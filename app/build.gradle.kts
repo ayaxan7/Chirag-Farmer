@@ -59,8 +59,6 @@ dependencies {
     implementation(libs.coil.compose)
     // Add ConstraintLayout (for traditional XML layouts used by AAR resources)
     implementation(libs.androidx.constraintlayout)
-    implementation (libs.android.plugin.annotation.v9)
-    implementation (libs.android.plugin.markerview.v9)
     // Retrofit
     implementation(libs.retrofit)
     implementation(libs.converter.gson)

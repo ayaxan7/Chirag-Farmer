@@ -1,7 +1,5 @@
 [versions]
 agp = "8.13.2"
-androidPluginAnnotationV9 = "3.0.2"
-androidSdk = "11.13.1"
 constraintlayout = "2.1.4"
 converterGson = "2.9.0"
 datastorePreferences = "1.1.7"
@@ -35,9 +33,6 @@ firebaseMessaging = "25.0.1"
 material3AdaptiveNavigationSuite = "1.4.0"
 
 [libraries]
-android-plugin-annotation-v9 = { module = "org.maplibre.gl:android-plugin-annotation-v9", version.ref = "androidPluginAnnotationV9" }
-android-plugin-markerview-v9 = { module = "org.maplibre.gl:android-plugin-markerview-v9", version.ref = "androidPluginAnnotationV9" }
-android-sdk = { module = "org.maplibre.gl:android-sdk", version.ref = "androidSdk" }
 androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 androidx-compose-material3-window-size-class1 = { module = "androidx.compose.material3:material3-window-size-class", version.ref = "material3WindowSizeClass" }
 androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }
