@@ -17,6 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.ayaan.chiragfarmer.R
+import com.ayaan.chiragfarmer.ui.theme.BGBlack
 import com.ayaan.chiragfarmer.ui.theme.BorderColour
 
 @Composable
@@ -26,15 +27,22 @@ fun ChiragTextField(
     placeholder: String,
     modifier: Modifier = Modifier,
     leadingIcon: Int? = null,
-    keyboardType: KeyboardType = KeyboardType.Text
+    keyboardType: KeyboardType = KeyboardType.Text,
+    maxChars:Int?=null
 ) {
     OutlinedTextField(
         value = value,
-        onValueChange = onValueChange,
+        onValueChange = { newValue ->
+            if (maxChars != null) {
+                onValueChange(newValue.take(maxChars))
+            } else {
+                onValueChange(newValue)
+            }
+        },
         placeholder = {
             Text(
                 text = placeholder,
-                color = Color(0xFF9E9E9E)
+                color = BGBlack
             )
         },
         leadingIcon = {

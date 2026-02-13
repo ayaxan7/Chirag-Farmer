@@ -59,8 +59,8 @@ fun OTPVerificationScreen(
     SideEffect {
         try {
             focusRequester.requestFocus()
-        } catch (_: Exception) {
-            // Silently ignore if focus can't be requested yet
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
