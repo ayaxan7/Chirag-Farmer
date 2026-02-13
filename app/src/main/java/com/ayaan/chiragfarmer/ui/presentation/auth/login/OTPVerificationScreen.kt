@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -20,6 +21,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
@@ -28,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
@@ -45,6 +48,7 @@ import androidx.navigation.compose.rememberNavController
 import com.ayaan.chiragfarmer.R
 import com.ayaan.chiragfarmer.ui.presentation.auth.login.components.OTPBox
 import com.ayaan.chiragfarmer.ui.presentation.common.components.ChiragButton
+import com.ayaan.chiragfarmer.ui.theme.BGBlack
 import com.ayaan.chiragfarmer.ui.theme.BGWhite
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -65,21 +69,25 @@ fun OTPVerificationScreen(
     }
 
     Scaffold(
-        modifier = modifier, containerColor = BGWhite, topBar = {
+        containerColor = BGWhite, topBar = {
             TopAppBar(
                 title = {
                     Icon(
                         painter = painterResource(R.drawable.ic_back_arrow),
                         contentDescription = "Back",
                         modifier = Modifier
-                            .padding(start = 16.dp, top = 16.dp)
-                            .size(32.dp)
+                            .size(16.dp)
                             .clickable {
                                 navController.popBackStack()
                             },
                         tint = Color.Black
                     )
-                })
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = BGWhite,
+                    titleContentColor = Color.Black
+                )
+            )
         }) { innerPadding ->
         Box(
             modifier = Modifier
@@ -99,27 +107,6 @@ fun OTPVerificationScreen(
             Column(
                 modifier = Modifier.fillMaxSize()
             ) {
-                // Top white section with back button
-//                Box(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .height(120.dp)
-//                        .background(Color.White)
-//                        .statusBarsPadding()
-//                ) {
-//                    Icon(
-//                        painter = painterResource(R.drawable.ic_back_arrow),
-//                        contentDescription = "Back",
-//                        modifier = Modifier
-//                            .padding(start = 16.dp, top = 16.dp)
-//                            .size(32.dp)
-//                            .clickable {
-//                                navController.popBackStack()
-//                            },
-//                        tint = Color.Black
-//                    )
-//                }
-
                 // Main content on black background
                 Column(
                     modifier = Modifier
@@ -130,18 +117,18 @@ fun OTPVerificationScreen(
                     // Title
                     Text(
                         text = "Enter authentication code",
-                        fontSize = 28.sp,
+                        fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.White
+                        color = BGBlack
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Description
                     Text(
-                        text = "Enter the 4-digit that we have sent to your registered email id.",
-                        fontSize = 16.sp,
-                        color = Color(0xFFB0B0B0),
+                        text = "Enter the 4-digit OTP that we have sent to your mobile number.",
+                        fontSize = 12.sp,
+                        color = BGBlack,
                         lineHeight = 24.sp
                     )
 
@@ -149,7 +136,7 @@ fun OTPVerificationScreen(
 
                     // OTP Input Boxes
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.wrapContentWidth(),
                         horizontalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         repeat(4) { index ->
@@ -170,28 +157,31 @@ fun OTPVerificationScreen(
                             }
                         },
                         modifier = Modifier
-                            .size(0.dp)
-                            .focusRequester(focusRequester),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword)
+                            .focusRequester(focusRequester)
+                            .alpha(0f)
+                            .fillMaxWidth()
+                            .height(1.dp),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                     )
+
 
                     Spacer(modifier = Modifier.height(32.dp))
 
                     // Resend code text
-                    Text(text = buildAnnotatedString {
-                        withStyle(style = SpanStyle(color = Color(0xFF808080))) {
-                            append("Didn't Received code yet? ")
-                        }
-                        withStyle(
-                            style = SpanStyle(
-                                color = Color.White, fontWeight = FontWeight.Bold
-                            )
-                        ) {
-                            append("Resend")
-                        }
-                    }, fontSize = 14.sp, modifier = Modifier.clickable {
-                        // Handle resend OTP
-                    })
+//                    Text(text = buildAnnotatedString {
+//                        withStyle(style = SpanStyle(color = Color(0xFF808080))) {
+//                            append("Didn't Received code yet? ")
+//                        }
+//                        withStyle(
+//                            style = SpanStyle(
+//                                color = Color.White, fontWeight = FontWeight.Bold
+//                            )
+//                        ) {
+//                            append("Resend")
+//                        }
+//                    }, fontSize = 14.sp, modifier = Modifier.clickable {
+//                        // Handle resend OTP
+//                    })
 
                     Spacer(modifier = Modifier.weight(1f))
 
