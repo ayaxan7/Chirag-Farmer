@@ -11,6 +11,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -93,16 +96,23 @@ fun OTPVerificationScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
+                .imePadding()
+                .navigationBarsPadding()
         ) {
             // Background decorative drone image at bottom right
-            Image(
-                painter = painterResource(R.drawable.left_tilt_drone), // Make sure to add this drawable
-                contentDescription = "Drone pattern",
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .size(300.dp),
-                alpha = 0.3f
-            )
+            Box(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.left_tilt_drone),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .size(300.dp)
+                        .offset(x = 50.dp, y = (-100).dp)
+                        .alpha(0.9f)
+                )
+            }
 
             Column(
                 modifier = Modifier.fillMaxSize()
@@ -192,7 +202,7 @@ fun OTPVerificationScreen(
                             // Handle OTP verification
                         },
                         enabled = otpValue.length == 4,
-                        modifier = Modifier.padding(bottom = 40.dp)
+//                        modifier = Modifier.padding(bottom = 40.dp)
                     )
                 }
             }
