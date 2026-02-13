@@ -5,7 +5,7 @@ sealed class Route(val path: String) {
     object Favorites : Route("favorites")
     object Profile : Route("profile")
     object Login : Route("login")
-    object OTPVerification : Route("otp/{phone}"){
-        fun createRoute(phone: String) = "otp/$phone"
+    object OTPVerification : Route("otp/{phone}/{requestId}/{isSignUp}"){
+        fun createRoute(phone: String, requestId: String, isSignUp: Boolean) = "otp/$phone/$requestId/$isSignUp"
     }
 }

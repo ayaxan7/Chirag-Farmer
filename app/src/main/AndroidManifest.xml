@@ -3,7 +3,9 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <application
+        android:name=".ChiragFarmerApplication"
         android:allowBackup="true"
+        android:usesCleartextTraffic="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:windowSoftInputMode="adjustResize"
         android:enableOnBackInvokedCallback="true"

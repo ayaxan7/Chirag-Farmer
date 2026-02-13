@@ -17,9 +17,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,23 +40,52 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.ayaan.chiragfarmer.R
 import com.ayaan.chiragfarmer.ui.presentation.common.components.ChiragButton
 import com.ayaan.chiragfarmer.ui.presentation.common.components.ChiragTextField
 import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.Route
+import com.ayaan.chiragfarmer.ui.theme.BGBlack
 import com.ayaan.chiragfarmer.ui.theme.BGWhite
 import com.ayaan.chiragfarmer.ui.theme.TextGray
+
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-//    viewModel: LoginViewModel = hiltViewModel()
+    viewModel: LoginViewModel = hiltViewModel()
 ) {
     var mobileNumber by remember { mutableStateOf("") }
+    var isSignUpClicked by remember { mutableStateOf(false) }
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    // Handle UI state changes
+    LaunchedEffect(uiState) {
+        when (val state = uiState) {
+            is LoginUiState.Success -> {
+                navController.navigate(
+                    Route.OTPVerification.createRoute(
+                        phone = mobileNumber,
+                        requestId = state.requestId,
+                        isSignUp = state.isSignUp
+                    )
+                )
+                viewModel.resetState()
+            }
+            is LoginUiState.Error -> {
+                snackbarHostState.showSnackbar(state.message)
+                viewModel.resetState()
+            }
+            else -> Unit
+        }
+    }
 
     Scaffold(
-        containerColor = BGWhite
+        containerColor = BGWhite,
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -72,6 +105,13 @@ fun LoginScreen(
                     .offset(y = (-100).dp)
                     .alpha(0.3f)
             )
+
+            // Loading indicator
+            if (uiState is LoginUiState.Loading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            }
 
             // Main content
             Column(
@@ -103,7 +143,7 @@ fun LoginScreen(
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "Login to continue",
+                        text = if(isSignUpClicked) "Register to continue" else "Login to continue",
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black
@@ -123,7 +163,7 @@ fun LoginScreen(
 
                 Spacer(modifier = Modifier.weight(1f))
 
-                // Sign up text
+                // Sign up/Login text
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center,
@@ -131,8 +171,8 @@ fun LoginScreen(
                 ) {
                     Text(
                         text = buildAnnotatedString {
-                            withStyle(style = SpanStyle(color = Color(0xFF666666))) {
-                                append("Don't have an account? ")
+                            withStyle(style = SpanStyle(color = BGBlack)) {
+                                append(if(isSignUpClicked) "Already have an account? " else "Don't have an account? ")
                             }
                             withStyle(
                                 style = SpanStyle(
@@ -140,12 +180,12 @@ fun LoginScreen(
                                     fontWeight = FontWeight.Bold
                                 )
                             ) {
-                                append("Signup")
+                                append(if(isSignUpClicked) "Login" else "Signup")
                             }
                         },
                         fontSize = 14.sp,
                         modifier = Modifier.clickable {
-//                            navController.navigate(Route.OTPVerification.path)
+                            isSignUpClicked = !isSignUpClicked
                         }
                     )
                 }
@@ -156,11 +196,9 @@ fun LoginScreen(
                 ChiragButton(
                     text = "Continue",
                     onClick = {
-                        navController.navigate(
-                            Route.OTPVerification.createRoute(mobileNumber)
-                        )
+                        viewModel.sendOTP(mobileNumber, isSignUpClicked)
                     },
-//                    enabled = mobileNumber.isNotEmpty()
+                    enabled = mobileNumber.length == 10 && uiState !is LoginUiState.Loading
                 )
             }
         }

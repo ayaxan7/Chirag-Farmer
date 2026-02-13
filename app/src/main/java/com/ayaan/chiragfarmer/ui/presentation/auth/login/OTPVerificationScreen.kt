@@ -19,14 +19,17 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,41 +41,65 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.ayaan.chiragfarmer.R
 import com.ayaan.chiragfarmer.ui.presentation.auth.login.components.OTPBox
 import com.ayaan.chiragfarmer.ui.presentation.common.components.ChiragButton
+import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.Route
 import com.ayaan.chiragfarmer.ui.theme.BGBlack
 import com.ayaan.chiragfarmer.ui.theme.BGWhite
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OTPVerificationScreen(
-    modifier: Modifier = Modifier, navController: NavHostController, phoneNumber: String? = ""
+    modifier: Modifier = Modifier,
+    navController: NavHostController,
+    phoneNumber: String? = "",
+    requestId: String? = "",
+    isSignUp: Boolean = false,
+    viewModel: OTPViewModel = hiltViewModel()
 ) {
     var otpValue by remember { mutableStateOf("") }
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
     val focusRequester = remember { FocusRequester() }
-    Log.d("OTPVerificationScreen", "phoneNumber: $phoneNumber")
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
 
-    SideEffect {
-        try {
-            focusRequester.requestFocus()
-        } catch (e: Exception) {
-            e.printStackTrace()
+    Log.d("OTPVerificationScreen", "phoneNumber: $phoneNumber, requestId: $requestId, isSignUp: $isSignUp")
+
+    // Handle UI state changes
+    LaunchedEffect(uiState) {
+        when (val state = uiState) {
+            is OTPUiState.Success -> {
+                snackbarHostState.showSnackbar(state.message)
+                // Navigate to home screen after successful verification
+                navController.navigate(Route.Home.path) {
+                    popUpTo(Route.Login.path) { inclusive = true }
+                }
+                viewModel.resetState()
+            }
+            is OTPUiState.Error -> {
+                snackbarHostState.showSnackbar(state.message)
+                viewModel.resetState()
+            }
+            else -> Unit
         }
     }
 
     Scaffold(
-        containerColor = BGWhite, topBar = {
+        containerColor = BGWhite,
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        topBar = {
             TopAppBar(
                 title = {
                     Icon(
@@ -91,7 +118,8 @@ fun OTPVerificationScreen(
                     titleContentColor = Color.Black
                 )
             )
-        }) { innerPadding ->
+        }
+    ) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -111,6 +139,13 @@ fun OTPVerificationScreen(
                         .size(300.dp)
                         .offset(x = 50.dp, y = (-100).dp)
                         .alpha(0.9f)
+                )
+            }
+
+            // Loading indicator
+            if (uiState is OTPUiState.Loading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center)
                 )
             }
 
@@ -158,6 +193,8 @@ fun OTPVerificationScreen(
                         }
                     }
 
+                    Spacer(modifier = Modifier.height(16.dp))
+
                     // Hidden text field for capturing input
                     BasicTextField(
                         value = otpValue,
@@ -168,30 +205,14 @@ fun OTPVerificationScreen(
                         },
                         modifier = Modifier
                             .focusRequester(focusRequester)
-                            .alpha(0f)
                             .fillMaxWidth()
-                            .height(1.dp),
+                            .height(1.dp)
+                            .alpha(0f),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                     )
 
 
                     Spacer(modifier = Modifier.height(32.dp))
-
-                    // Resend code text
-//                    Text(text = buildAnnotatedString {
-//                        withStyle(style = SpanStyle(color = Color(0xFF808080))) {
-//                            append("Didn't Received code yet? ")
-//                        }
-//                        withStyle(
-//                            style = SpanStyle(
-//                                color = Color.White, fontWeight = FontWeight.Bold
-//                            )
-//                        ) {
-//                            append("Resend")
-//                        }
-//                    }, fontSize = 14.sp, modifier = Modifier.clickable {
-//                        // Handle resend OTP
-//                    })
 
                     Spacer(modifier = Modifier.weight(1f))
 
@@ -199,10 +220,11 @@ fun OTPVerificationScreen(
                     ChiragButton(
                         text = "Continue",
                         onClick = {
-                            // Handle OTP verification
+                            if (phoneNumber != null && requestId != null) {
+                                viewModel.verifyOTP(phoneNumber, otpValue, requestId, isSignUp)
+                            }
                         },
-                        enabled = otpValue.length == 4,
-//                        modifier = Modifier.padding(bottom = 40.dp)
+                        enabled = otpValue.length == 4 && uiState !is OTPUiState.Loading
                     )
                 }
             }

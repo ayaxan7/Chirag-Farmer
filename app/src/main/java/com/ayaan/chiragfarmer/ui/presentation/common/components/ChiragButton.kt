@@ -20,8 +20,10 @@ fun ChiragButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    backgroundColor: Color = BGBlack,
-    textColor: Color = Color.White
+    containerColor: Color = BGBlack,
+    contentColor: Color = Color.White,
+    disabledContainerColor: Color = BGBlack.copy(alpha = 0.4f),
+    disabledContentColor: Color = Color.White
 ) {
     Button(
         onClick = onClick,
@@ -31,10 +33,10 @@ fun ChiragButton(
         enabled = enabled,
         shape = RoundedCornerShape(8.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = backgroundColor,
-            contentColor = textColor,
-            disabledContainerColor = backgroundColor,
-            disabledContentColor = textColor
+            containerColor = containerColor,
+            contentColor = contentColor,
+            disabledContainerColor = disabledContainerColor,
+            disabledContentColor = disabledContentColor
         )
     ) {
         Text(
