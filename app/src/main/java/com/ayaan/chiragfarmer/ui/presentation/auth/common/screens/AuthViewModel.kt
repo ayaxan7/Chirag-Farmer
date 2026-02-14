@@ -1,4 +1,4 @@
-package com.ayaan.chiragfarmer.ui.presentation.auth.login
+package com.ayaan.chiragfarmer.ui.presentation.auth.common.screens
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(
+class AuthViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ) : ViewModel() {
 

@@ -1,4 +1,4 @@
-package com.ayaan.chiragfarmer.ui.presentation.auth.login.components
+package com.ayaan.chiragfarmer.ui.presentation.auth.common.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

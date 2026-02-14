@@ -20,7 +20,8 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-    private const val BASE_URL = "http://192.168.1.8:5001/" // For Android Emulator
+//    private const val BASE_URL = "http://192.168.1.8:5001/"
+    private const val BASE_URL = "http://10.0.2.2:5001/"// For Android Emulator
     // Use "http://localhost:5000/" for actual device with port forwarding
     // Or use your actual server IP address
 

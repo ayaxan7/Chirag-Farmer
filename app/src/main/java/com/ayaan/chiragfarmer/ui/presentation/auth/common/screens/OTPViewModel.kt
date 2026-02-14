@@ -1,4 +1,4 @@
-package com.ayaan.chiragfarmer.ui.presentation.auth.login
+package com.ayaan.chiragfarmer.ui.presentation.auth.common.screens
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

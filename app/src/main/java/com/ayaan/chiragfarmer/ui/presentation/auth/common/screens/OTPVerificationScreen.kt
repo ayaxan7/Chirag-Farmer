@@ -1,4 +1,4 @@
-package com.ayaan.chiragfarmer.ui.presentation.auth.login
+package com.ayaan.chiragfarmer.ui.presentation.auth.common.screens
 
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -51,7 +51,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.ayaan.chiragfarmer.R
-import com.ayaan.chiragfarmer.ui.presentation.auth.login.components.OTPBox
+import com.ayaan.chiragfarmer.ui.presentation.auth.common.components.OTPBox
 import com.ayaan.chiragfarmer.ui.presentation.common.components.ChiragButton
 import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.Route
 import com.ayaan.chiragfarmer.ui.theme.BGBlack

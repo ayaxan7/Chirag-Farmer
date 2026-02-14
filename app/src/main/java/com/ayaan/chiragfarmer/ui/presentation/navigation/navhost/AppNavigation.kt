@@ -11,8 +11,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.ayaan.chiragfarmer.data.local.AuthDataStore
-import com.ayaan.chiragfarmer.ui.presentation.auth.login.LoginScreen
-import com.ayaan.chiragfarmer.ui.presentation.auth.login.OTPVerificationScreen
+import com.ayaan.chiragfarmer.ui.presentation.auth.common.screens.AuthScreen
+import com.ayaan.chiragfarmer.ui.presentation.auth.common.screens.OTPVerificationScreen
 import com.ayaan.chiragfarmer.ui.presentation.home.HomeScreen
 import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.Route
 
@@ -40,7 +40,7 @@ fun AppNavigation(
         navController = navController
     ) {
         composable(Route.Login.path) {
-            LoginScreen(
+            AuthScreen(
                 navController = navController, modifier = modifier
             )
         }

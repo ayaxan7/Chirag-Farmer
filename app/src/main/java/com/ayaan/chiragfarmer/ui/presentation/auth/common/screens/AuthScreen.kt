@@ -1,4 +1,4 @@
-package com.ayaan.chiragfarmer.ui.presentation.auth.login
+package com.ayaan.chiragfarmer.ui.presentation.auth.common.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -52,10 +52,10 @@ import com.ayaan.chiragfarmer.ui.theme.BGWhite
 import com.ayaan.chiragfarmer.ui.theme.TextGray
 
 @Composable
-fun LoginScreen(
+fun AuthScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    viewModel: LoginViewModel = hiltViewModel()
+    viewModel: AuthViewModel = hiltViewModel()
 ) {
     var mobileNumber by remember { mutableStateOf("") }
     var isSignUpClicked by remember { mutableStateOf(false) }
