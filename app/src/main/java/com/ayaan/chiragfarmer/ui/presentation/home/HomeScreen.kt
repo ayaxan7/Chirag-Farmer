@@ -59,7 +59,7 @@ fun HomeScreen(navController: NavHostController) {
                         dataStore.clearAuthData()
 
                         // Navigate back to login screen
-                        navController.navigate(Route.Login.path) {
+                        navController.navigate(Route.Auth.path) {
                             popUpTo(0) { inclusive = true }
                         }
                     }

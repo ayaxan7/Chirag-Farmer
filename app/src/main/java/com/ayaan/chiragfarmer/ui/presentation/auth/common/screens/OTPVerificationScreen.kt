@@ -2,7 +2,6 @@ package com.ayaan.chiragfarmer.ui.presentation.auth.common.screens
 
 import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,13 +20,10 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -39,7 +35,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -72,27 +67,51 @@ fun OTPVerificationScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val focusRequester = remember { FocusRequester() }
+
+    // Request focus after a delay to ensure the composable is placed
     LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
+        kotlinx.coroutines.delay(100) // Small delay to ensure view is laid out
+        try {
+            focusRequester.requestFocus()
+        } catch (e: Exception) {
+            Log.e("OTPVerificationScreen", "Error requesting focus: ${e.message}")
+        }
     }
 
-    Log.d("OTPVerificationScreen", "phoneNumber: $phoneNumber, requestId: $requestId, isSignUp: $isSignUp")
+    Log.d(
+        "OTPVerificationScreen",
+        "phoneNumber: $phoneNumber, requestId: $requestId, isSignUp: $isSignUp"
+    )
 
     // Handle UI state changes
     LaunchedEffect(uiState) {
         when (val state = uiState) {
             is OTPUiState.Success -> {
-                snackbarHostState.showSnackbar(state.message)
-                // Navigate to home screen after successful verification
-                navController.navigate(Route.Home.path) {
-                    popUpTo(Route.Login.path) { inclusive = true }
+                Log.d("OTPVerificationScreen", "OTP Verification Success!")
+                Log.d("OTPVerificationScreen", "isSignUp: $isSignUp")
+
+                // Navigate based on whether it's signup or login
+                if (isSignUp) {
+                    // Navigate to RegisterScreen for new users
+                    Log.d("OTPVerificationScreen", "Navigating to RegisterScreen (Signup)")
+                    navController.navigate(Route.Register.path) {
+                        popUpTo(Route.Auth.path) { inclusive = true }
+                    }
+                } else {
+                    // Navigate to HomeScreen for existing users
+                    Log.d("OTPVerificationScreen", "Navigating to HomeScreen (Login)")
+                    navController.navigate(Route.Home.path) {
+                        popUpTo(Route.Auth.path) { inclusive = true }
+                    }
                 }
                 viewModel.resetState()
             }
+
             is OTPUiState.Error -> {
                 snackbarHostState.showSnackbar(state.message)
                 viewModel.resetState()
             }
+
             else -> Unit
         }
     }
@@ -102,11 +121,9 @@ fun OTPVerificationScreen(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             ChiragTopBar(
-                navController=navController,
-                icon = R.drawable.ic_back_arrow
+                navController = navController, icon = R.drawable.ic_back_arrow
             )
-        }
-    ) { innerPadding ->
+        }) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -205,13 +222,11 @@ fun OTPVerificationScreen(
 
                     // Continue button
                     ChiragButton(
-                        text = "Continue",
-                        onClick = {
+                        text = "Continue", onClick = {
                             if (phoneNumber != null && requestId != null) {
                                 viewModel.verifyOTP(phoneNumber, otpValue, requestId, isSignUp)
                             }
-                        },
-                        enabled = otpValue.length == 4 && uiState !is OTPUiState.Loading
+                        }, enabled = otpValue.length == 4 && uiState !is OTPUiState.Loading
                     )
                 }
             }

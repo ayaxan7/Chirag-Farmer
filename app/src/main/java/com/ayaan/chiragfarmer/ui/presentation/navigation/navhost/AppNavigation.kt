@@ -13,6 +13,7 @@ import androidx.navigation.navArgument
 import com.ayaan.chiragfarmer.data.local.AuthDataStore
 import com.ayaan.chiragfarmer.ui.presentation.auth.common.screens.AuthScreen
 import com.ayaan.chiragfarmer.ui.presentation.auth.common.screens.OTPVerificationScreen
+import com.ayaan.chiragfarmer.ui.presentation.auth.register.RegisterScreen
 import com.ayaan.chiragfarmer.ui.presentation.home.HomeScreen
 import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.Route
 
@@ -31,7 +32,7 @@ fun AppNavigation(
     val startDestination = if (authToken != null && authToken!!.isNotEmpty()) {
         Route.Home.path
     } else {
-        Route.Login.path
+        Route.Auth.path
     }
 
     NavHost(
@@ -39,7 +40,7 @@ fun AppNavigation(
         startDestination = startDestination,
         navController = navController
     ) {
-        composable(Route.Login.path) {
+        composable(Route.Auth.path) {
             AuthScreen(
                 navController = navController, modifier = modifier
             )
@@ -62,6 +63,9 @@ fun AppNavigation(
                 isSignUp = isSignUp,
                 modifier = modifier
             )
+        }
+        composable(Route.Register.path) {
+            RegisterScreen(navController = navController)
         }
         composable(Route.Home.path){
             HomeScreen(navController = navController)
