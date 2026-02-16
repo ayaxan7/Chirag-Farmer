@@ -1,5 +1,8 @@
 package com.ayaan.chiragfarmer.ui.presentation.auth.register
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -23,10 +26,14 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.CameraAlt
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,20 +50,122 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import com.ayaan.chiragfarmer.R
 import com.ayaan.chiragfarmer.ui.presentation.auth.register.components.RegisterTextField
 import com.ayaan.chiragfarmer.ui.presentation.common.components.ChiragButton
 import com.ayaan.chiragfarmer.ui.presentation.common.components.ImageUploadBox
 import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.ChiragTopBar
+import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.Route
 import com.ayaan.chiragfarmer.ui.theme.BGWhite
+import com.ayaan.chiragfarmer.utils.Base64ImageUtils
 
 @Composable
-fun RegisterScreen(navController: NavHostController) {
-
+fun RegisterScreen(
+    navController: NavHostController,
+    viewModel: RegisterViewModel = hiltViewModel()
+) {
+    val context = LocalContext.current
     var name by remember { mutableStateOf("") }
-    var mobileNumber by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
+    var vendorName by remember { mutableStateOf("") }
+    var profileImageUri by remember { mutableStateOf<Uri?>(null) }
+    var profileImageBase64 by remember { mutableStateOf<String?>(null) }
+
+    // Aadhaar card images
+    var aadhaarFrontUri by remember { mutableStateOf<Uri?>(null) }
+    var aadhaarFrontBase64 by remember { mutableStateOf<String?>(null) }
+    var aadhaarBackUri by remember { mutableStateOf<Uri?>(null) }
+    var aadhaarBackBase64 by remember { mutableStateOf<String?>(null) }
+
+    // Drone image
+    var droneImageUri by remember { mutableStateOf<Uri?>(null) }
+    var droneImageBase64 by remember { mutableStateOf<String?>(null) }
+
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    // Image picker launcher for profile
+    val imagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            profileImageUri = it
+            profileImageBase64 = Base64ImageUtils.encodeUriToBase64(
+                context = context,
+                uri = it,
+                quality = 80,
+                includeDataUriPrefix = true
+            )
+        }
+    }
+
+    // Image picker launcher for Aadhaar front
+    val aadhaarFrontPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            aadhaarFrontUri = it
+            aadhaarFrontBase64 = Base64ImageUtils.encodeUriToBase64(
+                context = context,
+                uri = it,
+                quality = 80,
+                includeDataUriPrefix = true
+            )
+        }
+    }
+
+    // Image picker launcher for Aadhaar back
+    val aadhaarBackPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            aadhaarBackUri = it
+            aadhaarBackBase64 = Base64ImageUtils.encodeUriToBase64(
+                context = context,
+                uri = it,
+                quality = 80,
+                includeDataUriPrefix = true
+            )
+        }
+    }
+
+    // Image picker launcher for Drone image
+    val droneImagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            droneImageUri = it
+            droneImageBase64 = Base64ImageUtils.encodeUriToBase64(
+                context = context,
+                uri = it,
+                quality = 80,
+                includeDataUriPrefix = true
+            )
+        }
+    }
+
+    // Handle UI state changes
+    LaunchedEffect(uiState) {
+        when (val state = uiState) {
+            is RegisterUiState.Success -> {
+                snackbarHostState.showSnackbar(state.message)
+                // Navigate to home screen after successful registration
+                navController.navigate(Route.Home.path) {
+                    popUpTo(Route.Auth.path) { inclusive = true }
+                }
+                viewModel.resetState()
+            }
+            is RegisterUiState.Error -> {
+                snackbarHostState.showSnackbar(state.message)
+                viewModel.resetState()
+            }
+            else -> Unit
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -66,7 +175,8 @@ fun RegisterScreen(navController: NavHostController) {
                 icon = R.drawable.ic_back_arrow
             )
         },
-        containerColor = BGWhite
+        containerColor = BGWhite,
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -87,6 +197,13 @@ fun RegisterScreen(navController: NavHostController) {
                         .size(200.dp)
                         .offset(x = 50.dp, y = (-100).dp)
                         .alpha(0.8f)
+                )
+            }
+
+            // Loading indicator
+            if (uiState is RegisterUiState.Loading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center)
                 )
             }
 
@@ -118,12 +235,20 @@ fun RegisterScreen(navController: NavHostController) {
                                 .background(Color(0xffe3e6e7)),
                             contentAlignment = Alignment.Center
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.Person,
-                                contentDescription = "Profile Photo",
-                                modifier = Modifier.fillMaxSize(),
-                                tint = Color(0xffaeb4b7)
-                            )
+                            if (profileImageUri != null) {
+                                AsyncImage(
+                                    model = profileImageUri,
+                                    contentDescription = "Profile Photo",
+                                    modifier = Modifier.fillMaxSize()
+                                )
+                            } else {
+                                Icon(
+                                    imageVector = Icons.Default.Person,
+                                    contentDescription = "Profile Photo",
+                                    modifier = Modifier.fillMaxSize(),
+                                    tint = Color(0xffaeb4b7)
+                                )
+                            }
                         }
                         // Camera badge
                         Box(
@@ -132,7 +257,7 @@ fun RegisterScreen(navController: NavHostController) {
                                 .clip(CircleShape)
                                 .background(Color.White)
                                 .border(1.dp, Color(0xFFDDDDDD), CircleShape)
-                                .clickable { /* handle photo pick */ },
+                                .clickable { imagePickerLauncher.launch("image/*") },
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
@@ -155,17 +280,6 @@ fun RegisterScreen(navController: NavHostController) {
                     placeholder = "Enter Your Full Name"
                 )
 
-//                Spacer(modifier = Modifier.height(16.dp))
-//                LabelText(text = "Mobile Number *")
-//                Spacer(modifier = Modifier.height(6.dp))
-//                RegisterTextField(
-//                    value = mobileNumber,
-//                    onValueChange = { mobileNumber = it },
-//                    placeholder = "Enter Your Mobile Number",
-//                    keyboardType = KeyboardType.Phone,
-//                    maxChars = 10
-//                )
-
                 Spacer(modifier = Modifier.height(16.dp))
 
                 LabelText(text = "Email ID *")
@@ -177,6 +291,16 @@ fun RegisterScreen(navController: NavHostController) {
                     keyboardType = KeyboardType.Email
                 )
 
+                Spacer(modifier = Modifier.height(16.dp))
+
+                LabelText(text = "Vendor Name (Optional)")
+                Spacer(modifier = Modifier.height(6.dp))
+                RegisterTextField(
+                    value = vendorName,
+                    onValueChange = { vendorName = it },
+                    placeholder = "Enter Vendor Name"
+                )
+
                 Spacer(modifier = Modifier.height(20.dp))
 
                 LabelText(text = "Aadhaar card")
@@ -186,25 +310,19 @@ fun RegisterScreen(navController: NavHostController) {
                         label = "Front side of Aadhaar card",
                         width = 100.dp,
                         height = 90.dp,
-                        onClick = { /* pick front aadhaar */ }
+                        imageUri = aadhaarFrontUri,
+                        onClick = { aadhaarFrontPickerLauncher.launch("image/*") }
                     )
                     ImageUploadBox(
                         label = "Back side of Aadhaar card",
                         width = 100.dp,
                         height = 90.dp,
-                        onClick = { /* pick back aadhaar */ }
+                        imageUri = aadhaarBackUri,
+                        onClick = { aadhaarBackPickerLauncher.launch("image/*") }
                     )
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))
-
-//                LabelText(text = "Select vendor *")
-//                Spacer(modifier = Modifier.height(6.dp))
-//                VendorDropdown(
-//                    selectedVendor = selectedVendor,
-//                    onDropdownClick = { /* show vendor search dialog */ }
-//                )
-//                Spacer(modifier = Modifier.height(20.dp))
 
                 LabelText(text = "Upload Image of Drone available")
                 Spacer(modifier = Modifier.height(6.dp))
@@ -212,7 +330,8 @@ fun RegisterScreen(navController: NavHostController) {
                     label = "Add image of Drone",
                     width = 100.dp,
                     height = 90.dp,
-                    onClick = { /* pick drone image */ }
+                    imageUri = droneImageUri,
+                    onClick = { droneImagePickerLauncher.launch("image/*") }
                 )
 
                 Spacer(modifier = Modifier.weight(1f))
@@ -220,9 +339,17 @@ fun RegisterScreen(navController: NavHostController) {
                 ChiragButton(
                     text = "Continue",
                     onClick = {
-                        // Handle registration submission
+                        viewModel.addBusinessInfo(
+                            name = name,
+                            email = email,
+                            vendorName = vendorName.ifBlank { null },
+                            profileImage = profileImageBase64,
+                            aadhaarFrontImage = aadhaarFrontBase64,
+                            aadhaarBackImage = aadhaarBackBase64,
+                            droneImage = droneImageBase64
+                        )
                     },
-                    enabled = name.isNotEmpty() && mobileNumber.isNotEmpty() && email.isNotEmpty()
+                    enabled = name.isNotEmpty() && email.isNotEmpty() && uiState !is RegisterUiState.Loading
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))

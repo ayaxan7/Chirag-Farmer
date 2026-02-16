@@ -1,12 +1,16 @@
 package com.ayaan.chiragfarmer.data.remote
 
+import com.ayaan.chiragfarmer.data.model.auth.AddBusinessInfoRequest
 import com.ayaan.chiragfarmer.data.model.auth.AuthResponse
 import com.ayaan.chiragfarmer.data.model.auth.RegisterRequest
 import com.ayaan.chiragfarmer.data.model.auth.SendOTPData
 import com.ayaan.chiragfarmer.data.model.auth.SendOTPRequest
+import com.ayaan.chiragfarmer.data.model.auth.UserDetailsData
 import com.ayaan.chiragfarmer.data.model.auth.VerifyOTPData
 import com.ayaan.chiragfarmer.data.model.auth.VerifyOTPRequest
 import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface AuthApiService {
@@ -30,5 +34,16 @@ interface AuthApiService {
     suspend fun register(
         @Body request: RegisterRequest
     ): AuthResponse<VerifyOTPData>
+
+    @GET("api/msg91/get-user-details")
+    suspend fun getUserDetails(
+        @Header("Authorization") authorization: String
+    ): AuthResponse<UserDetailsData>
+
+    @POST("api/msg91/add-business-info")
+    suspend fun addBusinessInfo(
+        @Header("Authorization") authorization: String,
+        @Body request: AddBusinessInfoRequest
+    ): AuthResponse<UserDetailsData>
 }
 

@@ -1,14 +1,17 @@
 package com.ayaan.chiragfarmer.data.repository
 
 import com.ayaan.chiragfarmer.data.local.AuthDataStore
+import com.ayaan.chiragfarmer.data.model.auth.AddBusinessInfoRequest
 import com.ayaan.chiragfarmer.data.model.auth.AuthResponse
 import com.ayaan.chiragfarmer.data.model.auth.RegisterRequest
 import com.ayaan.chiragfarmer.data.model.auth.SendOTPData
 import com.ayaan.chiragfarmer.data.model.auth.SendOTPRequest
+import com.ayaan.chiragfarmer.data.model.auth.UserDetailsData
 import com.ayaan.chiragfarmer.data.model.auth.VerifyOTPData
 import com.ayaan.chiragfarmer.data.model.auth.VerifyOTPRequest
 import com.ayaan.chiragfarmer.data.remote.AuthApiService
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class AuthRepository @Inject constructor(
@@ -92,6 +95,32 @@ class AuthRepository @Inject constructor(
 
     fun getUserRole(): Flow<String?> {
         return authDataStore.getUserRole()
+    }
+
+    suspend fun getUserDetails(): Result<AuthResponse<UserDetailsData>> {
+        return try {
+            val token = authDataStore.getAuthToken().first()
+            if (token.isNullOrEmpty()) {
+                return Result.failure(Exception("No authentication token found"))
+            }
+            val response = apiService.getUserDetails("Bearer $token")
+            Result.success(response)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun addBusinessInfo(request: AddBusinessInfoRequest): Result<AuthResponse<UserDetailsData>> {
+        return try {
+            val token = authDataStore.getAuthToken().first()
+            if (token.isNullOrEmpty()) {
+                return Result.failure(Exception("No authentication token found"))
+            }
+            val response = apiService.addBusinessInfo("Bearer $token", request)
+            Result.success(response)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
     suspend fun logout() {
