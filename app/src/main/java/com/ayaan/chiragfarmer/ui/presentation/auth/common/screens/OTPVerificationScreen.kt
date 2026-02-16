@@ -53,6 +53,7 @@ import androidx.navigation.compose.rememberNavController
 import com.ayaan.chiragfarmer.R
 import com.ayaan.chiragfarmer.ui.presentation.auth.common.components.OTPBox
 import com.ayaan.chiragfarmer.ui.presentation.common.components.ChiragButton
+import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.ChiragTopBar
 import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.Route
 import com.ayaan.chiragfarmer.ui.theme.BGBlack
 import com.ayaan.chiragfarmer.ui.theme.BGWhite
@@ -100,23 +101,9 @@ fun OTPVerificationScreen(
         containerColor = BGWhite,
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
-            TopAppBar(
-                title = {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_back_arrow),
-                        contentDescription = "Back",
-                        modifier = Modifier
-                            .size(16.dp)
-                            .clickable {
-                                navController.popBackStack()
-                            },
-                        tint = Color.Black
-                    )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = BGWhite,
-                    titleContentColor = Color.Black
-                )
+            ChiragTopBar(
+                navController=navController,
+                icon = R.drawable.ic_back_arrow
             )
         }
     ) { innerPadding ->

@@ -8,4 +8,5 @@ sealed class Route(val path: String) {
     object OTPVerification : Route("otp/{phone}/{requestId}/{isSignUp}"){
         fun createRoute(phone: String, requestId: String, isSignUp: Boolean) = "otp/$phone/$requestId/$isSignUp"
     }
+    object Register: Route("register")
 }
