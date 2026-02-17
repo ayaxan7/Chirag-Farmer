@@ -14,6 +14,7 @@ import com.ayaan.chiragfarmer.data.local.AuthDataStore
 import com.ayaan.chiragfarmer.ui.presentation.auth.common.screens.AuthScreen
 import com.ayaan.chiragfarmer.ui.presentation.auth.common.screens.OTPVerificationScreen
 import com.ayaan.chiragfarmer.ui.presentation.auth.register.RegisterScreen
+import com.ayaan.chiragfarmer.ui.presentation.auth.register.RegisterSuccessScreen
 import com.ayaan.chiragfarmer.ui.presentation.home.HomeScreen
 import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.Route
 
@@ -66,6 +67,9 @@ fun AppNavigation(
         }
         composable(Route.Register.path) {
             RegisterScreen(navController = navController)
+        }
+        composable(Route.RegisterSuccess.path) {
+            RegisterSuccessScreen(navController = navController)
         }
         composable(Route.Home.path){
             HomeScreen(navController = navController)

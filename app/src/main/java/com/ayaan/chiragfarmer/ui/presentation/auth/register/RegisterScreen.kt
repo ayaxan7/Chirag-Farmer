@@ -153,8 +153,7 @@ fun RegisterScreen(
         when (val state = uiState) {
             is RegisterUiState.Success -> {
                 snackbarHostState.showSnackbar(state.message)
-                // Navigate to home screen after successful registration
-                navController.navigate(Route.Home.path) {
+                navController.navigate(Route.RegisterSuccess.path) {
                     popUpTo(Route.Auth.path) { inclusive = true }
                 }
                 viewModel.resetState()

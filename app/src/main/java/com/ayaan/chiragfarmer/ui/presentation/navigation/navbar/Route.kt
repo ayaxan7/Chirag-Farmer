@@ -9,4 +9,5 @@ sealed class Route(val path: String) {
         fun createRoute(phone: String, requestId: String, isSignUp: Boolean) = "otp/$phone/$requestId/$isSignUp"
     }
     object Register: Route("register")
+    object RegisterSuccess: Route("register_success")
 }
