@@ -33,6 +33,8 @@ import com.ayaan.chiragfarmer.ui.theme.BGWhite
 fun HomeTopBar(navController: NavHostController) {
     Box(
         modifier = Modifier.fillMaxWidth()
+            .background(Color.Transparent),
+
     ) {
         Box(
             modifier = Modifier

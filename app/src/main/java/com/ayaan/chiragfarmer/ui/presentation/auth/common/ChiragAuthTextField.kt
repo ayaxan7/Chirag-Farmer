@@ -1,4 +1,4 @@
-package com.ayaan.chiragfarmer.ui.presentation.common.components
+package com.ayaan.chiragfarmer.ui.presentation.auth.common
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,7 +19,7 @@ import com.ayaan.chiragfarmer.ui.theme.BGBlack
 import com.ayaan.chiragfarmer.ui.theme.BorderColour
 
 @Composable
-fun ChiragTextField(
+fun ChiragAuthTextField(
     value: String,
     onValueChange: (String) -> Unit,
     placeholder: String,

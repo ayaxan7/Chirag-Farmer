@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -28,48 +29,65 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun ImageCarousel(
-    images: List<Int>, modifier: Modifier = Modifier, autoScrollDuration: Long = 3000L
+    images: List<Int>,
+    modifier: Modifier = Modifier,
+    autoScrollDuration: Long = 3000L
 ) {
     val pagerState = rememberPagerState(
-        initialPage = 0, pageCount = { images.size })
+        initialPage = 0,
+        pageCount = { images.size }
+    )
+
+    // Auto-scroll
     LaunchedEffect(Unit) {
         while (true) {
             delay(autoScrollDuration)
-            val nextPage =(pagerState.currentPage + 1) % images.size
-            pagerState.animateScrollToPage(nextPage)
+            if (!pagerState.isScrollInProgress) {
+                val nextPage = (pagerState.currentPage + 1) % images.size
+                pagerState.animateScrollToPage(nextPage)
+            }
         }
     }
-    Column(
-        modifier = modifier.fillMaxWidth()
+
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(200.dp)
+            .clip(RoundedCornerShape(16.dp))
     ) {
+
         // Image Pager
         HorizontalPager(
             state = pagerState,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp)
-                .clip(RoundedCornerShape(16.dp))
+            modifier = Modifier.fillMaxWidth()
         ) { page ->
             Image(
                 painter = painterResource(images[page]),
-                contentDescription = "Carousel Image",
+                contentDescription = null,
                 modifier = Modifier.fillMaxWidth(),
                 contentScale = ContentScale.FillWidth
             )
         }
-        // Indicators
+
         Row(
-            modifier = Modifier.align(Alignment.CenterHorizontally),
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 24.dp),
             horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             repeat(images.size) { index ->
                 Box(
                     modifier = Modifier
-                        .size(8.dp)
+                        .size(
+                            width =  8.dp,
+                            height = 8.dp
+                        )
                         .clip(CircleShape)
                         .background(
-                            if (index == pagerState.currentPage) BGBlack
-                            else LightGray
+                            if (index == pagerState.currentPage)
+                                BGBlack
+                            else
+                                LightGray
                         )
                 )
             }

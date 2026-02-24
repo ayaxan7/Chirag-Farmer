@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.ayaan.chiragfarmer.R
 import com.ayaan.chiragfarmer.data.local.AuthDataStore
+import com.ayaan.chiragfarmer.ui.presentation.home.components.BookServiceCard
 import com.ayaan.chiragfarmer.ui.presentation.home.components.ImageCarousel
 import com.ayaan.chiragfarmer.ui.presentation.home.components.topbar.HomeTopBar
 import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.Route
@@ -61,11 +62,19 @@ fun HomeScreen(navController: NavHostController) {
                 modifier = Modifier.fillMaxWidth(),
                 contentScale = ContentScale.FillWidth
             )
+            Spacer(modifier = Modifier.height(16.dp))
             ImageCarousel(
                 images = carouselImages,
                 modifier = Modifier.fillMaxWidth()
             )
-            Spacer(modifier = Modifier.height(16.dp))
+//            Spacer(modifier = Modifier.height(16.dp))
+
+            // Book Service Form Card
+            BookServiceCard(
+                onBookNowClick = {
+                    // Handle booking
+                }
+            )
 
             Text(
                 text = "You are successfully logged in as a farmer.",

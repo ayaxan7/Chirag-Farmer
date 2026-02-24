@@ -45,7 +45,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.ayaan.chiragfarmer.R
 import com.ayaan.chiragfarmer.ui.presentation.common.components.ChiragButton
-import com.ayaan.chiragfarmer.ui.presentation.common.components.ChiragTextField
+import com.ayaan.chiragfarmer.ui.presentation.auth.common.ChiragAuthTextField
 import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.Route
 import com.ayaan.chiragfarmer.ui.theme.BGBlack
 import com.ayaan.chiragfarmer.ui.theme.BGWhite
@@ -152,7 +152,7 @@ fun AuthScreen(
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                ChiragTextField(
+                ChiragAuthTextField(
                     value = mobileNumber,
                     onValueChange = { mobileNumber = it },
                     placeholder = "Your Mobile Number",

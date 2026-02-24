@@ -55,7 +55,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.ayaan.chiragfarmer.R
-import com.ayaan.chiragfarmer.ui.presentation.auth.register.components.RegisterTextField
+import com.ayaan.chiragfarmer.ui.presentation.common.components.ChiragBasicTextField
 import com.ayaan.chiragfarmer.ui.presentation.common.components.ChiragButton
 import com.ayaan.chiragfarmer.ui.presentation.common.components.ImageUploadBox
 import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.ChiragTopBar
@@ -273,7 +273,7 @@ fun RegisterScreen(
 
                 LabelText(text = "Name *")
                 Spacer(modifier = Modifier.height(6.dp))
-                RegisterTextField(
+                ChiragBasicTextField(
                     value = name,
                     onValueChange = { name = it },
                     placeholder = "Enter Your Full Name"
@@ -283,7 +283,7 @@ fun RegisterScreen(
 
                 LabelText(text = "Email ID *")
                 Spacer(modifier = Modifier.height(6.dp))
-                RegisterTextField(
+                ChiragBasicTextField(
                     value = email,
                     onValueChange = { email = it },
                     placeholder = "Enter Your Email Id",
@@ -294,7 +294,7 @@ fun RegisterScreen(
 
                 LabelText(text = "Vendor Name (Optional)")
                 Spacer(modifier = Modifier.height(6.dp))
-                RegisterTextField(
+                ChiragBasicTextField(
                     value = vendorName,
                     onValueChange = { vendorName = it },
                     placeholder = "Enter Vendor Name"
