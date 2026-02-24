@@ -10,4 +10,5 @@ sealed class Route(val path: String) {
     }
     object Register: Route("register")
     object RegisterSuccess: Route("register_success")
+    object Search:Route("search")
 }

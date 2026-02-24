@@ -3,6 +3,7 @@ package com.ayaan.chiragfarmer.ui.presentation.home
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -13,13 +14,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.ayaan.chiragfarmer.data.local.AuthDataStore
+import com.ayaan.chiragfarmer.ui.presentation.home.components.HomeTopBar
 import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.Route
+import com.ayaan.chiragfarmer.ui.theme.BGBlack
+import com.ayaan.chiragfarmer.ui.theme.BGWhite
 import kotlinx.coroutines.launch
 
 @Composable
@@ -28,11 +33,16 @@ fun HomeScreen(navController: NavHostController) {
     val dataStore = AuthDataStore(context)
     val scope = rememberCoroutineScope()
 
-    Scaffold { padding ->
+    Scaffold(
+        topBar = {
+            HomeTopBar(navController)
+        },
+        containerColor = BGWhite,
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
+                .padding(paddingValues)
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
