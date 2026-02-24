@@ -1,4 +1,4 @@
-package com.ayaan.chiragfarmer.ui.presentation.home.components
+package com.ayaan.chiragfarmer.ui.presentation.home.components.topbar
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -6,12 +6,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -21,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -35,10 +32,8 @@ import com.ayaan.chiragfarmer.ui.theme.BGWhite
 @Composable
 fun HomeTopBar(navController: NavHostController) {
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = Modifier.fillMaxWidth()
     ) {
-        // Black background with curved bottom
         Box(
             modifier = Modifier
                 .matchParentSize()
@@ -52,7 +47,6 @@ fun HomeTopBar(navController: NavHostController) {
                 .fillMaxWidth()
                 .padding(bottom = 24.dp)
         ) {
-            // Top app bar with logo and action icons
             TopAppBar(
                 title = {
                     Image(
@@ -63,11 +57,9 @@ fun HomeTopBar(navController: NavHostController) {
                             .width(140.dp)
                             .height(38.dp)
                     )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
+                }, colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.Transparent
-                ),
-                actions = {
+                ), actions = {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(0.dp)
@@ -99,8 +91,7 @@ fun HomeTopBar(navController: NavHostController) {
                         )
                         Spacer(modifier = Modifier.width(12.dp))
                     }
-                }
-            )
+                })
 
             // Search bar button
             SearchBarButton(

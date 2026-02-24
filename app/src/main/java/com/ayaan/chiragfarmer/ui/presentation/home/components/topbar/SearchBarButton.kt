@@ -1,4 +1,4 @@
-package com.ayaan.chiragfarmer.ui.presentation.home.components
+package com.ayaan.chiragfarmer.ui.presentation.home.components.topbar
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -46,8 +46,8 @@ fun SearchBarButton(
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_search),
-                contentDescription = "Camera search",
-                modifier = Modifier.size(20.dp)
+                contentDescription = "Search",
+                modifier = Modifier.size(16.dp)
             )
             Spacer(modifier= Modifier.width(4.dp))
             Text(
