@@ -3,7 +3,6 @@ package com.ayaan.chiragfarmer.ui.presentation.home
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,7 +18,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -28,7 +26,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -38,11 +35,20 @@ import com.ayaan.chiragfarmer.R
 import com.ayaan.chiragfarmer.ui.presentation.common.components.CategoryHeader
 import com.ayaan.chiragfarmer.ui.presentation.home.components.bookservicecard.BookServiceCard
 import com.ayaan.chiragfarmer.ui.presentation.home.components.ImageCarousel
+import com.ayaan.chiragfarmer.ui.presentation.home.components.CommonProductCard
 import com.ayaan.chiragfarmer.ui.presentation.home.components.topbar.HomeTopBar
 import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.Route
-import com.ayaan.chiragfarmer.ui.theme.BGBlack
 import com.ayaan.chiragfarmer.ui.theme.BGWhite
 import kotlinx.coroutines.launch
+
+data class SmartFarmingProduct(
+    val imageRes: Int,
+    val name: String,
+    val brand: String,
+    val currentPrice: String,
+    val originalPrice: String,
+    val rating: String
+)
 
 @Composable
 fun HomeScreen(
@@ -58,6 +64,27 @@ fun HomeScreen(
         R.drawable.smart_farmer,
         R.drawable.smart_farmer
     )
+
+    // Sample Smart Farming Products Data
+    val smartFarmingProducts = listOf(
+        SmartFarmingProduct(
+            imageRes = R.drawable.sprayer,
+            name = "25 LITER POWER SPRAYER",
+            brand = "Snap Export",
+            currentPrice = "1599",
+            originalPrice = "1899.00",
+            rating = "4.8"
+        ),
+        SmartFarmingProduct(
+            imageRes = R.drawable.sprayer,
+            name = "25 LITER POWER SPRAYER",
+            brand = "Snap Export",
+            currentPrice = "1599",
+            originalPrice = "1899.00",
+            rating = "4.8"
+        ),
+    )
+
     Scaffold(
         topBar = {
             HomeTopBar(navController)
@@ -83,11 +110,11 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(16.dp))
             }
 
+            // Smart Farmer Carousel
             ImageCarousel(
                 images = carouselImages,
                 modifier = Modifier.fillMaxWidth()
             )
-//            Spacer(modifier = Modifier.height(16.dp))
 
             // Book Service Form Card
             BookServiceCard(
@@ -95,6 +122,8 @@ fun HomeScreen(
                     // Handle booking
                 }
             )
+
+            // Buy Products Section
             CategoryHeader(
                 category = "Buy Products For Your Farm",
                 btnText = "View All",
@@ -104,7 +133,7 @@ fun HomeScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(5){
+                items(5) {
                     Card(
                         modifier = Modifier
                             .height(120.dp)
@@ -116,16 +145,40 @@ fun HomeScreen(
                         Image(
                             painter = painterResource(R.drawable.seeds_product),
                             contentDescription = "Seeds Product",
-                            modifier = Modifier.fillMaxSize()
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
                         )
                     }
                 }
             }
+
+            // Smart Farming Section with Full Product Cards
             CategoryHeader(
                 category = "Smart Farming",
                 btnText = "View All",
                 onClick = {}
             )
+            LazyRow(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                items(smartFarmingProducts) { product ->
+                    CommonProductCard(
+                        imageRes = product.imageRes,
+                        productName = product.name,
+                        brandName = product.brand,
+                        currentPrice = product.currentPrice,
+                        originalPrice = product.originalPrice,
+                        rating = product.rating,
+                        onSizeClick = {
+                            // Handle size selection
+                        }
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             Text(
                 text = "You are successfully logged in as a farmer.",
                 fontSize = 16.sp
@@ -148,7 +201,8 @@ fun HomeScreen(
             ) {
                 Text(text = "Logout")
             }
+
+            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }
-
