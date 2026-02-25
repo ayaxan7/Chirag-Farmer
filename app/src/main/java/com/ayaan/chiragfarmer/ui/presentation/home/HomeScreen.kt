@@ -120,7 +120,8 @@ fun HomeScreen(
             BookServiceCard(
                 onBookNowClick = {
                     // Handle booking
-                }
+                },
+                isEnabled = isProfileComplete
             )
 
             // Buy Products Section
@@ -176,9 +177,82 @@ fun HomeScreen(
                     )
                 }
             }
-
+            CategoryHeader(
+                category = "Seeds",
+                btnText = "View All",
+                onClick = {}
+            )
+            LazyRow(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                items(smartFarmingProducts) { product ->
+                    CommonProductCard(
+                        imageRes = product.imageRes,
+                        productName = product.name,
+                        brandName = product.brand,
+                        currentPrice = product.currentPrice,
+                        originalPrice = product.originalPrice,
+                        rating = product.rating,
+                        onSizeClick = {
+                            // Handle size selection
+                        }
+                    )
+                }
+            }
+            CategoryHeader(
+                category = "Popular Products",
+                btnText = "View All",
+                onClick = {}
+            )
+            LazyRow(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                items(smartFarmingProducts) { product ->
+                    CommonProductCard(
+                        imageRes = product.imageRes,
+                        productName = product.name,
+                        brandName = product.brand,
+                        currentPrice = product.currentPrice,
+                        originalPrice = product.originalPrice,
+                        rating = product.rating,
+                        onSizeClick = {
+                            // Handle size selection
+                        }
+                    )
+                }
+            }
             Spacer(modifier = Modifier.height(16.dp))
 
+            LazyRow(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                items(smartFarmingProducts) { product ->
+                    CommonProductCard(
+                        imageRes = product.imageRes,
+                        productName = product.name,
+                        brandName = product.brand,
+                        currentPrice = product.currentPrice,
+                        originalPrice = product.originalPrice,
+                        rating = product.rating,
+                        onSizeClick = {
+                            // Handle size selection
+                        }
+                    )
+                }
+            }
+//            Spacer(modifier = Modifier.height(16.dp))
+            CategoryHeader(
+                category = "Our USPs"
+            )
+            Image(
+                painter = painterResource(R.drawable.our_usps),
+                contentDescription = "USPs",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.FillWidth
+            )
             Text(
                 text = "You are successfully logged in as a farmer.",
                 fontSize = 16.sp

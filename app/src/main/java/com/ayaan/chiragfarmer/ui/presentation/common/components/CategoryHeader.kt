@@ -13,26 +13,19 @@ import androidx.compose.ui.unit.sp
 import com.ayaan.chiragfarmer.ui.theme.BGBlack
 
 @Composable
-fun CategoryHeader(category: String, btnText: String, onClick: () -> Unit) {
+fun CategoryHeader(category: String, btnText: String = "", onClick: () -> Unit = {}) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
-    ){
+    ) {
         Text(
-            text = category,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.W600,
-            color = BGBlack
+            text = category, fontSize = 16.sp, fontWeight = FontWeight.W600, color = BGBlack
         )
         TextButton(
-            onClick = {onClick()}
-        ) {
+            onClick = { onClick() }) {
             Text(
-                text = btnText,
-                fontSize = 12.sp,
-                color = BGBlack,
-                fontWeight = FontWeight.W500
+                text = btnText, fontSize = 12.sp, color = BGBlack, fontWeight = FontWeight.W500
             )
         }
     }

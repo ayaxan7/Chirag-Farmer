@@ -30,7 +30,8 @@ import com.ayaan.chiragfarmer.ui.theme.LightGray
 @Composable
 fun BookServiceCard(
     onBookNowClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isEnabled: Boolean
 ) {
     var selectedService by remember { mutableStateOf("") }
     var farmLocation by remember { mutableStateOf("") }
@@ -142,7 +143,9 @@ fun BookServiceCard(
             onClick = onBookNowClick,
             enabled = selectedService.isNotEmpty() &&
                     farmLocation.isNotEmpty() &&
-                    farmArea.isNotEmpty()
+                    farmArea.isNotEmpty() &&
+                    searchCrop.isNotEmpty() &&
+                    isEnabled
         )
     }
 }
