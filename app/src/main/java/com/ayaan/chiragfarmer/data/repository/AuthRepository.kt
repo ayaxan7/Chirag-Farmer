@@ -123,6 +123,29 @@ class AuthRepository @Inject constructor(
         }
     }
 
+    suspend fun checkProfileStatus(): Result<AuthResponse<Boolean>> {
+        return try {
+            val token = authDataStore.getAuthToken().first()
+            if (token.isNullOrEmpty()) {
+                return Result.failure(Exception("No authentication token found"))
+            }
+            val response = apiService.checkProfileStatus("Bearer $token")
+
+            // Save profile status to DataStore
+            if (response.success && response.data != null) {
+                authDataStore.saveProfileStatus(response.data)
+            }
+
+            Result.success(response)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    fun getProfileStatus(): Flow<Boolean> {
+        return authDataStore.getProfileStatus()
+    }
+
     suspend fun logout() {
         authDataStore.clearAuthData()
     }

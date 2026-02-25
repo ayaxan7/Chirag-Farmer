@@ -13,17 +13,18 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.ayaan.chiragfarmer.R
-import com.ayaan.chiragfarmer.data.local.AuthDataStore
 import com.ayaan.chiragfarmer.ui.presentation.home.components.BookServiceCard
 import com.ayaan.chiragfarmer.ui.presentation.home.components.ImageCarousel
 import com.ayaan.chiragfarmer.ui.presentation.home.components.topbar.HomeTopBar
@@ -32,10 +33,13 @@ import com.ayaan.chiragfarmer.ui.theme.BGWhite
 import kotlinx.coroutines.launch
 
 @Composable
-fun HomeScreen(navController: NavHostController) {
-    val context = LocalContext.current
-    val dataStore = AuthDataStore(context)
+fun HomeScreen(
+    navController: NavHostController,
+    viewModel: HomeViewModel = hiltViewModel()
+) {
     val scope = rememberCoroutineScope()
+    val isProfileComplete by viewModel.isProfileComplete.collectAsStateWithLifecycle()
+
     val carouselImages = listOf(
         R.drawable.smart_farmer,
         R.drawable.smart_farmer,
@@ -56,13 +60,17 @@ fun HomeScreen(navController: NavHostController) {
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
-                painter = painterResource(R.drawable.profile_incomplete_image),
-                contentDescription = "Profile Image",
-                modifier = Modifier.fillMaxWidth(),
-                contentScale = ContentScale.FillWidth
-            )
-            Spacer(modifier = Modifier.height(16.dp))
+            // Only show profile incomplete image if profile is not complete
+            if (!isProfileComplete) {
+                Image(
+                    painter = painterResource(R.drawable.profile_incomplete_image),
+                    contentDescription = "Profile Incomplete Image",
+                    modifier = Modifier.fillMaxWidth(),
+                    contentScale = ContentScale.FillWidth
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
             ImageCarousel(
                 images = carouselImages,
                 modifier = Modifier.fillMaxWidth()
@@ -86,8 +94,8 @@ fun HomeScreen(navController: NavHostController) {
             Button(
                 onClick = {
                     scope.launch {
-                        // Clear auth data from DataStore
-                        dataStore.clearAuthData()
+                        // Logout using ViewModel
+                        viewModel.logout()
 
                         // Navigate back to login screen
                         navController.navigate(Route.Auth.path) {

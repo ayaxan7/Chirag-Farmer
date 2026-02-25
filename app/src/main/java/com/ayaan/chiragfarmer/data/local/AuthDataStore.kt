@@ -3,6 +3,7 @@ package com.ayaan.chiragfarmer.data.local
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -18,6 +19,7 @@ class AuthDataStore(private val context: Context) {
         private val USER_ID_KEY = stringPreferencesKey("user_id")
         private val USER_PHONE_KEY = stringPreferencesKey("user_phone")
         private val USER_ROLE_KEY = stringPreferencesKey("user_role")
+        private val PROFILE_COMPLETE_KEY = booleanPreferencesKey("profile_complete")
     }
 
     suspend fun saveAuthToken(token: String) {
@@ -58,6 +60,18 @@ class AuthDataStore(private val context: Context) {
     fun getUserPhone(): Flow<String?> {
         return context.dataStore.data.map { preferences ->
             preferences[USER_PHONE_KEY]
+        }
+    }
+
+    suspend fun saveProfileStatus(isComplete: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[PROFILE_COMPLETE_KEY] = isComplete
+        }
+    }
+
+    fun getProfileStatus(): Flow<Boolean> {
+        return context.dataStore.data.map { preferences ->
+            preferences[PROFILE_COMPLETE_KEY] ?: false
         }
     }
 

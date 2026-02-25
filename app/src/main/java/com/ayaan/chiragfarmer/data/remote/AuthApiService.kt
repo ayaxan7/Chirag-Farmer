@@ -45,5 +45,10 @@ interface AuthApiService {
         @Header("Authorization") authorization: String,
         @Body request: AddBusinessInfoRequest
     ): AuthResponse<UserDetailsData>
+
+    @GET("api/msg91/check-profile-status")
+    suspend fun checkProfileStatus(
+        @Header("Authorization") authorization: String
+    ): AuthResponse<Boolean>
 }
 
