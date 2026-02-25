@@ -1,6 +1,5 @@
-package com.ayaan.chiragfarmer.ui.presentation.home.components
+package com.ayaan.chiragfarmer.ui.presentation.home.components.bookservicecard.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -11,9 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.LocationOn
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,7 +21,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ayaan.chiragfarmer.R
@@ -31,7 +28,7 @@ import com.ayaan.chiragfarmer.ui.theme.BorderColour
 import com.ayaan.chiragfarmer.ui.theme.TextGray
 
 @Composable
-fun LocationInputField(
+fun SearchInputField(
     value: String,
     onValueChange: (String) -> Unit,
     placeholder: String,
@@ -78,9 +75,9 @@ fun LocationInputField(
                     }
                     innerTextField()
                 }
-                Image(
-                    painter = painterResource(R.drawable.map_pin),
-                    contentDescription = "Location",
+                Icon(
+                    painter = painterResource(R.drawable.ic_search),
+                    contentDescription = "Search",
                     modifier = Modifier.size(20.dp)
                 )
             }

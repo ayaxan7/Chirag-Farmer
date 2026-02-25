@@ -25,7 +25,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.ayaan.chiragfarmer.R
-import com.ayaan.chiragfarmer.ui.presentation.home.components.BookServiceCard
+import com.ayaan.chiragfarmer.ui.presentation.home.components.bookservicecard.BookServiceCard
 import com.ayaan.chiragfarmer.ui.presentation.home.components.ImageCarousel
 import com.ayaan.chiragfarmer.ui.presentation.home.components.topbar.HomeTopBar
 import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.Route

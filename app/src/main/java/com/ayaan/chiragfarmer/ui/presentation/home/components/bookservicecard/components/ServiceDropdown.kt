@@ -1,4 +1,4 @@
-package com.ayaan.chiragfarmer.ui.presentation.home.components
+package com.ayaan.chiragfarmer.ui.presentation.home.components.bookservicecard.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

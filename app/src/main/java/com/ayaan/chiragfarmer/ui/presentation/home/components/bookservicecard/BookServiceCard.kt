@@ -1,4 +1,4 @@
-package com.ayaan.chiragfarmer.ui.presentation.home.components
+package com.ayaan.chiragfarmer.ui.presentation.home.components.bookservicecard
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -21,6 +21,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ayaan.chiragfarmer.ui.presentation.common.components.ChiragBasicTextField
 import com.ayaan.chiragfarmer.ui.presentation.common.components.ChiragButton
+import com.ayaan.chiragfarmer.ui.presentation.home.components.bookservicecard.components.LocationInputField
+import com.ayaan.chiragfarmer.ui.presentation.home.components.bookservicecard.components.SearchInputField
+import com.ayaan.chiragfarmer.ui.presentation.home.components.bookservicecard.components.ServiceDropdown
 import com.ayaan.chiragfarmer.ui.theme.BGWhite
 import com.ayaan.chiragfarmer.ui.theme.LightGray
 

@@ -1,5 +1,6 @@
 package com.ayaan.chiragfarmer.ui.presentation.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ayaan.chiragfarmer.data.repository.AuthRepository
@@ -43,7 +44,7 @@ class HomeViewModel @Inject constructor(
                     }
                 },
                 onFailure = {
-                    // Silently fail and use cached value
+                    Log.e("HomeViewModel", "Error fetching profile status: ${it.message}")
                 }
             )
             _isLoading.value = false

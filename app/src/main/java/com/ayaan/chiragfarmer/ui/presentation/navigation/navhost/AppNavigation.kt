@@ -5,6 +5,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -16,6 +17,7 @@ import com.ayaan.chiragfarmer.ui.presentation.auth.common.screens.OTPVerificatio
 import com.ayaan.chiragfarmer.ui.presentation.auth.register.RegisterScreen
 import com.ayaan.chiragfarmer.ui.presentation.auth.register.RegisterSuccessScreen
 import com.ayaan.chiragfarmer.ui.presentation.home.HomeScreen
+import com.ayaan.chiragfarmer.ui.presentation.home.HomeViewModel
 import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.Route
 
 @Composable
@@ -72,7 +74,8 @@ fun AppNavigation(
             RegisterSuccessScreen(navController = navController)
         }
         composable(Route.Home.path){
-            HomeScreen(navController = navController)
+            val viewModel: HomeViewModel = hiltViewModel()
+            HomeScreen(navController = navController, viewModel = viewModel)
         }
     }
 }
