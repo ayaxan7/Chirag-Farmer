@@ -4,9 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -29,14 +27,10 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun ImageCarousel(
-    images: List<Int>,
-    modifier: Modifier = Modifier,
-    autoScrollDuration: Long = 3000L
+    images: List<Int>, modifier: Modifier = Modifier, autoScrollDuration: Long = 3000L
 ) {
     val pagerState = rememberPagerState(
-        initialPage = 0,
-        pageCount = { images.size }
-    )
+        initialPage = 0, pageCount = { images.size })
 
     // Auto-scroll
     LaunchedEffect(Unit) {
@@ -58,8 +52,7 @@ fun ImageCarousel(
 
         // Image Pager
         HorizontalPager(
-            state = pagerState,
-            modifier = Modifier.fillMaxWidth()
+            state = pagerState, modifier = Modifier.fillMaxWidth()
         ) { page ->
             Image(
                 painter = painterResource(images[page]),
@@ -79,15 +72,12 @@ fun ImageCarousel(
                 Box(
                     modifier = Modifier
                         .size(
-                            width =  8.dp,
-                            height = 8.dp
+                            width = 8.dp, height = 8.dp
                         )
                         .clip(CircleShape)
                         .background(
-                            if (index == pagerState.currentPage)
-                                BGBlack
-                            else
-                                LightGray
+                            if (index == pagerState.currentPage) BGBlack
+                            else LightGray
                         )
                 )
             }

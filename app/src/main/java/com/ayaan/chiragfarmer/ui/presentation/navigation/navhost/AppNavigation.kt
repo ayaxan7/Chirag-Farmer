@@ -13,9 +13,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.ayaan.chiragfarmer.data.local.AuthDataStore
 import com.ayaan.chiragfarmer.ui.presentation.auth.common.screens.AuthScreen
+import com.ayaan.chiragfarmer.ui.presentation.auth.common.screens.AuthViewModel
 import com.ayaan.chiragfarmer.ui.presentation.auth.common.screens.OTPVerificationScreen
+import com.ayaan.chiragfarmer.ui.presentation.auth.common.screens.OTPViewModel
 import com.ayaan.chiragfarmer.ui.presentation.auth.register.RegisterScreen
 import com.ayaan.chiragfarmer.ui.presentation.auth.register.RegisterSuccessScreen
+import com.ayaan.chiragfarmer.ui.presentation.auth.register.RegisterViewModel
 import com.ayaan.chiragfarmer.ui.presentation.home.HomeScreen
 import com.ayaan.chiragfarmer.ui.presentation.home.HomeViewModel
 import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.Route
@@ -44,8 +47,9 @@ fun AppNavigation(
         navController = navController
     ) {
         composable(Route.Auth.path) {
+            val viewModel: AuthViewModel=hiltViewModel()
             AuthScreen(
-                navController = navController, modifier = modifier
+                navController = navController, modifier = modifier, viewModel = viewModel
             )
         }
         composable(
@@ -59,16 +63,19 @@ fun AppNavigation(
             val phoneNumber = backStackEntry.arguments?.getString("phone") ?: ""
             val requestId = backStackEntry.arguments?.getString("requestId") ?: ""
             val isSignUp = backStackEntry.arguments?.getBoolean("isSignUp") ?: false
+            val viewModel: OTPViewModel=hiltViewModel()
             OTPVerificationScreen(
                 navController = navController,
                 phoneNumber = phoneNumber,
                 requestId = requestId,
                 isSignUp = isSignUp,
-                modifier = modifier
+                modifier = modifier,
+                viewModel = viewModel
             )
         }
         composable(Route.Register.path) {
-            RegisterScreen(navController = navController)
+            val viewModel: RegisterViewModel = hiltViewModel()
+            RegisterScreen(navController = navController, viewModel = viewModel)
         }
         composable(Route.RegisterSuccess.path) {
             RegisterSuccessScreen(navController = navController)
