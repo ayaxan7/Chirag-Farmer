@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -76,7 +74,7 @@ fun SearchInputField(
                     innerTextField()
                 }
                 Icon(
-                    painter = painterResource(R.drawable.ic_search),
+                    painter = painterResource(R.drawable.ic_search_2),
                     contentDescription = "Search",
                     modifier = Modifier.size(20.dp)
                 )

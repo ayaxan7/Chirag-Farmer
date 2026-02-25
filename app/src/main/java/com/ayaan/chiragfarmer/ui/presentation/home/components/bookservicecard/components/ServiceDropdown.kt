@@ -23,10 +23,10 @@ import com.ayaan.chiragfarmer.ui.theme.TextGray
 
 @Composable
 fun ServiceDropdown(
+    modifier: Modifier = Modifier,
     selectedService: String,
     placeholder: String = "Select Service",
     onDropdownClick: () -> Unit,
-    modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier
@@ -48,7 +48,7 @@ fun ServiceDropdown(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = if (selectedService.isEmpty()) placeholder else selectedService,
+                text = selectedService.ifEmpty { placeholder },
                 fontSize = 14.sp,
                 color = if (selectedService.isEmpty()) TextGray else Color.Black,
                 modifier = Modifier.weight(1f)
