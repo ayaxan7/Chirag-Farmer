@@ -12,11 +12,21 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.ayaan.chiragfarmer.domain.model.BookingRequest
+import com.ayaan.chiragfarmer.domain.usecase.CreateBookingUseCase
+
+sealed class BookingStatus {
+    object Idle : BookingStatus()
+    object Loading : BookingStatus()
+    data class Success(val message: String) : BookingStatus()
+    data class Error(val message: String) : BookingStatus()
+}
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val authRepository: AuthRepository,
-    private val getLocationSuggestionsUseCase: GetLocationSuggestionsUseCase
+    private val getLocationSuggestionsUseCase: GetLocationSuggestionsUseCase,
+    private val createBookingUseCase: CreateBookingUseCase
 ) : ViewModel() {
 
     private val _isProfileComplete = MutableStateFlow(false)
@@ -33,6 +43,18 @@ class HomeViewModel @Inject constructor(
 
     private val _selectedLocation = MutableStateFlow<Location?>(null)
     val selectedLocation: StateFlow<Location?> = _selectedLocation.asStateFlow()
+
+    private val _selectedService = MutableStateFlow("")
+    val selectedService: StateFlow<String> = _selectedService.asStateFlow()
+
+    private val _farmArea = MutableStateFlow("")
+    val farmArea: StateFlow<String> = _farmArea.asStateFlow()
+
+    private val _cropName = MutableStateFlow("")
+    val cropName: StateFlow<String> = _cropName.asStateFlow()
+
+    private val _bookingStatus = MutableStateFlow<BookingStatus>(BookingStatus.Idle)
+    val bookingStatus: StateFlow<BookingStatus> = _bookingStatus.asStateFlow()
 
     init {
         // Load profile status from DataStore
@@ -93,6 +115,62 @@ class HomeViewModel @Inject constructor(
         Log.d("HomeViewModel", "Selected location: ${location.displayName} (${location.latitude}, ${location.longitude})")
     }
 
+    fun onServiceSelected(service: String) {
+        _selectedService.value = service
+    }
+
+    fun onFarmAreaChange(area: String) {
+        _farmArea.value = area
+    }
+
+    fun onCropNameChange(crop: String) {
+        _cropName.value = crop
+    }
+
+    fun createBooking() {
+        val location = _selectedLocation.value
+        val lat = location?.latitude ?: 0.0
+        val lon = location?.longitude ?: 0.0
+        val service = _selectedService.value
+        val area = _farmArea.value.toIntOrNull() ?: 0
+        val crop = _cropName.value
+        val locName = _locationQuery.value
+
+        if (lat == 0.0 || lon == 0.0 || service.isEmpty() || area == 0) {
+            _bookingStatus.value = BookingStatus.Error("Please fill all required fields correctly")
+            return
+        }
+
+        viewModelScope.launch {
+            _bookingStatus.value = BookingStatus.Loading
+            val request = BookingRequest(
+                latitude = lat,
+                longitude = lon,
+                serviceType = service,
+                farmArea = area,
+                cropName = crop,
+                locationName = locName
+            )
+            val result = createBookingUseCase(request)
+            result.fold(
+                onSuccess = {
+                    _bookingStatus.value = BookingStatus.Success("Booking created successfully")
+                    clearForm()
+                },
+                onFailure = {
+                    _bookingStatus.value = BookingStatus.Error(it.message ?: "Booking failed")
+                }
+            )
+        }
+    }
+
+    private fun clearForm() {
+        _selectedService.value = ""
+        _farmArea.value = ""
+        _cropName.value = ""
+        clearLocationSelection()
+    }
+
     fun clearSuggestions() {
         _locationSuggestions.value = emptyList()
     }
@@ -101,6 +179,10 @@ class HomeViewModel @Inject constructor(
         _locationQuery.value = ""
         _selectedLocation.value = null
         _locationSuggestions.value = emptyList()
+    }
+
+    fun resetBookingStatus() {
+        _bookingStatus.value = BookingStatus.Idle
     }
 
     suspend fun logout() {

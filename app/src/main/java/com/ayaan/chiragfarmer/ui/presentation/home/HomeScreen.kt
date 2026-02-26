@@ -1,5 +1,6 @@
 package com.ayaan.chiragfarmer.ui.presentation.home
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,6 +20,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -57,9 +59,6 @@ fun HomeScreen(
 ) {
     val scope = rememberCoroutineScope()
     val isProfileComplete by viewModel.isProfileComplete.collectAsStateWithLifecycle()
-    val locationQuery by viewModel.locationQuery.collectAsStateWithLifecycle()
-    val locationSuggestions by viewModel.locationSuggestions.collectAsStateWithLifecycle()
-    val selectedLocation by viewModel.selectedLocation.collectAsStateWithLifecycle()
 
     val carouselImages = listOf(
         R.drawable.smart_farmer,
@@ -87,6 +86,23 @@ fun HomeScreen(
             rating = "4.8"
         ),
     )
+
+    val bookingStatus by viewModel.bookingStatus.collectAsStateWithLifecycle()
+
+    // Simple feedback handling (in a real app, use a SnackbarHost)
+    LaunchedEffect(bookingStatus) {
+        when (bookingStatus) {
+            is BookingStatus.Success -> {
+                Log.d("HomeScreen", "Booking Success: ${(bookingStatus as BookingStatus.Success).message}")
+                viewModel.resetBookingStatus()
+            }
+            is BookingStatus.Error -> {
+                Log.e("HomeScreen", "Booking Error: ${(bookingStatus as BookingStatus.Error).message}")
+                viewModel.resetBookingStatus()
+            }
+            else -> {}
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -121,19 +137,8 @@ fun HomeScreen(
 
             // Book Service Form Card
             BookServiceCard(
-                onBookNowClick = {
-                    // Handle booking
-                    viewModel.clearSuggestions()
-                },
-                isEnabled = isProfileComplete,
-                locationQuery = locationQuery,
-                locationSuggestions = locationSuggestions,
-                onLocationChange = { query ->
-                    viewModel.onLocationQueryChange(query)
-                },
-                onLocationSelected = { location ->
-                    viewModel.onLocationSelected(location)
-                }
+                viewModel = viewModel,
+                isEnabled = isProfileComplete
             )
 
             // Buy Products Section

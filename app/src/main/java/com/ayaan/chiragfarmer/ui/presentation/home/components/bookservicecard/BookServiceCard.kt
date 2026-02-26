@@ -28,19 +28,22 @@ import com.ayaan.chiragfarmer.ui.presentation.home.components.bookservicecard.co
 import com.ayaan.chiragfarmer.ui.theme.BGWhite
 import com.ayaan.chiragfarmer.ui.theme.LightGray
 
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ayaan.chiragfarmer.ui.presentation.home.HomeViewModel
+import com.ayaan.chiragfarmer.ui.presentation.home.BookingStatus
+
 @Composable
 fun BookServiceCard(
-    onBookNowClick: () -> Unit,
+    viewModel: HomeViewModel,
     modifier: Modifier = Modifier,
-    isEnabled: Boolean,
-    locationQuery: String = "",
-    locationSuggestions: List<com.ayaan.chiragfarmer.domain.model.Location> = emptyList(),
-    onLocationChange: (String) -> Unit = {},
-    onLocationSelected: (com.ayaan.chiragfarmer.domain.model.Location) -> Unit = {}
+    isEnabled: Boolean
 ) {
-    var selectedService by remember { mutableStateOf("") }
-    var farmArea by remember { mutableStateOf("") }
-    var searchCrop by remember { mutableStateOf("") }
+    val locationQuery by viewModel.locationQuery.collectAsStateWithLifecycle()
+    val locationSuggestions by viewModel.locationSuggestions.collectAsStateWithLifecycle()
+    val selectedService by viewModel.selectedService.collectAsStateWithLifecycle()
+    val farmArea by viewModel.farmArea.collectAsStateWithLifecycle()
+    val cropName by viewModel.cropName.collectAsStateWithLifecycle()
+    val bookingStatus by viewModel.bookingStatus.collectAsStateWithLifecycle()
 
     Column(
         modifier = modifier
@@ -80,9 +83,7 @@ fun BookServiceCard(
         ServiceDropdown(
             selectedService = selectedService,
             placeholder = "Select Service",
-            onServiceSelected = {
-                selectedService = it
-            }
+            onServiceSelected = { viewModel.onServiceSelected(it) }
         )
 
         Spacer(modifier = Modifier.height(14.dp))
@@ -99,10 +100,10 @@ fun BookServiceCard(
         // Farm Location Input
         LocationInputField(
             value = locationQuery,
-            onValueChange = onLocationChange,
+            onValueChange = { viewModel.onLocationQueryChange(it) },
             placeholder = "Pratapgarh, Uttar pradesh",
             suggestions = locationSuggestions,
-            onSuggestionClick = onLocationSelected
+            onSuggestionClick = { viewModel.onLocationSelected(it) }
         )
 
         Spacer(modifier = Modifier.height(14.dp))
@@ -119,7 +120,7 @@ fun BookServiceCard(
         // Farm Area Input
         ChiragBasicTextField(
             value = farmArea,
-            onValueChange = { farmArea = it },
+            onValueChange = { viewModel.onFarmAreaChange(it) },
             placeholder = "Enter Your Farm area in acres",
             keyboardType = KeyboardType.Number
         )
@@ -137,8 +138,8 @@ fun BookServiceCard(
 
         // Search Crop Input
         SearchInputField(
-            value = searchCrop,
-            onValueChange = { searchCrop = it },
+            value = cropName,
+            onValueChange = { viewModel.onCropNameChange(it) },
             placeholder = "Enter"
         )
 
@@ -147,12 +148,13 @@ fun BookServiceCard(
         // Book Now Button
         ChiragButton(
             text = "Book Now",
-            onClick = onBookNowClick,
+            onClick = { viewModel.createBooking() },
             enabled = selectedService.isNotEmpty() &&
                     locationQuery.isNotEmpty() &&
                     farmArea.isNotEmpty() &&
-                    searchCrop.isNotEmpty() &&
-                    isEnabled
+                    cropName.isNotEmpty() &&
+                    isEnabled && 
+                    bookingStatus !is BookingStatus.Loading
         )
     }
 }
