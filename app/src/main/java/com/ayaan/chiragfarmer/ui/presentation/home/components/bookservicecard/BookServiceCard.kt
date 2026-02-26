@@ -17,6 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ayaan.chiragfarmer.ui.presentation.common.components.ChiragBasicTextField
@@ -79,8 +80,8 @@ fun BookServiceCard(
         ServiceDropdown(
             selectedService = selectedService,
             placeholder = "Select Service",
-            onDropdownClick = {
-                // Open service selection dialog/bottom sheet
+            onServiceSelected = {
+                selectedService = it
             }
         )
 
@@ -119,7 +120,8 @@ fun BookServiceCard(
         ChiragBasicTextField(
             value = farmArea,
             onValueChange = { farmArea = it },
-            placeholder = "Enter Your Farm area in acres"
+            placeholder = "Enter Your Farm area in acres",
+            keyboardType = KeyboardType.Number
         )
 
         Spacer(modifier = Modifier.height(14.dp))
