@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -6,7 +8,13 @@ plugins {
     id("com.google.dagger.hilt.android")
     id("kotlin-parcelize")
 }
-
+val localPropertiesFile = rootProject.file("local.properties")
+val localProperties = Properties().apply {
+    if (localPropertiesFile.exists()) {
+        localPropertiesFile.inputStream().use { load(it) }
+    }
+}
+val nominatimBaseUrl=localProperties.getProperty("OSM_NOMINATIM_BASE_URL")?:"MISSING_BASE_URL"
 android {
     namespace = "com.ayaan.chiragfarmer"
     compileSdk {
@@ -19,7 +27,7 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
-
+        buildConfigField("String", "OSM_NOMINATIM_BASE_URL", "\"$nominatimBaseUrl\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -38,6 +46,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig=true
     }
     kotlin {
         jvmToolchain(11)

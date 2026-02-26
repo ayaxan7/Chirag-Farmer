@@ -31,6 +31,9 @@ class HomeViewModel @Inject constructor(
     private val _locationQuery = MutableStateFlow("")
     val locationQuery: StateFlow<String> = _locationQuery.asStateFlow()
 
+    private val _selectedLocation = MutableStateFlow<Location?>(null)
+    val selectedLocation: StateFlow<Location?> = _selectedLocation.asStateFlow()
+
     init {
         // Load profile status from DataStore
         viewModelScope.launch {
@@ -62,6 +65,9 @@ class HomeViewModel @Inject constructor(
 
     fun onLocationQueryChange(query: String) {
         _locationQuery.value = query
+        // Reset selected location when user manually types
+        _selectedLocation.value = null
+        
         if (query.length < 3) {
             _locationSuggestions.value = emptyList()
             return
@@ -80,7 +86,20 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun onLocationSelected(location: Location) {
+        _locationQuery.value = location.displayName
+        _selectedLocation.value = location
+        _locationSuggestions.value = emptyList()
+        Log.d("HomeViewModel", "Selected location: ${location.displayName} (${location.latitude}, ${location.longitude})")
+    }
+
     fun clearSuggestions() {
+        _locationSuggestions.value = emptyList()
+    }
+
+    fun clearLocationSelection() {
+        _locationQuery.value = ""
+        _selectedLocation.value = null
         _locationSuggestions.value = emptyList()
     }
 

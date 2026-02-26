@@ -1,5 +1,6 @@
 package com.ayaan.chiragfarmer.data.remote
 
+import com.ayaan.chiragfarmer.BuildConfig
 import com.ayaan.chiragfarmer.data.remote.dto.LocationDto
 import retrofit2.http.GET
 import retrofit2.http.Headers
@@ -17,6 +18,6 @@ interface LocationApi {
     ): List<LocationDto>
 
     companion object {
-        const val BASE_URL = "https://nominatim.openstreetmap.org/"
+        const val BASE_URL = BuildConfig.OSM_NOMINATIM_BASE_URL
     }
 }

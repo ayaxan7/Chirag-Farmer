@@ -59,6 +59,7 @@ fun HomeScreen(
     val isProfileComplete by viewModel.isProfileComplete.collectAsStateWithLifecycle()
     val locationQuery by viewModel.locationQuery.collectAsStateWithLifecycle()
     val locationSuggestions by viewModel.locationSuggestions.collectAsStateWithLifecycle()
+    val selectedLocation by viewModel.selectedLocation.collectAsStateWithLifecycle()
 
     val carouselImages = listOf(
         R.drawable.smart_farmer,
@@ -129,6 +130,9 @@ fun HomeScreen(
                 locationSuggestions = locationSuggestions,
                 onLocationChange = { query ->
                     viewModel.onLocationQueryChange(query)
+                },
+                onLocationSelected = { location ->
+                    viewModel.onLocationSelected(location)
                 }
             )
 

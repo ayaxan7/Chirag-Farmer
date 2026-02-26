@@ -34,7 +34,8 @@ fun BookServiceCard(
     isEnabled: Boolean,
     locationQuery: String = "",
     locationSuggestions: List<com.ayaan.chiragfarmer.domain.model.Location> = emptyList(),
-    onLocationChange: (String) -> Unit = {}
+    onLocationChange: (String) -> Unit = {},
+    onLocationSelected: (com.ayaan.chiragfarmer.domain.model.Location) -> Unit = {}
 ) {
     var selectedService by remember { mutableStateOf("") }
     var farmArea by remember { mutableStateOf("") }
@@ -100,9 +101,7 @@ fun BookServiceCard(
             onValueChange = onLocationChange,
             placeholder = "Pratapgarh, Uttar pradesh",
             suggestions = locationSuggestions,
-            onSuggestionClick = { suggestion ->
-                onLocationChange(suggestion.displayName)
-            }
+            onSuggestionClick = onLocationSelected
         )
 
         Spacer(modifier = Modifier.height(14.dp))
