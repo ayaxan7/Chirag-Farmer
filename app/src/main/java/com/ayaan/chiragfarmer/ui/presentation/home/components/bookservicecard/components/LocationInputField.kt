@@ -4,11 +4,13 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Text
@@ -21,13 +23,21 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.unit.toSize
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalDensity
 import com.ayaan.chiragfarmer.R
 import com.ayaan.chiragfarmer.ui.theme.BorderColour
 import com.ayaan.chiragfarmer.ui.theme.TextGray
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.Box
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MenuDefaults
 
 @Composable
 fun LocationInputField(
@@ -38,6 +48,8 @@ fun LocationInputField(
     suggestions: List<com.ayaan.chiragfarmer.domain.model.Location> = emptyList(),
     onSuggestionClick: (com.ayaan.chiragfarmer.domain.model.Location) -> Unit = {}
 ) {
+    var textFieldSize by remember { mutableStateOf(Size.Zero) }
+
     Box(modifier = modifier) {
         Column {
             BasicTextField(
@@ -52,6 +64,9 @@ fun LocationInputField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp)
+                    .onGloballyPositioned { coordinates ->
+                        textFieldSize = coordinates.size.toSize()
+                    }
                     .background(
                         color = Color.White,
                         shape = RoundedCornerShape(6.dp)
@@ -90,29 +105,31 @@ fun LocationInputField(
                 }
             )
 
-            if (suggestions.isNotEmpty()) {
-                Spacer(modifier = Modifier.height(4.dp))
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color.White, RoundedCornerShape(8.dp))
-                        .border(1.dp, BorderColour, RoundedCornerShape(8.dp))
-                        .padding(vertical = 4.dp)
-                ) {
-                    suggestions.forEach { suggestion ->
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { onSuggestionClick(suggestion) }
-                                .padding(horizontal = 16.dp, vertical = 12.dp)
-                        ) {
+            // DropdownMenu for suggestions
+            DropdownMenu(
+                expanded = suggestions.isNotEmpty(),
+                onDismissRequest = { /* Suggestions are driven by ViewModel query */ },
+                modifier = Modifier
+                    .width(with(LocalDensity.current) { textFieldSize.width.toDp() })
+                    .height(200.dp)
+                    .background(Color.White),
+                properties = androidx.compose.ui.window.PopupProperties(focusable = false)
+            ) {
+                suggestions.forEach { suggestion ->
+                    DropdownMenuItem(
+                        text = {
                             Text(
                                 text = suggestion.displayName,
                                 fontSize = 14.sp,
                                 color = Color.Black
                             )
-                        }
-                    }
+                        },
+                        onClick = { onSuggestionClick(suggestion) },
+                        colors = MenuDefaults.itemColors(
+                            textColor = Color.Black
+                        )
+                    )
+                    HorizontalDivider()
                 }
             }
         }
