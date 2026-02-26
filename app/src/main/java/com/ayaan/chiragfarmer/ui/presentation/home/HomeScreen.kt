@@ -57,6 +57,8 @@ fun HomeScreen(
 ) {
     val scope = rememberCoroutineScope()
     val isProfileComplete by viewModel.isProfileComplete.collectAsStateWithLifecycle()
+    val locationQuery by viewModel.locationQuery.collectAsStateWithLifecycle()
+    val locationSuggestions by viewModel.locationSuggestions.collectAsStateWithLifecycle()
 
     val carouselImages = listOf(
         R.drawable.smart_farmer,
@@ -120,8 +122,14 @@ fun HomeScreen(
             BookServiceCard(
                 onBookNowClick = {
                     // Handle booking
+                    viewModel.clearSuggestions()
                 },
-                isEnabled = isProfileComplete
+                isEnabled = isProfileComplete,
+                locationQuery = locationQuery,
+                locationSuggestions = locationSuggestions,
+                onLocationChange = { query ->
+                    viewModel.onLocationQueryChange(query)
+                }
             )
 
             // Buy Products Section

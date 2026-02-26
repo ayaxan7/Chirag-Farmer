@@ -31,10 +31,12 @@ import com.ayaan.chiragfarmer.ui.theme.LightGray
 fun BookServiceCard(
     onBookNowClick: () -> Unit,
     modifier: Modifier = Modifier,
-    isEnabled: Boolean
+    isEnabled: Boolean,
+    locationQuery: String = "",
+    locationSuggestions: List<com.ayaan.chiragfarmer.domain.model.Location> = emptyList(),
+    onLocationChange: (String) -> Unit = {}
 ) {
     var selectedService by remember { mutableStateOf("") }
-    var farmLocation by remember { mutableStateOf("") }
     var farmArea by remember { mutableStateOf("") }
     var searchCrop by remember { mutableStateOf("") }
 
@@ -94,9 +96,13 @@ fun BookServiceCard(
 
         // Farm Location Input
         LocationInputField(
-            value = farmLocation,
-            onValueChange = { farmLocation = it },
-            placeholder = "Pratapgarh, Uttar pradesh"
+            value = locationQuery,
+            onValueChange = onLocationChange,
+            placeholder = "Pratapgarh, Uttar pradesh",
+            suggestions = locationSuggestions,
+            onSuggestionClick = { suggestion ->
+                onLocationChange(suggestion.displayName)
+            }
         )
 
         Spacer(modifier = Modifier.height(14.dp))
@@ -142,7 +148,7 @@ fun BookServiceCard(
             text = "Book Now",
             onClick = onBookNowClick,
             enabled = selectedService.isNotEmpty() &&
-                    farmLocation.isNotEmpty() &&
+                    locationQuery.isNotEmpty() &&
                     farmArea.isNotEmpty() &&
                     searchCrop.isNotEmpty() &&
                     isEnabled

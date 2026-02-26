@@ -24,61 +24,97 @@ import androidx.compose.ui.unit.sp
 import com.ayaan.chiragfarmer.R
 import com.ayaan.chiragfarmer.ui.theme.BorderColour
 import com.ayaan.chiragfarmer.ui.theme.TextGray
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Box
 
 @Composable
 fun LocationInputField(
     value: String,
     onValueChange: (String) -> Unit,
     placeholder: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    suggestions: List<com.ayaan.chiragfarmer.domain.model.Location> = emptyList(),
+    onSuggestionClick: (com.ayaan.chiragfarmer.domain.model.Location) -> Unit = {}
 ) {
-    BasicTextField(
-        value = value,
-        onValueChange = onValueChange,
-        singleLine = true,
-        textStyle = TextStyle(
-            fontSize = 14.sp,
-            color = Color.Black
-        ),
-        cursorBrush = SolidColor(Color.Black),
-        modifier = modifier
-            .fillMaxWidth()
-            .height(48.dp)
-            .background(
-                color = Color.White,
-                shape = RoundedCornerShape(6.dp)
-            )
-            .border(
-                width = 1.dp,
-                color = BorderColour,
-                shape = RoundedCornerShape(6.dp)
-            ),
-        decorationBox = { innerTextField ->
-            Row(
+    Box(modifier = modifier) {
+        Column {
+            BasicTextField(
+                value = value,
+                onValueChange = onValueChange,
+                singleLine = true,
+                textStyle = TextStyle(
+                    fontSize = 14.sp,
+                    color = Color.Black
+                ),
+                cursorBrush = SolidColor(Color.Black),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 14.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Box(
-                    modifier = Modifier.weight(1f),
-                    contentAlignment = Alignment.CenterStart
-                ) {
-                    if (value.isEmpty()) {
-                        Text(
-                            text = placeholder,
-                            fontSize = 14.sp,
-                            color = TextGray
+                    .height(48.dp)
+                    .background(
+                        color = Color.White,
+                        shape = RoundedCornerShape(6.dp)
+                    )
+                    .border(
+                        width = 1.dp,
+                        color = BorderColour,
+                        shape = RoundedCornerShape(6.dp)
+                    ),
+                decorationBox = { innerTextField ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 14.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Box(
+                            modifier = Modifier.weight(1f),
+                            contentAlignment = Alignment.CenterStart
+                        ) {
+                            if (value.isEmpty()) {
+                                Text(
+                                    text = placeholder,
+                                    fontSize = 14.sp,
+                                    color = TextGray
+                                )
+                            }
+                            innerTextField()
+                        }
+                        Image(
+                            painter = painterResource(R.drawable.map_pin),
+                            contentDescription = "Location",
+                            modifier = Modifier.size(20.dp)
                         )
                     }
-                    innerTextField()
                 }
-                Image(
-                    painter = painterResource(R.drawable.map_pin),
-                    contentDescription = "Location",
-                    modifier = Modifier.size(20.dp)
-                )
+            )
+
+            if (suggestions.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.White, RoundedCornerShape(8.dp))
+                        .border(1.dp, BorderColour, RoundedCornerShape(8.dp))
+                        .padding(vertical = 4.dp)
+                ) {
+                    suggestions.forEach { suggestion ->
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { onSuggestionClick(suggestion) }
+                                .padding(horizontal = 16.dp, vertical = 12.dp)
+                        ) {
+                            Text(
+                                text = suggestion.displayName,
+                                fontSize = 14.sp,
+                                color = Color.Black
+                            )
+                        }
+                    }
+                }
             }
         }
-    )
+    }
 }
