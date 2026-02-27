@@ -12,7 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight.Companion.W400
+import androidx.compose.ui.text.font.FontWeight.Companion.W500
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -20,36 +20,33 @@ import com.ayaan.chiragfarmer.ui.theme.BGWhite
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChiragTopBar(navController: NavHostController,title:String="",icon:Int?=null){
+fun ChiragTopBar(navController: NavHostController, title: String = "", icon: Int? = null) {
     TopAppBar(
-        title={
-            Text(
-                text = title,
-                color = Color.Black,
-                modifier = Modifier.padding(start = 16.dp),
-                fontWeight = W400,
-                fontSize = 16.sp,
-                lineHeight = 24.sp
-            )
-        },
-        navigationIcon = {
-            if(icon!=null) {
-                Icon(
-                    painter = painterResource(icon),
-                    contentDescription = "Back",
-                    modifier = Modifier
-                        .padding(start = 16.dp)
-                        .size(16.dp)
-                        .clickable {
-                            navController.popBackStack()
-                        },
-                    tint = Color.Black
-                )
-            }
-        },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = BGWhite,
-            titleContentColor = Color.Black
+        title = {
+        Text(
+            text = title,
+            color = Color.Black,
+            modifier = Modifier.padding(start = 16.dp),
+            fontWeight = W500,
+            fontSize = 20.sp,
+            lineHeight = 24.sp
         )
+    }, navigationIcon = {
+        if (icon != null) {
+            Icon(
+                painter = painterResource(icon),
+                contentDescription = "Back",
+                modifier = Modifier
+                    .padding(start = 16.dp)
+                    .size(16.dp)
+                    .clickable {
+                        navController.popBackStack()
+                    },
+                tint = Color.Black
+            )
+        }
+    }, colors = TopAppBarDefaults.topAppBarColors(
+        containerColor = BGWhite, titleContentColor = Color.Black
+    )
     )
 }

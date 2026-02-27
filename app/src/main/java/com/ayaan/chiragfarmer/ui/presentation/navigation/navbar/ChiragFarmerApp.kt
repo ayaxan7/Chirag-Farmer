@@ -1,12 +1,10 @@
 package com.ayaan.chiragfarmer.ui.presentation.navigation.navbar
 
 import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteDefaults
-import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteItemColors
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.material3.adaptive.navigationsuite.rememberNavigationSuiteScaffoldState
 import androidx.compose.runtime.Composable
@@ -70,10 +68,12 @@ fun ChiragFarmerApp(navController: NavHostController, modifier: Modifier = Modif
                     colors = bottomItemColors
                 )
             }
-        }, containerColor = BGWhite, state = bottomBarState, contentColor = BGWhite,
-        navigationSuiteColors=NavigationSuiteDefaults.colors(
-            navigationBarContainerColor = BGWhite,
-            navigationBarContentColor = BGWhite
+        },
+        containerColor = BGWhite,
+        state = bottomBarState,
+        contentColor = BGWhite,
+        navigationSuiteColors = NavigationSuiteDefaults.colors(
+            navigationBarContainerColor = BGWhite, navigationBarContentColor = BGWhite
         )
     ) {
         Surface(
