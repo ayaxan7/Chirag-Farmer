@@ -21,6 +21,10 @@ import com.ayaan.chiragfarmer.ui.presentation.auth.register.RegisterSuccessScree
 import com.ayaan.chiragfarmer.ui.presentation.auth.register.RegisterViewModel
 import com.ayaan.chiragfarmer.ui.presentation.home.HomeScreen
 import com.ayaan.chiragfarmer.ui.presentation.home.HomeViewModel
+import com.ayaan.chiragfarmer.ui.presentation.assist.AssistScreen
+import com.ayaan.chiragfarmer.ui.presentation.bookings.BookingsScreen
+import com.ayaan.chiragfarmer.ui.presentation.buy.BuyScreen
+import com.ayaan.chiragfarmer.ui.presentation.sell.SellScreen
 import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.Route
 
 @Composable
@@ -83,6 +87,18 @@ fun AppNavigation(
         composable(Route.Home.path){
             val viewModel: HomeViewModel = hiltViewModel()
             HomeScreen(navController = navController, viewModel = viewModel)
+        }
+        composable(Route.Assist.path) {
+            AssistScreen(navController = navController)
+        }
+        composable(Route.Bookings.path) {
+            BookingsScreen(navController = navController)
+        }
+        composable(Route.Buy.path) {
+            BuyScreen(navController = navController)
+        }
+        composable(Route.Sell.path) {
+            SellScreen(navController = navController)
         }
     }
 }

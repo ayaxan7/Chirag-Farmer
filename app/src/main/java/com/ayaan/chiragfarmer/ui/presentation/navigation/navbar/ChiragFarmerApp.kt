@@ -1,37 +1,69 @@
 package com.ayaan.chiragfarmer.ui.presentation.navigation.navbar
 
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
+import androidx.compose.material3.adaptive.navigationsuite.rememberNavigationSuiteScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.PreviewScreenSizes
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.ayaan.chiragfarmer.ui.presentation.navigation.destinations.AppDestinations
+import com.ayaan.chiragfarmer.ui.presentation.navigation.navhost.AppNavigation
+import com.ayaan.chiragfarmer.ui.theme.BGWhite
 
-@PreviewScreenSizes
 @Composable
-fun ChiragFarmerApp() {
-    var currentDestination by rememberSaveable { mutableStateOf(AppDestinations.HOME) }
-
+fun ChiragFarmerApp(navController: NavHostController, modifier: Modifier = Modifier) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+    val bottomBarState=rememberNavigationSuiteScaffoldState()
+    // Determine if we should show the bottom bar
+    val showBottomBar = currentRoute in listOf("home", "assist", "bookings", "buy", "sell")
+    LaunchedEffect(showBottomBar) {
+        if (showBottomBar) {
+            bottomBarState.show()
+        } else {
+            bottomBarState.hide()
+        }
+    }
     NavigationSuiteScaffold(
         navigationSuiteItems = {
-            AppDestinations.entries.forEach {
-                item(
-                    icon = {
-                    Icon(
-                        if(currentDestination==it) painterResource(id = it.selectedIcon) else painterResource(id = it.unSelectedIcon),
-                        contentDescription = it.label
+                AppDestinations.entries.forEach { destination ->
+                    item(
+                        icon = {
+                            Icon(
+                                painter = if (currentRoute == destination.route)
+                                    painterResource(id = destination.selectedIcon)
+                                else
+                                    painterResource(id = destination.unSelectedIcon),
+                                contentDescription = destination.label
+                            )
+                        },
+                        label = { Text(destination.label) },
+                        selected = currentRoute == destination.route,
+                        onClick = {
+                            navController.navigate(destination.route) {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        }
                     )
-                },
-                    label = { Text(it.label) },
-                    selected = it == currentDestination,
-                    onClick = { currentDestination = it })
-            }
-        }) {
-
+                }
+        },
+        containerColor = BGWhite,
+        state = bottomBarState,
+    ) {
+        Surface(
+            color = BGWhite
+        ) {
+            AppNavigation(navController = navController, modifier = modifier)
+        }
     }
 }

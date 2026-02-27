@@ -10,7 +10,7 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.ayaan.chiragfarmer.data.local.AuthDataStore
-import com.ayaan.chiragfarmer.ui.presentation.navigation.navhost.AppNavigation
+import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.ChiragFarmerApp
 import com.ayaan.chiragfarmer.ui.theme.ChiragFarmerTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             ChiragFarmerTheme(darkTheme = false) {
-                AppNavigation(
+                ChiragFarmerApp(
                     navController = rememberNavController(),
                     modifier = Modifier.fillMaxSize()
                 )
