@@ -15,6 +15,8 @@ val localProperties = Properties().apply {
     }
 }
 val nominatimBaseUrl=localProperties.getProperty("OSM_NOMINATIM_BASE_URL")?:"MISSING_BASE_URL"
+val cloudinaryCloudName=localProperties.getProperty("CLOUD_NAME")?:"MISSING_CLOUD_NAME"
+val cloudinaryUploadPreset=localProperties.getProperty("CLOUDINARY_UPLOAD_PRESET")?:"MISSING_UPLOAD_PRESET"
 android {
     namespace = "com.ayaan.chiragfarmer"
     compileSdk {
@@ -28,6 +30,8 @@ android {
         versionCode = 1
         versionName = "1.0"
         buildConfigField("String", "OSM_NOMINATIM_BASE_URL", "\"$nominatimBaseUrl\"")
+        buildConfigField("String", "CLOUDINARY_CLOUD_NAME", "\"$cloudinaryCloudName\"")
+        buildConfigField("String", "CLOUDINARY_UPLOAD_PRESET", "\"$cloudinaryUploadPreset\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -114,4 +118,5 @@ dependencies {
     // For Kotlin users, also add the Kotlin extensions library
     implementation(libs.review.ktx)
     implementation(libs.androidx.compose.material3.window.size.class1)
+    implementation(libs.cloudinary.android)
 }

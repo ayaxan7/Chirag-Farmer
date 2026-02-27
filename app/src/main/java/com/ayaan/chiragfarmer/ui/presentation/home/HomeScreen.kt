@@ -2,6 +2,7 @@ package com.ayaan.chiragfarmer.ui.presentation.home
 
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -123,7 +124,10 @@ fun HomeScreen(
                 Image(
                     painter = painterResource(R.drawable.profile_incomplete_image),
                     contentDescription = "Profile Incomplete Image",
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth()
+                        .clickable{
+                            navController.navigate(Route.Register.path)
+                        },
                     contentScale = ContentScale.FillWidth
                 )
                 Spacer(modifier = Modifier.height(16.dp))

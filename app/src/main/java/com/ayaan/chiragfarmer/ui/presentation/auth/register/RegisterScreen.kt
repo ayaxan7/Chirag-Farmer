@@ -61,7 +61,6 @@ import com.ayaan.chiragfarmer.ui.presentation.common.components.ImageUploadBox
 import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.ChiragTopBar
 import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.Route
 import com.ayaan.chiragfarmer.ui.theme.BGWhite
-import com.ayaan.chiragfarmer.utils.Base64ImageUtils
 
 @Composable
 fun RegisterScreen(
@@ -73,17 +72,13 @@ fun RegisterScreen(
     var email by remember { mutableStateOf("") }
     var vendorName by remember { mutableStateOf("") }
     var profileImageUri by remember { mutableStateOf<Uri?>(null) }
-    var profileImageBase64 by remember { mutableStateOf<String?>(null) }
 
     // Aadhaar card images
     var aadhaarFrontUri by remember { mutableStateOf<Uri?>(null) }
-    var aadhaarFrontBase64 by remember { mutableStateOf<String?>(null) }
     var aadhaarBackUri by remember { mutableStateOf<Uri?>(null) }
-    var aadhaarBackBase64 by remember { mutableStateOf<String?>(null) }
 
     // Drone image
     var droneImageUri by remember { mutableStateOf<Uri?>(null) }
-    var droneImageBase64 by remember { mutableStateOf<String?>(null) }
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -92,60 +87,28 @@ fun RegisterScreen(
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        uri?.let {
-            profileImageUri = it
-            profileImageBase64 = Base64ImageUtils.encodeUriToBase64(
-                context = context,
-                uri = it,
-                quality = 80,
-                includeDataUriPrefix = true
-            )
-        }
+        uri?.let { profileImageUri = it }
     }
 
     // Image picker launcher for Aadhaar front
     val aadhaarFrontPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        uri?.let {
-            aadhaarFrontUri = it
-            aadhaarFrontBase64 = Base64ImageUtils.encodeUriToBase64(
-                context = context,
-                uri = it,
-                quality = 80,
-                includeDataUriPrefix = true
-            )
-        }
+        uri?.let { aadhaarFrontUri = it }
     }
 
     // Image picker launcher for Aadhaar back
     val aadhaarBackPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        uri?.let {
-            aadhaarBackUri = it
-            aadhaarBackBase64 = Base64ImageUtils.encodeUriToBase64(
-                context = context,
-                uri = it,
-                quality = 80,
-                includeDataUriPrefix = true
-            )
-        }
+        uri?.let { aadhaarBackUri = it }
     }
 
     // Image picker launcher for Drone image
     val droneImagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        uri?.let {
-            droneImageUri = it
-            droneImageBase64 = Base64ImageUtils.encodeUriToBase64(
-                context = context,
-                uri = it,
-                quality = 80,
-                includeDataUriPrefix = true
-            )
-        }
+        uri?.let { droneImageUri = it }
     }
 
     // Handle UI state changes
@@ -339,13 +302,14 @@ fun RegisterScreen(
                     text = "Continue",
                     onClick = {
                         viewModel.addBusinessInfo(
+                            context = context,
                             name = name,
                             email = email,
                             vendorName = vendorName.ifBlank { null },
-                            profileImage = profileImageBase64,
-                            aadhaarFrontImage = aadhaarFrontBase64,
-                            aadhaarBackImage = aadhaarBackBase64,
-                            droneImage = droneImageBase64
+                            profileImageUri = profileImageUri,
+                            aadhaarFrontImageUri = aadhaarFrontUri,
+                            aadhaarBackImageUri = aadhaarBackUri,
+                            droneImageUri = droneImageUri
                         )
                     },
                     enabled = name.isNotEmpty() && email.isNotEmpty() && uiState !is RegisterUiState.Loading
