@@ -156,9 +156,11 @@ class HomeViewModel @Inject constructor(
                 onSuccess = {
                     _bookingStatus.value = BookingStatus.Success("Booking created successfully")
                     clearForm()
+                    Log.d("HomeViewModel", "Booking created successfully: $request ")
                 },
                 onFailure = {
                     _bookingStatus.value = BookingStatus.Error(it.message ?: "Booking failed")
+                    Log.e("HomeViewModel", "Booking failed: ${it.message}")
                 }
             )
         }

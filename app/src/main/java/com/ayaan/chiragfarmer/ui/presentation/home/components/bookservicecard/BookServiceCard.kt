@@ -11,32 +11,28 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ayaan.chiragfarmer.ui.presentation.common.components.ChiragBasicTextField
 import com.ayaan.chiragfarmer.ui.presentation.common.components.ChiragButton
+import com.ayaan.chiragfarmer.ui.presentation.common.components.ChiragErrorButton
+import com.ayaan.chiragfarmer.ui.presentation.common.components.ChiragLoadingIndicator
+import com.ayaan.chiragfarmer.ui.presentation.home.BookingStatus
+import com.ayaan.chiragfarmer.ui.presentation.home.HomeViewModel
 import com.ayaan.chiragfarmer.ui.presentation.home.components.bookservicecard.components.LocationInputField
 import com.ayaan.chiragfarmer.ui.presentation.home.components.bookservicecard.components.SearchInputField
 import com.ayaan.chiragfarmer.ui.presentation.home.components.bookservicecard.components.ServiceDropdown
 import com.ayaan.chiragfarmer.ui.theme.BGWhite
 import com.ayaan.chiragfarmer.ui.theme.LightGray
 
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ayaan.chiragfarmer.ui.presentation.home.HomeViewModel
-import com.ayaan.chiragfarmer.ui.presentation.home.BookingStatus
-
 @Composable
 fun BookServiceCard(
-    viewModel: HomeViewModel,
-    modifier: Modifier = Modifier,
-    isEnabled: Boolean
+    viewModel: HomeViewModel, modifier: Modifier = Modifier, isEnabled: Boolean
 ) {
     val locationQuery by viewModel.locationQuery.collectAsStateWithLifecycle()
     val locationSuggestions by viewModel.locationSuggestions.collectAsStateWithLifecycle()
@@ -49,13 +45,10 @@ fun BookServiceCard(
         modifier = modifier
             .fillMaxWidth()
             .background(
-                color = BGWhite,
-                shape = RoundedCornerShape(12.dp)
+                color = BGWhite, shape = RoundedCornerShape(12.dp)
             )
             .border(
-                width = 1.dp,
-                color = LightGray,
-                shape = RoundedCornerShape(12.dp)
+                width = 1.dp, color = LightGray, shape = RoundedCornerShape(12.dp)
             )
             .padding(16.dp)
 
@@ -83,8 +76,7 @@ fun BookServiceCard(
         ServiceDropdown(
             selectedService = selectedService,
             placeholder = "Select Service",
-            onServiceSelected = { viewModel.onServiceSelected(it) }
-        )
+            onServiceSelected = { viewModel.onServiceSelected(it) })
 
         Spacer(modifier = Modifier.height(14.dp))
 
@@ -103,8 +95,7 @@ fun BookServiceCard(
             onValueChange = { viewModel.onLocationQueryChange(it) },
             placeholder = "Pratapgarh, Uttar pradesh",
             suggestions = locationSuggestions,
-            onSuggestionClick = { viewModel.onLocationSelected(it) }
-        )
+            onSuggestionClick = { viewModel.onLocationSelected(it) })
 
         Spacer(modifier = Modifier.height(14.dp))
 
@@ -145,16 +136,28 @@ fun BookServiceCard(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Book Now Button
-        ChiragButton(
-            text = "Book Now",
-            onClick = { viewModel.createBooking() },
-            enabled = selectedService.isNotEmpty() &&
-                    locationQuery.isNotEmpty() &&
-                    farmArea.isNotEmpty() &&
-                    cropName.isNotEmpty() &&
-                    isEnabled && 
-                    bookingStatus !is BookingStatus.Loading
-        )
+        // Book Now Button / Loading / Error state
+        when (bookingStatus) {
+            is BookingStatus.Loading -> {
+                ChiragLoadingIndicator()
+            }
+
+            is BookingStatus.Error -> {
+                ChiragErrorButton(
+                    onClick = {
+                        viewModel.resetBookingStatus()
+                        viewModel.createBooking()
+                    }, text = (bookingStatus as BookingStatus.Error).message
+                )
+            }
+
+            else -> {
+                ChiragButton(
+                    text = "Book Now",
+                    onClick = { viewModel.createBooking() },
+                    enabled = selectedService.isNotEmpty() && locationQuery.isNotEmpty() && farmArea.isNotEmpty() && cropName.isNotEmpty() && isEnabled
+                )
+            }
+        }
     }
 }

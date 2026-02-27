@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import com.ayaan.chiragfarmer.ui.presentation.navigation.destinations.AppDestinations
 
@@ -22,7 +23,8 @@ fun ChiragFarmerApp() {
                 item(
                     icon = {
                     Icon(
-                        it.icon, contentDescription = it.label
+                        if(currentDestination==it) painterResource(id = it.selectedIcon) else painterResource(id = it.unSelectedIcon),
+                        contentDescription = it.label
                     )
                 },
                     label = { Text(it.label) },
