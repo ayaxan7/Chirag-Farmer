@@ -20,8 +20,10 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
@@ -47,7 +49,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -57,89 +58,67 @@ import coil.compose.AsyncImage
 import com.ayaan.chiragfarmer.R
 import com.ayaan.chiragfarmer.ui.presentation.common.components.ChiragBasicTextField
 import com.ayaan.chiragfarmer.ui.presentation.common.components.ChiragButton
-import com.ayaan.chiragfarmer.ui.presentation.common.components.ImageUploadBox
 import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.ChiragTopBar
 import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.Route
+import com.ayaan.chiragfarmer.ui.theme.BGBlack
 import com.ayaan.chiragfarmer.ui.theme.BGWhite
+import com.ayaan.chiragfarmer.ui.theme.BorderGray
+import com.ayaan.chiragfarmer.ui.theme.TextGray
 
 @Composable
 fun RegisterScreen(
-    navController: NavHostController,
-    viewModel: RegisterViewModel = hiltViewModel()
+    navController: NavHostController, viewModel: RegisterViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
+
     var name by remember { mutableStateOf("") }
+    var mobileNumber by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
-    var vendorName by remember { mutableStateOf("") }
+    var selectedGender by remember { mutableStateOf<String?>(null) }
+    var state by remember { mutableStateOf("") }
+    var village by remember { mutableStateOf("") }
+    var region by remember { mutableStateOf("") }
     var profileImageUri by remember { mutableStateOf<Uri?>(null) }
-
-    // Aadhaar card images
-    var aadhaarFrontUri by remember { mutableStateOf<Uri?>(null) }
-    var aadhaarBackUri by remember { mutableStateOf<Uri?>(null) }
-
-    // Drone image
-    var droneImageUri by remember { mutableStateOf<Uri?>(null) }
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    // Image picker launcher for profile
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         uri?.let { profileImageUri = it }
     }
 
-    // Image picker launcher for Aadhaar front
-    val aadhaarFrontPickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        uri?.let { aadhaarFrontUri = it }
-    }
-
-    // Image picker launcher for Aadhaar back
-    val aadhaarBackPickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        uri?.let { aadhaarBackUri = it }
-    }
-
-    // Image picker launcher for Drone image
-    val droneImagePickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        uri?.let { droneImageUri = it }
-    }
-
-    // Handle UI state changes
     LaunchedEffect(uiState) {
-        when (val state = uiState) {
+        when (val stateUi = uiState) {
             is RegisterUiState.Success -> {
-                snackbarHostState.showSnackbar(state.message)
+                snackbarHostState.showSnackbar(stateUi.message)
                 navController.navigate(Route.RegisterSuccess.path) {
                     popUpTo(Route.Auth.path) { inclusive = true }
                 }
                 viewModel.resetState()
             }
+
             is RegisterUiState.Error -> {
-                snackbarHostState.showSnackbar(state.message)
+                snackbarHostState.showSnackbar(stateUi.message)
                 viewModel.resetState()
             }
+
             else -> Unit
         }
     }
 
     Scaffold(
         topBar = {
-            ChiragTopBar(
-                title = "Complete your registration",
-                navController = navController,
-                icon = R.drawable.ic_back_arrow
-            )
-        },
+        ChiragTopBar(
+            title = "Complete your registration",
+            navController = navController,
+            icon = R.drawable.ic_back_arrow
+        )
+    },
         containerColor = BGWhite,
-        snackbarHost = { SnackbarHost(snackbarHostState) }
-    ) { innerPadding ->
+        snackbarHost = { SnackbarHost(snackbarHostState) }) { innerPadding ->
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -147,22 +126,18 @@ fun RegisterScreen(
                 .imePadding()
                 .navigationBarsPadding()
         ) {
-            // Background drone watermark (bottom right)
-            Box(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                Image(
-                    painter = painterResource(R.drawable.right_tilted_drone),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .size(200.dp)
-                        .offset(x = 50.dp, y = (-100).dp)
-                        .alpha(0.8f)
-                )
-            }
 
-            // Loading indicator
+            // Background drone watermark
+            Image(
+                painter = painterResource(R.drawable.right_tilted_drone),
+                contentDescription = null,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .size(220.dp)
+                    .offset(x = 40.dp, y = (-60).dp)
+                    .alpha(0.15f)
+            )
+
             if (uiState is RegisterUiState.Loading) {
                 CircularProgressIndicator(
                     modifier = Modifier.align(Alignment.Center)
@@ -175,66 +150,66 @@ fun RegisterScreen(
                     .padding(horizontal = 20.dp)
                     .verticalScroll(rememberScrollState())
             ) {
+
                 Spacer(modifier = Modifier.height(20.dp))
+
+                // Profile Photo
                 Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxWidth()
                 ) {
+
                     Text(
-                        text = "Profile Photo",
-                        fontSize = 14.sp,
-                        color = Color.Black,
-                        fontWeight = FontWeight.Normal
+                        text = "Profile Photo", fontSize = 14.sp, fontWeight = FontWeight.Medium
                     )
-                    Spacer(modifier = Modifier.height(10.dp))
+
+                    Spacer(modifier = Modifier.height(12.dp))
 
                     Box(contentAlignment = Alignment.BottomEnd) {
-                        // Avatar circle
+
                         Box(
                             modifier = Modifier
-                                .size(72.dp)
+                                .size(90.dp)
                                 .clip(CircleShape)
-                                .background(Color(0xffe3e6e7)),
-                            contentAlignment = Alignment.Center
+                                .background(Color(0xFFEAEAEA)), contentAlignment = Alignment.Center
                         ) {
                             if (profileImageUri != null) {
                                 AsyncImage(
                                     model = profileImageUri,
-                                    contentDescription = "Profile Photo",
+                                    contentDescription = null,
                                     modifier = Modifier.fillMaxSize()
                                 )
                             } else {
                                 Icon(
                                     imageVector = Icons.Default.Person,
-                                    contentDescription = "Profile Photo",
-                                    modifier = Modifier.fillMaxSize(),
-                                    tint = Color(0xffaeb4b7)
+                                    contentDescription = null,
+                                    tint = Color.Gray,
+                                    modifier = Modifier.size(48.dp)
                                 )
                             }
                         }
-                        // Camera badge
+
                         Box(
                             modifier = Modifier
-                                .size(18.dp)
+                                .size(24.dp)
                                 .clip(CircleShape)
                                 .background(Color.White)
-                                .border(1.dp, Color(0xFFDDDDDD), CircleShape)
+                                .border(1.dp, Color.LightGray, CircleShape)
                                 .clickable { imagePickerLauncher.launch("image/*") },
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
                                 imageVector = Icons.Outlined.CameraAlt,
-                                contentDescription = "Pick photo",
-                                modifier = Modifier.fillMaxSize(0.8f),
-                                tint = Color.Black
+                                contentDescription = null,
+                                modifier = Modifier.size(14.dp)
                             )
                         }
                     }
                 }
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(28.dp))
 
-                LabelText(text = "Name *")
+                LabelText("Name*")
                 Spacer(modifier = Modifier.height(6.dp))
                 ChiragBasicTextField(
                     value = name,
@@ -244,59 +219,74 @@ fun RegisterScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                LabelText(text = "Email ID *")
+                LabelText("Mobile Number*")
                 Spacer(modifier = Modifier.height(6.dp))
                 ChiragBasicTextField(
-                    value = email,
-                    onValueChange = { email = it },
-                    placeholder = "Enter Your Email Id",
-                    keyboardType = KeyboardType.Email
+                    value = mobileNumber,
+                    onValueChange = { mobileNumber = it },
+                    placeholder = "Enter Your Contact Number",
+                    keyboardType = KeyboardType.Number
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                LabelText(text = "Vendor Name (Optional)")
+                LabelText("Email ID*")
                 Spacer(modifier = Modifier.height(6.dp))
                 ChiragBasicTextField(
-                    value = vendorName,
-                    onValueChange = { vendorName = it },
-                    placeholder = "Enter Vendor Name"
+                    value = email,
+                    onValueChange = { email = it },
+                    placeholder = "Enter Your Email ID",
+                    keyboardType = KeyboardType.Email
                 )
 
-                Spacer(modifier = Modifier.height(20.dp))
+//                Spacer(modifier = Modifier.height(16.dp))
+//
+//                LabelText("Select Gender*")
+//                Spacer(modifier = Modifier.height(8.dp))
+//
+//                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+//                    GenderButton(
+//                        text = "Male",
+//                        isSelected = selectedGender == "Male",
+//                        onClick = { selectedGender = "Male" })
+//                    GenderButton(
+//                        text = "Female",
+//                        isSelected = selectedGender == "Female",
+//                        onClick = { selectedGender = "Female" })
+//                }
 
-                LabelText(text = "Aadhaar card")
+                Spacer(modifier = Modifier.height(16.dp))
+
+                LabelText("State*")
                 Spacer(modifier = Modifier.height(6.dp))
-                Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                    ImageUploadBox(
-                        label = "Front side of Aadhaar card",
-                        width = 100.dp,
-                        height = 90.dp,
-                        imageUri = aadhaarFrontUri,
-                        onClick = { aadhaarFrontPickerLauncher.launch("image/*") }
-                    )
-                    ImageUploadBox(
-                        label = "Back side of Aadhaar card",
-                        width = 100.dp,
-                        height = 90.dp,
-                        imageUri = aadhaarBackUri,
-                        onClick = { aadhaarBackPickerLauncher.launch("image/*") }
-                    )
-                }
+                ChiragBasicTextField(
+                    value = state,
+                    onValueChange = { state = it },
+                    placeholder = "Select or enter location"
+                )
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-                LabelText(text = "Upload Image of Drone available")
+                LabelText("City / Town / Village*")
                 Spacer(modifier = Modifier.height(6.dp))
-                ImageUploadBox(
-                    label = "Add image of Drone",
-                    width = 100.dp,
-                    height = 90.dp,
-                    imageUri = droneImageUri,
-                    onClick = { droneImagePickerLauncher.launch("image/*") }
+                ChiragBasicTextField(
+                    value = village,
+                    onValueChange = { village = it },
+                    placeholder = "Select or enter location"
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                LabelText("Region Field")
+                Spacer(modifier = Modifier.height(6.dp))
+                ChiragBasicTextField(
+                    value = region,
+                    onValueChange = { region = it },
+                    placeholder = "Select or enter location"
                 )
 
                 Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.height(16.dp))
 
                 ChiragButton(
                     text = "Continue",
@@ -305,14 +295,14 @@ fun RegisterScreen(
                             context = context,
                             name = name,
                             email = email,
-                            vendorName = vendorName.ifBlank { null },
+                            vendorName = null,
                             profileImageUri = profileImageUri,
-                            aadhaarFrontImageUri = aadhaarFrontUri,
-                            aadhaarBackImageUri = aadhaarBackUri,
-                            droneImageUri = droneImageUri
+                            aadhaarFrontImageUri = null,
+                            aadhaarBackImageUri = null,
+                            droneImageUri = null
                         )
                     },
-                    enabled = name.isNotEmpty() && email.isNotEmpty() && uiState !is RegisterUiState.Loading
+                    enabled = name.isNotEmpty() && mobileNumber.isNotEmpty() && email.isNotEmpty() && selectedGender != null && uiState !is RegisterUiState.Loading
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
@@ -324,15 +314,31 @@ fun RegisterScreen(
 @Composable
 private fun LabelText(text: String) {
     Text(
-        text = text,
-        fontSize = 14.sp,
-        color = Color.Black,
-        fontWeight = FontWeight.Normal
+        text = text, fontSize = 14.sp, fontWeight = FontWeight.Medium, color = Color.Black
     )
 }
 
-@Preview(showBackground = true)
 @Composable
-fun RegisterScreenPreview() {
-    RegisterScreen(navController = NavHostController(LocalContext.current))
+fun GenderButton(
+    text: String, isSelected: Boolean, onClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .width(84.dp)
+            .height(32.dp)
+            .clip(RoundedCornerShape(4.dp))
+            .background(
+                if (isSelected) BGBlack else Color.Transparent
+            )
+            .clickable { onClick() }
+            .border(
+                1.dp, if (isSelected) BGBlack else BorderGray
+            )) {
+        Text(
+            text = text,
+            color = if (isSelected) BGWhite else TextGray,
+            fontSize = 12.sp,
+            modifier = Modifier.align(Alignment.Center)
+        )
+    }
 }
