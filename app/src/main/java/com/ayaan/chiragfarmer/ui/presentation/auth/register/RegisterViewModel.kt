@@ -31,6 +31,12 @@ class RegisterViewModel @Inject constructor(
         businessAddress: String? = null,
         pincode: String? = null,
         vendorName: String? = null,
+        gender: String? = null, // New field
+        stateName: String? = null, // New field for mapping
+        townName: String? = null, // New field for mapping
+        region: String? = null, // New field for mapping
+        companyLogoUri: Uri? = null, // New field
+        signatureUri: Uri? = null, // New field
         profileImageUri: Uri? = null,
         aadhaarFrontImageUri: Uri? = null,
         aadhaarBackImageUri: Uri? = null,
@@ -53,6 +59,17 @@ class RegisterViewModel @Inject constructor(
                 val droneImageUrl = droneImageUri?.let {
                     CloudinaryUploader.uploadImage(context, it)
                 }
+                val companyLogoUrl = companyLogoUri?.let {
+                    CloudinaryUploader.uploadImage(context, it)
+                }
+                val signatureUrl = signatureUri?.let {
+                    CloudinaryUploader.uploadImage(context, it)
+                }
+
+                // Map location strings to LocationItems if provided
+                val stateLocation = stateName?.takeIf { it.isNotBlank() }?.let { com.ayaan.chiragfarmer.data.model.auth.LocationItem(name = it, latitude = 0.0, longitude = 0.0) }
+                val townLocation = townName?.takeIf { it.isNotBlank() }?.let { com.ayaan.chiragfarmer.data.model.auth.LocationItem(name = it, latitude = 0.0, longitude = 0.0) }
+                val regionLocation = region?.takeIf { it.isNotBlank() }?.let { com.ayaan.chiragfarmer.data.model.auth.LocationItem(name = it, latitude = 0.0, longitude = 0.0) }
 
                 val request = AddBusinessInfoRequest(
                     name = name,
@@ -60,12 +77,18 @@ class RegisterViewModel @Inject constructor(
                     companyName = companyName,
                     gstNumber = gstNumber,
                     businessAddress = businessAddress,
-                    pinCode = pincode,
+                    pincode = pincode,
                     vendorName = vendorName,
+                    gender = gender,
+                    companyLogo = companyLogoUrl,
+                    signature = signatureUrl,
+                    aadhaarFront = aadhaarFrontUrl,
+                    aadhaarBack = aadhaarBackUrl,
+                    droneImage = droneImageUrl,
                     profileImage = profileImageUrl,
-                    aadhaarFrontImage = aadhaarFrontUrl,
-                    aadhaarBackImage = aadhaarBackUrl,
-                    droneImage = droneImageUrl
+                    stateName = stateLocation,
+                    townName = townLocation,
+                    region = regionLocation
                 )
 
                 val result = authRepository.addBusinessInfo(request)

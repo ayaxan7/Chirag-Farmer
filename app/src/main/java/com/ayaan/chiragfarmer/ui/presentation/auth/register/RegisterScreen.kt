@@ -239,21 +239,21 @@ fun RegisterScreen(
                     keyboardType = KeyboardType.Email
                 )
 
-//                Spacer(modifier = Modifier.height(16.dp))
-//
-//                LabelText("Select Gender*")
-//                Spacer(modifier = Modifier.height(8.dp))
-//
-//                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-//                    GenderButton(
-//                        text = "Male",
-//                        isSelected = selectedGender == "Male",
-//                        onClick = { selectedGender = "Male" })
-//                    GenderButton(
-//                        text = "Female",
-//                        isSelected = selectedGender == "Female",
-//                        onClick = { selectedGender = "Female" })
-//                }
+                Spacer(modifier = Modifier.height(16.dp))
+
+                LabelText("Select Gender*")
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                    GenderButton(
+                        text = "Male",
+                        isSelected = selectedGender == "Male",
+                        onClick = { selectedGender = "Male" })
+                    GenderButton(
+                        text = "Female",
+                        isSelected = selectedGender == "Female",
+                        onClick = { selectedGender = "Female" })
+                }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -296,6 +296,10 @@ fun RegisterScreen(
                             name = name,
                             email = email,
                             vendorName = null,
+                            gender = selectedGender,
+                            stateName = state,
+                            townName = village,
+                            region = region,
                             profileImageUri = profileImageUri,
                             aadhaarFrontImageUri = null,
                             aadhaarBackImageUri = null,
