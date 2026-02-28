@@ -24,6 +24,7 @@ import com.ayaan.chiragfarmer.ui.presentation.home.HomeViewModel
 import com.ayaan.chiragfarmer.ui.presentation.assist.AssistScreen
 import com.ayaan.chiragfarmer.ui.presentation.bookings.BookingsScreen
 import com.ayaan.chiragfarmer.ui.presentation.buy.BuyScreen
+import com.ayaan.chiragfarmer.ui.presentation.home.screens.SearchScreen
 import com.ayaan.chiragfarmer.ui.presentation.sell.SellScreen
 import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.Route
 
@@ -87,6 +88,9 @@ fun AppNavigation(
         composable(Route.Home.path){
             val viewModel: HomeViewModel = hiltViewModel()
             HomeScreen(navController = navController, viewModel = viewModel)
+        }
+        composable(Route.Search.path) {
+            SearchScreen(navController = navController)
         }
         composable(Route.Assist.path) {
             AssistScreen(navController = navController)
