@@ -132,7 +132,7 @@ fun HomeScreen(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
             }
-
+            BookServiceCard()
             // Smart Farmer Carousel
             ImageCarousel(
                 images = carouselImages,
@@ -140,10 +140,7 @@ fun HomeScreen(
             )
 
             // Book Service Form Card
-            BookServiceCard(
-                viewModel = viewModel,
-                isEnabled = isProfileComplete
-            )
+
 
             // Buy Products Section
             CategoryHeader(
