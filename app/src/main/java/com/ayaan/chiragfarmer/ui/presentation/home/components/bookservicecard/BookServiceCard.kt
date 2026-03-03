@@ -1,13 +1,17 @@
 package com.ayaan.chiragfarmer.ui.presentation.home.components.bookservicecard
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -24,7 +28,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ayaan.chiragfarmer.R
-import com.ayaan.chiragfarmer.ui.presentation.home.HomeViewModel
 import com.ayaan.chiragfarmer.ui.theme.BGWhite
 
 @Composable
@@ -46,9 +49,9 @@ fun BookServiceCard(
             )
         ) {
 
-            Box (
-                modifier = Modifier.fillMaxWidth()
-            ){
+            Box(
+                modifier = Modifier.wrapContentSize()
+            ) {
                 // Background Image
                 Image(
                     painter = painterResource(R.drawable.book_service_card),
@@ -63,21 +66,39 @@ fun BookServiceCard(
                     color = BGWhite,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.W700,
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier
+                        .padding(start = 12.dp, top = 8.dp)
                         .align(Alignment.TopStart),
                     lineHeight = 18.sp
                 )
-                Text(
-                    text = "From drone spraying, soil testing\nconnect with verified providers instantly.",
-                    color = BGWhite,
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.Medium,
-                    lineHeight = 12.sp,
-                    textAlign = TextAlign.Center,
+                Column(
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .padding(bottom = 16.dp),
-                )
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+
+                    Text(
+                        text = "From drone spraying, soil testing\nconnect with verified providers instantly",
+                        color = BGWhite,
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Medium,
+                        lineHeight = 12.sp,
+                        textAlign = TextAlign.Center,
+                    )
+
+                    Spacer(modifier = Modifier.height(6.dp))
+
+                    Box(
+                        modifier = Modifier
+                            .width(222.dp)
+                            .height(26.dp)
+                            .background(Color.White, RoundedCornerShape(8.dp))
+                            .border(
+                                1.dp, BGWhite
+                            )
+                    )
+                }
             }
         }
     }
