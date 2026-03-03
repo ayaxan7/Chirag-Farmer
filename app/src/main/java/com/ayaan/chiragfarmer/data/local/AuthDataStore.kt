@@ -75,10 +75,15 @@ class AuthDataStore(private val context: Context) {
         }
     }
 
+    suspend fun clearProfileStatus() {
+        context.dataStore.edit { preferences ->
+            preferences.remove(PROFILE_COMPLETE_KEY)
+        }
+    }
+
     suspend fun clearAuthData() {
         context.dataStore.edit { preferences ->
             preferences.clear()
         }
     }
 }
-

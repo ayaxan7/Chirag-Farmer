@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -49,7 +48,6 @@ fun ImageCarousel(
             .height(200.dp)
             .clip(RoundedCornerShape(16.dp))
     ) {
-
         // Image Pager
         HorizontalPager(
             state = pagerState, modifier = Modifier.fillMaxWidth()
@@ -64,8 +62,7 @@ fun ImageCarousel(
 
         Row(
             modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 24.dp),
+                .align(Alignment.BottomCenter),
             horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             repeat(images.size) { index ->

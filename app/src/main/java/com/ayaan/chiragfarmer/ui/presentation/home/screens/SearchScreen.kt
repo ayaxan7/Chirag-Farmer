@@ -49,10 +49,10 @@ fun SearchScreen(navController: NavHostController) {
     // Sample recent searches data
     val recentSearches = remember {
         mutableStateListOf(
-            RecentSearch(1, R.drawable.seeds_product, "Seeds"),
-            RecentSearch(2, R.drawable.seeds_product, "Drone"),
-            RecentSearch(3, R.drawable.seeds_product, "Power Sprayer"),
-            RecentSearch(4, R.drawable.seeds_product, "Tomato's")
+            RecentSearch(1, R.drawable.agri_seeds, "Seeds"),
+            RecentSearch(2, R.drawable.agri_seeds, "Drone"),
+            RecentSearch(3, R.drawable.agri_seeds, "Power Sprayer"),
+            RecentSearch(4, R.drawable.agri_seeds, "Tomato's")
         )
     }
 

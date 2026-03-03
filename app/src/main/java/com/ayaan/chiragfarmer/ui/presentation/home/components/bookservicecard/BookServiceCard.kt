@@ -47,13 +47,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.ayaan.chiragfarmer.R
 import com.ayaan.chiragfarmer.ui.theme.BGWhite
 import com.ayaan.chiragfarmer.ui.theme.ChiragFarmerTheme
 
 @Composable
 fun BookServiceCard(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavHostController
 ) {
     var expanded by remember { mutableStateOf(false) }
     var selectedService by remember { mutableStateOf<String?>(null) }
@@ -66,7 +69,9 @@ fun BookServiceCard(
         onServiceSelected = {
             selectedService = it
             expanded = false
-        })
+        },
+        navController=navController
+    )
 }
 
 @Composable
@@ -75,7 +80,8 @@ fun BookServiceCardContent(
     expanded: Boolean,
     onExpandedChange: (Boolean) -> Unit,
     selectedService: String?,
-    onServiceSelected: (String) -> Unit
+    onServiceSelected: (String) -> Unit,
+    navController: NavHostController
 ) {
     val services = listOf(
         "Drone Spraying",
@@ -276,7 +282,9 @@ fun BookServiceCardContent(
 @Composable
 fun BookServiceCardPreview() {
     ChiragFarmerTheme {
-        BookServiceCard()
+        BookServiceCard(
+            navController = rememberNavController()
+        )
     }
 }
 
@@ -288,6 +296,8 @@ fun BookServiceCardExpandedPreview() {
             expanded = true,
             onExpandedChange = {},
             selectedService = null,
-            onServiceSelected = {})
+            onServiceSelected = {},
+            navController = rememberNavController()
+        )
     }
 }

@@ -1,6 +1,7 @@
 package com.ayaan.chiragfarmer.ui.presentation.common.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
@@ -9,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ayaan.chiragfarmer.ui.theme.BGBlack
 
@@ -23,7 +25,8 @@ fun CategoryHeader(category: String, btnText: String = "", onClick: () -> Unit =
             text = category, fontSize = 16.sp, fontWeight = FontWeight.W600, color = BGBlack
         )
         TextButton(
-            onClick = { onClick() }) {
+            onClick = { onClick() },
+            contentPadding = PaddingValues(0.dp)) {
             Text(
                 text = btnText, fontSize = 12.sp, color = BGBlack, fontWeight = FontWeight.W500
             )

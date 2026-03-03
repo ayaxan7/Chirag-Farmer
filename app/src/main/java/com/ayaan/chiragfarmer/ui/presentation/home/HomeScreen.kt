@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,6 +30,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -87,7 +90,11 @@ fun HomeScreen(
             rating = "4.8"
         ),
     )
-
+    val productCategories=listOf(
+        Pair("Agriculture\nDrones",R.drawable.agri_drone),
+        Pair("Seeds",R.drawable.agri_seeds),
+        Pair("Sprayer",R.drawable.agri_sprayer)
+    )
     val bookingStatus by viewModel.bookingStatus.collectAsStateWithLifecycle()
 
     // Simple feedback handling (in a real app, use a SnackbarHost)
@@ -132,15 +139,14 @@ fun HomeScreen(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
             }
-            BookServiceCard()
+            BookServiceCard(
+                navController=navController
+            )
             // Smart Farmer Carousel
             ImageCarousel(
                 images = carouselImages,
                 modifier = Modifier.fillMaxWidth()
             )
-
-            // Book Service Form Card
-
 
             // Buy Products Section
             CategoryHeader(
@@ -152,7 +158,7 @@ fun HomeScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(5) {
+                items(productCategories.size) {item->
                     Card(
                         modifier = Modifier
                             .height(120.dp)
@@ -161,12 +167,25 @@ fun HomeScreen(
                             containerColor = Color.Transparent
                         )
                     ) {
-                        Image(
-                            painter = painterResource(R.drawable.seeds_product),
-                            contentDescription = "Seeds Product",
-                            modifier = Modifier.fillMaxSize(),
-                            contentScale = ContentScale.Crop
-                        )
+                        Box(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Image(
+                                painter = painterResource(productCategories[item].second),
+                                contentDescription = productCategories[item].first,
+                                modifier = Modifier.fillMaxSize(),
+                                contentScale = ContentScale.FillBounds
+                            )
+                            Text(
+                                text=productCategories[item].first,
+                                color = Color.White,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.W600,
+                                lineHeight = 12.sp,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 8.dp)
+                            )
+                        }
                     }
                 }
             }

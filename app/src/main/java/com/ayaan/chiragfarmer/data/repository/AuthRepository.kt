@@ -53,6 +53,7 @@ class AuthRepository @Inject constructor(
                 response.data.token?.let { token ->
                     response.data.user?.let { user ->
                         authDataStore.saveUserSession(token, user.id, user.phone, user.role)
+                        authDataStore.saveProfileStatus(false)
                     }
                 }
             }
@@ -79,6 +80,8 @@ class AuthRepository @Inject constructor(
                 response.data.token?.let { token ->
                     response.data.user?.let { user ->
                         authDataStore.saveUserSession(token, user.id, user.phone, user.role)
+                        // Reset profile status to false on registration, will be updated by API call
+                        authDataStore.saveProfileStatus(false)
                     }
                 }
             }
