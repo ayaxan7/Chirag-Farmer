@@ -287,16 +287,23 @@ fun SellProducesScreen(
                             isUpdate = isEditMode
                         )
                     },
-                    enabled = productTitle.isNotEmpty() &&
-                             availableStock.isNotEmpty() &&
-                             location.isNotEmpty() &&
-                             pricing.isNotEmpty() &&
-                             (imageUri != null || existingImageUrl != null) &&
-                             addProductState !is AddProductState.Loading &&
-                             addProductState !is AddProductState.UploadingImage &&
-                             fetchProductState !is FetchProductState.Loading
+                    enabled = if (isEditMode) {
+                        productTitle.isNotEmpty() &&
+                        pricing.isNotEmpty() &&
+                        addProductState !is AddProductState.Loading &&
+                        addProductState !is AddProductState.UploadingImage &&
+                        fetchProductState !is FetchProductState.Loading
+                    } else {
+                        productTitle.isNotEmpty() &&
+                        availableStock.isNotEmpty() &&
+                        location.isNotEmpty() &&
+                        pricing.isNotEmpty() &&
+                        imageUri != null &&
+                        addProductState !is AddProductState.Loading &&
+                        addProductState !is AddProductState.UploadingImage &&
+                        fetchProductState !is FetchProductState.Loading
+                    }
                 )
-
                 Spacer(modifier = Modifier.height(24.dp))
             }
 

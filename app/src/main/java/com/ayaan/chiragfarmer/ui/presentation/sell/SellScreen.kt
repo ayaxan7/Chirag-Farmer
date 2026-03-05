@@ -112,7 +112,7 @@ fun SellScreen(
                 buttonText = "Sell Product",
                 buttonIcon = Icons.Default.Add,
                 onButtonClick = {
-                    navController.navigate(Route.SellProduct.path) {
+                    navController.navigate(Route.SellProduct.createRoute()) {
                         launchSingleTop = true
                     }
                 })
