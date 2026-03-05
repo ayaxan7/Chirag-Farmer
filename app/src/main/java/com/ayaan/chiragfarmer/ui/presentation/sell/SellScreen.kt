@@ -34,6 +34,7 @@ import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.ChiragTopBar
 import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.Route
 import com.ayaan.chiragfarmer.ui.presentation.sell.screens.ActiveProductsScreen
 import com.ayaan.chiragfarmer.ui.presentation.sell.screens.SoldOutProductsScreen
+import com.ayaan.chiragfarmer.ui.theme.BGBlack
 import com.ayaan.chiragfarmer.ui.theme.BGWhite
 import kotlinx.coroutines.launch
 
@@ -86,13 +87,13 @@ fun SellScreen(navController: NavHostController) {
             TabRow(
                 selectedTabIndex = pagerState.currentPage,
                 containerColor = Color.Transparent,
-                contentColor = Color.Black,
+                contentColor = BGBlack,
                 divider = {},
                 indicator = { tabPositions ->
                     TabRowDefaults.SecondaryIndicator(
                         modifier = Modifier.tabIndicatorOffset(
                             tabPositions[pagerState.currentPage]
-                        ), height = 2.dp, color = Color.Black
+                        ), height = 2.dp, color = BGBlack
                     )
                 }
             ) {
@@ -109,15 +110,15 @@ fun SellScreen(navController: NavHostController) {
                         text = {
                             Text(
                                 text = title,
-                                color = Color.Black,
+                                color = BGBlack,
                                 fontWeight = if (pagerState.currentPage == index)
                                     FontWeight.SemiBold
                                 else
                                     FontWeight.Normal
                             )
                         },
-                        selectedContentColor = Color.Black,
-                        unselectedContentColor = Color.Black
+                        selectedContentColor = BGBlack,
+                        unselectedContentColor = BGBlack
                     )
                 }
             }
