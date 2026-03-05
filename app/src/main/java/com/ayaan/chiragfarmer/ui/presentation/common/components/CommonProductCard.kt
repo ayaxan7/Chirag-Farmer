@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ayaan.chiragfarmer.R
 import com.ayaan.chiragfarmer.ui.presentation.sell.components.DeleteItemBox
+import com.ayaan.chiragfarmer.ui.presentation.sell.components.EditItemBox
 import com.ayaan.chiragfarmer.ui.theme.BGBlack
 import com.ayaan.chiragfarmer.ui.theme.BGWhite
 import com.ayaan.chiragfarmer.ui.theme.BorderGray
@@ -243,6 +244,10 @@ fun CommonProductCard(
                         Spacer(modifier = Modifier.weight(1f))
                         DeleteItemBox(
                             onDelete={}
+                        )
+                        Spacer(modifier = Modifier.width(2.dp))
+                        EditItemBox(
+                            onEdit={}
                         )
                     }
                 }
