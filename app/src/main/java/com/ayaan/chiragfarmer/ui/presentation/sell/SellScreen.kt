@@ -18,15 +18,16 @@ import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.ayaan.chiragfarmer.R
 import com.ayaan.chiragfarmer.ui.presentation.home.components.search.SearchBox
 import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.ChiragTopBar
@@ -38,13 +39,28 @@ import com.ayaan.chiragfarmer.ui.theme.BGWhite
 import kotlinx.coroutines.launch
 
 @Composable
-fun SellScreen(navController: NavHostController) {
+fun SellScreen(
+    navController: NavHostController,
+    viewModel: SellViewModel = hiltViewModel()
+) {
 
     val snackBarHostState = remember { SnackbarHostState() }
-    var searchQuery by remember { mutableStateOf("") }
+    val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
 
     val pagerState = rememberPagerState(pageCount = { 2 })
     val scope = rememberCoroutineScope()
+
+    val activeProducts = viewModel.activeProducts.collectAsLazyPagingItems()
+    val soldOutProducts = viewModel.soldOutProducts.collectAsLazyPagingItems()
+
+    androidx.compose.runtime.LaunchedEffect(pagerState.currentPage, searchQuery) {
+        kotlinx.coroutines.delay(500) // Debounce
+        if (pagerState.currentPage == 0) {
+            viewModel.fetchActive(searchQuery)
+        } else {
+            viewModel.fetchSoldOut(searchQuery)
+        }
+    }
 
     Scaffold(
         containerColor = BGWhite,
@@ -75,7 +91,7 @@ fun SellScreen(navController: NavHostController) {
 
             SearchBox(
                 value = searchQuery,
-                onValueChange = { searchQuery = it },
+                onValueChange = { viewModel.onSearchQueryChange(it) },
                 placeholder = "Search For Products"
             )
 
@@ -126,8 +142,8 @@ fun SellScreen(navController: NavHostController) {
                 state = pagerState, modifier = Modifier.fillMaxSize()
             ) { page ->
                 when (page) {
-                    0 -> ActiveProductsScreen()
-                    1 -> SoldOutProductsScreen()
+                    0 -> ActiveProductsScreen(products = activeProducts)
+                    1 -> SoldOutProductsScreen(products = soldOutProducts)
                 }
             }
         }

@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -50,22 +49,25 @@ import com.ayaan.chiragfarmer.ui.theme.BorderGray
 import com.ayaan.chiragfarmer.ui.theme.DisabledButtonGray
 import com.ayaan.chiragfarmer.ui.theme.TextDarkGray
 
+import coil.compose.AsyncImage
+
 @Composable
 fun CommonProductCard(
     modifier: Modifier = Modifier,
-    imageRes: Int,
+    imageRes: Int? = null,
+    imageUrl: String? = null,
     productName: String,
     brandName: String,
     currentPrice: String,
-    originalPrice: String,
+    originalPrice: String? = null,
     rating: String,
     selectedSize: String = "1 Unit",
     onSizeClick: () -> Unit = {},
     isMarkAsSoldRowVisible: Boolean = false,
     onMarkAsSoldClick: () -> Unit = {},
-    onEditClick: () -> Unit={},
+    onEditClick: () -> Unit = {},
     onDeleteClick: () -> Unit = {},
-    isSoldOut: Boolean=false
+    isSoldOut: Boolean = false
 ) {
     Card(
         modifier = modifier
@@ -80,14 +82,27 @@ fun CommonProductCard(
             modifier = Modifier.fillMaxSize()
         ) {
             // Product Image
-            Image(
-                painter = painterResource(id = imageRes),
-                contentDescription = productName,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(160.dp),
-                contentScale = ContentScale.FillBounds
-            )
+            if (imageUrl != null) {
+                AsyncImage(
+                    model = imageUrl,
+                    contentDescription = productName,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(160.dp),
+                    contentScale = ContentScale.FillBounds,
+                    placeholder = painterResource(R.drawable.sprayer),
+                    error = painterResource(R.drawable.sprayer)
+                )
+            } else if (imageRes != null) {
+                Image(
+                    painter = painterResource(id = imageRes),
+                    contentDescription = productName,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(160.dp),
+                    contentScale = ContentScale.FillBounds
+                )
+            }
 
             Column(
                 modifier = Modifier
@@ -108,10 +123,7 @@ fun CommonProductCard(
 
                 // Brand Name
                 Text(
-                    text = brandName,
-                    fontSize = 10.sp,
-                    fontWeight = W400,
-                    color = TextDarkGray
+                    text = brandName, fontSize = 10.sp, fontWeight = W400, color = TextDarkGray
                 )
 
                 Spacer(modifier = Modifier.height(3.dp))
@@ -133,15 +145,17 @@ fun CommonProductCard(
                             fontWeight = FontWeight.Bold,
                             color = BGBlack
                         )
-                        Text(
-                            text = originalPrice,
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.Normal,
-                            color = TextDarkGray,
-                            style = TextStyle(
-                                textDecoration = TextDecoration.LineThrough
+                        if (originalPrice != null) {
+                            Text(
+                                text = originalPrice,
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Normal,
+                                color = TextDarkGray,
+                                style = TextStyle(
+                                    textDecoration = TextDecoration.LineThrough
+                                )
                             )
-                        )
+                        }
                     }
 
                     // Rating
@@ -156,10 +170,7 @@ fun CommonProductCard(
                             modifier = Modifier.size(12.dp)
                         )
                         Text(
-                            text = rating,
-                            fontSize = 10.sp,
-                            fontWeight = W400,
-                            color = Color.Black
+                            text = rating, fontSize = 10.sp, fontWeight = W400, color = Color.Black
                         )
                     }
                 }
@@ -173,10 +184,7 @@ fun CommonProductCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Size",
-                        fontSize = 11.sp,
-                        fontWeight = W500,
-                        color = Color.Black
+                        text = "Size", fontSize = 11.sp, fontWeight = W500, color = Color.Black
                     )
 
                     // Size Dropdown
@@ -222,8 +230,7 @@ fun CommonProductCard(
                                 .background(DisabledButtonGray)
                                 .clickable { }
                                 .padding(start = 4.dp, top = 2.dp, bottom = 2.dp, end = 8.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
+                            contentAlignment = Alignment.Center) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.Center
@@ -231,7 +238,7 @@ fun CommonProductCard(
 
                                 Icon(
                                     imageVector = Icons.Outlined.Cancel,
-                                    contentDescription = "Mark as Sold",
+                                    contentDescription = "Marked as Sold",
                                     modifier = Modifier.size(12.dp),
                                     tint = BGWhite
                                 )
@@ -239,23 +246,15 @@ fun CommonProductCard(
                                 Spacer(modifier = Modifier.width(6.dp))
 
                                 Text(
-                                    text = "Mark as Sold",
+                                    text = "Marked as Sold",
                                     fontSize = 12.sp,
                                     fontWeight = W400,
                                     color = BGWhite
                                 )
                             }
                         }
-                        Spacer(modifier = Modifier.weight(1f))
-                        DeleteItemBox(
-                            onDelete={}
-                        )
-                        Spacer(modifier = Modifier.width(2.dp))
-                        EditItemBox(
-                            onEdit={}
-                        )
                     }
-                }else if (!isSoldOut && isMarkAsSoldRowVisible){
+                } else if (!isSoldOut && isMarkAsSoldRowVisible) {
                     Spacer(modifier = Modifier.height(12.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -269,8 +268,7 @@ fun CommonProductCard(
                                 .background(BGBlack)
                                 .clickable { onMarkAsSoldClick() }
                                 .padding(start = 4.dp, top = 2.dp, bottom = 2.dp, end = 8.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
+                            contentAlignment = Alignment.Center) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.Center
@@ -295,12 +293,10 @@ fun CommonProductCard(
                         }
                         Spacer(modifier = Modifier.weight(1f))
                         DeleteItemBox(
-                            onDelete={}
-                        )
+                            onDelete = {})
                         Spacer(modifier = Modifier.width(2.dp))
                         EditItemBox(
-                            onEdit={}
-                        )
+                            onEdit = {})
                     }
                 }
                 Spacer(modifier = Modifier.height(12.dp))
