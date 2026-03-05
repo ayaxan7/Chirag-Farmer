@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import com.ayaan.chiragfarmer.domain.model.Product
+import com.ayaan.chiragfarmer.domain.usecase.DeleteProductUseCase
 import com.ayaan.chiragfarmer.domain.usecase.GetFarmerProductsUseCase
 import com.ayaan.chiragfarmer.domain.usecase.ToggleSoldOutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,10 +24,17 @@ sealed class ToggleSoldOutState {
     data class Error(val message: String) : ToggleSoldOutState()
 }
 
+sealed class DeleteProductState {
+    data object Idle : DeleteProductState()
+    data object Loading : DeleteProductState()
+    data class Success(val message: String) : DeleteProductState()
+    data class Error(val message: String) : DeleteProductState()
+}
 @HiltViewModel
 class SellViewModel @Inject constructor(
     private val getFarmerProductsUseCase: GetFarmerProductsUseCase,
-    private val toggleSoldOutUseCase: ToggleSoldOutUseCase
+    private val toggleSoldOutUseCase: ToggleSoldOutUseCase,
+    private val deleteProductUseCase: DeleteProductUseCase
 ) : ViewModel() {
 
     private val _activeSearchQuery = MutableStateFlow("")
@@ -37,6 +45,9 @@ class SellViewModel @Inject constructor(
 
     private val _toggleState = MutableStateFlow<ToggleSoldOutState>(ToggleSoldOutState.Idle)
     val toggleState: StateFlow<ToggleSoldOutState> = _toggleState.asStateFlow()
+
+    private val _deleteState = MutableStateFlow<DeleteProductState>(DeleteProductState.Idle)
+    val deleteState: StateFlow<DeleteProductState> = _deleteState.asStateFlow()
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val activeProducts: Flow<PagingData<Product>> = _activeSearchQuery
@@ -87,7 +98,29 @@ class SellViewModel @Inject constructor(
         }
     }
 
+    fun deleteProduct(productId: String) {
+        viewModelScope.launch {
+            _deleteState.value = DeleteProductState.Loading
+
+            deleteProductUseCase(productId).onSuccess {
+                _deleteState.value = DeleteProductState.Success("Product deleted successfully")
+
+                // Refresh both lists after deletion
+                _activeSearchQuery.value = _activeSearchQuery.value
+                _soldOutSearchQuery.value = _soldOutSearchQuery.value
+            }.onFailure { error ->
+                _deleteState.value = DeleteProductState.Error(
+                    error.message ?: "Failed to delete product"
+                )
+            }
+        }
+    }
+
     fun resetToggleState() {
         _toggleState.value = ToggleSoldOutState.Idle
+    }
+
+    fun resetDeleteState() {
+        _deleteState.value = DeleteProductState.Idle
     }
 }

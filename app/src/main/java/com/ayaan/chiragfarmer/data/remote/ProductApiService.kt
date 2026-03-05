@@ -2,6 +2,8 @@ package com.ayaan.chiragfarmer.data.remote
 
 import com.ayaan.chiragfarmer.data.remote.dto.AddProductRequest
 import com.ayaan.chiragfarmer.data.remote.dto.AddProductResponse
+import com.ayaan.chiragfarmer.data.remote.dto.DeleteProductRequest
+import com.ayaan.chiragfarmer.data.remote.dto.DeleteProductResponse
 import com.ayaan.chiragfarmer.data.remote.dto.ProductResponseDto
 import com.ayaan.chiragfarmer.data.remote.dto.ToggleSoldOutRequest
 import com.ayaan.chiragfarmer.data.remote.dto.ToggleSoldOutResponse
@@ -32,4 +34,10 @@ interface ProductApiService {
         @Header("Authorization") token: String,
         @Body request: ToggleSoldOutRequest
     ): ToggleSoldOutResponse
+
+    @POST("api/farmers/products/delete")
+    suspend fun deleteProduct(
+        @Header("Authorization") token: String,
+        @Body request: DeleteProductRequest
+    ): DeleteProductResponse
 }

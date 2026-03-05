@@ -49,6 +49,7 @@ fun SellScreen(
     val snackBarHostState = remember { SnackbarHostState() }
     val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
     val toggleState by viewModel.toggleState.collectAsStateWithLifecycle()
+    val deleteState by viewModel.deleteState.collectAsStateWithLifecycle()
 
     val pagerState = rememberPagerState(pageCount = { 2 })
     val scope = rememberCoroutineScope()
@@ -62,13 +63,30 @@ fun SellScreen(
             is ToggleSoldOutState.Success -> {
                 snackBarHostState.showSnackbar(state.message)
                 viewModel.resetToggleState()
-                // Refresh the appropriate list
                 activeProducts.refresh()
                 soldOutProducts.refresh()
             }
             is ToggleSoldOutState.Error -> {
                 snackBarHostState.showSnackbar(state.message)
                 viewModel.resetToggleState()
+            }
+            else -> Unit
+        }
+    }
+
+    // Handle delete state changes
+    LaunchedEffect(deleteState) {
+        when (val state = deleteState) {
+            is DeleteProductState.Success -> {
+                snackBarHostState.showSnackbar(state.message)
+                viewModel.resetDeleteState()
+                // Refresh both lists
+                activeProducts.refresh()
+                soldOutProducts.refresh()
+            }
+            is DeleteProductState.Error -> {
+                snackBarHostState.showSnackbar(state.message)
+                viewModel.resetDeleteState()
             }
             else -> Unit
         }
@@ -166,12 +184,18 @@ fun SellScreen(
                         products = activeProducts,
                         onToggleSoldOut = { productId ->
                             viewModel.toggleSoldOut(productId)
+                        },
+                        onDeleteProduct = { productId ->
+                            viewModel.deleteProduct(productId)
                         }
                     )
                     1 -> SoldOutProductsScreen(
                         products = soldOutProducts,
                         onToggleSoldOut = { productId ->
                             viewModel.toggleSoldOut(productId)
+                        },
+                        onDeleteProduct = { productId ->
+                            viewModel.deleteProduct(productId)
                         }
                     )
                 }

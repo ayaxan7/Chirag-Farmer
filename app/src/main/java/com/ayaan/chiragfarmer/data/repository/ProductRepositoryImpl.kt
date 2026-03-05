@@ -7,6 +7,7 @@ import com.ayaan.chiragfarmer.data.local.AuthDataStore
 import com.ayaan.chiragfarmer.data.paging.ProductPagingSource
 import com.ayaan.chiragfarmer.data.remote.ProductApiService
 import com.ayaan.chiragfarmer.data.remote.dto.AddProductRequest
+import com.ayaan.chiragfarmer.data.remote.dto.DeleteProductRequest
 import com.ayaan.chiragfarmer.data.remote.dto.ToggleSoldOutRequest
 import com.ayaan.chiragfarmer.domain.model.Product
 import com.ayaan.chiragfarmer.domain.repository.ProductRepository
@@ -68,6 +69,28 @@ class ProductRepositoryImpl @Inject constructor(
 
             if (response.success && response.data != null) {
                 Result.success(response.data.isAvailable)
+            } else {
+                Result.failure(Exception(response.message))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun deleteProduct(productId: String): Result<Unit> {
+        return try {
+            val token = authDataStore.getAuthToken().first()
+            if (token.isNullOrEmpty()) {
+                return Result.failure(Exception("Authentication token not found"))
+            }
+
+            val response = apiService.deleteProduct(
+                "Bearer $token",
+                DeleteProductRequest(productId)
+            )
+
+            if (response.success) {
+                Result.success(Unit)
             } else {
                 Result.failure(Exception(response.message))
             }

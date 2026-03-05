@@ -24,7 +24,8 @@ import com.ayaan.chiragfarmer.ui.theme.BGBlack
 @Composable
 fun SoldOutProductsScreen(
     products: LazyPagingItems<Product>,
-    onToggleSoldOut: (String) -> Unit
+    onToggleSoldOut: (String) -> Unit,
+    onDeleteProduct: (String) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -66,6 +67,9 @@ fun SoldOutProductsScreen(
                                     isMarkAsSoldRowVisible = true,
                                     onMarkAsSoldClick = {
                                         onToggleSoldOut(product.productId)
+                                    },
+                                    onDeleteClick = {
+                                        onDeleteProduct(product.productId)
                                     },
                                     isSoldOut = true
                                 )
