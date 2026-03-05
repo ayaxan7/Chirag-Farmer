@@ -1,30 +1,51 @@
 package com.ayaan.chiragfarmer.ui.presentation.sell
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.ayaan.chiragfarmer.R
+import com.ayaan.chiragfarmer.ui.presentation.home.components.search.SearchBox
 import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.ChiragTopBar
 import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.Route
+import com.ayaan.chiragfarmer.ui.presentation.sell.screens.ActiveProductsScreen
+import com.ayaan.chiragfarmer.ui.presentation.sell.screens.SoldOutProductsScreen
 import com.ayaan.chiragfarmer.ui.theme.BGWhite
+import kotlinx.coroutines.launch
 
 @Composable
 fun SellScreen(navController: NavHostController) {
-    val snackBarHostState= remember { SnackbarHostState() }
+
+    val snackBarHostState = remember { SnackbarHostState() }
+    var searchQuery by remember { mutableStateOf("") }
+
+    val pagerState = rememberPagerState(pageCount = { 2 })
+    val scope = rememberCoroutineScope()
+
     Scaffold(
         containerColor = BGWhite,
         snackbarHost = { SnackbarHost(snackBarHostState) },
@@ -37,27 +58,78 @@ fun SellScreen(navController: NavHostController) {
                 buttonIcon = Icons.Default.Add,
                 onButtonClick = {
                     navController.navigate(Route.Sell.path) {
-                        popUpTo(0) {
-                            inclusive = true
-                        }
+                        popUpTo(0) { inclusive = true }
                         launchSingleTop = true
                     }
-                }
-            )
+                })
         }
-    ) {paddingValues ->
-        Box(
-            modifier = Modifier.fillMaxSize()
+
+    ) { paddingValues ->
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(paddingValues)
-                .padding(16.dp),
-            contentAlignment = Alignment.Center
+                .padding(16.dp)
         ) {
-            Text(
-                text = "Assist Screen",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
+
+            SearchBox(
+                value = searchQuery,
+                onValueChange = { searchQuery = it },
+                placeholder = "Search For Products"
             )
+
+            Spacer(modifier = Modifier.padding(8.dp))
+
+            val tabs = listOf("Active Products", "Products Sold Out")
+
+            TabRow(
+                selectedTabIndex = pagerState.currentPage,
+                containerColor = Color.Transparent,
+                contentColor = Color.Black,
+                divider = {},
+                indicator = { tabPositions ->
+                    TabRowDefaults.SecondaryIndicator(
+                        modifier = Modifier.tabIndicatorOffset(
+                            tabPositions[pagerState.currentPage]
+                        ), height = 2.dp, color = Color.Black
+                    )
+                }
+            ) {
+
+                tabs.forEachIndexed { index, title ->
+
+                    Tab(
+                        selected = pagerState.currentPage == index,
+                        onClick = {
+                            scope.launch {
+                                pagerState.animateScrollToPage(index)
+                            }
+                        },
+                        text = {
+                            Text(
+                                text = title,
+                                color = Color.Black,
+                                fontWeight = if (pagerState.currentPage == index)
+                                    FontWeight.SemiBold
+                                else
+                                    FontWeight.Normal
+                            )
+                        },
+                        selectedContentColor = Color.Black,
+                        unselectedContentColor = Color.Black
+                    )
+                }
+            }
+
+            HorizontalPager(
+                state = pagerState, modifier = Modifier.fillMaxSize()
+            ) { page ->
+                when (page) {
+                    0 -> ActiveProductsScreen()
+                    1 -> SoldOutProductsScreen()
+                }
+            }
         }
     }
 }
-

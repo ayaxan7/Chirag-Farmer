@@ -83,7 +83,7 @@ fun ChiragTopBar(
                         contentColor = BGWhite
                     ),
                     shape = RoundedCornerShape(6.dp),
-                    contentPadding = PaddingValues(horizontal = 6.dp, vertical = 2.dp)
+                    contentPadding = PaddingValues(horizontal = 6.dp, vertical = 0.dp)
                 ) {
                     Icon(
                         imageVector = buttonIcon,

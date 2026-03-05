@@ -49,7 +49,7 @@ fun SearchBox(
             .border(
                 width = 1.dp,
                 color = BorderColour,
-                shape = RoundedCornerShape(8.dp)
+                shape = RoundedCornerShape(12.dp)
             )
             .then(
                 if (focusRequester != null) {
