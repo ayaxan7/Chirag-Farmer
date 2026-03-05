@@ -6,6 +6,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -118,18 +119,28 @@ fun LocationInputField(
                 suggestions.forEach { suggestion ->
                     DropdownMenuItem(
                         text = {
-                            Text(
-                                text = suggestion.displayName,
-                                fontSize = 14.sp,
-                                color = Color.Black
-                            )
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Image(
+                                    painter = painterResource(R.drawable.map_pin),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(16.dp)
+                                )
+                                Spacer(modifier = Modifier.width(12.dp))
+                                Text(
+                                    text = suggestion.displayName,
+                                    fontSize = 14.sp,
+                                    color = Color.Black,
+                                    maxLines = 2
+                                )
+                            }
                         },
                         onClick = { onSuggestionClick(suggestion) },
                         colors = MenuDefaults.itemColors(
                             textColor = Color.Black
-                        )
+                        ),
+                        contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 16.dp, vertical = 8.dp)
                     )
-                    HorizontalDivider()
+                    HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp), color = Color.LightGray.copy(alpha = 0.5f))
                 }
             }
         }

@@ -8,7 +8,7 @@ class GetLocationSuggestionsUseCase @Inject constructor(
     private val repository: LocationRepository
 ) {
     suspend operator fun invoke(query: String): Result<List<Location>> {
-        if (query.length < 3) return Result.success(emptyList())
+        if (query.isEmpty()) return Result.success(emptyList())
         return repository.getPlaceSuggestions(query)
     }
 }
