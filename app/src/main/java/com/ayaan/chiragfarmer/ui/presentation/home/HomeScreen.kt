@@ -4,21 +4,17 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,11 +23,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -39,9 +32,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.ayaan.chiragfarmer.R
 import com.ayaan.chiragfarmer.ui.presentation.common.components.CategoryHeader
+import com.ayaan.chiragfarmer.ui.presentation.common.components.ProductCategoryCard
 import com.ayaan.chiragfarmer.ui.presentation.home.components.bookservicecard.BookServiceCard
 import com.ayaan.chiragfarmer.ui.presentation.home.components.ImageCarousel
-import com.ayaan.chiragfarmer.ui.presentation.home.components.CommonProductCard
+import com.ayaan.chiragfarmer.ui.presentation.common.components.CommonProductCard
 import com.ayaan.chiragfarmer.ui.presentation.home.components.topbar.HomeTopBar
 import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.Route
 import com.ayaan.chiragfarmer.ui.theme.BGWhite
@@ -97,7 +91,6 @@ fun HomeScreen(
     )
     val bookingStatus by viewModel.bookingStatus.collectAsStateWithLifecycle()
 
-    // Simple feedback handling (in a real app, use a SnackbarHost)
     LaunchedEffect(bookingStatus) {
         when (bookingStatus) {
             is BookingStatus.Success -> {
@@ -158,35 +151,11 @@ fun HomeScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(productCategories.size) {item->
-                    Card(
-                        modifier = Modifier
-                            .height(120.dp)
-                            .width(116.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color.Transparent
-                        )
-                    ) {
-                        Box(
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Image(
-                                painter = painterResource(productCategories[item].second),
-                                contentDescription = productCategories[item].first,
-                                modifier = Modifier.fillMaxSize(),
-                                contentScale = ContentScale.FillBounds
-                            )
-                            Text(
-                                text=productCategories[item].first,
-                                color = Color.White,
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.W600,
-                                lineHeight = 12.sp,
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 8.dp)
-                            )
-                        }
-                    }
+                items(productCategories) { category ->
+                    ProductCategoryCard(
+                        title = category.first,
+                        imageRes = category.second
+                    )
                 }
             }
 
@@ -280,7 +249,6 @@ fun HomeScreen(
                     )
                 }
             }
-//            Spacer(modifier = Modifier.height(16.dp))
             CategoryHeader(
                 category = "Our USPs"
             )

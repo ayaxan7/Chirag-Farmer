@@ -1,4 +1,4 @@
-package com.ayaan.chiragfarmer.ui.presentation.sell.screens
+package com.ayaan.chiragfarmer.ui.presentation.sell.tabs
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,12 +9,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
-fun ActiveProductsScreen() {
+fun SoldOutProductsScreen() {
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        Text("Active Products Screen")
+        Text("Sold Out Products Screen")
     }
 }

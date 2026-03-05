@@ -1,9 +1,10 @@
-package com.ayaan.chiragfarmer.ui.presentation.home.components
+package com.ayaan.chiragfarmer.ui.presentation.common.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,10 +16,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.Cancel
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -32,10 +35,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.FontWeight.Companion.W400
+import androidx.compose.ui.text.font.FontWeight.Companion.W500
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ayaan.chiragfarmer.R
+import com.ayaan.chiragfarmer.ui.presentation.sell.components.DeleteItemBox
 import com.ayaan.chiragfarmer.ui.theme.BGBlack
 import com.ayaan.chiragfarmer.ui.theme.BGWhite
 import com.ayaan.chiragfarmer.ui.theme.BorderGray
@@ -52,19 +58,17 @@ fun CommonProductCard(
     rating: String,
     selectedSize: String = "1 Unit",
     onSizeClick: () -> Unit = {},
+    isMarkAsSoldRowVisible: Boolean = false,
+    onMarkAsSoldClick: () -> Unit = {}
 ) {
     Card(
         modifier = modifier
             .width(200.dp)
-            .height(280.dp),
-        colors = CardDefaults.cardColors(
+            .wrapContentHeight(), colors = CardDefaults.cardColors(
             containerColor = BGWhite
-        ),
-        border = BorderStroke(
-            width = 1.dp,
-            color = BorderGray
-        ),
-        shape = RoundedCornerShape(12.dp)
+        ), border = BorderStroke(
+            width = 1.dp, color = BorderGray
+        ), shape = RoundedCornerShape(12.dp)
     ) {
         Column(
             modifier = Modifier.fillMaxSize()
@@ -76,7 +80,6 @@ fun CommonProductCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(160.dp),
-//                    .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)),
                 contentScale = ContentScale.FillBounds
             )
 
@@ -101,7 +104,7 @@ fun CommonProductCard(
                 Text(
                     text = brandName,
                     fontSize = 10.sp,
-                    fontWeight = FontWeight.W400,
+                    fontWeight = W400,
                     color = TextDarkGray
                 )
 
@@ -149,7 +152,7 @@ fun CommonProductCard(
                         Text(
                             text = rating,
                             fontSize = 10.sp,
-                            fontWeight = FontWeight.W400,
+                            fontWeight = W400,
                             color = Color.Black
                         )
                     }
@@ -166,7 +169,7 @@ fun CommonProductCard(
                     Text(
                         text = "Size",
                         fontSize = 11.sp,
-                        fontWeight = FontWeight.W500,
+                        fontWeight = W500,
                         color = Color.Black
                     )
 
@@ -176,16 +179,12 @@ fun CommonProductCard(
                             .width(120.dp)
                             .height(24.dp)
                             .background(
-                                color = Color.White,
-                                shape = RoundedCornerShape(6.dp)
+                                color = Color.White, shape = RoundedCornerShape(6.dp)
                             )
                             .border(
-                                width = 1.dp,
-                                color = BorderGray,
-                                shape = RoundedCornerShape(6.dp)
+                                width = 1.dp, color = BorderGray, shape = RoundedCornerShape(6.dp)
                             )
-                            .padding(horizontal = 10.dp),
-                        contentAlignment = Alignment.Center
+                            .padding(horizontal = 10.dp), contentAlignment = Alignment.Center
                     ) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -193,9 +192,7 @@ fun CommonProductCard(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = selectedSize,
-                                fontSize = 11.sp,
-                                color = Color.Black
+                                text = selectedSize, fontSize = 11.sp, color = Color.Black
                             )
                             Icon(
                                 imageVector = Icons.Filled.KeyboardArrowDown,
@@ -206,6 +203,50 @@ fun CommonProductCard(
                         }
                     }
                 }
+                if (isMarkAsSoldRowVisible) {
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .wrapContentSize()
+                                .clip(RoundedCornerShape(6.dp))
+                                .background(BGBlack)
+                                .clickable { onMarkAsSoldClick() }
+                                .padding(start = 4.dp, top = 2.dp, bottom = 2.dp, end = 8.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+
+                                Icon(
+                                    imageVector = Icons.Outlined.Cancel,
+                                    contentDescription = "Mark as Sold",
+                                    modifier = Modifier.size(12.dp),
+                                    tint = BGWhite
+                                )
+
+                                Spacer(modifier = Modifier.width(6.dp))
+
+                                Text(
+                                    text = "Mark as Sold",
+                                    fontSize = 12.sp,
+                                    fontWeight = W400,
+                                    color = BGWhite
+                                )
+                            }
+                        }
+                        Spacer(modifier = Modifier.weight(1f))
+                        DeleteItemBox(
+                            onDelete={}
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(12.dp))
             }
         }
     }

@@ -9,7 +9,6 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Tab
@@ -32,8 +31,8 @@ import com.ayaan.chiragfarmer.R
 import com.ayaan.chiragfarmer.ui.presentation.home.components.search.SearchBox
 import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.ChiragTopBar
 import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.Route
-import com.ayaan.chiragfarmer.ui.presentation.sell.screens.ActiveProductsScreen
-import com.ayaan.chiragfarmer.ui.presentation.sell.screens.SoldOutProductsScreen
+import com.ayaan.chiragfarmer.ui.presentation.sell.tabs.ActiveProductsScreen
+import com.ayaan.chiragfarmer.ui.presentation.sell.tabs.SoldOutProductsScreen
 import com.ayaan.chiragfarmer.ui.theme.BGBlack
 import com.ayaan.chiragfarmer.ui.theme.BGWhite
 import kotlinx.coroutines.launch
