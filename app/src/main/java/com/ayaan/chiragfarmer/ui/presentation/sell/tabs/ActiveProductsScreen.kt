@@ -25,7 +25,8 @@ import com.ayaan.chiragfarmer.ui.theme.BGBlack
 fun ActiveProductsScreen(
     products: LazyPagingItems<Product>,
     onToggleSoldOut: (String) -> Unit,
-    onDeleteProduct: (String) -> Unit
+    onDeleteProduct: (String) -> Unit,
+    onEditProduct: (String) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -70,6 +71,9 @@ fun ActiveProductsScreen(
                                     },
                                     onDeleteClick = {
                                         onDeleteProduct(product.productId)
+                                    },
+                                    onEditClick = {
+                                        onEditProduct(product.productId)
                                     },
                                     isSoldOut = false
                                 )

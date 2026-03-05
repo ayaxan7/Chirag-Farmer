@@ -26,6 +26,9 @@ fun EditItemBox(
                 color = EditGreen,
                 shape = RoundedCornerShape(4.dp)
             )
+            .clickable{
+                onEdit()
+            }
     ){
         Image(
             painter = painterResource(R.drawable.ic_edit),

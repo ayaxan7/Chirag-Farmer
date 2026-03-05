@@ -187,6 +187,9 @@ fun SellScreen(
                         },
                         onDeleteProduct = { productId ->
                             viewModel.deleteProduct(productId)
+                        },
+                        onEditProduct = { productId ->
+                            navController.navigate(Route.SellProduct.createRoute(productId))
                         }
                     )
                     1 -> SoldOutProductsScreen(

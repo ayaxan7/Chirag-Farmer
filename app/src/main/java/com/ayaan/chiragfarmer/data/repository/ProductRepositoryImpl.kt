@@ -8,7 +8,9 @@ import com.ayaan.chiragfarmer.data.paging.ProductPagingSource
 import com.ayaan.chiragfarmer.data.remote.ProductApiService
 import com.ayaan.chiragfarmer.data.remote.dto.AddProductRequest
 import com.ayaan.chiragfarmer.data.remote.dto.DeleteProductRequest
+import com.ayaan.chiragfarmer.data.remote.dto.ProductDetailsData
 import com.ayaan.chiragfarmer.data.remote.dto.ToggleSoldOutRequest
+import com.ayaan.chiragfarmer.data.remote.dto.UpdateProductRequest
 import com.ayaan.chiragfarmer.domain.model.Product
 import com.ayaan.chiragfarmer.domain.repository.ProductRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -37,6 +39,24 @@ class ProductRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getProductDetails(productId: String): Result<ProductDetailsData> {
+        return try {
+            val token = authDataStore.getAuthToken().first()
+            if (token.isNullOrEmpty()) {
+                return Result.failure(Exception("Authentication token not found"))
+            }
+
+            val response = apiService.getProductDetails("Bearer $token", productId)
+            if (response.success && response.data != null) {
+                Result.success(response.data)
+            } else {
+                Result.failure(Exception(response.message))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     override suspend fun addProduct(request: AddProductRequest): Result<String> {
         return try {
             val token = authDataStore.getAuthToken().first()
@@ -47,6 +67,24 @@ class ProductRepositoryImpl @Inject constructor(
             val response = apiService.addProduct("Bearer $token", request)
             if (response.success && response.data != null) {
                 Result.success(response.data.id)
+            } else {
+                Result.failure(Exception(response.message))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun updateProduct(request: UpdateProductRequest): Result<Unit> {
+        return try {
+            val token = authDataStore.getAuthToken().first()
+            if (token.isNullOrEmpty()) {
+                return Result.failure(Exception("Authentication token not found"))
+            }
+
+            val response = apiService.updateProduct("Bearer $token", request)
+            if (response.success) {
+                Result.success(Unit)
             } else {
                 Result.failure(Exception(response.message))
             }

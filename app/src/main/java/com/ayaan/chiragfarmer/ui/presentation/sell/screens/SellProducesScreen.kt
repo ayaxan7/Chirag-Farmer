@@ -53,6 +53,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 @Composable
 fun SellProducesScreen(
     navController: NavHostController,
+    productId: String? = null,
     viewModel: SellProducesViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
@@ -65,14 +66,44 @@ fun SellProducesScreen(
     var productDescription by remember { mutableStateOf("") }
 
     val imageUri by viewModel.imageUri.collectAsStateWithLifecycle()
+    val existingImageUrl by viewModel.existingImageUrl.collectAsStateWithLifecycle()
     val addProductState by viewModel.addProductState.collectAsStateWithLifecycle()
+    val fetchProductState by viewModel.fetchProductState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
+    val isEditMode = productId != null
     // Image picker launcher
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         viewModel.onImageSelected(uri)
+    }
+
+    // Fetch product details if editing
+    LaunchedEffect(productId) {
+        if (productId != null) {
+            viewModel.fetchProductDetails(productId)
+        }
+    }
+
+    // Handle fetch product state
+    LaunchedEffect(fetchProductState) {
+        when (val state = fetchProductState) {
+            is FetchProductState.Success -> {
+                val product = state.product
+                productCategory = product.category ?: ""
+                productTitle = product.title
+                availableStock = product.availableStockWeight?.toString() ?: ""
+                pricing = product.price.toString()
+                productDescription = product.description ?: ""
+                viewModel.resetFetchState()
+            }
+            is FetchProductState.Error -> {
+                snackbarHostState.showSnackbar(state.message)
+                viewModel.resetFetchState()
+            }
+            else -> Unit
+        }
     }
 
     // Handle product submission states
@@ -96,16 +127,16 @@ fun SellProducesScreen(
             ChiragTopBar(
                 navController = navController,
                 icon = R.drawable.ic_arrow,
-                title = "Sell Produces"
+                title = if (isEditMode) "Edit Product" else "Sell Produces"
             )
         },
         containerColor = BGWhite,
         snackbarHost = { SnackbarHost(snackbarHostState) }
-    ) { paddingValues ->
+    ) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
+                .padding(innerPadding)
         ) {
             Column(
                 modifier = Modifier
@@ -151,10 +182,22 @@ fun SellProducesScreen(
                 FieldLabel(text = "Images")
                 Spacer(modifier = Modifier.height(10.dp))
 
+                // Show existing image or selected new image
                 if (imageUri != null) {
                     Image(
                         painter = rememberAsyncImagePainter(imageUri),
                         contentDescription = "Selected product image",
+                        modifier = Modifier
+                            .size(100.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .border(1.dp, Color.Gray, RoundedCornerShape(8.dp)),
+                        contentScale = ContentScale.Crop
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                } else if (existingImageUrl != null) {
+                    Image(
+                        painter = rememberAsyncImagePainter(existingImageUrl),
+                        contentDescription = "Existing product image",
                         modifier = Modifier
                             .size(100.dp)
                             .clip(RoundedCornerShape(8.dp))
@@ -223,11 +266,16 @@ fun SellProducesScreen(
 
                 // Submit Button
                 ChiragButton(
-                    text = if (addProductState is AddProductState.UploadingImage)
+                    text = if (fetchProductState is FetchProductState.Loading)
+                        "Loading..."
+                    else if (addProductState is AddProductState.UploadingImage)
                         "Uploading Image..."
                     else if (addProductState is AddProductState.Loading)
                         "Submitting..."
-                    else "Submit",
+                    else if (isEditMode)
+                        "Update Product"
+                    else
+                        "Submit",
                     onClick = {
                         viewModel.submitProduct(
                             context = context,
@@ -235,23 +283,27 @@ fun SellProducesScreen(
                             title = productTitle,
                             availableStock = availableStock,
                             price = pricing,
-                            description = productDescription
+                            description = productDescription,
+                            isUpdate = isEditMode
                         )
                     },
                     enabled = productTitle.isNotEmpty() &&
                              availableStock.isNotEmpty() &&
                              location.isNotEmpty() &&
                              pricing.isNotEmpty() &&
-                             imageUri != null &&
+                             (imageUri != null || existingImageUrl != null) &&
                              addProductState !is AddProductState.Loading &&
-                             addProductState !is AddProductState.UploadingImage
+                             addProductState !is AddProductState.UploadingImage &&
+                             fetchProductState !is FetchProductState.Loading
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
             }
 
             // Loading indicator
-            if (addProductState is AddProductState.Loading || addProductState is AddProductState.UploadingImage) {
+            if (addProductState is AddProductState.Loading ||
+                addProductState is AddProductState.UploadingImage ||
+                fetchProductState is FetchProductState.Loading) {
                 CircularProgressIndicator(
                     modifier = Modifier.align(Alignment.Center)
                 )

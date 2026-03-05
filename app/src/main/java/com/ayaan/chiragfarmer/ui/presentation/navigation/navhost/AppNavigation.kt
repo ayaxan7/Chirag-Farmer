@@ -105,8 +105,22 @@ fun AppNavigation(
         composable(Route.Sell.path) {
             SellScreen(navController = navController)
         }
-        composable(Route.SellProduct.path) {
-            SellProducesScreen(navController = navController)
+        composable(
+            Route.SellProduct.path,
+            arguments = listOf(
+                navArgument("productId") {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
+                }
+            )
+        ) { backStackEntry ->
+            val productId = backStackEntry.arguments?.getString("productId")
+            SellProducesScreen(
+                navController = navController,
+                productId = productId,
+                viewModel = hiltViewModel()
+            )
         }
     }
 }

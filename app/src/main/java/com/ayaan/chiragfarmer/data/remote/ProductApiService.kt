@@ -4,13 +4,17 @@ import com.ayaan.chiragfarmer.data.remote.dto.AddProductRequest
 import com.ayaan.chiragfarmer.data.remote.dto.AddProductResponse
 import com.ayaan.chiragfarmer.data.remote.dto.DeleteProductRequest
 import com.ayaan.chiragfarmer.data.remote.dto.DeleteProductResponse
+import com.ayaan.chiragfarmer.data.remote.dto.ProductDetailsResponse
 import com.ayaan.chiragfarmer.data.remote.dto.ProductResponseDto
 import com.ayaan.chiragfarmer.data.remote.dto.ToggleSoldOutRequest
 import com.ayaan.chiragfarmer.data.remote.dto.ToggleSoldOutResponse
+import com.ayaan.chiragfarmer.data.remote.dto.UpdateProductRequest
+import com.ayaan.chiragfarmer.data.remote.dto.UpdateProductResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ProductApiService {
@@ -23,11 +27,23 @@ interface ProductApiService {
         @Query("search") search: String? = null
     ): ProductResponseDto
 
+    @GET("api/farmers/products/{productId}")
+    suspend fun getProductDetails(
+        @Header("Authorization") token: String,
+        @Path("productId") productId: String
+    ): ProductDetailsResponse
+
     @POST("api/farmers/add-product")
     suspend fun addProduct(
         @Header("Authorization") token: String,
         @Body request: AddProductRequest
     ): AddProductResponse
+
+    @POST("api/farmers/products/update")
+    suspend fun updateProduct(
+        @Header("Authorization") token: String,
+        @Body request: UpdateProductRequest
+    ): UpdateProductResponse
 
     @POST("api/farmers/products/toggle-sold-out")
     suspend fun toggleSoldOut(
