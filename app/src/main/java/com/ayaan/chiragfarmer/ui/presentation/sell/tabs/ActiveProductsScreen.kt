@@ -61,7 +61,9 @@ fun ActiveProductsScreen() {
                     isMarkAsSoldRowVisible = true,
                     onMarkAsSoldClick = {
                         // Handle mark as sold click
-                    })
+                    },
+                    isSoldOut = true
+                )
             }
         }
     }

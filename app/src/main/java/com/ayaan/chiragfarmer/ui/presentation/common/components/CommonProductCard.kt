@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -46,6 +47,7 @@ import com.ayaan.chiragfarmer.ui.presentation.sell.components.EditItemBox
 import com.ayaan.chiragfarmer.ui.theme.BGBlack
 import com.ayaan.chiragfarmer.ui.theme.BGWhite
 import com.ayaan.chiragfarmer.ui.theme.BorderGray
+import com.ayaan.chiragfarmer.ui.theme.DisabledButtonGray
 import com.ayaan.chiragfarmer.ui.theme.TextDarkGray
 
 @Composable
@@ -60,7 +62,10 @@ fun CommonProductCard(
     selectedSize: String = "1 Unit",
     onSizeClick: () -> Unit = {},
     isMarkAsSoldRowVisible: Boolean = false,
-    onMarkAsSoldClick: () -> Unit = {}
+    onMarkAsSoldClick: () -> Unit = {},
+    onEditClick: () -> Unit={},
+    onDeleteClick: () -> Unit = {},
+    isSoldOut: Boolean=false
 ) {
     Card(
         modifier = modifier
@@ -204,7 +209,7 @@ fun CommonProductCard(
                         }
                     }
                 }
-                if (isMarkAsSoldRowVisible) {
+                if (isMarkAsSoldRowVisible && isSoldOut) {
                     Spacer(modifier = Modifier.height(12.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -213,6 +218,53 @@ fun CommonProductCard(
                         Box(
                             modifier = Modifier
                                 .wrapContentSize()
+                                .clip(RoundedCornerShape(6.dp))
+                                .background(DisabledButtonGray)
+                                .clickable { }
+                                .padding(start = 4.dp, top = 2.dp, bottom = 2.dp, end = 8.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+
+                                Icon(
+                                    imageVector = Icons.Outlined.Cancel,
+                                    contentDescription = "Mark as Sold",
+                                    modifier = Modifier.size(12.dp),
+                                    tint = BGWhite
+                                )
+
+                                Spacer(modifier = Modifier.width(6.dp))
+
+                                Text(
+                                    text = "Mark as Sold",
+                                    fontSize = 12.sp,
+                                    fontWeight = W400,
+                                    color = BGWhite
+                                )
+                            }
+                        }
+                        Spacer(modifier = Modifier.weight(1f))
+                        DeleteItemBox(
+                            onDelete={}
+                        )
+                        Spacer(modifier = Modifier.width(2.dp))
+                        EditItemBox(
+                            onEdit={}
+                        )
+                    }
+                }else if (!isSoldOut && isMarkAsSoldRowVisible){
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentHeight()
                                 .clip(RoundedCornerShape(6.dp))
                                 .background(BGBlack)
                                 .clickable { onMarkAsSoldClick() }
