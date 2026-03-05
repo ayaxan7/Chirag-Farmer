@@ -40,6 +40,7 @@ import androidx.compose.ui.text.font.FontWeight.Companion.W500
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.ayaan.chiragfarmer.R
 import com.ayaan.chiragfarmer.ui.presentation.sell.components.DeleteItemBox
 import com.ayaan.chiragfarmer.ui.presentation.sell.components.EditItemBox
@@ -48,8 +49,6 @@ import com.ayaan.chiragfarmer.ui.theme.BGWhite
 import com.ayaan.chiragfarmer.ui.theme.BorderGray
 import com.ayaan.chiragfarmer.ui.theme.DisabledButtonGray
 import com.ayaan.chiragfarmer.ui.theme.TextDarkGray
-
-import coil.compose.AsyncImage
 
 @Composable
 fun CommonProductCard(
@@ -217,86 +216,51 @@ fun CommonProductCard(
                         }
                     }
                 }
-                if (isMarkAsSoldRowVisible && isSoldOut) {
+                if (isMarkAsSoldRowVisible) {
                     Spacer(modifier = Modifier.height(12.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
+                        val backgroundColor = if (isSoldOut) DisabledButtonGray else BGBlack
+                        val text = if (isSoldOut) "Marked as Sold" else "Mark as Sold"
+                        val clickableModifier =
+                            if (isSoldOut) Modifier else Modifier.clickable { onMarkAsSoldClick() }
                         Box(
                             modifier = Modifier
-                                .wrapContentSize()
-                                .clip(RoundedCornerShape(6.dp))
-                                .background(DisabledButtonGray)
-                                .clickable { }
-                                .padding(start = 4.dp, top = 2.dp, bottom = 2.dp, end = 8.dp),
-                            contentAlignment = Alignment.Center) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Center
-                            ) {
-
-                                Icon(
-                                    imageVector = Icons.Outlined.Cancel,
-                                    contentDescription = "Marked as Sold",
-                                    modifier = Modifier.size(12.dp),
-                                    tint = BGWhite
-                                )
-
-                                Spacer(modifier = Modifier.width(6.dp))
-
-                                Text(
-                                    text = "Marked as Sold",
-                                    fontSize = 12.sp,
-                                    fontWeight = W400,
-                                    color = BGWhite
-                                )
-                            }
-                        }
-                    }
-                } else if (!isSoldOut && isMarkAsSoldRowVisible) {
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
+                                .weight(1f)
                                 .wrapContentHeight()
                                 .clip(RoundedCornerShape(6.dp))
-                                .background(BGBlack)
-                                .clickable { onMarkAsSoldClick() }
+                                .background(backgroundColor)
+                                .then(clickableModifier)
                                 .padding(start = 4.dp, top = 2.dp, bottom = 2.dp, end = 8.dp),
-                            contentAlignment = Alignment.Center) {
+                            contentAlignment = Alignment.Center
+                        ) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.Center
                             ) {
-
                                 Icon(
                                     imageVector = Icons.Outlined.Cancel,
-                                    contentDescription = "Mark as Sold",
+                                    contentDescription = text,
                                     modifier = Modifier.size(12.dp),
                                     tint = BGWhite
                                 )
-
                                 Spacer(modifier = Modifier.width(6.dp))
-
                                 Text(
-                                    text = "Mark as Sold",
+                                    text = text,
                                     fontSize = 12.sp,
                                     fontWeight = W400,
                                     color = BGWhite
                                 )
                             }
                         }
-                        Spacer(modifier = Modifier.weight(1f))
-                        DeleteItemBox(
-                            onDelete = {})
-                        Spacer(modifier = Modifier.width(2.dp))
-                        EditItemBox(
-                            onEdit = {})
+                        if(!isSoldOut) {
+                            Spacer(modifier = Modifier.width(8.dp))
+                            DeleteItemBox(onDelete = onDeleteClick)
+                            Spacer(modifier = Modifier.width(4.dp))
+                            EditItemBox(onEdit = onEditClick)
+                        }
                     }
                 }
                 Spacer(modifier = Modifier.height(12.dp))
