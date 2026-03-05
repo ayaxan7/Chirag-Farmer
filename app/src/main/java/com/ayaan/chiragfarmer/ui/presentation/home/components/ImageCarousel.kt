@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -62,7 +63,8 @@ fun ImageCarousel(
 
         Row(
             modifier = Modifier
-                .align(Alignment.BottomCenter),
+                .align(Alignment.BottomCenter)
+                .padding(bottom=24.dp),
             horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             repeat(images.size) { index ->
