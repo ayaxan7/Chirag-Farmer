@@ -23,7 +23,8 @@ import com.ayaan.chiragfarmer.ui.theme.BGBlack
 
 @Composable
 fun SoldOutProductsScreen(
-    products: LazyPagingItems<Product>
+    products: LazyPagingItems<Product>,
+    onToggleSoldOut: (String) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -63,7 +64,9 @@ fun SoldOutProductsScreen(
                                     rating = "4.8", // Static for now
                                     onSizeClick = {},
                                     isMarkAsSoldRowVisible = true,
-                                    onMarkAsSoldClick = {},
+                                    onMarkAsSoldClick = {
+                                        onToggleSoldOut(product.productId)
+                                    },
                                     isSoldOut = true
                                 )
                             }

@@ -37,6 +37,7 @@ import com.ayaan.chiragfarmer.ui.presentation.sell.tabs.ActiveProductsScreen
 import com.ayaan.chiragfarmer.ui.presentation.sell.tabs.SoldOutProductsScreen
 import com.ayaan.chiragfarmer.ui.theme.BGBlack
 import com.ayaan.chiragfarmer.ui.theme.BGWhite
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -47,6 +48,7 @@ fun SellScreen(
 
     val snackBarHostState = remember { SnackbarHostState() }
     val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
+    val toggleState by viewModel.toggleState.collectAsStateWithLifecycle()
 
     val pagerState = rememberPagerState(pageCount = { 2 })
     val scope = rememberCoroutineScope()
@@ -54,8 +56,26 @@ fun SellScreen(
     val activeProducts = viewModel.activeProducts.collectAsLazyPagingItems()
     val soldOutProducts = viewModel.soldOutProducts.collectAsLazyPagingItems()
 
+    // Handle toggle state changes
+    LaunchedEffect(toggleState) {
+        when (val state = toggleState) {
+            is ToggleSoldOutState.Success -> {
+                snackBarHostState.showSnackbar(state.message)
+                viewModel.resetToggleState()
+                // Refresh the appropriate list
+                activeProducts.refresh()
+                soldOutProducts.refresh()
+            }
+            is ToggleSoldOutState.Error -> {
+                snackBarHostState.showSnackbar(state.message)
+                viewModel.resetToggleState()
+            }
+            else -> Unit
+        }
+    }
+
     LaunchedEffect(pagerState.currentPage, searchQuery) {
-        kotlinx.coroutines.delay(500) // Debounce
+        delay(500)
         if (pagerState.currentPage == 0) {
             viewModel.fetchActive(searchQuery)
         } else {
@@ -142,8 +162,18 @@ fun SellScreen(
                 state = pagerState, modifier = Modifier.fillMaxSize()
             ) { page ->
                 when (page) {
-                    0 -> ActiveProductsScreen(products = activeProducts)
-                    1 -> SoldOutProductsScreen(products = soldOutProducts)
+                    0 -> ActiveProductsScreen(
+                        products = activeProducts,
+                        onToggleSoldOut = { productId ->
+                            viewModel.toggleSoldOut(productId)
+                        }
+                    )
+                    1 -> SoldOutProductsScreen(
+                        products = soldOutProducts,
+                        onToggleSoldOut = { productId ->
+                            viewModel.toggleSoldOut(productId)
+                        }
+                    )
                 }
             }
         }

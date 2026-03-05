@@ -8,4 +8,5 @@ import kotlinx.coroutines.flow.Flow
 interface ProductRepository {
     fun getFarmerProducts(type: String, search: String?): Flow<PagingData<Product>>
     suspend fun addProduct(request: AddProductRequest): Result<String>
+    suspend fun toggleSoldOut(productId: String): Result<Boolean>
 }
