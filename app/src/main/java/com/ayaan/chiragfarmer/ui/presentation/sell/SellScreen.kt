@@ -17,6 +17,7 @@ import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -53,7 +54,7 @@ fun SellScreen(
     val activeProducts = viewModel.activeProducts.collectAsLazyPagingItems()
     val soldOutProducts = viewModel.soldOutProducts.collectAsLazyPagingItems()
 
-    androidx.compose.runtime.LaunchedEffect(pagerState.currentPage, searchQuery) {
+    LaunchedEffect(pagerState.currentPage, searchQuery) {
         kotlinx.coroutines.delay(500) // Debounce
         if (pagerState.currentPage == 0) {
             viewModel.fetchActive(searchQuery)
