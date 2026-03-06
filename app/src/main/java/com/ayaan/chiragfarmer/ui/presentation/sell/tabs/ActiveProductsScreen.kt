@@ -11,6 +11,10 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -18,6 +22,8 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import com.ayaan.chiragfarmer.domain.model.Product
 import com.ayaan.chiragfarmer.ui.presentation.common.components.CommonProductCard
+import com.ayaan.chiragfarmer.ui.presentation.sell.components.RemoveProductDialog
+import com.ayaan.chiragfarmer.ui.presentation.sell.components.SoldOutDialog
 import com.ayaan.chiragfarmer.ui.theme.BGBlack
 
 @Composable
@@ -27,6 +33,38 @@ fun ActiveProductsScreen(
     onDeleteProduct: (String) -> Unit,
     onEditProduct: (String) -> Unit
 ) {
+    var showRemoveDialog by remember { mutableStateOf(false) }
+    var showSoldOutDialog by remember { mutableStateOf(false) }
+    var selectedProductId by remember { mutableStateOf<String?>(null) }
+
+    // Remove Product Dialog
+    if (showRemoveDialog && selectedProductId != null) {
+        RemoveProductDialog(
+            onDismiss = {
+                showRemoveDialog = false
+                selectedProductId = null
+            },
+            onConfirm = {
+                selectedProductId?.let { onDeleteProduct(it) }
+                selectedProductId = null
+            }
+        )
+    }
+
+    // Sold Out Dialog
+    if (showSoldOutDialog && selectedProductId != null) {
+        SoldOutDialog(
+            onDismiss = {
+                showSoldOutDialog = false
+                selectedProductId = null
+            },
+            onConfirm = {
+                selectedProductId?.let { onToggleSoldOut(it) }
+                selectedProductId = null
+            }
+        )
+    }
+
     when (products.loadState.refresh) {
         is LoadState.Loading -> {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -47,7 +85,7 @@ fun ActiveProductsScreen(
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
                     modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 16.dp),
+                    contentPadding = PaddingValues(vertical = 16.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
@@ -62,10 +100,12 @@ fun ActiveProductsScreen(
                                 onSizeClick = {},
                                 isMarkAsSoldRowVisible = true,
                                 onMarkAsSoldClick = {
-                                    onToggleSoldOut(product.productId)
+                                    selectedProductId = product.productId
+                                    showSoldOutDialog = true
                                 },
                                 onDeleteClick = {
-                                    onDeleteProduct(product.productId)
+                                    selectedProductId = product.productId
+                                    showRemoveDialog = true
                                 },
                                 onEditClick = {
                                     onEditProduct(product.productId)
