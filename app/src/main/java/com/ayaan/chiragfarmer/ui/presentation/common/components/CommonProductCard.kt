@@ -37,6 +37,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.W400
 import androidx.compose.ui.text.font.FontWeight.Companion.W500
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -245,12 +246,14 @@ fun CommonProductCard(
                                     modifier = Modifier.size(12.dp),
                                     tint = BGWhite
                                 )
-                                Spacer(modifier = Modifier.width(6.dp))
+                                Spacer(modifier = Modifier.width(4.dp))
                                 Text(
                                     text = text,
                                     fontSize = 12.sp,
                                     fontWeight = W400,
-                                    color = BGWhite
+                                    color = BGWhite,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Clip
                                 )
                             }
                         }

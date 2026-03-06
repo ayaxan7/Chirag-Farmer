@@ -2,13 +2,12 @@ package com.ayaan.chiragfarmer.ui.presentation.sell.tabs
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,60 +27,62 @@ fun ActiveProductsScreen(
     onDeleteProduct: (String) -> Unit,
     onEditProduct: (String) -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 2.dp)
-            .padding(top = 16.dp)
-    ) {
-        when (products.loadState.refresh) {
-            is LoadState.Loading -> {
-                Box(modifier = Modifier.fillMaxWidth().padding(32.dp), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(color = BGBlack)
-                }
+    when (products.loadState.refresh) {
+        is LoadState.Loading -> {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator(color = BGBlack)
             }
-            is LoadState.Error -> {
-                Box(modifier = Modifier.fillMaxWidth().padding(32.dp), contentAlignment = Alignment.Center) {
-                    Text(text = "Error loading products")
-                }
+        }
+        is LoadState.Error -> {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(text = "Error loading products")
             }
-            else -> {
-                if (products.itemCount == 0) {
-                    Box(modifier = Modifier.fillMaxWidth().padding(32.dp), contentAlignment = Alignment.Center) {
-                        Text(text = "No active products found")
-                    }
-                } else {
-                    LazyRow(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        items(products.itemCount) { index ->
-                            products[index]?.let { product ->
-                                CommonProductCard(
-                                    imageUrl = product.imageUrl,
-                                    productName = product.productName,
-                                    brandName = product.sellerName,
-                                    currentPrice = product.price.toString(),
-                                    rating = "4.8", // Static for now as per DTO
-                                    onSizeClick = {},
-                                    isMarkAsSoldRowVisible = true,
-                                    onMarkAsSoldClick = {
-                                        onToggleSoldOut(product.productId)
-                                    },
-                                    onDeleteClick = {
-                                        onDeleteProduct(product.productId)
-                                    },
-                                    onEditClick = {
-                                        onEditProduct(product.productId)
-                                    },
-                                    isSoldOut = false
-                                )
-                            }
+        }
+        else -> {
+            if (products.itemCount == 0) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text(text = "No active products found")
+                }
+            } else {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    items(products.itemCount) { index ->
+                        products[index]?.let { product ->
+                            CommonProductCard(
+                                imageUrl = product.imageUrl,
+                                productName = product.productName,
+                                brandName = product.sellerName,
+                                currentPrice = product.price.toString(),
+                                rating = "4.8", // Static for now as per DTO
+                                onSizeClick = {},
+                                isMarkAsSoldRowVisible = true,
+                                onMarkAsSoldClick = {
+                                    onToggleSoldOut(product.productId)
+                                },
+                                onDeleteClick = {
+                                    onDeleteProduct(product.productId)
+                                },
+                                onEditClick = {
+                                    onEditProduct(product.productId)
+                                },
+                                isSoldOut = false
+                            )
                         }
-                        if (products.loadState.append is LoadState.Loading) {
-                            item {
-                                CircularProgressIndicator(color = BGBlack, modifier = Modifier.padding(16.dp))
+                    }
+                    if (products.loadState.append is LoadState.Loading) {
+                        item {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                CircularProgressIndicator(color = BGBlack)
                             }
                         }
                     }
