@@ -1,10 +1,11 @@
-package com.ayaan.chiragfarmer.ui.presentation.sell.screens
+package com.ayaan.chiragfarmer.ui.presentation.sell.screens.sellproduces
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -190,6 +191,9 @@ fun SellProducesScreen(
                         modifier = Modifier
                             .size(100.dp)
                             .clip(RoundedCornerShape(8.dp))
+                            .clickable{
+                                imagePickerLauncher.launch("image/*")
+                            }
                             .border(1.dp, Color.Gray, RoundedCornerShape(8.dp)),
                         contentScale = ContentScale.Crop
                     )
@@ -200,18 +204,21 @@ fun SellProducesScreen(
                         contentDescription = "Existing product image",
                         modifier = Modifier
                             .size(100.dp)
+                            .clickable{
+                                imagePickerLauncher.launch("image/*")
+                            }
                             .clip(RoundedCornerShape(8.dp))
                             .border(1.dp, Color.Gray, RoundedCornerShape(8.dp)),
                         contentScale = ContentScale.Crop
                     )
                     Spacer(modifier = Modifier.height(8.dp))
+                }else{
+                    ProductImageUpload(
+                        onClick = {
+                            imagePickerLauncher.launch("image/*")
+                        }
+                    )
                 }
-
-                ProductImageUpload(
-                    onClick = {
-                        imagePickerLauncher.launch("image/*")
-                    }
-                )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
