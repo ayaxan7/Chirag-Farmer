@@ -70,7 +70,7 @@ fun CommonProductCard(
 ) {
     Card(
         modifier = modifier
-            .width(200.dp)
+            .fillMaxWidth()
             .wrapContentHeight(), colors = CardDefaults.cardColors(
             containerColor = BGWhite
         ), border = BorderStroke(
@@ -80,27 +80,40 @@ fun CommonProductCard(
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
-            // Product Image
-            if (imageUrl != null) {
-                AsyncImage(
-                    model = imageUrl,
-                    contentDescription = productName,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(160.dp),
-                    contentScale = ContentScale.FillBounds,
-                    placeholder = painterResource(R.drawable.sprayer),
-                    error = painterResource(R.drawable.sprayer)
-                )
-            } else if (imageRes != null) {
-                Image(
-                    painter = painterResource(id = imageRes),
-                    contentDescription = productName,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(160.dp),
-                    contentScale = ContentScale.FillBounds
-                )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(160.dp)
+            ) {
+
+                if (imageUrl != null) {
+                    AsyncImage(
+                        model = imageUrl,
+                        contentDescription = productName,
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop,
+                        placeholder = painterResource(R.drawable.sprayer),
+                        error = painterResource(R.drawable.sprayer)
+                    )
+                } else if (imageRes != null) {
+                    Image(
+                        painter = painterResource(id = imageRes),
+                        contentDescription = productName,
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+
+                // Edit button overlay
+                if (!isSoldOut) {
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(8.dp)
+                    ) {
+                        EditItemBox(onEdit = onEditClick)
+                    }
+                }
             }
 
             Column(
@@ -175,47 +188,6 @@ fun CommonProductCard(
                 }
 
                 Spacer(modifier = Modifier.height(3.dp))
-
-                // Size Selector
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Size", fontSize = 11.sp, fontWeight = W500, color = Color.Black
-                    )
-
-                    // Size Dropdown
-                    Box(
-                        modifier = Modifier
-                            .width(120.dp)
-                            .height(24.dp)
-                            .background(
-                                color = Color.White, shape = RoundedCornerShape(6.dp)
-                            )
-                            .border(
-                                width = 1.dp, color = BorderGray, shape = RoundedCornerShape(6.dp)
-                            )
-                            .padding(horizontal = 10.dp), contentAlignment = Alignment.Center
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = selectedSize, fontSize = 11.sp, color = Color.Black
-                            )
-                            Icon(
-                                imageVector = Icons.Filled.KeyboardArrowDown,
-                                contentDescription = "Select size",
-                                tint = BorderGray,
-                                modifier = Modifier.size(16.dp)
-                            )
-                        }
-                    }
-                }
                 if (isMarkAsSoldRowVisible) {
                     Spacer(modifier = Modifier.height(12.dp))
                     Row(
@@ -257,12 +229,8 @@ fun CommonProductCard(
                                 )
                             }
                         }
-                        if (!isSoldOut) {
-                            Spacer(modifier = Modifier.width(8.dp))
-                            DeleteItemBox(onDelete = onDeleteClick)
-                            Spacer(modifier = Modifier.width(4.dp))
-                            EditItemBox(onEdit = onEditClick)
-                        }
+                        Spacer(modifier = Modifier.width(8.dp))
+                        DeleteItemBox(onDelete = onDeleteClick)
                     }
                 }
                 Spacer(modifier = Modifier.height(12.dp))

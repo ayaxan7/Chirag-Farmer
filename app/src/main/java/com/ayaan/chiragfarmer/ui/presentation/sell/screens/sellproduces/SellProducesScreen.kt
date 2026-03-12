@@ -169,7 +169,7 @@ fun SellProducesScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Product Title
-                FieldLabel(text = "Produce Tittle")
+                FieldLabel(text = "Produce Title")
                 Spacer(modifier = Modifier.height(6.dp))
                 ChiragBasicTextField(
                     value = productTitle,
@@ -180,7 +180,7 @@ fun SellProducesScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Images
-                FieldLabel(text = "Images")
+                FieldLabel(text = "Image")
                 Spacer(modifier = Modifier.height(10.dp))
 
                 // Show existing image or selected new image
@@ -223,12 +223,12 @@ fun SellProducesScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Available Stock Weight
-                FieldLabel(text = "Available Stock Weight (Kg) *")
+                FieldLabel(text = "Available Stock*")
                 Spacer(modifier = Modifier.height(6.dp))
                 ChiragBasicTextField(
                     value = availableStock,
                     onValueChange = { availableStock = it },
-                    placeholder = "KG , Grams , Litres",
+                    placeholder = "KG , Grams , Litres , Units",
                     keyboardType = KeyboardType.Number
                 )
 
@@ -240,7 +240,7 @@ fun SellProducesScreen(
                 LocationInputField(
                     value = location,
                     onValueChange = { viewModel.onLocationQueryChange(it) },
-                    placeholder = "Prtapgarh, Uttar pradesh",
+                    placeholder = "Pratapgarh, Uttar pradesh",
                     suggestions = locationSuggestions,
                     onSuggestionClick = { viewModel.onLocationSelected(it) }
                 )
@@ -258,7 +258,15 @@ fun SellProducesScreen(
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
-
+                FieldLabel(text = "Discount %")
+                Spacer(modifier = Modifier.height(6.dp))
+                ChiragBasicTextField(
+                    value = pricing,
+                    onValueChange = { pricing = it },
+                    placeholder = "Enter Discount Percentage",
+                    keyboardType = KeyboardType.Number
+                )
+                Spacer(modifier = Modifier.height(16.dp))
                 // Product Description
                 FieldLabel(text = "Produce Description")
                 Spacer(modifier = Modifier.height(6.dp))
@@ -268,15 +276,32 @@ fun SellProducesScreen(
                     placeholder = "Add Produce Description",
                     minHeight = 120
                 )
-
+                Spacer(modifier = Modifier.height(16.dp))
+                FieldLabel(text = "Produce Features")
+                Spacer(modifier = Modifier.height(6.dp))
+                MultiLineTextField(
+                    value = productDescription,
+                    onValueChange = { productDescription = it },
+                    placeholder = "Add Produce Features",
+                    minHeight = 80
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                FieldLabel(text = "Delivery Fee / KM")
+                Spacer(modifier = Modifier.height(6.dp))
+                ChiragBasicTextField(
+                    value = pricing,
+                    onValueChange = { pricing = it },
+                    placeholder = "Enter Price",
+                    keyboardType = KeyboardType.Number
+                )
                 Spacer(modifier = Modifier.height(32.dp))
 
                 // Submit Button
                 ChiragButton(
                     text = if (fetchProductState is FetchProductState.Loading)
                         "Loading..."
-                    else if (addProductState is AddProductState.UploadingImage)
-                        "Uploading Image..."
+                    else if (addProductState is AddProductState.UploadingProduct)
+                        "Uploading Product..."
                     else if (addProductState is AddProductState.Loading)
                         "Submitting..."
                     else if (isEditMode)
@@ -298,7 +323,7 @@ fun SellProducesScreen(
                         productTitle.isNotEmpty() &&
                         pricing.isNotEmpty() &&
                         addProductState !is AddProductState.Loading &&
-                        addProductState !is AddProductState.UploadingImage &&
+                        addProductState !is AddProductState.UploadingProduct &&
                         fetchProductState !is FetchProductState.Loading
                     } else {
                         productTitle.isNotEmpty() &&
@@ -307,7 +332,7 @@ fun SellProducesScreen(
                         pricing.isNotEmpty() &&
                         imageUri != null &&
                         addProductState !is AddProductState.Loading &&
-                        addProductState !is AddProductState.UploadingImage &&
+                        addProductState !is AddProductState.UploadingProduct &&
                         fetchProductState !is FetchProductState.Loading
                     }
                 )
@@ -316,7 +341,7 @@ fun SellProducesScreen(
 
             // Loading indicator
             if (addProductState is AddProductState.Loading ||
-                addProductState is AddProductState.UploadingImage ||
+                addProductState is AddProductState.UploadingProduct ||
                 fetchProductState is FetchProductState.Loading) {
                 CircularProgressIndicator(
                     modifier = Modifier.align(Alignment.Center)

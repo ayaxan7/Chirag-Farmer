@@ -92,8 +92,8 @@ fun SellScreen(
         }
     }
 
+    // Update search query based on current tab
     LaunchedEffect(pagerState.currentPage, searchQuery) {
-        delay(500)
         if (pagerState.currentPage == 0) {
             viewModel.fetchActive(searchQuery)
         } else {

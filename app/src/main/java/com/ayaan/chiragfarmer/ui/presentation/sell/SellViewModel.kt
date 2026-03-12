@@ -3,6 +3,7 @@ package com.ayaan.chiragfarmer.ui.presentation.sell
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.ayaan.chiragfarmer.domain.model.Product
 import com.ayaan.chiragfarmer.domain.usecase.DeleteProductUseCase
 import com.ayaan.chiragfarmer.domain.usecase.GetFarmerProductsUseCase
@@ -54,14 +55,14 @@ class SellViewModel @Inject constructor(
         .flatMapLatest { query ->
             getFarmerProductsUseCase(type = "active", search = query.ifEmpty { null })
         }
-//        .cachedIn(viewModelScope)
+        .cachedIn(viewModelScope)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val soldOutProducts: Flow<PagingData<Product>> = _soldOutSearchQuery
         .flatMapLatest { query ->
             getFarmerProductsUseCase(type = "sold_out", search = query.ifEmpty { null })
         }
-//        .cachedIn(viewModelScope)
+        .cachedIn(viewModelScope)
 
     fun onSearchQueryChange(query: String) {
         _searchQuery.value = query

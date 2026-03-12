@@ -31,11 +31,12 @@ class ProductPagingSource(
                 search = search
             )
             val products = response.data.products.map { it.toDomain() }
-            
+            val totalPages = (response.data.total + params.loadSize - 1) / params.loadSize
+
             LoadResult.Page(
                 data = products,
                 prevKey = if (page == 1) null else page - 1,
-                nextKey = if (products.isEmpty()) null else page + 1
+                nextKey = if (page >= totalPages || products.isEmpty()) null else page + 1
             )
         } catch (e: Exception) {
             LoadResult.Error(e)

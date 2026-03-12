@@ -26,7 +26,7 @@ import javax.inject.Inject
 sealed class AddProductState {
     data object Idle : AddProductState()
     data object Loading : AddProductState()
-    data object UploadingImage : AddProductState()
+    data object UploadingProduct : AddProductState()
     data class Success(val message: String) : AddProductState()
     data class Error(val message: String) : AddProductState()
 }
@@ -153,7 +153,7 @@ class SellProducesViewModel @Inject constructor(
                     val imageUrl = when {
                         _imageUri.value != null -> {
                             // Upload new image to Cloudinary
-                            _addProductState.value = AddProductState.UploadingImage
+                            _addProductState.value = AddProductState.UploadingProduct
                             CloudinaryUploader.uploadImage(context, _imageUri.value!!)
                         }
                         else -> null // Keep existing image (don't send in request)
@@ -210,7 +210,7 @@ class SellProducesViewModel @Inject constructor(
                     }
 
                     // Upload image to Cloudinary
-                    _addProductState.value = AddProductState.UploadingImage
+                    _addProductState.value = AddProductState.UploadingProduct
                     val imageUrl = CloudinaryUploader.uploadImage(context, imageUriValue)
 
                     // Parse numeric values
