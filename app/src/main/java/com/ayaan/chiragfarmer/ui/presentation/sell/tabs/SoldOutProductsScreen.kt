@@ -18,6 +18,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import com.ayaan.chiragfarmer.domain.model.Product
 import com.ayaan.chiragfarmer.ui.presentation.common.components.CommonProductCard
+import com.ayaan.chiragfarmer.ui.presentation.common.components.CommonProductCardData
 import com.ayaan.chiragfarmer.ui.theme.BGBlack
 
 @Composable
@@ -55,21 +56,21 @@ fun SoldOutProductsScreen(
                     items(products.itemCount) { index ->
                         products[index]?.let { product ->
                             CommonProductCard(
-                                imageUrl = product.imageUrl,
-                                productName = product.productName,
-                                brandName = product.sellerName,
-                                currentPrice = product.effectivePrice.toString(),
-                                originalPrice = product.originalPrice.toString(),
-                                rating = "4.8", // Static for now
-                                onSizeClick = {},
-                                isMarkAsSoldRowVisible = true,
+                                product = CommonProductCardData(
+                                    imageUrl = product.imageUrl,
+                                    productName = product.productName,
+                                    brandName = product.sellerName,
+                                    currentPrice = product.effectivePrice.toString(),
+                                    originalPrice = product.originalPrice.toString(),
+                                    rating = "4.8", // Static for now
+                                    isSoldOut = true
+                                ),
                                 onMarkAsSoldClick = {
                                     onToggleSoldOut(product.productId)
                                 },
                                 onDeleteClick = {
                                     onDeleteProduct(product.productId)
-                                },
-                                isSoldOut = true
+                                }
                             )
                         }
                     }

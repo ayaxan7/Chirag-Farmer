@@ -22,6 +22,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import com.ayaan.chiragfarmer.domain.model.Product
 import com.ayaan.chiragfarmer.ui.presentation.common.components.CommonProductCard
+import com.ayaan.chiragfarmer.ui.presentation.common.components.CommonProductCardData
 import com.ayaan.chiragfarmer.ui.presentation.sell.components.RemoveProductDialog
 import com.ayaan.chiragfarmer.ui.presentation.sell.components.SoldOutDialog
 import com.ayaan.chiragfarmer.ui.theme.BGBlack
@@ -94,14 +95,15 @@ fun ActiveProductsScreen(
                     items(products.itemCount) { index ->
                         products[index]?.let { product ->
                             CommonProductCard(
-                                imageUrl = product.imageUrl,
-                                productName = product.productName,
-                                brandName = product.sellerName,
-                                currentPrice = product.effectivePrice.toString(),
-                                originalPrice = product.originalPrice.toString(),
-                                rating = "4.8", // Static for now as per DTO
-                                onSizeClick = {},
-                                isMarkAsSoldRowVisible = true,
+                                product = CommonProductCardData(
+                                    imageUrl = product.imageUrl,
+                                    productName = product.productName,
+                                    brandName = product.sellerName,
+                                    currentPrice = product.effectivePrice.toString(),
+                                    originalPrice = product.originalPrice.toString(),
+                                    rating = "4.8", // Static for now as per DTO
+                                    isSoldOut = false
+                                ),
                                 onMarkAsSoldClick = {
                                     selectedProductId = product.productId
                                     showSoldOutDialog = true
@@ -112,8 +114,7 @@ fun ActiveProductsScreen(
                                 },
                                 onEditClick = {
                                     onEditProduct(product.productId)
-                                },
-                                isSoldOut = false
+                                }
                             )
                         }
                     }
