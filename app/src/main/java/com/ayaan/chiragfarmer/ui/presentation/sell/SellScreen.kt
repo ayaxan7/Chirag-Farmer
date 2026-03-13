@@ -37,13 +37,11 @@ import com.ayaan.chiragfarmer.ui.presentation.sell.tabs.ActiveProductsScreen
 import com.ayaan.chiragfarmer.ui.presentation.sell.tabs.SoldOutProductsScreen
 import com.ayaan.chiragfarmer.ui.theme.BGBlack
 import com.ayaan.chiragfarmer.ui.theme.BGWhite
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
 fun SellScreen(
-    navController: NavHostController,
-    viewModel: SellViewModel = hiltViewModel()
+    navController: NavHostController, viewModel: SellViewModel = hiltViewModel()
 ) {
 
     val snackBarHostState = remember { SnackbarHostState() }
@@ -66,10 +64,12 @@ fun SellScreen(
                 activeProducts.refresh()
                 soldOutProducts.refresh()
             }
+
             is ToggleSoldOutState.Error -> {
                 snackBarHostState.showSnackbar(state.message)
                 viewModel.resetToggleState()
             }
+
             else -> Unit
         }
     }
@@ -84,10 +84,12 @@ fun SellScreen(
                 activeProducts.refresh()
                 soldOutProducts.refresh()
             }
+
             is DeleteProductState.Error -> {
                 snackBarHostState.showSnackbar(state.message)
                 viewModel.resetDeleteState()
             }
+
             else -> Unit
         }
     }
@@ -135,43 +137,36 @@ fun SellScreen(
 
             Spacer(modifier = Modifier.padding(8.dp))
 
-            val tabs = listOf("Active Products", "Products Sold Out")
+            val tabs = listOf("Active Produces", "Products Sold Out", "Active Orders")
 
             TabRow(
                 selectedTabIndex = pagerState.currentPage,
                 containerColor = Color.Transparent,
                 contentColor = BGBlack,
-                divider = {},
+//                divider = {},
                 indicator = { tabPositions ->
                     TabRowDefaults.SecondaryIndicator(
                         modifier = Modifier.tabIndicatorOffset(
                             tabPositions[pagerState.currentPage]
                         ), height = 2.dp, color = BGBlack
                     )
-                }
-            ) {
-
+                }) {
                 tabs.forEachIndexed { index, title ->
-
                     Tab(
-                        selected = pagerState.currentPage == index,
-                        onClick = {
-                            scope.launch {
-                                pagerState.animateScrollToPage(index)
-                            }
-                        },
-                        text = {
-                            Text(
-                                text = title,
-                                color = BGBlack,
-                                fontWeight = if (pagerState.currentPage == index)
-                                    FontWeight.SemiBold
-                                else
-                                    FontWeight.Normal
-                            )
-                        },
-                        selectedContentColor = BGBlack,
-                        unselectedContentColor = BGBlack
+                        selected = pagerState.currentPage == index, onClick = {
+                        scope.launch {
+                            pagerState.animateScrollToPage(index)
+                        }
+                    }, text = {
+                        Text(
+                            text = title,
+                            color = BGBlack,
+                            fontWeight = if (pagerState.currentPage == index) FontWeight.SemiBold
+                            else FontWeight.Normal,
+                            maxLines = 1,
+                            overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                        )
+                    }, selectedContentColor = BGBlack, unselectedContentColor = BGBlack
                     )
                 }
             }
@@ -190,8 +185,8 @@ fun SellScreen(
                         },
                         onEditProduct = { productId ->
                             navController.navigate(Route.SellProduct.createRoute(productId))
-                        }
-                    )
+                        })
+
                     1 -> SoldOutProductsScreen(
                         products = soldOutProducts,
                         onToggleSoldOut = { productId ->
@@ -199,8 +194,7 @@ fun SellScreen(
                         },
                         onDeleteProduct = { productId ->
                             viewModel.deleteProduct(productId)
-                        }
-                    )
+                        })
                 }
             }
         }
