@@ -97,7 +97,8 @@ fun ActiveProductsScreen(
                                 imageUrl = product.imageUrl,
                                 productName = product.productName,
                                 brandName = product.sellerName,
-                                currentPrice = product.price.toString(),
+                                currentPrice = product.effectivePrice.toString(),
+                                originalPrice = product.originalPrice.toString(),
                                 rating = "4.8", // Static for now as per DTO
                                 onSizeClick = {},
                                 isMarkAsSoldRowVisible = true,

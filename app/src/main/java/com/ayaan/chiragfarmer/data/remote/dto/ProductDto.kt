@@ -1,6 +1,7 @@
 package com.ayaan.chiragfarmer.data.remote.dto
 
 import com.ayaan.chiragfarmer.domain.model.Product
+import com.google.gson.annotations.SerializedName
 
 data class ProductResponseDto(
     val success: Boolean,
@@ -20,17 +21,25 @@ data class ProductDto(
     val productName: String,
     val imageUrl: String,
     val sellerName: String,
-    val price: Int,
+    @SerializedName("price")
+    val price: Double? = null,
+    @SerializedName("regularPrice")
+    val regularPrice: Double? = null,
+    @SerializedName("discountedPrice")
+    val discountedPrice: Double? = null,
     val availableQuantity: Int
 )
 
 fun ProductDto.toDomain(): Product {
+    val effectivePrice = discountedPrice ?: regularPrice ?: price ?: 0.0
+
     return Product(
         productId = productId,
         productName = productName,
         imageUrl = imageUrl,
         sellerName = sellerName,
-        price = price,
-        availableQuantity = availableQuantity
+        effectivePrice = effectivePrice.toInt(),
+        availableQuantity = availableQuantity,
+        originalPrice = regularPrice?.toInt() ?: 0
     )
 }
