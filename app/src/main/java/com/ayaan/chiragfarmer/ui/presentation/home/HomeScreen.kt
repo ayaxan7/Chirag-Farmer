@@ -32,7 +32,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.ayaan.chiragfarmer.R
 import com.ayaan.chiragfarmer.ui.presentation.common.components.CategoryHeader
-import com.ayaan.chiragfarmer.ui.presentation.common.components.CommonProductCardData
+import com.ayaan.chiragfarmer.ui.presentation.common.data.CommonProductCardData
 import com.ayaan.chiragfarmer.ui.presentation.common.components.ProductCategoryCard
 import com.ayaan.chiragfarmer.ui.presentation.home.components.bookservicecard.BookServiceCard
 import com.ayaan.chiragfarmer.ui.presentation.home.components.ImageCarousel

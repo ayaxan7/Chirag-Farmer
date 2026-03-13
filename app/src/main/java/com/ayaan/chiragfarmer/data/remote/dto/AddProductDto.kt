@@ -15,6 +15,10 @@ data class AddProductRequest(
     val availableStockWeight: Double?,
     @SerializedName("price")
     val price: Double,
+    @SerializedName("discount")
+    val discount: Double? = null,
+    @SerializedName("deliveryFee")
+    val deliveryFee: Double? = null,
     @SerializedName("location")
     val location: LocationRequestDto
 )

@@ -131,6 +131,8 @@ class SellProducesViewModel @Inject constructor(
         title: String,
         availableStock: String,
         price: String,
+        discount: String,
+        deliveryFee: String,
         description: String,
         isUpdate: Boolean = false
     ) {
@@ -162,9 +164,21 @@ class SellProducesViewModel @Inject constructor(
                     // Parse numeric values
                     val stockWeight = availableStock.toDoubleOrNull()
                     val priceValue = price.toDoubleOrNull()
+                    val discountValue = discount.takeIf { it.isNotBlank() }?.toDoubleOrNull()
+                    val deliveryFeeValue = deliveryFee.takeIf { it.isNotBlank() }?.toDoubleOrNull()
 
                     if (priceValue == null) {
                         _addProductState.value = AddProductState.Error("Invalid price value")
+                        return@launch
+                    }
+
+                    if (discount.isNotBlank() && discountValue == null) {
+                        _addProductState.value = AddProductState.Error("Invalid discount value")
+                        return@launch
+                    }
+
+                    if (deliveryFee.isNotBlank() && deliveryFeeValue == null) {
+                        _addProductState.value = AddProductState.Error("Invalid delivery fee value")
                         return@launch
                     }
 
@@ -177,6 +191,8 @@ class SellProducesViewModel @Inject constructor(
                         description = description.takeIf { it.isNotEmpty() },
                         availableStockWeight = stockWeight,
                         price = priceValue,
+                        discount = discountValue,
+                        deliveryFee = deliveryFeeValue,
                         location = selectedLoc?.let {
                             LocationRequestDto(
                                 name = it.displayName,
@@ -216,9 +232,21 @@ class SellProducesViewModel @Inject constructor(
                     // Parse numeric values
                     val stockWeight = availableStock.toDoubleOrNull()
                     val priceValue = price.toDoubleOrNull()
+                    val discountValue = discount.takeIf { it.isNotBlank() }?.toDoubleOrNull()
+                    val deliveryFeeValue = deliveryFee.takeIf { it.isNotBlank() }?.toDoubleOrNull()
 
                     if (priceValue == null) {
                         _addProductState.value = AddProductState.Error("Invalid price value")
+                        return@launch
+                    }
+
+                    if (discount.isNotBlank() && discountValue == null) {
+                        _addProductState.value = AddProductState.Error("Invalid discount value")
+                        return@launch
+                    }
+
+                    if (deliveryFee.isNotBlank() && deliveryFeeValue == null) {
+                        _addProductState.value = AddProductState.Error("Invalid delivery fee value")
                         return@launch
                     }
 
@@ -230,6 +258,8 @@ class SellProducesViewModel @Inject constructor(
                         description = description.takeIf { it.isNotEmpty() },
                         availableStockWeight = stockWeight,
                         price = priceValue,
+                        discount = discountValue,
+                        deliveryFee = deliveryFeeValue,
                         location = LocationRequestDto(
                             name = selectedLoc.displayName,
                             coordinates = listOf(selectedLoc.longitude, selectedLoc.latitude)

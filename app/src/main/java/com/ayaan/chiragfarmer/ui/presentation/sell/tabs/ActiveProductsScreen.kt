@@ -22,7 +22,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import com.ayaan.chiragfarmer.domain.model.Product
 import com.ayaan.chiragfarmer.ui.presentation.common.components.CommonProductCard
-import com.ayaan.chiragfarmer.ui.presentation.common.components.CommonProductCardData
+import com.ayaan.chiragfarmer.ui.presentation.common.data.CommonProductCardData
 import com.ayaan.chiragfarmer.ui.presentation.sell.components.RemoveProductDialog
 import com.ayaan.chiragfarmer.ui.presentation.sell.components.SoldOutDialog
 import com.ayaan.chiragfarmer.ui.theme.BGBlack

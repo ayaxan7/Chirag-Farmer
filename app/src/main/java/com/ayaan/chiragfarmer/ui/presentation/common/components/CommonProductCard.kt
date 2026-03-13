@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.ayaan.chiragfarmer.R
+import com.ayaan.chiragfarmer.ui.presentation.common.data.CommonProductCardData
 import com.ayaan.chiragfarmer.ui.presentation.sell.components.DeleteItemBox
 import com.ayaan.chiragfarmer.ui.presentation.sell.components.EditItemBox
 import com.ayaan.chiragfarmer.ui.theme.BGBlack
@@ -47,16 +48,7 @@ import com.ayaan.chiragfarmer.ui.theme.BorderGray
 import com.ayaan.chiragfarmer.ui.theme.DisabledButtonGray
 import com.ayaan.chiragfarmer.ui.theme.TextDarkGray
 
-data class CommonProductCardData(
-    val imageRes: Int? = null,
-    val imageUrl: String? = null,
-    val productName: String,
-    val brandName: String,
-    val currentPrice: String,
-    val originalPrice: String? = null,
-    val rating: String,
-    val isSoldOut: Boolean = true
-)
+
 @Composable
 fun CommonProductCard(
     modifier: Modifier = Modifier,

@@ -17,6 +17,10 @@ data class UpdateProductRequest(
     val availableStockWeight: Double? = null,
     @SerializedName("price")
     val price: Double? = null,
+    @SerializedName("discount")
+    val discount: Double? = null,
+    @SerializedName("deliveryFee")
+    val deliveryFee: Double? = null,
     @SerializedName("location")
     val location: LocationRequestDto? = null
 )
@@ -49,6 +53,10 @@ data class UpdatedProductData(
     val location: ProductLocation,
     @SerializedName("price")
     val price: Double,
+    @SerializedName("discount")
+    val discount: Double? = null,
+    @SerializedName("deliveryFee")
+    val deliveryFee: Double? = null,
     @SerializedName("isAvailable")
     val isAvailable: Boolean,
     @SerializedName("createdAt")

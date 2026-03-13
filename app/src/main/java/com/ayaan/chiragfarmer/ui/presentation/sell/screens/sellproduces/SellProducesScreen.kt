@@ -64,6 +64,8 @@ fun SellProducesScreen(
     val location by viewModel.locationQuery.collectAsStateWithLifecycle()
     val locationSuggestions by viewModel.locationSuggestions.collectAsStateWithLifecycle()
     var pricing by remember { mutableStateOf("") }
+    var discountPercent by remember { mutableStateOf("") }
+    var deliveryFeePerKm by remember { mutableStateOf("") }
     var productDescription by remember { mutableStateOf("") }
 
     val imageUri by viewModel.imageUri.collectAsStateWithLifecycle()
@@ -96,6 +98,8 @@ fun SellProducesScreen(
                 productTitle = product.title
                 availableStock = product.availableStockWeight?.toString() ?: ""
                 pricing = product.price.toString()
+                discountPercent = product.discount?.toString() ?: ""
+                deliveryFeePerKm = product.deliveryFee?.toString() ?: ""
                 productDescription = product.description ?: ""
                 viewModel.resetFetchState()
             }
@@ -261,8 +265,8 @@ fun SellProducesScreen(
                 FieldLabel(text = "Discount %")
                 Spacer(modifier = Modifier.height(6.dp))
                 ChiragBasicTextField(
-                    value = pricing,
-                    onValueChange = { pricing = it },
+                    value = discountPercent,
+                    onValueChange = { discountPercent = it },
                     placeholder = "Enter Discount Percentage",
                     keyboardType = KeyboardType.Number
                 )
@@ -289,8 +293,8 @@ fun SellProducesScreen(
                 FieldLabel(text = "Delivery Fee / KM")
                 Spacer(modifier = Modifier.height(6.dp))
                 ChiragBasicTextField(
-                    value = pricing,
-                    onValueChange = { pricing = it },
+                    value = deliveryFeePerKm,
+                    onValueChange = { deliveryFeePerKm = it },
                     placeholder = "Enter Price",
                     keyboardType = KeyboardType.Number
                 )
@@ -315,6 +319,8 @@ fun SellProducesScreen(
                             title = productTitle,
                             availableStock = availableStock,
                             price = pricing,
+                            discount = discountPercent,
+                            deliveryFee = deliveryFeePerKm,
                             description = productDescription,
                             isUpdate = isEditMode
                         )
