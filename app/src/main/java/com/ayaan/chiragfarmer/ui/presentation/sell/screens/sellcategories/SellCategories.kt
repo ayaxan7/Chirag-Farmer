@@ -61,10 +61,14 @@ fun SellCategoriesScreen(navController: NavHostController) {
             SellCategory("Pulses &\nLegumes", R.drawable.sell_category_cereals),
             SellCategory("Fruits", R.drawable.sell_category_cereals),
             SellCategory("Vegetables", R.drawable.sell_category_cereals),
+            SellCategory("Oilseeds", R.drawable.sell_category_cereals),
             SellCategory("Spices", R.drawable.sell_category_cereals),
-            SellCategory("Dry Fruits", R.drawable.sell_category_cereals),
-            SellCategory("Oils", R.drawable.sell_category_cereals),
-            SellCategory("Others", R.drawable.sell_category_cereals)
+            SellCategory("Tubers and\nRoot Crops", R.drawable.sell_category_cereals),
+            SellCategory("Flowers", R.drawable.sell_category_cereals),
+            SellCategory("Dry Fruits &\nNuts", R.drawable.sell_category_cereals),
+            SellCategory("Organic Procedure", R.drawable.sell_category_cereals),
+            SellCategory("Livestock Products", R.drawable.sell_category_cereals),
+            SellCategory("Other", R.drawable.sell_category_cereals)
         )
     }
     Scaffold(
@@ -92,10 +96,10 @@ fun SellCategoriesScreen(navController: NavHostController) {
                 columns = GridCells.Fixed(4),
                 modifier = Modifier
                     .weight(1f)
+                    .padding(top=4.dp)
                     .fillMaxSize(),
-//                contentPadding = PaddingValues(vertical = 8.dp),
                 horizontalArrangement = Arrangement.spacedBy(2.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+//                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(categories) { category ->
                     CategoryItem(
@@ -107,8 +111,7 @@ fun SellCategoriesScreen(navController: NavHostController) {
                             } else {
                                 category.name
                             }
-                        }
-                    )
+                        })
                 }
             }
             Spacer(Modifier.weight(1f))
@@ -120,40 +123,34 @@ fun SellCategoriesScreen(navController: NavHostController) {
         }
     }
 }
+
 @Composable
 private fun CategoryItem(
-category: SellCategory,
-selected: Boolean,
-onClick: () -> Unit,
-modifier: Modifier = Modifier
+    category: SellCategory, selected: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = modifier
-            .clickable { onClick() }
-            .padding(8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    Column(modifier = modifier
+        .clickable { onClick() }
+        .padding(top = 4.dp),
+        horizontalAlignment = Alignment.CenterHorizontally) {
         // Circular Image Container
         Box(
             modifier = Modifier
-                .size(100.dp)
+                .size(80.dp)
                 .clip(CircleShape)
                 .background(
                     color = BackgroundGray
                 )
                 .border(
-                    width = if (selected) 3.dp else 0.dp,
+                    width = if (selected) 1.dp else 0.dp,
                     color = if (selected) BorderGreen else Color.Transparent,
                     shape = CircleShape
-                )
-                .padding(if (selected) 8.dp else 12.dp),
-            contentAlignment = Alignment.Center
+                ), contentAlignment = Alignment.Center
         ) {
             Image(
                 painter = painterResource(id = category.image),
                 contentDescription = category.name,
                 modifier = Modifier
-                    .size(if (selected) 80.dp else 76.dp)
+                    .fillMaxSize(.9f)
                     .clip(CircleShape),
                 contentScale = ContentScale.Fit
             )
@@ -165,10 +162,10 @@ modifier: Modifier = Modifier
         Text(
             text = category.name,
             fontSize = 13.sp,
-            fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
+            fontWeight = FontWeight.Normal,
             color = Color.Black,
             textAlign = TextAlign.Center,
-            lineHeight = 16.sp,
+            lineHeight = 14.sp,
             modifier = Modifier.padding(horizontal = 4.dp),
             maxLines = 2,
             overflow = TextOverflow.MiddleEllipsis
@@ -183,13 +180,11 @@ fun CategoryItemPreview() {
         CategoryItem(
             category = SellCategory("Cereals &\nGrains", R.drawable.sell_category_cereals),
             selected = true,
-            onClick = {}
-        )
+            onClick = {})
         Spacer(modifier = Modifier.height(16.dp))
         CategoryItem(
             category = SellCategory("Pulses &\nLegumes", R.drawable.sell_category_cereals),
             selected = false,
-            onClick = {}
-        )
+            onClick = {})
     }
 }
