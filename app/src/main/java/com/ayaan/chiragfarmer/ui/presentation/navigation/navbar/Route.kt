@@ -14,12 +14,17 @@ sealed class Route(val path: String) {
     object RegisterSuccess: Route("register_success")
     object Search:Route("search")
     object SellCategories:Route("sell_categories")
-    object SellProduct:Route("sell_product?productId={productId}") {
-        fun createRoute(productId: String? = null): String {
-            return if (productId != null) {
-                "sell_product?productId=$productId"
-            } else {
+    object SellProduct:Route("sell_product?productId={productId}&selectedCategory={selectedCategory}") {
+        fun createRoute(productId: String? = null, selectedCategory: String? = null): String {
+            val queryParams = buildList {
+                productId?.let { add("productId=$it") }
+                selectedCategory?.let { add("selectedCategory=$it") }
+            }
+
+            return if (queryParams.isEmpty()) {
                 "sell_product"
+            } else {
+                "sell_product?${queryParams.joinToString("&")}" 
             }
         }
     }

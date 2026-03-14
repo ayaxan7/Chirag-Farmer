@@ -19,6 +19,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ayaan.chiragfarmer.ui.theme.BackgroundGray
 import com.ayaan.chiragfarmer.ui.theme.BorderColour
 import com.ayaan.chiragfarmer.ui.theme.TextGray
 
@@ -29,11 +30,13 @@ fun ChiragBasicTextField(
     placeholder: String,
     modifier: Modifier = Modifier,
     keyboardType: KeyboardType = KeyboardType.Text,
-    maxChars: Int = Int.MAX_VALUE
+    maxChars: Int = Int.MAX_VALUE,
+    readOnly: Boolean = false
 ) {
     BasicTextField(
         value = value,
         onValueChange = { if (it.length <= maxChars) onValueChange(it) },
+        readOnly = readOnly,
         singleLine = true,
         textStyle = TextStyle(
             fontSize = 14.sp,
@@ -45,7 +48,7 @@ fun ChiragBasicTextField(
             .fillMaxWidth()
             .height(48.dp)
             .background(
-                color = Color.White,
+                color = if (readOnly) BackgroundGray else Color.White,
                 shape = RoundedCornerShape(6.dp)
             )
             .border(

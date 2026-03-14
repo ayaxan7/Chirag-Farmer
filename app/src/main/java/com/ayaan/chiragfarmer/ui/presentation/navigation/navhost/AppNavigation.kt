@@ -116,13 +116,20 @@ fun AppNavigation(
                     type = NavType.StringType
                     nullable = true
                     defaultValue = null
+                },
+                navArgument("selectedCategory") {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
                 }
             )
         ) { backStackEntry ->
             val productId = backStackEntry.arguments?.getString("productId")
+            val selectedCategory = backStackEntry.arguments?.getString("selectedCategory")
             SellProducesScreen(
                 navController = navController,
                 productId = productId,
+                selectedCategory = selectedCategory,
                 viewModel = hiltViewModel()
             )
         }

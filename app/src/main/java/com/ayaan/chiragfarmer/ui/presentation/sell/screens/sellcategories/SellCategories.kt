@@ -1,5 +1,6 @@
 package com.ayaan.chiragfarmer.ui.presentation.sell.screens.sellcategories
 
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -50,6 +51,7 @@ import com.ayaan.chiragfarmer.ui.theme.BGBlack
 import com.ayaan.chiragfarmer.ui.theme.BGWhite
 import com.ayaan.chiragfarmer.ui.theme.BackgroundGray
 import com.ayaan.chiragfarmer.ui.theme.BorderGreen
+
 
 @Composable
 fun SellCategoriesScreen(navController: NavHostController) {
@@ -117,7 +119,12 @@ fun SellCategoriesScreen(navController: NavHostController) {
             Spacer(Modifier.weight(1f))
             ChiragButton(
                 text = "Continue", containerColor = BGBlack, contentColor = BGWhite, onClick = {
-                    navController.navigate(Route.SellProduct.createRoute())
+                    val sanitizedCategory = sanitizeCategoryForForm(selectedCategory)
+                    navController.navigate(
+                        Route.SellProduct.createRoute(
+                            selectedCategory = Uri.encode(sanitizedCategory)
+                        )
+                    )
                 }, enabled = selectedCategory.isNotEmpty()
             )
         }
@@ -141,7 +148,7 @@ private fun CategoryItem(
                     color = BackgroundGray
                 )
                 .border(
-                    width = if (selected) 1.dp else 0.dp,
+                    width = if (selected) 2.dp else 0.dp,
                     color = if (selected) BorderGreen else Color.Transparent,
                     shape = CircleShape
                 ), contentAlignment = Alignment.Center
@@ -171,6 +178,13 @@ private fun CategoryItem(
             overflow = TextOverflow.MiddleEllipsis
         )
     }
+}
+private fun sanitizeCategoryForForm(value: String): String {
+    return value
+        .replace("\\n", " ")
+        .replace("\n", " ")
+        .trim()
+        .replace(Regex("\\s+"), " ")
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)

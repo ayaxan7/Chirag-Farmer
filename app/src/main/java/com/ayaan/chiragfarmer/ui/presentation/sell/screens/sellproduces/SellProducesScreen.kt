@@ -51,14 +51,25 @@ import com.ayaan.chiragfarmer.ui.theme.BGWhite
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
+private fun sanitizeCategoryForSingleLine(value: String?): String {
+    return value
+        ?.replace("\\n", " ")
+        ?.replace("\n", " ")
+        ?.trim()
+        ?.replace(Regex("\\s+"), " ")
+        .orEmpty()
+}
+
 @Composable
 fun SellProducesScreen(
     navController: NavHostController,
     productId: String? = null,
+    selectedCategory: String? = null,
     viewModel: SellProducesViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     var productCategory by remember { mutableStateOf("") }
+    var isCategoryEditable by remember { mutableStateOf(true) }
     var productTitle by remember { mutableStateOf("") }
     var availableStock by remember { mutableStateOf("") }
     val location by viewModel.locationQuery.collectAsStateWithLifecycle()
@@ -75,6 +86,10 @@ fun SellProducesScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     val isEditMode = productId != null
+
+    fun isOtherCategory(value: String?): Boolean {
+        return value?.trim()?.equals("other", ignoreCase = true) == true
+    }
     // Image picker launcher
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -89,12 +104,37 @@ fun SellProducesScreen(
         }
     }
 
+    // Initialize category when screen is opened from category selection flow.
+    LaunchedEffect(productId, selectedCategory) {
+        if (productId != null) return@LaunchedEffect
+
+        val decodedSelectedCategory = sanitizeCategoryForSingleLine(
+            selectedCategory?.let(Uri::decode)
+        )
+        if (decodedSelectedCategory.isEmpty()) {
+            productCategory = ""
+            isCategoryEditable = true
+        } else if (isOtherCategory(decodedSelectedCategory)) {
+            productCategory = ""
+            isCategoryEditable = true
+        } else {
+            productCategory = decodedSelectedCategory
+            isCategoryEditable = false
+        }
+    }
+
     // Handle fetch product state
     LaunchedEffect(fetchProductState) {
         when (val state = fetchProductState) {
             is FetchProductState.Success -> {
                 val product = state.product
-                productCategory = product.category ?: ""
+                if (isOtherCategory(product.category)) {
+                    productCategory = ""
+                    isCategoryEditable = true
+                } else {
+                    productCategory = sanitizeCategoryForSingleLine(product.category)
+                    isCategoryEditable = false
+                }
                 productTitle = product.title
                 availableStock = product.availableStockWeight?.toString() ?: ""
                 pricing = product.price.toString()
@@ -167,7 +207,8 @@ fun SellProducesScreen(
                 ChiragBasicTextField(
                     value = productCategory,
                     onValueChange = { productCategory = it },
-                    placeholder = "Wheat, Rice, Maize, Barley, Millets Etc......."
+                    placeholder = "Wheat, Rice, Maize, Barley, Millets Etc.......",
+                    readOnly = !isCategoryEditable
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -326,12 +367,14 @@ fun SellProducesScreen(
                         )
                     },
                     enabled = if (isEditMode) {
+                        productCategory.isNotEmpty() &&
                         productTitle.isNotEmpty() &&
                         pricing.isNotEmpty() &&
                         addProductState !is AddProductState.Loading &&
                         addProductState !is AddProductState.UploadingProduct &&
                         fetchProductState !is FetchProductState.Loading
                     } else {
+                        productCategory.isNotEmpty() &&
                         productTitle.isNotEmpty() &&
                         availableStock.isNotEmpty() &&
                         location.isNotEmpty() &&
