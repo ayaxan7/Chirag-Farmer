@@ -29,7 +29,7 @@ fun ChiragButton(
     containerColor: Color = BGBlack,
     contentColor: Color = Color.White,
     disabledContainerColor: Color = BGBlack.copy(alpha = 0.4f),
-    disabledContentColor: Color = Color.White
+    disabledContentColor: Color = Color.White,
 ) {
     Button(
         onClick = onClick,

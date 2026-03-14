@@ -82,6 +82,7 @@ dependencies {
     implementation(libs.firebase.messaging)
     implementation(libs.androidx.compose.material3.adaptive.navigation.suite)
     implementation(libs.androidx.lifecycle.process)
+    implementation(libs.androidx.compose.foundation)
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
