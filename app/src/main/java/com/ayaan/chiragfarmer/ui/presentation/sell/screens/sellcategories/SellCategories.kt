@@ -51,8 +51,6 @@ import com.ayaan.chiragfarmer.ui.theme.BGBlack
 import com.ayaan.chiragfarmer.ui.theme.BGWhite
 import com.ayaan.chiragfarmer.ui.theme.BackgroundGray
 import com.ayaan.chiragfarmer.ui.theme.BorderGreen
-
-
 @Composable
 fun SellCategoriesScreen(navController: NavHostController) {
     val snackBarHostState = remember { SnackbarHostState() }
@@ -60,17 +58,17 @@ fun SellCategoriesScreen(navController: NavHostController) {
     val categories = remember {
         listOf(
             SellCategory("Cereals &\nGrains", R.drawable.sell_category_cereals),
-            SellCategory("Pulses &\nLegumes", R.drawable.sell_category_cereals),
-            SellCategory("Fruits", R.drawable.sell_category_cereals),
-            SellCategory("Vegetables", R.drawable.sell_category_cereals),
-            SellCategory("Oilseeds", R.drawable.sell_category_cereals),
-            SellCategory("Spices", R.drawable.sell_category_cereals),
-            SellCategory("Tubers and\nRoot Crops", R.drawable.sell_category_cereals),
-            SellCategory("Flowers", R.drawable.sell_category_cereals),
-            SellCategory("Dry Fruits &\nNuts", R.drawable.sell_category_cereals),
-            SellCategory("Organic Procedure", R.drawable.sell_category_cereals),
-            SellCategory("Livestock Products", R.drawable.sell_category_cereals),
-            SellCategory("Other", R.drawable.sell_category_cereals)
+            SellCategory("Pulses &\nLegumes", R.drawable.sell_category_pulses),
+            SellCategory("Fruits", R.drawable.sell_category_fruits),
+            SellCategory("Vegetables", R.drawable.sell_category_vegetables),
+            SellCategory("Oilseeds", R.drawable.sell_category_oilseeds),
+            SellCategory("Spices", R.drawable.sell_category_spices),
+            SellCategory("Tubers and\nRoot Crops", R.drawable.sell_category_tubers),
+            SellCategory("Flowers", R.drawable.sell_category_flowers),
+            SellCategory("Dry Fruits &\nNuts", R.drawable.sell_category_dryfruits),
+            SellCategory("Organic Procedure", R.drawable.sell_category_organicproduces),
+            SellCategory("Livestock Products", R.drawable.sell_category_livestock),
+            SellCategory("Other", R.drawable.sell_category_other)
         )
     }
     Scaffold(
