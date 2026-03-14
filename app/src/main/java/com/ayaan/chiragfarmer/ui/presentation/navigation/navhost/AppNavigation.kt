@@ -27,6 +27,7 @@ import com.ayaan.chiragfarmer.ui.presentation.buy.BuyScreen
 import com.ayaan.chiragfarmer.ui.presentation.home.screens.SearchScreen
 import com.ayaan.chiragfarmer.ui.presentation.sell.SellScreen
 import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.Route
+import com.ayaan.chiragfarmer.ui.presentation.sell.screens.sellcategories.SellCategoriesScreen
 import com.ayaan.chiragfarmer.ui.presentation.sell.screens.sellproduces.SellProducesScreen
 
 @Composable
@@ -92,6 +93,9 @@ fun AppNavigation(
         }
         composable(Route.Search.path) {
             SearchScreen(navController = navController)
+        }
+        composable(Route.SellCategories.path) {
+            SellCategoriesScreen(navController = navController)
         }
         composable(Route.Assist.path) {
             AssistScreen(navController = navController)

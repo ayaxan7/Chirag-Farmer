@@ -13,7 +13,7 @@ interface LocationApi {
         @Query("q") query: String,
         @Query("format") format: String = "json",
         @Query("addressdetails") addressDetails: Int = 1,
-        @Query("limit") limit: Int = 5,
+        @Query("limit") limit: Int = 10,
         @Query("countrycodes") countryCodes: String = "in" // Restrict to India as it's for Indian farmers
     ): List<LocationDto>
 

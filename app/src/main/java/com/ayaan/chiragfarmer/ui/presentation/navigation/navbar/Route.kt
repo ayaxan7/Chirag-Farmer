@@ -13,6 +13,7 @@ sealed class Route(val path: String) {
     object Register: Route("register")
     object RegisterSuccess: Route("register_success")
     object Search:Route("search")
+    object SellCategories:Route("sell_categories")
     object SellProduct:Route("sell_product?productId={productId}") {
         fun createRoute(productId: String? = null): String {
             return if (productId != null) {
