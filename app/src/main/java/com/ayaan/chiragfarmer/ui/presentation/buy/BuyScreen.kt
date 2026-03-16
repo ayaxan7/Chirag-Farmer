@@ -156,6 +156,30 @@ fun BuyScreen(navController: NavHostController) {
                     product = product
                 )
             }
+            item(span = { GridItemSpan(maxLineSpan) }) {
+                CategoryHeader(
+                    category = "Seeds",
+                    btnText = "View All",
+                    onClick = {}
+                )
+            }
+            items(smartFarmingProducts) { product ->
+                CommonProductCard(
+                    product = product
+                )
+            }
+            item(span = { GridItemSpan(maxLineSpan) }) {
+                CategoryHeader(
+                    category = "Popular Products",
+                    btnText = "View All",
+                    onClick = {}
+                )
+            }
+            items(smartFarmingProducts) { product ->
+                CommonProductCard(
+                    product = product
+                )
+            }
         }
     }
 }

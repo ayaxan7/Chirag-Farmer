@@ -183,8 +183,6 @@ fun CommonProductCard(
                 }
 
                 if(isSellScreen) {
-
-                    Spacer(modifier = Modifier.height(3.dp))
                     Spacer(modifier = Modifier.height(12.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
