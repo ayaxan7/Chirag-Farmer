@@ -11,18 +11,20 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -46,102 +48,112 @@ fun RemoveProductDialog(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 12.dp),
+                .padding(horizontal = 20.dp),
             contentAlignment = Alignment.Center
         ) {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = BGWhite),
-            elevation = CardDefaults.cardElevation(8.dp)
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(20.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(20.dp),
+                colors = CardDefaults.cardColors(containerColor = BGWhite),
+                elevation = CardDefaults.cardElevation(8.dp)
             ) {
-                // Illustration
-                Image(
-                    painter = painterResource(id = R.drawable.remove_produce),
-                    contentDescription = "Remove Product",
-                    modifier = Modifier.size(120.dp)
-                )
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                // Title
-                Text(
-                    text = "Remove Produce?",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    color =BGBlack
-                )
-
-                Spacer(modifier = Modifier.height(4.dp))
-
-                // Message
-                Text(
-                    text = "Are you sure you want to remove this produce listing?",
-                    fontSize = 14.sp,
-                    color =BGBlack,
-                    textAlign = TextAlign.Center,
-                    lineHeight = 16.sp
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                // Buttons
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                Box(
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    // Cancel Button
-                    OutlinedButton(
-                        onClick = onDismiss,
+                    Column(
                         modifier = Modifier
-                            .weight(1f)
-                            .height(36.dp),
-                        shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            contentColor = BGBlack,
-                            containerColor = BGWhite
-                        ),
-                        border = BorderStroke(
-                            width = 1.dp,
+                            .fillMaxWidth()
+                            .padding(20.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.remove_produce),
+                            contentDescription = "Remove Product",
+                            modifier = Modifier.size(120.dp)
+                        )
+
+                        Spacer(modifier = Modifier.height(20.dp))
+
+                        Text(
+                            text = "Remove Produce?",
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
                             color = BGBlack
                         )
-                    ) {
+
+                        Spacer(modifier = Modifier.height(4.dp))
+
                         Text(
-                            text = "Cancel",
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.Medium
+                            text = "Are you sure you want to remove this produce listing?",
+                            fontSize = 14.sp,
+                            color = BGBlack,
+                            textAlign = TextAlign.Center,
+                            lineHeight = 16.sp
                         )
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            OutlinedButton(
+                                onClick = onDismiss,
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(36.dp),
+                                shape = RoundedCornerShape(8.dp),
+                                colors = ButtonDefaults.outlinedButtonColors(
+                                    contentColor = BGBlack,
+                                    containerColor = BGWhite
+                                ),
+                                border = BorderStroke(
+                                    width = 1.dp,
+                                    color = BGBlack
+                                )
+                            ) {
+                                Text(
+                                    text = "Cancel",
+                                    fontSize = 15.sp,
+                                    fontWeight = FontWeight.Medium
+                                )
+                            }
+
+                            Button(
+                                onClick = {
+                                    onConfirm()
+                                    onDismiss()
+                                },
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(36.dp),
+                                shape = RoundedCornerShape(8.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = BGBlack
+                                )
+                            ) {
+                                Text(
+                                    text = "Yes, Remove",
+                                    fontSize = 15.sp,
+                                    fontWeight = FontWeight.Medium
+                                )
+                            }
+                        }
                     }
 
-                    // Confirm Button
-                    Button(
-                        onClick = {
-                            onConfirm()
-                            onDismiss()
-                        },
+                    IconButton(
+                        onClick = onDismiss,
                         modifier = Modifier
-                            .weight(1f)
-                            .height(36.dp),
-                        shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = BGBlack
-                        )
+                            .align(Alignment.TopEnd)
+                            .padding(8.dp)
                     ) {
-                        Text(
-                            text = "Yes, Remove",
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.Medium
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = "Close dialog",
+                            tint = BGBlack
                         )
                     }
                 }
-            }
             }
         }
     }
