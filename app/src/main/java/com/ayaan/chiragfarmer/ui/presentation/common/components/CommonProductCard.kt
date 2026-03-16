@@ -55,7 +55,8 @@ fun CommonProductCard(
     product: CommonProductCardData,
     onMarkAsSoldClick: () -> Unit = {},
     onEditClick: () -> Unit = {},
-    onDeleteClick: () -> Unit = {}
+    onDeleteClick: () -> Unit = {},
+    isSellScreen: Boolean = false
 ) {
     Card(
         modifier = modifier
@@ -181,49 +182,52 @@ fun CommonProductCard(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(3.dp))
-                Spacer(modifier = Modifier.height(12.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    val backgroundColor = if (product.isSoldOut) DisabledButtonGray else BGBlack
-                    val text = if (product.isSoldOut) "Marked as Sold" else "Mark as Sold"
-                    val clickableModifier =
-                        if (product.isSoldOut) Modifier else Modifier.clickable { onMarkAsSoldClick() }
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .wrapContentHeight()
-                            .clip(RoundedCornerShape(6.dp))
-                            .background(backgroundColor)
-                            .then(clickableModifier)
-                            .padding(start = 4.dp, top = 2.dp, bottom = 2.dp, end = 8.dp),
-                        contentAlignment = Alignment.Center
+                if(isSellScreen) {
+
+                    Spacer(modifier = Modifier.height(3.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
+                        val backgroundColor = if (product.isSoldOut) DisabledButtonGray else BGBlack
+                        val text = if (product.isSoldOut) "Marked as Sold" else "Mark as Sold"
+                        val clickableModifier =
+                            if (product.isSoldOut) Modifier else Modifier.clickable { onMarkAsSoldClick() }
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .wrapContentHeight()
+                                .clip(RoundedCornerShape(6.dp))
+                                .background(backgroundColor)
+                                .then(clickableModifier)
+                                .padding(start = 4.dp, top = 2.dp, bottom = 2.dp, end = 8.dp),
+                            contentAlignment = Alignment.Center
                         ) {
-                            Icon(
-                                imageVector = Icons.Outlined.Cancel,
-                                contentDescription = text,
-                                modifier = Modifier.size(12.dp),
-                                tint = BGWhite
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text(
-                                text = text,
-                                fontSize = 12.sp,
-                                fontWeight = W400,
-                                color = BGWhite,
-                                maxLines = 1,
-                                overflow = TextOverflow.Clip
-                            )
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Cancel,
+                                    contentDescription = text,
+                                    modifier = Modifier.size(12.dp),
+                                    tint = BGWhite
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text(
+                                    text = text,
+                                    fontSize = 12.sp,
+                                    fontWeight = W400,
+                                    color = BGWhite,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Clip
+                                )
+                            }
                         }
+                        Spacer(modifier = Modifier.width(8.dp))
+                        DeleteItemBox(onDelete = onDeleteClick)
                     }
-                    Spacer(modifier = Modifier.width(8.dp))
-                    DeleteItemBox(onDelete = onDeleteClick)
                 }
                 Spacer(modifier = Modifier.height(12.dp))
             }

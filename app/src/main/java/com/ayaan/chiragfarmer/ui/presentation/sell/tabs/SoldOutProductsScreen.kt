@@ -65,6 +65,7 @@ fun SoldOutProductsScreen(
                                     rating = "4.8", // Static for now
                                     isSoldOut = true
                                 ),
+                                isSellScreen = true,
                                 onMarkAsSoldClick = {
                                     onToggleSoldOut(product.productId)
                                 },

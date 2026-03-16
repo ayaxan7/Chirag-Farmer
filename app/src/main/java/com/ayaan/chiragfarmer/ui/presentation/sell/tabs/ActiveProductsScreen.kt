@@ -102,8 +102,9 @@ fun ActiveProductsScreen(
                                     currentPrice = product.effectivePrice.toString(),
                                     originalPrice = product.originalPrice.toString(),
                                     rating = "4.8", // Static for now as per DTO
-                                    isSoldOut = false
+                                    isSoldOut = true
                                 ),
+                                isSellScreen = true,
                                 onMarkAsSoldClick = {
                                     selectedProductId = product.productId
                                     showSoldOutDialog = true
