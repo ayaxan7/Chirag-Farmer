@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -38,12 +38,10 @@ import com.ayaan.chiragfarmer.ui.theme.BGWhite
 
 @Composable
 fun RemoveProductDialog(
-    onDismiss: () -> Unit,
-    onConfirm: () -> Unit
+    onDismiss: () -> Unit, onConfirm: () -> Unit
 ) {
     Dialog(
-        onDismissRequest = onDismiss,
-        properties = DialogProperties(usePlatformDefaultWidth = false)
+        onDismissRequest = onDismiss, properties = DialogProperties(usePlatformDefaultWidth = false)
     ) {
         Box(
             modifier = Modifier
@@ -69,14 +67,16 @@ fun RemoveProductDialog(
                         Image(
                             painter = painterResource(id = R.drawable.remove_produce),
                             contentDescription = "Remove Product",
-                            modifier = Modifier.size(120.dp)
+                            modifier = Modifier
+                                .width(160.dp)
+                                .height(120.dp)
                         )
 
-                        Spacer(modifier = Modifier.height(20.dp))
+                        Spacer(modifier = Modifier.height(10.dp))
 
                         Text(
                             text = "Remove Produce?",
-                            fontSize = 20.sp,
+                            fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
                             color = BGBlack
                         )
@@ -104,12 +104,10 @@ fun RemoveProductDialog(
                                     .height(36.dp),
                                 shape = RoundedCornerShape(8.dp),
                                 colors = ButtonDefaults.outlinedButtonColors(
-                                    contentColor = BGBlack,
-                                    containerColor = BGWhite
+                                    contentColor = BGBlack, containerColor = BGWhite
                                 ),
                                 border = BorderStroke(
-                                    width = 1.dp,
-                                    color = BGBlack
+                                    width = 1.dp, color = BGBlack
                                 )
                             ) {
                                 Text(
