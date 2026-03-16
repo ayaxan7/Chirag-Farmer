@@ -62,18 +62,51 @@ fun BuyScreen(navController: NavHostController) {
             )
         }
     }
+    val directFromFarmersProducts = remember {
+        List(2) {
+            CommonProductCardData(
+                imageUrl = "imageUrl",
+                productName = "productName",
+                brandName = "sellerName",
+                currentPrice = "121",
+                originalPrice = "145",
+                rating = "4.8"
+            )
+        }
+    }
+    val seedsProducts = remember {
+        List(2) {
+            CommonProductCardData(
+                imageUrl = "imageUrl",
+                productName = "productName",
+                brandName = "sellerName",
+                currentPrice = "121",
+                originalPrice = "145",
+                rating = "4.8"
+            )
+        }
+    }
+    val popularProducts = remember {
+        List(4) {
+            CommonProductCardData(
+                imageUrl = "imageUrl",
+                productName = "productName",
+                brandName = "sellerName",
+                currentPrice = "121",
+                originalPrice = "145",
+                rating = "4.8"
+            )
+        }
+    }
 
     Scaffold(
         containerColor = BGWhite,
         snackbarHost = { SnackbarHost(snackBarHostState) },
         topBar = {
             ChiragTopBar(
-                navController = navController,
-                icon = R.drawable.ic_arrow,
-                title = "Buy"
+                navController = navController, icon = R.drawable.ic_arrow, title = "Buy"
             )
-        }
-    ) { paddingValues ->
+        }) { paddingValues ->
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             modifier = Modifier.fillMaxWidth(),
@@ -90,8 +123,7 @@ fun BuyScreen(navController: NavHostController) {
                 SearchBarButton(
                     onClick = {
                         navController.navigate(Route.Search.path)
-                    },
-                    modifier = Modifier.fillMaxWidth()
+                    }, modifier = Modifier.fillMaxWidth()
                 )
             }
 
@@ -101,8 +133,7 @@ fun BuyScreen(navController: NavHostController) {
 
             item(span = { GridItemSpan(maxLineSpan) }) {
                 ImageCarousel(
-                    images = carouselImages,
-                    modifier = Modifier.fillMaxWidth()
+                    images = carouselImages, modifier = Modifier.fillMaxWidth()
                 )
             }
 
@@ -126,8 +157,7 @@ fun BuyScreen(navController: NavHostController) {
                             onClick = {
                                 selectedCategory =
                                     if (selectedCategory == category.id) 0.0 else category.id
-                            }
-                        )
+                            })
                     }
                 }
             }
@@ -146,36 +176,27 @@ fun BuyScreen(navController: NavHostController) {
 
             item(span = { GridItemSpan(maxLineSpan) }) {
                 CategoryHeader(
-                    category = "Direct From Farmers",
-                    btnText = "View All",
-                    onClick = {}
-                )
+                    category = "Direct From Farmers", btnText = "View All", onClick = {})
             }
-            items(smartFarmingProducts) { product ->
+            items(directFromFarmersProducts) { product ->
                 CommonProductCard(
                     product = product
                 )
             }
             item(span = { GridItemSpan(maxLineSpan) }) {
                 CategoryHeader(
-                    category = "Seeds",
-                    btnText = "View All",
-                    onClick = {}
-                )
+                    category = "Seeds", btnText = "View All", onClick = {})
             }
-            items(smartFarmingProducts) { product ->
+            items(seedsProducts) { product ->
                 CommonProductCard(
                     product = product
                 )
             }
             item(span = { GridItemSpan(maxLineSpan) }) {
                 CategoryHeader(
-                    category = "Popular Products",
-                    btnText = "View All",
-                    onClick = {}
-                )
+                    category = "Popular Products", btnText = "View All", onClick = {})
             }
-            items(smartFarmingProducts) { product ->
+            items(popularProducts) { product ->
                 CommonProductCard(
                     product = product
                 )
