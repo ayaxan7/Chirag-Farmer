@@ -1,6 +1,7 @@
 package com.ayaan.chiragfarmer.ui.presentation.home.components.topbar
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -24,6 +25,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ayaan.chiragfarmer.R
 import com.ayaan.chiragfarmer.ui.theme.BGBlack
+import com.ayaan.chiragfarmer.ui.theme.BGWhite
+import com.ayaan.chiragfarmer.ui.theme.BackgroundGray
 import com.ayaan.chiragfarmer.ui.theme.TextDarkGray
 
 @Composable
@@ -36,7 +39,11 @@ fun SearchBarButton(
             .height(38.dp)
             .clip(RoundedCornerShape(10.dp))
             .background(
-                color = Color.White
+                color = BGWhite
+            )
+            .border(
+                width = 2.dp,
+                color=Color(0xffebebeb)
             )
             .padding(horizontal = 16.dp)
             .clickable{

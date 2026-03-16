@@ -61,10 +61,10 @@ fun SellCategoriesScreen(navController: NavHostController) {
     }
     Scaffold(
         topBar = {
-        ChiragTopBar(
-            title = "Sell Produces", navController = navController, icon = R.drawable.ic_arrow
-        )
-    },
+            ChiragTopBar(
+                title = "Sell Produces", navController = navController, icon = R.drawable.ic_arrow
+            )
+        },
         containerColor = BGWhite,
         snackbarHost = { SnackbarHost(snackBarHostState) }) { innerPadding ->
         Column(
