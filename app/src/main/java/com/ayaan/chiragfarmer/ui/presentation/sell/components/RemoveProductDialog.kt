@@ -1,7 +1,9 @@
 package com.ayaan.chiragfarmer.ui.presentation.sell.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -27,28 +29,37 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.ayaan.chiragfarmer.R
 import com.ayaan.chiragfarmer.ui.theme.BGBlack
+import com.ayaan.chiragfarmer.ui.theme.BGWhite
 
 @Composable
 fun RemoveProductDialog(
     onDismiss: () -> Unit,
     onConfirm: () -> Unit
 ) {
-    Dialog(onDismissRequest = onDismiss) {
-        Card(
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = Color.White
-            ),
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(usePlatformDefaultWidth = false)
+    ) {
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(horizontal = 12.dp),
+            contentAlignment = Alignment.Center
+        ) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(containerColor = BGWhite),
+            elevation = CardDefaults.cardElevation(8.dp)
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(24.dp),
+                    .padding(20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 // Illustration
@@ -65,21 +76,21 @@ fun RemoveProductDialog(
                     text = "Remove Produce?",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                    color =BGBlack
                 )
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(4.dp))
 
                 // Message
                 Text(
                     text = "Are you sure you want to remove this produce listing?",
                     fontSize = 14.sp,
-                    color = Color(0xFF666666),
+                    color =BGBlack,
                     textAlign = TextAlign.Center,
-                    lineHeight = 20.sp
+                    lineHeight = 16.sp
                 )
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
                 // Buttons
                 Row(
@@ -91,10 +102,15 @@ fun RemoveProductDialog(
                         onClick = onDismiss,
                         modifier = Modifier
                             .weight(1f)
-                            .height(48.dp),
+                            .height(36.dp),
                         shape = RoundedCornerShape(8.dp),
                         colors = ButtonDefaults.outlinedButtonColors(
-                            contentColor = Color.Black
+                            contentColor = BGBlack,
+                            containerColor = BGWhite
+                        ),
+                        border = BorderStroke(
+                            width = 1.dp,
+                            color = BGBlack
                         )
                     ) {
                         Text(
@@ -112,7 +128,7 @@ fun RemoveProductDialog(
                         },
                         modifier = Modifier
                             .weight(1f)
-                            .height(48.dp),
+                            .height(36.dp),
                         shape = RoundedCornerShape(8.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = BGBlack
@@ -125,6 +141,7 @@ fun RemoveProductDialog(
                         )
                     }
                 }
+            }
             }
         }
     }

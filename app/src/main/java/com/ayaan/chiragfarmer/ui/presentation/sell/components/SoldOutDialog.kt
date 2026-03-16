@@ -2,6 +2,7 @@ package com.ayaan.chiragfarmer.ui.presentation.sell.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -26,102 +27,107 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.ayaan.chiragfarmer.R
 import com.ayaan.chiragfarmer.ui.theme.BGBlack
+import com.ayaan.chiragfarmer.ui.theme.BGWhite
 
 @Composable
 fun SoldOutDialog(
-    onDismiss: () -> Unit,
-    onConfirm: () -> Unit
+    onDismiss: () -> Unit, onConfirm: () -> Unit
 ) {
-    Dialog(onDismissRequest = onDismiss) {
-        Card(
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = Color.White
-            ),
+    Dialog(
+        onDismissRequest = onDismiss, properties = DialogProperties(usePlatformDefaultWidth = false)
+    ) {
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(horizontal = 12.dp),
+            contentAlignment = Alignment.Center
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = BGWhite),
+                elevation = CardDefaults.cardElevation(8.dp)
             ) {
-                // Illustration
-                Image(
-                    painter = painterResource(id = R.drawable.sold_out),
-                    contentDescription = "Sold Out",
-                    modifier = Modifier.size(120.dp)
-                )
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                // Title
-                Text(
-                    text = "Make as Sold Out",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                // Message
-                Text(
-                    text = "Are you sure you want to mark this produce as Sold Out?",
-                    fontSize = 14.sp,
-                    color = Color(0xFF666666),
-                    textAlign = TextAlign.Center,
-                    lineHeight = 20.sp
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                // Buttons
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(20.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    // Cancel Button
-                    OutlinedButton(
-                        onClick = onDismiss,
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(48.dp),
-                        shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            contentColor = Color.Black
-                        )
-                    ) {
-                        Text(
-                            text = "Cancel",
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.Medium
-                        )
-                    }
+                    // Illustration
+                    Image(
+                        painter = painterResource(id = R.drawable.sold_out),
+                        contentDescription = "Sold Out",
+                        modifier = Modifier.size(120.dp)
+                    )
 
-                    // Confirm Button
-                    Button(
-                        onClick = {
-                            onConfirm()
-                            onDismiss()
-                        },
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(48.dp),
-                        shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = BGBlack
-                        )
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    // Title
+                    Text(
+                        text = "Mark as Sold Out",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
+                    )
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    // Message
+                    Text(
+                        text = "Are you sure you want to mark this produce as Sold Out?",
+                        fontSize = 14.sp,
+                        color = BGBlack,
+                        textAlign = TextAlign.Center,
+                        lineHeight = 20.sp
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    // Buttons
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        Text(
-                            text = "Yes, Sold Out",
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.Medium
-                        )
+                        // Cancel Button
+                        OutlinedButton(
+                            onClick = onDismiss,
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(36.dp),
+                            shape = RoundedCornerShape(8.dp),
+                            colors = ButtonDefaults.outlinedButtonColors(
+                                contentColor = Color.Black
+                            )
+                        ) {
+                            Text(
+                                text = "Cancel", fontSize = 15.sp, fontWeight = FontWeight.Medium
+                            )
+                        }
+
+                        // Confirm Button
+                        Button(
+                            onClick = {
+                                onConfirm()
+                                onDismiss()
+                            },
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(36.dp),
+                            shape = RoundedCornerShape(8.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = BGBlack
+                            )
+                        ) {
+                            Text(
+                                text = "Yes, Sold Out",
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
                     }
                 }
             }
