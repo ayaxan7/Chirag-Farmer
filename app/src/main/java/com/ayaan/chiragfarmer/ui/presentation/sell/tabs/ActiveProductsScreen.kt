@@ -102,7 +102,7 @@ fun ActiveProductsScreen(
                                     currentPrice = product.effectivePrice.toString(),
                                     originalPrice = product.originalPrice.toString(),
                                     rating = "4.8", // Static for now as per DTO
-                                    isSoldOut = true
+                                    isSoldOut = false
                                 ),
                                 isSellScreen = true,
                                 onMarkAsSoldClick = {

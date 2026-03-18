@@ -109,15 +109,13 @@ fun BuyScreen(navController: NavHostController) {
         }) { paddingValues ->
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(paddingValues),
             contentPadding = PaddingValues(
-                start = 16.dp,
-                end = 16.dp,
-                top = paddingValues.calculateTopPadding(),
-                bottom = paddingValues.calculateBottomPadding() + 16.dp
+                horizontal = 16.dp
             ),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item(span = { GridItemSpan(maxLineSpan) }) {
                 SearchBarButton(
@@ -170,7 +168,7 @@ fun BuyScreen(navController: NavHostController) {
 
             items(smartFarmingProducts) { product ->
                 CommonProductCard(
-                    product = product
+                    product = product, modifier = Modifier.padding(bottom = 12.dp)
                 )
             }
 
@@ -180,7 +178,7 @@ fun BuyScreen(navController: NavHostController) {
             }
             items(directFromFarmersProducts) { product ->
                 CommonProductCard(
-                    product = product
+                    product = product, modifier = Modifier.padding(bottom = 12.dp)
                 )
             }
             item(span = { GridItemSpan(maxLineSpan) }) {
@@ -189,7 +187,7 @@ fun BuyScreen(navController: NavHostController) {
             }
             items(seedsProducts) { product ->
                 CommonProductCard(
-                    product = product
+                    product = product, modifier = Modifier.padding(bottom = 12.dp)
                 )
             }
             item(span = { GridItemSpan(maxLineSpan) }) {
@@ -198,8 +196,11 @@ fun BuyScreen(navController: NavHostController) {
             }
             items(popularProducts) { product ->
                 CommonProductCard(
-                    product = product
+                    product = product, modifier = Modifier.padding(bottom = 12.dp)
                 )
+            }
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
             }
         }
     }
