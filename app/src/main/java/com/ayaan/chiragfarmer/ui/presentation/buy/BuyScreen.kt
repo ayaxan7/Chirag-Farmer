@@ -144,8 +144,7 @@ fun BuyScreen(navController: NavHostController) {
             item(span = { GridItemSpan(maxLineSpan) }) {
                 LazyRow(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 4.dp),
+                        .fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     items(categories) { category ->

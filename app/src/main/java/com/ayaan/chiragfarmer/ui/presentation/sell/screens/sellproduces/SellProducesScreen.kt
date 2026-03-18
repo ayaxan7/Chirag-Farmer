@@ -4,12 +4,16 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -17,6 +21,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -37,6 +43,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.ayaan.chiragfarmer.R
@@ -47,16 +55,10 @@ import com.ayaan.chiragfarmer.ui.presentation.common.components.ProductImageUplo
 import com.ayaan.chiragfarmer.ui.presentation.home.components.bookservicecard.components.LocationInputField
 import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.ChiragTopBar
 import com.ayaan.chiragfarmer.ui.theme.BGWhite
-
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import java.util.Locale
 
 private fun sanitizeCategoryForSingleLine(value: String?): String {
-    return value
-        ?.replace("\\n", " ")
-        ?.replace("\n", " ")
-        ?.trim()
-        ?.replace(Regex("\\s+"), " ")
+    return value?.replace("\\n", " ")?.replace("\n", " ")?.trim()?.replace(Regex("\\s+"), " ")
         .orEmpty()
 }
 
@@ -143,10 +145,12 @@ fun SellProducesScreen(
                 productDescription = product.description ?: ""
                 viewModel.resetFetchState()
             }
+
             is FetchProductState.Error -> {
                 snackbarHostState.showSnackbar(state.message)
                 viewModel.resetFetchState()
             }
+
             else -> Unit
         }
     }
@@ -159,25 +163,26 @@ fun SellProducesScreen(
                 viewModel.resetState()
                 navController.popBackStack()
             }
+
             is AddProductState.Error -> {
                 snackbarHostState.showSnackbar(state.message)
                 viewModel.resetState()
             }
+
             else -> Unit
         }
     }
 
     Scaffold(
         topBar = {
-            ChiragTopBar(
-                navController = navController,
-                icon = R.drawable.ic_arrow,
-                title = if (isEditMode) "Edit Product" else "Sell Produces"
-            )
-        },
+        ChiragTopBar(
+            navController = navController,
+            icon = R.drawable.ic_arrow,
+            title = if (isEditMode) "Edit Produce" else "Sell Produces"
+        )
+    },
         containerColor = BGWhite,
-        snackbarHost = { SnackbarHost(snackbarHostState) }
-    ) { innerPadding ->
+        snackbarHost = { SnackbarHost(snackbarHostState) }) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -236,12 +241,11 @@ fun SellProducesScreen(
                         modifier = Modifier
                             .size(100.dp)
                             .clip(RoundedCornerShape(8.dp))
-                            .clickable{
+                            .clickable {
                                 imagePickerLauncher.launch("image/*")
                             }
                             .border(1.dp, Color.Gray, RoundedCornerShape(8.dp)),
-                        contentScale = ContentScale.Crop
-                    )
+                        contentScale = ContentScale.Crop)
                     Spacer(modifier = Modifier.height(8.dp))
                 } else if (existingImageUrl != null) {
                     Image(
@@ -249,33 +253,68 @@ fun SellProducesScreen(
                         contentDescription = "Existing product image",
                         modifier = Modifier
                             .size(100.dp)
-                            .clickable{
+                            .clickable {
                                 imagePickerLauncher.launch("image/*")
                             }
                             .clip(RoundedCornerShape(8.dp))
                             .border(1.dp, Color.Gray, RoundedCornerShape(8.dp)),
-                        contentScale = ContentScale.Crop
-                    )
+                        contentScale = ContentScale.Crop)
                     Spacer(modifier = Modifier.height(8.dp))
-                }else{
+                } else {
                     ProductImageUpload(
                         onClick = {
                             imagePickerLauncher.launch("image/*")
-                        }
-                    )
+                        })
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Available Stock Weight
+                var expanded by remember { mutableStateOf(false) }
+                var selectedUnit by remember { mutableStateOf("kg") }
+
+                val units = listOf("KG", "Unit", "Litre")
+
                 FieldLabel(text = "Available Stock*")
+
                 Spacer(modifier = Modifier.height(6.dp))
-                ChiragBasicTextField(
-                    value = availableStock,
-                    onValueChange = { availableStock = it },
-                    placeholder = "KG , Grams , Litres , Units",
-                    keyboardType = KeyboardType.Number
-                )
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+
+                    // Text Field (takes remaining space)
+                    ChiragBasicTextField(
+                        value = availableStock,
+                        onValueChange = { availableStock = it },
+                        placeholder = "Enter quantity",
+                        keyboardType = KeyboardType.Number,
+                        modifier = Modifier.weight(1f)
+                    )
+
+                    // Dropdown (only required width)
+                    Box {
+                        Text(
+                            text = selectedUnit,
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(8.dp))
+                                .clickable { expanded = true }
+                                .background(Color.LightGray)
+                                .padding(horizontal = 12.dp, vertical = 12.dp))
+
+                        DropdownMenu(
+                            expanded = expanded, onDismissRequest = { expanded = false }) {
+                            units.forEach { unit ->
+                                DropdownMenuItem(
+                                    text = { Text(text = unit, fontWeight = FontWeight.Bold) },
+                                    onClick = {
+                                        selectedUnit = unit
+                                        expanded = false
+                                    })
+                            }
+                        }
+                    }
+                }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -287,13 +326,19 @@ fun SellProducesScreen(
                     onValueChange = { viewModel.onLocationQueryChange(it) },
                     placeholder = "Pratapgarh, Uttar pradesh",
                     suggestions = locationSuggestions,
-                    onSuggestionClick = { viewModel.onLocationSelected(it) }
-                )
+                    onSuggestionClick = { viewModel.onLocationSelected(it) })
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Pricing
-                FieldLabel(text = "Pricing")
+                FieldLabel(
+                    text = "Pricing / ${
+                    selectedUnit.replaceFirstChar {
+                        if (it.isLowerCase()) it.titlecase(
+                            Locale.getDefault()
+                        ) else it.toString()
+                    }
+                }")
                 Spacer(modifier = Modifier.height(6.dp))
                 ChiragBasicTextField(
                     value = pricing,
@@ -343,17 +388,11 @@ fun SellProducesScreen(
 
                 // Submit Button
                 ChiragButton(
-                    text = if (fetchProductState is FetchProductState.Loading)
-                        "Loading..."
-                    else if (addProductState is AddProductState.UploadingProduct)
-                        "Uploading Product..."
-                    else if (addProductState is AddProductState.Loading)
-                        "Submitting..."
-                    else if (isEditMode)
-                        "Update Product"
-                    else
-                        "Submit",
-                    onClick = {
+                    text = if (fetchProductState is FetchProductState.Loading) "Loading..."
+                    else if (addProductState is AddProductState.UploadingProduct) "Uploading Product..."
+                    else if (addProductState is AddProductState.Loading) "Submitting..."
+                    else if (isEditMode) "Update Product"
+                    else "Submit", onClick = {
                         viewModel.submitProduct(
                             context = context,
                             category = productCategory,
@@ -365,33 +404,17 @@ fun SellProducesScreen(
                             description = productDescription,
                             isUpdate = isEditMode
                         )
-                    },
-                    enabled = if (isEditMode) {
-                        productCategory.isNotEmpty() &&
-                        productTitle.isNotEmpty() &&
-                        pricing.isNotEmpty() &&
-                        addProductState !is AddProductState.Loading &&
-                        addProductState !is AddProductState.UploadingProduct &&
-                        fetchProductState !is FetchProductState.Loading
+                    }, enabled = if (isEditMode) {
+                        productCategory.isNotEmpty() && productTitle.isNotEmpty() && pricing.isNotEmpty() && addProductState !is AddProductState.Loading && addProductState !is AddProductState.UploadingProduct && fetchProductState !is FetchProductState.Loading
                     } else {
-                        productCategory.isNotEmpty() &&
-                        productTitle.isNotEmpty() &&
-                        availableStock.isNotEmpty() &&
-                        location.isNotEmpty() &&
-                        pricing.isNotEmpty() &&
-                        imageUri != null &&
-                        addProductState !is AddProductState.Loading &&
-                        addProductState !is AddProductState.UploadingProduct &&
-                        fetchProductState !is FetchProductState.Loading
+                        productCategory.isNotEmpty() && productTitle.isNotEmpty() && availableStock.isNotEmpty() && location.isNotEmpty() && pricing.isNotEmpty() && imageUri != null && addProductState !is AddProductState.Loading && addProductState !is AddProductState.UploadingProduct && fetchProductState !is FetchProductState.Loading
                     }
                 )
                 Spacer(modifier = Modifier.height(24.dp))
             }
 
             // Loading indicator
-            if (addProductState is AddProductState.Loading ||
-                addProductState is AddProductState.UploadingProduct ||
-                fetchProductState is FetchProductState.Loading) {
+            if (addProductState is AddProductState.Loading || addProductState is AddProductState.UploadingProduct || fetchProductState is FetchProductState.Loading) {
                 CircularProgressIndicator(
                     modifier = Modifier.align(Alignment.Center)
                 )
