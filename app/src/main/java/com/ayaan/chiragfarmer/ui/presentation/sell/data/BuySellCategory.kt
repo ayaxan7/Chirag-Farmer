@@ -22,11 +22,11 @@ object Categories {
         BuySellCategory("Other", R.drawable.sell_category_other, 0.12)
     )
     val BuyCategories = mutableListOf(
-        BuySellCategory("Seeds", R.drawable.sell_category_cereals, 1.1),
-        BuySellCategory("Seeds", R.drawable.sell_category_cereals, 1.2),
-        BuySellCategory("Seeds", R.drawable.sell_category_cereals, 1.3),
-        BuySellCategory("Seeds", R.drawable.sell_category_cereals, 1.4),
-        BuySellCategory("Seeds", R.drawable.sell_category_cereals, 1.5),
-        BuySellCategory("Seeds", R.drawable.sell_category_cereals, 1.6),
+        BuySellCategory("Seeds", R.drawable.buy_category_seeds, 1.1),
+        BuySellCategory("Sprayers", R.drawable.buy_category_sprayers, 1.2),
+        BuySellCategory("Agriculture\nDrone", R.drawable.buy_category_agri_drone, 1.3),
+        BuySellCategory("Tractors", R.drawable.buy_category_tractor, 1.4),
+        BuySellCategory("Direct From\nFarmers", R.drawable.buy_category_direct_from_farmers, 1.5),
+//        BuySellCategory("Seeds", R.drawable.sell_category_cereals, 1.6),
     )
 }
