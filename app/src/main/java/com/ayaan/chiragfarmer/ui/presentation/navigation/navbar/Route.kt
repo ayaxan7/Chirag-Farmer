@@ -1,5 +1,7 @@
 package com.ayaan.chiragfarmer.ui.presentation.navigation.navbar
 
+import android.net.Uri
+
 sealed class Route(val path: String) {
     object Home : Route("home")
     object Assist : Route("assist")
@@ -13,6 +15,11 @@ sealed class Route(val path: String) {
     object Register: Route("register")
     object RegisterSuccess: Route("register_success")
     object Search:Route("search")
+    object BuyCategory : Route("buy_category/{categoryName}") {
+        fun createRoute(categoryName: String): String {
+            return "buy_category/${Uri.encode(categoryName)}"
+        }
+    }
     object SellCategories:Route("sell_categories")
     object SellProduct:Route("sell_product?productId={productId}&selectedCategory={selectedCategory}") {
         fun createRoute(productId: String? = null, selectedCategory: String? = null): String {

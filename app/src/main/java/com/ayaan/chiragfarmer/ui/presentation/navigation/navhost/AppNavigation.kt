@@ -1,5 +1,6 @@
 package com.ayaan.chiragfarmer.ui.presentation.navigation.navhost
 
+import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -24,6 +25,7 @@ import com.ayaan.chiragfarmer.ui.presentation.home.HomeViewModel
 import com.ayaan.chiragfarmer.ui.presentation.assist.AssistScreen
 import com.ayaan.chiragfarmer.ui.presentation.bookings.BookingsScreen
 import com.ayaan.chiragfarmer.ui.presentation.buy.BuyScreen
+import com.ayaan.chiragfarmer.ui.presentation.buy.screens.CategoriesScreen
 import com.ayaan.chiragfarmer.ui.presentation.home.screens.SearchScreen
 import com.ayaan.chiragfarmer.ui.presentation.sell.SellScreen
 import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.Route
@@ -105,6 +107,18 @@ fun AppNavigation(
         }
         composable(Route.Buy.path) {
             BuyScreen(navController = navController)
+        }
+        composable(
+            route = Route.BuyCategory.path,
+            arguments = listOf(
+                navArgument("categoryName") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val categoryName = Uri.decode(backStackEntry.arguments?.getString("categoryName") ?: "")
+            CategoriesScreen(
+                navController = navController,
+                categoryName = categoryName
+            )
         }
         composable(Route.Sell.path) {
             SellScreen(navController = navController)

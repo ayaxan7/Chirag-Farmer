@@ -173,7 +173,12 @@ fun BuyScreen(navController: NavHostController) {
 
             item(span = { GridItemSpan(maxLineSpan) }) {
                 CategoryHeader(
-                    category = "Direct From Farmers", btnText = "View All", onClick = {})
+                    category = "Direct From Farmers",
+                    btnText = "View All",
+                    onClick = {
+                        navController.navigate(Route.BuyCategory.createRoute("Direct From Farmers"))
+                    }
+                )
             }
             items(directFromFarmersProducts) { product ->
                 CommonProductCard(
@@ -182,7 +187,12 @@ fun BuyScreen(navController: NavHostController) {
             }
             item(span = { GridItemSpan(maxLineSpan) }) {
                 CategoryHeader(
-                    category = "Seeds", btnText = "View All", onClick = {})
+                    category = "Seeds",
+                    btnText = "View All",
+                    onClick = {
+                        navController.navigate(Route.BuyCategory.createRoute("Seeds"))
+                    }
+                )
             }
             items(seedsProducts) { product ->
                 CommonProductCard(
@@ -191,7 +201,12 @@ fun BuyScreen(navController: NavHostController) {
             }
             item(span = { GridItemSpan(maxLineSpan) }) {
                 CategoryHeader(
-                    category = "Popular Products", btnText = "View All", onClick = {})
+                    category = "Popular Products",
+                    btnText = "View All",
+                    onClick = {
+                        navController.navigate(Route.BuyCategory.createRoute("Popular Products"))
+                    }
+                )
             }
             items(popularProducts) { product ->
                 CommonProductCard(

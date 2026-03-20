@@ -17,8 +17,8 @@ object Categories {
         BuySellCategory("Tubers and\nRoot Crops", R.drawable.sell_category_tubers, 0.7),
         BuySellCategory("Flowers", R.drawable.sell_category_flowers, 0.8),
         BuySellCategory("Dry Fruits &\nNuts", R.drawable.sell_category_dryfruits, 0.9),
-        BuySellCategory("Organic Procedure", R.drawable.sell_category_organicproduces, 0.10),
-        BuySellCategory("Livestock Products", R.drawable.sell_category_livestock, 0.11),
+        BuySellCategory("Organic\nProcedure", R.drawable.sell_category_organicproduces, 0.10),
+        BuySellCategory("Livestock\nProducts", R.drawable.sell_category_livestock, 0.11),
         BuySellCategory("Other", R.drawable.sell_category_other, 0.12)
     )
     val BuyCategories = mutableListOf(
