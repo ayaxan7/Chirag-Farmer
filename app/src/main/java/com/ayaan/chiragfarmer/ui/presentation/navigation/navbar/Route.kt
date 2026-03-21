@@ -20,6 +20,7 @@ sealed class Route(val path: String) {
             return "buy_category/${Uri.encode(categoryName)}"
         }
     }
+    object Notifications:Route("notifications")
     object SellCategories:Route("sell_categories")
     object SellProduct:Route("sell_product?productId={productId}&selectedCategory={selectedCategory}") {
         fun createRoute(productId: String? = null, selectedCategory: String? = null): String {

@@ -27,6 +27,7 @@ import com.ayaan.chiragfarmer.ui.presentation.bookings.BookingsScreen
 import com.ayaan.chiragfarmer.ui.presentation.buy.BuyScreen
 import com.ayaan.chiragfarmer.ui.presentation.buy.screens.CategoriesScreen
 import com.ayaan.chiragfarmer.ui.presentation.home.screens.SearchScreen
+import com.ayaan.chiragfarmer.ui.presentation.home.screens.notifications.NotificationsScreen
 import com.ayaan.chiragfarmer.ui.presentation.sell.SellScreen
 import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.Route
 import com.ayaan.chiragfarmer.ui.presentation.sell.screens.sellcategories.SellCategoriesScreen
@@ -101,6 +102,9 @@ fun AppNavigation(
         }
         composable(Route.Assist.path) {
             AssistScreen(navController = navController)
+        }
+        composable(Route.Notifications.path) {
+            NotificationsScreen(navController = navController)
         }
         composable(Route.Bookings.path) {
             BookingsScreen(navController = navController)

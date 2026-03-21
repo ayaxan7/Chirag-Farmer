@@ -2,6 +2,7 @@ package com.ayaan.chiragfarmer.ui.presentation.home.components.topbar
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -73,6 +74,11 @@ fun HomeTopBar(navController: NavHostController) {
                             modifier = Modifier
                                 .width(20.dp)
                                 .height(20.dp)
+                                .clickable{
+                                    navController.navigate(
+                                        Route.Notifications.path
+                                    )
+                                }
                         )
                         Spacer(modifier = Modifier.width(12.dp))
                         Image(
