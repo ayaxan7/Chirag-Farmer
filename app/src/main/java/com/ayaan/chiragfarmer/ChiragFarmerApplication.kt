@@ -32,6 +32,7 @@ class ChiragFarmerApplication : Application() {
         MediaManager.init(this, config)
 
         // Observe app lifecycle
+        
         ProcessLifecycleOwner.get().lifecycle.addObserver(
             LifecycleEventObserver { _, event ->
                 if (event == Lifecycle.Event.ON_STOP) {
