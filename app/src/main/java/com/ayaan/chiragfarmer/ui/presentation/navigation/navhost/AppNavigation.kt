@@ -23,6 +23,7 @@ import com.ayaan.chiragfarmer.ui.presentation.auth.register.RegisterViewModel
 import com.ayaan.chiragfarmer.ui.presentation.home.HomeScreen
 import com.ayaan.chiragfarmer.ui.presentation.home.HomeViewModel
 import com.ayaan.chiragfarmer.ui.presentation.assist.AssistScreen
+import com.ayaan.chiragfarmer.ui.presentation.assist.screens.assistImage.AssistImage
 import com.ayaan.chiragfarmer.ui.presentation.bookings.BookingsScreen
 import com.ayaan.chiragfarmer.ui.presentation.buy.BuyScreen
 import com.ayaan.chiragfarmer.ui.presentation.buy.screens.CategoriesScreen
@@ -122,6 +123,11 @@ fun AppNavigation(
             CategoriesScreen(
                 navController = navController,
                 categoryName = categoryName
+            )
+        }
+        composable(Route.AssistImage.path){
+            AssistImage(
+                navController=navController
             )
         }
         composable(Route.Sell.path) {

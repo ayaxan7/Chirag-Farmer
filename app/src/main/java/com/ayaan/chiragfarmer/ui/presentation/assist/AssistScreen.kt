@@ -13,9 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -32,26 +29,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.ayaan.chiragfarmer.R
 import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.ChiragTopBar
+import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.Route
 import com.ayaan.chiragfarmer.ui.theme.BGBlack
 import com.ayaan.chiragfarmer.ui.theme.BGWhite
 import com.ayaan.chiragfarmer.ui.theme.BorderGray
 
 @Composable
 fun AssistScreen(navController: NavHostController) {
-    val snackbarHostState = remember { SnackbarHostState() }
+    val snackBarHostState = remember { SnackbarHostState() }
     Scaffold(
         containerColor = BGWhite,
-        snackbarHost = { SnackbarHost(snackbarHostState) },
+        snackbarHost = { SnackbarHost(snackBarHostState) },
         topBar = {
             ChiragTopBar(
                 navController = navController, icon = R.drawable.ic_arrow, title = "Assist"
@@ -76,17 +72,19 @@ fun AssistScreen(navController: NavHostController) {
             )
             Spacer(modifier = Modifier.height(16.dp))
             NavigationCard(
-                navController=navController,
+                navController = navController,
                 iconRes = R.drawable.get_help,
-                title="Got Plant Trouble? We’re\nHere to Help.",
-                description = "Upload plant photos to get instant disease\ndiagnosis"
+                title = "Got Plant Trouble? We’re\nHere to Help.",
+                description = "Upload plant photos to get instant disease\ndiagnosis",
+                onClick = {navController.navigate(Route.AssistImage.path)}
             )
             Spacer(modifier = Modifier.height(16.dp))
             NavigationCard(
-                navController=navController,
+                navController = navController,
                 iconRes = R.drawable.qna,
-                title="Ask. Solve. Farm Help Made\nEasy",
-                description = "Ask anything about your crop, land, or agri\ninputs"
+                title = "Ask. Solve. Farm Help Made\nEasy",
+                description = "Ask anything about your crop, land, or agri\ninputs",
+                onClick = { }
             )
         }
     }
@@ -94,6 +92,7 @@ fun AssistScreen(navController: NavHostController) {
 
 @Composable
 private fun NavigationCard(
+    onClick: () -> Unit = {},
     navController: NavHostController,
     iconRes: Int,
     title: String,
@@ -103,7 +102,7 @@ private fun NavigationCard(
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                // navController.navigate("your_route")
+                onClick()
             },
         border = BorderStroke(1.dp, BorderGray),
         shape = RoundedCornerShape(12.dp),
@@ -132,10 +131,7 @@ private fun NavigationCard(
                 Spacer(modifier = Modifier.height(6.dp))
 
                 Text(
-                    text = description,
-                    fontSize = 12.sp,
-                    lineHeight = 16.sp,
-                    color = Color.Gray
+                    text = description, fontSize = 12.sp, lineHeight = 16.sp, color = Color.Gray
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -146,11 +142,10 @@ private fun NavigationCard(
                         .clip(RoundedCornerShape(8.dp))
                         .background(BGBlack)
                         .clickable {
-                            // navController.navigate("your_route")
+                            onClick()
                         }
                         .padding(horizontal = 12.dp, vertical = 6.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+                    verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         painter = painterResource(R.drawable.ic_right_arrow),
                         contentDescription = "Start Icon",
@@ -173,8 +168,7 @@ private fun NavigationCard(
             Image(
                 painter = painterResource(id = iconRes),
                 contentDescription = "Icon",
-                modifier = Modifier
-                    .size(80.dp),
+                modifier = Modifier.size(80.dp),
                 contentScale = ContentScale.FillBounds
             )
         }
