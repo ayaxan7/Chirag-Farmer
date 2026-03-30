@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
@@ -29,10 +28,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.ayaan.chiragfarmer.R
-import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.ChiragTopBar
-import com.ayaan.chiragfarmer.ui.theme.BGWhite
 import com.ayaan.chiragfarmer.ui.presentation.home.screens.notifications.components.NotificationFilterChip
 import com.ayaan.chiragfarmer.ui.presentation.home.screens.notifications.components.NotificationItem
+import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.ChiragTopBar
+
 data class NotificationData(
     val avatarRes: Int,
     val title: String,
@@ -44,8 +43,7 @@ data class NotificationData(
 
 @Composable
 fun NotificationsScreen(
-    navController: NavHostController,
-    modifier: Modifier = Modifier
+    navController: NavHostController, modifier: Modifier = Modifier
 ) {
     var selectedFilter by remember { mutableStateOf("All") }
 
@@ -60,16 +58,14 @@ fun NotificationsScreen(
                 timeAgo = "1m ago",
                 actionButtonText = "Shop Now",
                 category = "buy"
-            ),
-            NotificationData(
+            ), NotificationData(
                 avatarRes = R.drawable.sprayer,
                 title = "Flash Sale on Vegetable Seeds!",
                 message = "Up to 40% off for the next 6 hours.",
                 timeAgo = "1m ago",
                 actionButtonText = "Shop Now",
                 category = "buy"
-            ),
-            NotificationData(
+            ), NotificationData(
                 avatarRes = R.drawable.sprayer,
                 title = "You received a new Order on your Wheat listing",
                 message = "",
@@ -85,16 +81,14 @@ fun NotificationsScreen(
                 timeAgo = "1m ago",
                 actionButtonText = "View Details",
                 category = "sell"
-            ),
-            NotificationData(
+            ), NotificationData(
                 avatarRes = R.drawable.sprayer,
                 title = "Reminder: Drone spraying service booked for Saturday, 3 PM.",
                 message = "",
                 timeAgo = "1m ago",
                 actionButtonText = "View Details",
                 category = "service"
-            ),
-            NotificationData(
+            ), NotificationData(
                 avatarRes = R.drawable.sprayer,
                 title = "Service Feedback Request: Rate your recent service for Water Pump.",
                 message = "",
@@ -106,7 +100,7 @@ fun NotificationsScreen(
     }
 
     // Filter notifications based on selected category
-    val filteredNotifications = if (selectedFilter == "All") {
+    val filteredNotifications = if (selectedFilter.equals("All",ignoreCase = true)) {
         allNotifications
     } else {
         allNotifications.filter { it.category == selectedFilter.lowercase() }
@@ -117,16 +111,11 @@ fun NotificationsScreen(
     val yesterdayNotifications = filteredNotifications.drop(3)
 
     Scaffold(
-        modifier = modifier,
-        containerColor = Color.Transparent,
-        topBar = {
+        modifier = modifier, containerColor = Color.Transparent, topBar = {
             ChiragTopBar(
-                navController = navController,
-                icon = R.drawable.ic_arrow,
-                title = "Notifications"
+                navController = navController, icon = R.drawable.ic_arrow, title = "Notifications"
             )
-        }
-    ) { paddingValues ->
+        }) { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -158,23 +147,19 @@ fun NotificationsScreen(
                     NotificationFilterChip(
                         label = "All",
                         isSelected = selectedFilter == "All",
-                        onClick = { selectedFilter = "All" }
-                    )
+                        onClick = { selectedFilter = "All" })
                     NotificationFilterChip(
                         label = "Buy",
                         isSelected = selectedFilter == "Buy",
-                        onClick = { selectedFilter = "Buy" }
-                    )
+                        onClick = { selectedFilter = "Buy" })
                     NotificationFilterChip(
                         label = "sell",
                         isSelected = selectedFilter == "sell",
-                        onClick = { selectedFilter = "sell" }
-                    )
+                        onClick = { selectedFilter = "sell" })
                     NotificationFilterChip(
                         label = "service",
                         isSelected = selectedFilter == "service",
-                        onClick = { selectedFilter = "service" }
-                    )
+                        onClick = { selectedFilter = "service" })
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))
