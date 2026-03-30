@@ -1,0 +1,48 @@
+name: Build Release AAB
+
+on:
+  push:
+    branches:
+      - deployment
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # Create local.properties
+      - name: Create local.properties
+        run: |
+          echo "OSM_NOMINATIM_BASE_URL=${{ secrets.OSM_NOMINATIM_BASE_URL }}" >> local.properties
+          echo "CLOUD_NAME=${{ secrets.CLOUD_NAME }}" >> local.properties
+          echo "CLOUDINARY_UPLOAD_PRESET=${{ secrets.CLOUDINARY_UPLOAD_PRESET }}" >> local.properties
+
+      # Decode keystore
+      - name: Decode Keystore
+        run: |
+          echo "${{ secrets.RELEASE_STORE_FILE }}" | base64 --decode > release.keystore
+
+      # Build AAB
+      - name: Build Release AAB
+        run: ./gradlew bundleRelease
+        env:
+          RELEASE_STORE_FILE: release.keystore
+          RELEASE_STORE_PASSWORD: ${{ secrets.RELEASE_STORE_PASSWORD }}
+          RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+          RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
+
+      # Upload AAB
+      - name: Upload AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-aab
+          path: app/build/outputs/bundle/release/app-release.aab
