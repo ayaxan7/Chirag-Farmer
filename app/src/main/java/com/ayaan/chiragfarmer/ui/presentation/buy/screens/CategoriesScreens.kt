@@ -14,7 +14,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -23,6 +22,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -35,7 +35,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.ayaan.chiragfarmer.R
 import com.ayaan.chiragfarmer.ui.presentation.common.components.CategoryItem
 import com.ayaan.chiragfarmer.ui.presentation.common.components.CommonProductCard
@@ -51,6 +54,7 @@ fun CategoriesScreen(
     navController: NavHostController,
     categoryName: String = "",
     bannerImageRes: Int = R.drawable.buy_banner,
+    viewModel: BuyCategoriesViewModel = hiltViewModel()
 ) {
 
     var selectedCategoryId by rememberSaveable { mutableDoubleStateOf(0.0) }
@@ -61,35 +65,15 @@ fun CategoriesScreen(
         BuySellCategory("All\nProduces", R.drawable.sell_category_all, 0.0)
     ) + categories
 
-    val products = listOf(
-        CommonProductCardData(
-            productName = "TOMATOES",
-            brandName = "Rahul kissan",
-            currentPrice = "29",
-            originalPrice = "35",
-            rating = "4.8",
-            imageUrl = ""
-        ), CommonProductCardData(
-            productName = "RED APPLES",
-            brandName = "Rahul kissan",
-            currentPrice = "189",
-            originalPrice = "255",
-            rating = "4.8",
-            imageUrl = ""
-        ), CommonProductCardData(
-            productName = "WHITE RICE",
-            brandName = "Rahul kissan",
-            currentPrice = "899",
-            rating = "4.8",
-            imageUrl = ""
-        ), CommonProductCardData(
-            productName = "BIRYANI FLOWER",
-            brandName = "Rahul kissan",
-            currentPrice = "150",
-            rating = "4.8",
-            imageUrl = ""
-        )
-    )
+    val products = viewModel.products.collectAsLazyPagingItems()
+
+    LaunchedEffect(categoryName) {
+        viewModel.setCategoryName(categoryName)
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.onCategoryChipSelected("All Produces")
+    }
 
     val categoryDisplayText =
         allCategories.find { it.id == selectedCategoryId }?.name?.replace("\n", " ")
@@ -143,6 +127,11 @@ fun CategoriesScreen(
                             onClick = {
                                 selectedCategoryId =
                                     if (selectedCategoryId == category.id) 0.0 else category.id
+                                val selectedCategoryName =
+                                    allCategories.find { it.id == selectedCategoryId }?.name
+                                        ?.replace("\n", " ")
+                                        ?: "All Produces"
+                                viewModel.onCategoryChipSelected(selectedCategoryName)
                             })
                     }
                 }
@@ -174,10 +163,57 @@ fun CategoriesScreen(
                 }
             }
 
-            items(products) { product ->
+            when (val refreshState = products.loadState.refresh) {
+                is LoadState.Loading -> {
+                    item(span = { GridItemSpan(maxLineSpan) }) {
+                        Text(text = "Loading products...")
+                    }
+                }
+
+                is LoadState.Error -> {
+                    item(span = { GridItemSpan(maxLineSpan) }) {
+                        Text(text = refreshState.error.message ?: "Failed to load products")
+                    }
+                }
+
+                is LoadState.NotLoading -> {
+                    if (products.itemCount == 0) {
+                        item(span = { GridItemSpan(maxLineSpan) }) {
+                            Text(text = "No products found")
+                        }
+                    }
+                }
+            }
+
+            items(products.itemCount) { index ->
+                val product = products[index] ?: return@items
                 CommonProductCard(
-                    product = product, isSellScreen = false
+                    product = CommonProductCardData(
+                        productName = product.productName,
+                        brandName = product.sellerName,
+                        currentPrice = product.effectivePrice.toString(),
+                        originalPrice = product.originalPrice.takeIf { it > 0 }?.toString(),
+                        rating = "4.8",
+                        imageUrl = product.imageUrl
+                    ),
+                    isSellScreen = false
                 )
+            }
+
+            when (val appendState = products.loadState.append) {
+                is LoadState.Loading -> {
+                    item(span = { GridItemSpan(maxLineSpan) }) {
+                        Text(text = "Loading more...")
+                    }
+                }
+
+                is LoadState.Error -> {
+                    item(span = { GridItemSpan(maxLineSpan) }) {
+                        Text(text = appendState.error.message ?: "Failed to load more products")
+                    }
+                }
+
+                else -> Unit
             }
 
             item(span = { GridItemSpan(maxLineSpan) }) {

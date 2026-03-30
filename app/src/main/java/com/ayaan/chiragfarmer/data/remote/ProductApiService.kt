@@ -27,6 +27,15 @@ interface ProductApiService {
         @Query("search") search: String? = null
     ): ProductResponseDto
 
+    @GET("api/farmers/all-products")
+    suspend fun getAllProducts(
+        @Header("Authorization") token: String,
+        @Query("page") page: Int,
+        @Query("limit") limit: Int,
+        @Query("category") category: String,
+        @Query("subcategory") subcategory: String? = null
+    ): ProductResponseDto
+
     @GET("api/farmers/products/{productId}")
     suspend fun getProductDetails(
         @Header("Authorization") token: String,
