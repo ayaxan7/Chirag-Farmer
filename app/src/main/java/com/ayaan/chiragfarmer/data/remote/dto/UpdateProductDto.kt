@@ -7,8 +7,8 @@ data class UpdateProductRequest(
     val productId: String,
     @SerializedName("title")
     val title: String? = null,
-    @SerializedName("image")
-    val image: String? = null,
+    @SerializedName("images")
+    val images: List<String>? = null,
     @SerializedName("category")
     val category: String? = null,
     @SerializedName("description")

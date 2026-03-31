@@ -5,8 +5,8 @@ import com.google.gson.annotations.SerializedName
 data class AddProductRequest(
     @SerializedName("title")
     val title: String,
-    @SerializedName("image")
-    val image: String,
+    @SerializedName("images")
+    val images: List<String>,
     @SerializedName("category")
     val category: String?,
     @SerializedName("description")

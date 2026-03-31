@@ -18,8 +18,8 @@ data class ProductDetailsData(
     val farmer: FarmerInfo,
     @SerializedName("title")
     val title: String,
-    @SerializedName("image")
-    val image: String,
+    @SerializedName("images")
+    val images: List<String>,
     @SerializedName("category")
     val category: String?,
     @SerializedName("description")
