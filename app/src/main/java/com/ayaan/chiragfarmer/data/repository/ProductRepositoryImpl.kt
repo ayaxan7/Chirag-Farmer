@@ -6,6 +6,7 @@ import androidx.paging.PagingData
 import com.ayaan.chiragfarmer.data.local.AuthDataStore
 import com.ayaan.chiragfarmer.data.paging.AllProductsPagingSource
 import com.ayaan.chiragfarmer.data.paging.ProductPagingSource
+import com.ayaan.chiragfarmer.data.paging.SmartFarmingPagingSource
 import com.ayaan.chiragfarmer.data.remote.ProductApiService
 import com.ayaan.chiragfarmer.data.remote.dto.AddProductRequest
 import com.ayaan.chiragfarmer.data.remote.dto.DeleteProductRequest
@@ -57,6 +58,31 @@ class ProductRepositoryImpl @Inject constructor(
                 ),
                 pagingSourceFactory = {
                     AllProductsPagingSource(
+                        apiService = apiService,
+                        token = token ?: "",
+                        category = category,
+                        subcategory = subcategory
+                    )
+                }
+            ).flow
+        }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun getSmartFarmingProducts(
+        category: String,
+        subcategory: String?
+    ): Flow<PagingData<Product>> {
+        return authDataStore.getAuthToken().flatMapLatest { token ->
+            Pager(
+                config = PagingConfig(
+                    pageSize = 10,
+                    initialLoadSize = 10,
+                    prefetchDistance = 1,
+                    enablePlaceholders = false
+                ),
+                pagingSourceFactory = {
+                    SmartFarmingPagingSource(
                         apiService = apiService,
                         token = token ?: "",
                         category = category,

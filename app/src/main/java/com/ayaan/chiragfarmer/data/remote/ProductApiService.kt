@@ -36,6 +36,15 @@ interface ProductApiService {
         @Query("subcategory") subcategory: String? = null
     ): ProductResponseDto
 
+    @GET("api/farmers/smart-farming-products")
+    suspend fun getSmartFarmingProducts(
+        @Header("Authorization") token: String,
+        @Query("page") page: Int,
+        @Query("limit") limit: Int,
+        @Query("category") category: String,
+        @Query("subcategory") subcategory: String? = null
+    ): ProductResponseDto
+
     @GET("api/farmers/products/{productId}")
     suspend fun getProductDetails(
         @Header("Authorization") token: String,
