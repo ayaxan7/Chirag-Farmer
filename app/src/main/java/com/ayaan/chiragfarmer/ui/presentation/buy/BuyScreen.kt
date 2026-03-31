@@ -16,11 +16,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -45,8 +41,6 @@ fun BuyScreen(navController: NavHostController) {
         R.drawable.buy_banner,
         R.drawable.buy_banner,
     )
-
-    var selectedCategory by rememberSaveable { mutableDoubleStateOf(0.0) }
 
     val categories = remember { Categories.BuyCategories }
 
@@ -150,10 +144,15 @@ fun BuyScreen(navController: NavHostController) {
                     items(categories) { category ->
                         CategoryItem(
                             category = category,
-                            selected = selectedCategory == category.id,
+                            selected = false,
                             onClick = {
-                                selectedCategory =
-                                    if (selectedCategory == category.id) 0.0 else category.id
+                                val routeCategoryName = category.name
+                                    .replace("\n", " ")
+                                    .trim()
+
+                                navController.navigate(
+                                    Route.BuyCategory.createRoute(routeCategoryName)
+                                )
                             })
                     }
                 }

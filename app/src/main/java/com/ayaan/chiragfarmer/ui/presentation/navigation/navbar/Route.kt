@@ -22,7 +22,7 @@ sealed class Route(val path: String) {
     }
     object Notifications:Route("notifications")
     object SellCategories:Route("sell_categories")
-    object AssistImage:Route("assist/assist_image")
+    object AssistImage:Route("assist_image")
     object SellProduct:Route("sell_product?productId={productId}&selectedCategory={selectedCategory}") {
         fun createRoute(productId: String? = null, selectedCategory: String? = null): String {
             val queryParams = buildList {
