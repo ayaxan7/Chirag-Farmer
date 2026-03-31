@@ -15,9 +15,14 @@ sealed class Route(val path: String) {
     object Register: Route("register")
     object RegisterSuccess: Route("register_success")
     object Search:Route("search")
-    object BuyCategory : Route("buy_category/{categoryName}") {
-        fun createRoute(categoryName: String): String {
-            return "buy_category/${Uri.encode(categoryName)}"
+    object BuyCategory : Route("buy_category/{categoryName}?bannerImageResId={bannerImageResId}") {
+        fun createRoute(categoryName: String, bannerImageResId: Int? = null): String {
+            val params = Uri.encode(categoryName)
+            return if (bannerImageResId != null) {
+                "buy_category/$params?bannerImageResId=$bannerImageResId"
+            } else {
+                "buy_category/$params"
+            }
         }
     }
     object Notifications:Route("notifications")

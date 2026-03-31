@@ -44,6 +44,17 @@ fun BuyScreen(navController: NavHostController) {
 
     val categories = remember { Categories.BuyCategories }
 
+    // Map categories to their banner images
+    val categoryBannerMap = remember {
+        mapOf(
+            "Seeds" to R.drawable.seeds_banner,
+            "Sprayers" to R.drawable.agri_sprayers_banner,
+            "Agriculture Drone" to R.drawable.agri_drones,
+            "Tractors" to R.drawable.tractors_banner,
+            "Direct From Farmers" to R.drawable.direct_from_farmers_banner
+        )
+    }
+
     val smartFarmingProducts = remember {
         List(4) {
             CommonProductCardData(
@@ -150,8 +161,10 @@ fun BuyScreen(navController: NavHostController) {
                                     .replace("\n", " ")
                                     .trim()
 
+                                val bannerResId = categoryBannerMap[routeCategoryName] ?: R.drawable.buy_banner
+
                                 navController.navigate(
-                                    Route.BuyCategory.createRoute(routeCategoryName)
+                                    Route.BuyCategory.createRoute(routeCategoryName, bannerResId)
                                 )
                             })
                     }
@@ -175,7 +188,8 @@ fun BuyScreen(navController: NavHostController) {
                     category = "Direct From Farmers",
                     btnText = "View All",
                     onClick = {
-                        navController.navigate(Route.BuyCategory.createRoute("Direct From Farmers"))
+                        val bannerResId = categoryBannerMap["Direct From Farmers"] ?: R.drawable.buy_banner
+                        navController.navigate(Route.BuyCategory.createRoute("Direct From Farmers", bannerResId))
                     }
                 )
             }
@@ -189,7 +203,8 @@ fun BuyScreen(navController: NavHostController) {
                     category = "Seeds",
                     btnText = "View All",
                     onClick = {
-                        navController.navigate(Route.BuyCategory.createRoute("Seeds"))
+                        val bannerResId = categoryBannerMap["Seeds"] ?: R.drawable.buy_banner
+                        navController.navigate(Route.BuyCategory.createRoute("Seeds", bannerResId))
                     }
                 )
             }
