@@ -4,6 +4,7 @@ import com.ayaan.chiragfarmer.data.remote.dto.AddProductRequest
 import com.ayaan.chiragfarmer.data.remote.dto.AddProductResponse
 import com.ayaan.chiragfarmer.data.remote.dto.DeleteProductRequest
 import com.ayaan.chiragfarmer.data.remote.dto.DeleteProductResponse
+import com.ayaan.chiragfarmer.data.remote.dto.MixedProductsResponse
 import com.ayaan.chiragfarmer.data.remote.dto.ProductDetailsResponse
 import com.ayaan.chiragfarmer.data.remote.dto.ProductResponseDto
 import com.ayaan.chiragfarmer.data.remote.dto.ToggleSoldOutRequest
@@ -44,6 +45,11 @@ interface ProductApiService {
         @Query("category") category: String,
         @Query("subcategory") subcategory: String? = null
     ): ProductResponseDto
+
+    @GET("api/farmers/mixed-products")
+    suspend fun getMixedProducts(
+        @Header("Authorization") token: String
+    ): MixedProductsResponse
 
     @GET("api/farmers/products/{productId}")
     suspend fun getProductDetails(
