@@ -61,15 +61,19 @@ class SellProducesViewModel @Inject constructor(
     private val _fetchProductState = MutableStateFlow<FetchProductState>(FetchProductState.Idle)
     val fetchProductState: StateFlow<FetchProductState> = _fetchProductState.asStateFlow()
 
-    private val _imageUri = MutableStateFlow<Uri?>(null)
-    val imageUri: StateFlow<Uri?> = _imageUri.asStateFlow()
+    private val _selectedImageUris = MutableStateFlow<List<Uri>>(emptyList())
+    val selectedImageUris: StateFlow<List<Uri>> = _selectedImageUris.asStateFlow()
 
-    private val _existingImageUrl = MutableStateFlow<String?>(null)
-    val existingImageUrl: StateFlow<String?> = _existingImageUrl.asStateFlow()
+    private val _existingImageUrls = MutableStateFlow<List<String>>(emptyList())
+    val existingImageUrls: StateFlow<List<String>> = _existingImageUrls.asStateFlow()
 
     private val _productId = MutableStateFlow<String?>(null)
 
     private var searchJob: Job? = null
+
+    companion object {
+        private const val MAX_IMAGES = 3
+    }
 
     fun fetchProductDetails(productId: String) {
         viewModelScope.launch {
@@ -78,7 +82,8 @@ class SellProducesViewModel @Inject constructor(
 
             getProductDetailsUseCase(productId).onSuccess { product ->
                 _fetchProductState.value = FetchProductState.Success(product)
-                _existingImageUrl.value = product.image
+                // Load existing images (up to 3)
+                _existingImageUrls.value = product.images.take(MAX_IMAGES)
                 _locationQuery.value = product.location.name
                 _selectedLocation.value = Location(
                     displayName = product.location.name,
@@ -118,10 +123,28 @@ class SellProducesViewModel @Inject constructor(
     }
 
     fun onImageSelected(uri: Uri?) {
-        _imageUri.value = uri
-        // Clear existing image URL when new image is selected
-        if (uri != null) {
-            _existingImageUrl.value = null
+        uri?.let {
+            val currentImages = _selectedImageUris.value.toMutableList()
+            if (currentImages.size < MAX_IMAGES) {
+                currentImages.add(uri)
+                _selectedImageUris.value = currentImages
+            }
+        }
+    }
+
+    fun removeSelectedImage(index: Int) {
+        val currentImages = _selectedImageUris.value.toMutableList()
+        if (index in currentImages.indices) {
+            currentImages.removeAt(index)
+            _selectedImageUris.value = currentImages
+        }
+    }
+
+    fun removeExistingImage(index: Int) {
+        val currentImages = _existingImageUrls.value.toMutableList()
+        if (index in currentImages.indices) {
+            currentImages.removeAt(index)
+            _existingImageUrls.value = currentImages
         }
     }
 
@@ -139,26 +162,34 @@ class SellProducesViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 _addProductState.value = AddProductState.Loading
-
-                // Validate required fields
                 val selectedLoc = _selectedLocation.value
 
                 if (isUpdate) {
-                    // UPDATE MODE - Use update endpoint for partial updates
+                    // UPDATE MODE
                     val productIdValue = _productId.value
                     if (productIdValue == null) {
                         _addProductState.value = AddProductState.Error("Product ID not found")
                         return@launch
                     }
 
-                    // Determine image URL (only upload if new image selected)
-                    val imageUrl = when {
-                        _imageUri.value != null -> {
-                            // Upload new image to Cloudinary
-                            _addProductState.value = AddProductState.UploadingProduct
-                            CloudinaryUploader.uploadImage(context, _imageUri.value!!)
+                    // Collect all images: existing + newly selected
+                    val allImageUrls = mutableListOf<String>()
+                    
+                    // Add existing images that weren't removed
+                    allImageUrls.addAll(_existingImageUrls.value)
+
+                    // Upload new selected images one by one
+                    if (_selectedImageUris.value.isNotEmpty()) {
+                        _addProductState.value = AddProductState.UploadingProduct
+                        for (uri in _selectedImageUris.value) {
+                            try {
+                                val uploadedUrl = CloudinaryUploader.uploadImage(context, uri)
+                                allImageUrls.add(uploadedUrl)
+                            } catch (e: Exception) {
+                                _addProductState.value = AddProductState.Error("Failed to upload image: ${e.message}")
+                                return@launch
+                            }
                         }
-                        else -> null // Keep existing image (don't send in request)
                     }
 
                     // Parse numeric values
@@ -182,11 +213,11 @@ class SellProducesViewModel @Inject constructor(
                         return@launch
                     }
 
-                    // Create update request with only changed fields
+                    // Create update request with all images
                     val updateRequest = UpdateProductRequest(
                         productId = productIdValue,
                         title = title.takeIf { it.isNotEmpty() },
-                        image = imageUrl, // null if no new image
+                        images = if (allImageUrls.isNotEmpty()) allImageUrls else null,
                         category = category.takeIf { it.isNotEmpty() },
                         description = description.takeIf { it.isNotEmpty() },
                         availableStockWeight = stockWeight,
@@ -212,11 +243,9 @@ class SellProducesViewModel @Inject constructor(
                     }
 
                 } else {
-                    // ADD MODE - Use add endpoint (requires all fields)
-                    val imageUriValue = _imageUri.value
-
-                    if (imageUriValue == null) {
-                        _addProductState.value = AddProductState.Error("Please select a product image")
+                    // ADD MODE
+                    if (_selectedImageUris.value.isEmpty()) {
+                        _addProductState.value = AddProductState.Error("Please select at least one product image")
                         return@launch
                     }
 
@@ -225,9 +254,19 @@ class SellProducesViewModel @Inject constructor(
                         return@launch
                     }
 
-                    // Upload image to Cloudinary
+                    // Upload all selected images one by one
                     _addProductState.value = AddProductState.UploadingProduct
-                    val imageUrl = CloudinaryUploader.uploadImage(context, imageUriValue)
+                    val uploadedImageUrls = mutableListOf<String>()
+                    
+                    for (uri in _selectedImageUris.value) {
+                        try {
+                            val uploadedUrl = CloudinaryUploader.uploadImage(context, uri)
+                            uploadedImageUrls.add(uploadedUrl)
+                        } catch (e: Exception) {
+                            _addProductState.value = AddProductState.Error("Failed to upload image: ${e.message}")
+                            return@launch
+                        }
+                    }
 
                     // Parse numeric values
                     val stockWeight = availableStock.toDoubleOrNull()
@@ -250,10 +289,10 @@ class SellProducesViewModel @Inject constructor(
                         return@launch
                     }
 
-                    // Create request
+                    // Create request with all uploaded images
                     val request = AddProductRequest(
                         title = title,
-                        image = imageUrl,
+                        images = uploadedImageUrls, // All uploaded images
                         category = category.takeIf { it.isNotEmpty() },
                         description = description.takeIf { it.isNotEmpty() },
                         availableStockWeight = stockWeight,
@@ -294,8 +333,8 @@ class SellProducesViewModel @Inject constructor(
     }
 
     private fun resetForm() {
-        _imageUri.value = null
-        _existingImageUrl.value = null
+        _selectedImageUris.value = emptyList()
+        _existingImageUrls.value = emptyList()
         _locationQuery.value = ""
         _selectedLocation.value = null
         _productId.value = null

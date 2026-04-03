@@ -55,14 +55,14 @@ class SellViewModel @Inject constructor(
         .flatMapLatest { query ->
             getFarmerProductsUseCase(type = "active", search = query.ifEmpty { null })
         }
-        .cachedIn(viewModelScope)
+//        .cachedIn(viewModelScope)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val soldOutProducts: Flow<PagingData<Product>> = _soldOutSearchQuery
         .flatMapLatest { query ->
             getFarmerProductsUseCase(type = "sold_out", search = query.ifEmpty { null })
         }
-        .cachedIn(viewModelScope)
+//        .cachedIn(viewModelScope)
 
     fun onSearchQueryChange(query: String) {
         _searchQuery.value = query

@@ -16,11 +16,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -46,9 +42,18 @@ fun BuyScreen(navController: NavHostController) {
         R.drawable.buy_banner,
     )
 
-    var selectedCategory by rememberSaveable { mutableDoubleStateOf(0.0) }
-
     val categories = remember { Categories.BuyCategories }
+
+    // Map categories to their banner images
+    val categoryBannerMap = remember {
+        mapOf(
+            "Seeds" to R.drawable.seeds_banner,
+            "Sprayers" to R.drawable.agri_sprayers_banner,
+            "Agriculture Drone" to R.drawable.agri_drones,
+            "Tractors" to R.drawable.tractors_banner,
+            "Direct From Farmers" to R.drawable.direct_from_farmers_banner
+        )
+    }
 
     val smartFarmingProducts = remember {
         List(4) {
@@ -150,10 +155,17 @@ fun BuyScreen(navController: NavHostController) {
                     items(categories) { category ->
                         CategoryItem(
                             category = category,
-                            selected = selectedCategory == category.id,
+                            selected = false,
                             onClick = {
-                                selectedCategory =
-                                    if (selectedCategory == category.id) 0.0 else category.id
+                                val routeCategoryName = category.name
+                                    .replace("\n", " ")
+                                    .trim()
+
+                                val bannerResId = categoryBannerMap[routeCategoryName] ?: R.drawable.buy_banner
+
+                                navController.navigate(
+                                    Route.BuyCategory.createRoute(routeCategoryName, bannerResId)
+                                )
                             })
                     }
                 }
@@ -176,7 +188,8 @@ fun BuyScreen(navController: NavHostController) {
                     category = "Direct From Farmers",
                     btnText = "View All",
                     onClick = {
-                        navController.navigate(Route.BuyCategory.createRoute("Direct From Farmers"))
+                        val bannerResId = categoryBannerMap["Direct From Farmers"] ?: R.drawable.buy_banner
+                        navController.navigate(Route.BuyCategory.createRoute("Direct From Farmers", bannerResId))
                     }
                 )
             }
@@ -190,7 +203,8 @@ fun BuyScreen(navController: NavHostController) {
                     category = "Seeds",
                     btnText = "View All",
                     onClick = {
-                        navController.navigate(Route.BuyCategory.createRoute("Seeds"))
+                        val bannerResId = categoryBannerMap["Seeds"] ?: R.drawable.buy_banner
+                        navController.navigate(Route.BuyCategory.createRoute("Seeds", bannerResId))
                     }
                 )
             }

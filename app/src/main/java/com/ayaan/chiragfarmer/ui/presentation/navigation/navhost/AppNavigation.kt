@@ -12,6 +12,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.ayaan.chiragfarmer.R
 import com.ayaan.chiragfarmer.data.local.AuthDataStore
 import com.ayaan.chiragfarmer.ui.presentation.auth.common.screens.AuthScreen
 import com.ayaan.chiragfarmer.ui.presentation.auth.common.screens.AuthViewModel
@@ -116,13 +117,19 @@ fun AppNavigation(
         composable(
             route = Route.BuyCategory.path,
             arguments = listOf(
-                navArgument("categoryName") { type = NavType.StringType }
+                navArgument("categoryName") { type = NavType.StringType },
+                navArgument("bannerImageResId") { 
+                    type = NavType.IntType
+                    defaultValue = R.drawable.buy_banner
+                }
             )
         ) { backStackEntry ->
             val categoryName = Uri.decode(backStackEntry.arguments?.getString("categoryName") ?: "")
+            val bannerImageResId = backStackEntry.arguments?.getInt("bannerImageResId") ?: R.drawable.buy_banner
             CategoriesScreen(
                 navController = navController,
-                categoryName = categoryName
+                categoryName = categoryName,
+                bannerImageRes = bannerImageResId
             )
         }
         composable(Route.AssistImage.path){

@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.Flow
 interface ProductRepository {
     fun getFarmerProducts(type: String, search: String?): Flow<PagingData<Product>>
     fun getAllProducts(category: String, subcategory: String?): Flow<PagingData<Product>>
+    fun getSmartFarmingProducts(category: String, subcategory: String?): Flow<PagingData<Product>>
     suspend fun getProductDetails(productId: String): Result<ProductDetailsData>
     suspend fun addProduct(request: AddProductRequest): Result<String>
     suspend fun updateProduct(request: UpdateProductRequest): Result<Unit>

@@ -72,7 +72,6 @@ fun AssistScreen(navController: NavHostController) {
             )
             Spacer(modifier = Modifier.height(16.dp))
             NavigationCard(
-                navController = navController,
                 iconRes = R.drawable.get_help,
                 title = "Got Plant Trouble? We’re\nHere to Help.",
                 description = "Upload plant photos to get instant disease\ndiagnosis",
@@ -80,7 +79,6 @@ fun AssistScreen(navController: NavHostController) {
             )
             Spacer(modifier = Modifier.height(16.dp))
             NavigationCard(
-                navController = navController,
                 iconRes = R.drawable.qna,
                 title = "Ask. Solve. Farm Help Made\nEasy",
                 description = "Ask anything about your crop, land, or agri\ninputs",
@@ -93,7 +91,6 @@ fun AssistScreen(navController: NavHostController) {
 @Composable
 private fun NavigationCard(
     onClick: () -> Unit = {},
-    navController: NavHostController,
     iconRes: Int,
     title: String,
     description: String

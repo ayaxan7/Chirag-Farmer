@@ -10,6 +10,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,12 +18,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -51,7 +57,6 @@ import com.ayaan.chiragfarmer.R
 import com.ayaan.chiragfarmer.ui.presentation.common.components.ChiragBasicTextField
 import com.ayaan.chiragfarmer.ui.presentation.common.components.ChiragButton
 import com.ayaan.chiragfarmer.ui.presentation.common.components.MultiLineTextField
-import com.ayaan.chiragfarmer.ui.presentation.common.components.ProductImageUpload
 import com.ayaan.chiragfarmer.ui.presentation.home.components.bookservicecard.components.LocationInputField
 import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.ChiragTopBar
 import com.ayaan.chiragfarmer.ui.theme.BGWhite
@@ -81,8 +86,8 @@ fun SellProducesScreen(
     var deliveryFeePerKm by remember { mutableStateOf("") }
     var productDescription by remember { mutableStateOf("") }
 
-    val imageUri by viewModel.imageUri.collectAsStateWithLifecycle()
-    val existingImageUrl by viewModel.existingImageUrl.collectAsStateWithLifecycle()
+    val selectedImageUris by viewModel.selectedImageUris.collectAsStateWithLifecycle()
+    val existingImageUrls by viewModel.existingImageUrls.collectAsStateWithLifecycle()
     val addProductState by viewModel.addProductState.collectAsStateWithLifecycle()
     val fetchProductState by viewModel.fetchProductState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -229,43 +234,55 @@ fun SellProducesScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Images
-                FieldLabel(text = "Image")
+                // Images Gallery
+                FieldLabel(text = "Images (Max 3)")
                 Spacer(modifier = Modifier.height(10.dp))
 
-                // Show existing image or selected new image
-                if (imageUri != null) {
-                    Image(
-                        painter = rememberAsyncImagePainter(imageUri),
-                        contentDescription = "Selected product image",
+                // Display images horizontally with remove buttons
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(120.dp)
+                ) {
+                    LazyRow(
                         modifier = Modifier
-                            .size(100.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                            .clickable {
-                                imagePickerLauncher.launch("image/*")
+                            .fillMaxSize(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        contentPadding = PaddingValues(end = 8.dp)
+                    ) {
+                        // Existing images
+                        items(existingImageUrls.size) { index ->
+                            ImageThumbnailWithRemove(
+                                imageUrl = existingImageUrls[index],
+                                onRemove = { viewModel.removeExistingImage(index) }
+                            )
+                        }
+
+                        // Selected new images
+                        items(selectedImageUris.size) { index ->
+                            ImageThumbnailWithRemove(
+                                imageUri = selectedImageUris[index],
+                                onRemove = { viewModel.removeSelectedImage(index) }
+                            )
+                        }
+
+                        // Add image button (enabled only if less than 3 images)
+                        if ((existingImageUrls.size + selectedImageUris.size) < 3) {
+                            item {
+                                AddImageButton(
+                                    onClick = { imagePickerLauncher.launch("image/*") }
+                                )
                             }
-                            .border(1.dp, Color.Gray, RoundedCornerShape(8.dp)),
-                        contentScale = ContentScale.Crop)
-                    Spacer(modifier = Modifier.height(8.dp))
-                } else if (existingImageUrl != null) {
-                    Image(
-                        painter = rememberAsyncImagePainter(existingImageUrl),
-                        contentDescription = "Existing product image",
-                        modifier = Modifier
-                            .size(100.dp)
-                            .clickable {
-                                imagePickerLauncher.launch("image/*")
-                            }
-                            .clip(RoundedCornerShape(8.dp))
-                            .border(1.dp, Color.Gray, RoundedCornerShape(8.dp)),
-                        contentScale = ContentScale.Crop)
-                    Spacer(modifier = Modifier.height(8.dp))
-                } else {
-                    ProductImageUpload(
-                        onClick = {
-                            imagePickerLauncher.launch("image/*")
-                        })
+                        }
+                    }
                 }
+
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "${existingImageUrls.size + selectedImageUris.size} / 3 images",
+                    fontSize = 12.sp,
+                    color = Color.Gray
+                )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -407,7 +424,7 @@ fun SellProducesScreen(
                     }, enabled = if (isEditMode) {
                         productCategory.isNotEmpty() && productTitle.isNotEmpty() && pricing.isNotEmpty() && addProductState !is AddProductState.Loading && addProductState !is AddProductState.UploadingProduct && fetchProductState !is FetchProductState.Loading
                     } else {
-                        productCategory.isNotEmpty() && productTitle.isNotEmpty() && availableStock.isNotEmpty() && location.isNotEmpty() && pricing.isNotEmpty() && imageUri != null && addProductState !is AddProductState.Loading && addProductState !is AddProductState.UploadingProduct && fetchProductState !is FetchProductState.Loading
+                        productCategory.isNotEmpty() && productTitle.isNotEmpty() && availableStock.isNotEmpty() && location.isNotEmpty() && pricing.isNotEmpty() && (selectedImageUris.isNotEmpty() || existingImageUrls.isNotEmpty()) && addProductState !is AddProductState.Loading && addProductState !is AddProductState.UploadingProduct && fetchProductState !is FetchProductState.Loading
                     }
                 )
                 Spacer(modifier = Modifier.height(24.dp))
@@ -429,3 +446,74 @@ private fun FieldLabel(text: String) {
         text = text, fontSize = 13.sp, color = Color.Black, fontWeight = FontWeight.Normal
     )
 }
+
+@Composable
+private fun ImageThumbnailWithRemove(
+    imageUrl: String? = null,
+    imageUri: Uri? = null,
+    onRemove: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .size(100.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
+            .background(Color.LightGray)
+    ) {
+        // Display image
+        if (imageUrl != null) {
+            Image(
+                painter = rememberAsyncImagePainter(imageUrl),
+                contentDescription = "Product image",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
+        } else if (imageUri != null) {
+            Image(
+                painter = rememberAsyncImagePainter(imageUri),
+                contentDescription = "Selected product image",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
+        }
+
+        // Remove button at top-right
+        Box(
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(4.dp)
+                .size(24.dp)
+                .clip(RoundedCornerShape(4.dp))
+                .background(Color.Red)
+                .clickable { onRemove() },
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Close,
+                contentDescription = "Remove image",
+                tint = Color.White,
+                modifier = Modifier.size(16.dp)
+            )
+        }
+    }
+}
+
+@Composable
+private fun AddImageButton(onClick: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .size(100.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .border(2.dp, Color.Gray, RoundedCornerShape(8.dp))
+            .clickable { onClick() },
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            imageVector = Icons.Filled.Add,
+            contentDescription = "Add image",
+            tint = Color.Gray,
+            modifier = Modifier.size(40.dp)
+        )
+    }
+}
+

@@ -19,7 +19,7 @@ data class ProductsDataDto(
 data class ProductDto(
     val productId: String,
     val productName: String,
-    val imageUrl: String,
+    val images: List<String>,
     val sellerName: String,
     @SerializedName("price")
     val price: Double? = null,
@@ -36,7 +36,7 @@ fun ProductDto.toDomain(): Product {
     return Product(
         productId = productId,
         productName = productName,
-        imageUrl = imageUrl,
+        imageUrl = images.firstOrNull() ?: "", // Use first image from array
         sellerName = sellerName,
         effectivePrice = effectivePrice.toInt(),
         availableQuantity = availableQuantity,
