@@ -10,6 +10,7 @@ import com.ayaan.chiragfarmer.data.paging.SmartFarmingPagingSource
 import com.ayaan.chiragfarmer.data.remote.ProductApiService
 import com.ayaan.chiragfarmer.data.remote.dto.AddProductRequest
 import com.ayaan.chiragfarmer.data.remote.dto.DeleteProductRequest
+import com.ayaan.chiragfarmer.data.remote.dto.MixedProductsData
 import com.ayaan.chiragfarmer.data.remote.dto.ProductDetailsData
 import com.ayaan.chiragfarmer.data.remote.dto.ToggleSoldOutRequest
 import com.ayaan.chiragfarmer.data.remote.dto.UpdateProductRequest
@@ -90,6 +91,24 @@ class ProductRepositoryImpl @Inject constructor(
                     )
                 }
             ).flow
+        }
+    }
+
+    override suspend fun getMixedProducts(): Result<MixedProductsData> {
+        return try {
+            val token = authDataStore.getAuthToken().first()
+            if (token.isNullOrEmpty()) {
+                return Result.failure(Exception("Authentication token not found"))
+            }
+
+            val response = apiService.getMixedProducts("Bearer $token")
+            if (response.success && response.data != null) {
+                Result.success(response.data)
+            } else {
+                Result.failure(Exception(response.message))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 

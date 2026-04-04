@@ -1,8 +1,10 @@
 package com.ayaan.chiragfarmer.ui.presentation.buy
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -12,15 +14,21 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.ayaan.chiragfarmer.R
+import com.ayaan.chiragfarmer.data.remote.dto.MixedProductItem
 import com.ayaan.chiragfarmer.ui.presentation.common.components.CategoryHeader
 import com.ayaan.chiragfarmer.ui.presentation.common.components.CategoryItem
 import com.ayaan.chiragfarmer.ui.presentation.common.components.CommonProductCard
@@ -33,8 +41,9 @@ import com.ayaan.chiragfarmer.ui.presentation.sell.data.Categories
 import com.ayaan.chiragfarmer.ui.theme.BGWhite
 
 @Composable
-fun BuyScreen(navController: NavHostController) {
+fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltViewModel()) {
     val snackBarHostState = remember { SnackbarHostState() }
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
     val carouselImages = listOf(
         R.drawable.buy_banner,
@@ -55,54 +64,6 @@ fun BuyScreen(navController: NavHostController) {
         )
     }
 
-    val smartFarmingProducts = remember {
-        List(4) {
-            CommonProductCardData(
-                imageUrl = "imageUrl",
-                productName = "productName",
-                brandName = "sellerName",
-                currentPrice = "121",
-                originalPrice = "145",
-                rating = "4.8"
-            )
-        }
-    }
-    val directFromFarmersProducts = remember {
-        List(2) {
-            CommonProductCardData(
-                imageUrl = "imageUrl",
-                productName = "productName",
-                brandName = "sellerName",
-                currentPrice = "121",
-                originalPrice = "145",
-                rating = "4.8"
-            )
-        }
-    }
-    val seedsProducts = remember {
-        List(2) {
-            CommonProductCardData(
-                imageUrl = "imageUrl",
-                productName = "productName",
-                brandName = "sellerName",
-                currentPrice = "121",
-                originalPrice = "145",
-                rating = "4.8"
-            )
-        }
-    }
-    val popularProducts = remember {
-        List(4) {
-            CommonProductCardData(
-                imageUrl = "imageUrl",
-                productName = "productName",
-                brandName = "sellerName",
-                currentPrice = "121",
-                originalPrice = "145",
-                rating = "4.8"
-            )
-        }
-    }
 
     Scaffold(
         containerColor = BGWhite,
@@ -112,123 +73,201 @@ fun BuyScreen(navController: NavHostController) {
                 navController = navController, icon = R.drawable.ic_arrow, title = "Buy"
             )
         }) { paddingValues ->
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(paddingValues),
-            contentPadding = PaddingValues(
-                horizontal = 16.dp
-            ),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
-            item(span = { GridItemSpan(maxLineSpan) }) {
-                SearchBarButton(
-                    onClick = {
-                        navController.navigate(Route.Search.path)
-                    }, modifier = Modifier.fillMaxWidth()
-                )
-            }
-
-            item(span = { GridItemSpan(maxLineSpan) }) {
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-
-            item(span = { GridItemSpan(maxLineSpan) }) {
-                ImageCarousel(
-                    images = carouselImages, modifier = Modifier.fillMaxWidth()
-                )
-            }
-
-            item(span = { GridItemSpan(maxLineSpan) }) {
-                CategoryHeader(
-                    category = "Categories"
-                )
-            }
-
-            item(span = { GridItemSpan(maxLineSpan) }) {
-                LazyRow(
+        
+        when (val state = uiState.value) {
+            is BuyUiState.Loading -> {
+                Box(
                     modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        .fillMaxSize()
+                        .padding(paddingValues),
+                    contentAlignment = Alignment.Center
                 ) {
-                    items(categories) { category ->
-                        CategoryItem(
-                            category = category,
-                            selected = false,
-                            onClick = {
-                                val routeCategoryName = category.name
-                                    .replace("\n", " ")
-                                    .trim()
-
-                                val bannerResId = categoryBannerMap[routeCategoryName] ?: R.drawable.buy_banner
-
-                                navController.navigate(
-                                    Route.BuyCategory.createRoute(routeCategoryName, bannerResId)
-                                )
-                            })
-                    }
+                    CircularProgressIndicator()
                 }
             }
 
-            item(span = { GridItemSpan(maxLineSpan) }) {
-                CategoryHeader(
-                    category = "Smart Farming"
-                )
+            is BuyUiState.Error -> {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = state.message,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
             }
 
-            items(smartFarmingProducts) { product ->
-                CommonProductCard(
-                    product = product, modifier = Modifier.padding(bottom = 12.dp)
-                )
-            }
+            is BuyUiState.Success -> {
+                // Helper function to check if a product is valid
+                fun isValidProduct(product: MixedProductItem): Boolean {
+                    return !product.imageUrl.isNullOrEmpty() && 
+                           product.finalPrice > 0 && 
+                           product.originalPrice > 0
+                }
 
-            item(span = { GridItemSpan(maxLineSpan) }) {
-                CategoryHeader(
-                    category = "Direct From Farmers",
-                    btnText = "View All",
-                    onClick = {
-                        val bannerResId = categoryBannerMap["Direct From Farmers"] ?: R.drawable.buy_banner
-                        navController.navigate(Route.BuyCategory.createRoute("Direct From Farmers", bannerResId))
+                // Filter products to show only valid ones
+                val validVendorProducts = state.vendorProducts.filter { isValidProduct(it) }
+                val validDirectFromFarmersProducts = state.directFromFarmersProducts.filter { isValidProduct(it) }
+                val validSeedProducts = state.seedProducts.filter { isValidProduct(it) }
+                val validRandomProducts = state.randomProducts.filter { isValidProduct(it) }
+
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(paddingValues),
+                    contentPadding = PaddingValues(
+                        horizontal = 16.dp
+                    ),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
+                    item(span = { GridItemSpan(maxLineSpan) }) {
+                        SearchBarButton(
+                            onClick = {
+                                navController.navigate(Route.Search.path)
+                            }, modifier = Modifier.fillMaxWidth()
+                        )
                     }
-                )
-            }
-            items(directFromFarmersProducts) { product ->
-                CommonProductCard(
-                    product = product, modifier = Modifier.padding(bottom = 12.dp)
-                )
-            }
-            item(span = { GridItemSpan(maxLineSpan) }) {
-                CategoryHeader(
-                    category = "Seeds",
-                    btnText = "View All",
-                    onClick = {
-                        val bannerResId = categoryBannerMap["Seeds"] ?: R.drawable.buy_banner
-                        navController.navigate(Route.BuyCategory.createRoute("Seeds", bannerResId))
+
+                    item(span = { GridItemSpan(maxLineSpan) }) {
+                        Spacer(modifier = Modifier.height(8.dp))
                     }
-                )
-            }
-            items(seedsProducts) { product ->
-                CommonProductCard(
-                    product = product, modifier = Modifier.padding(bottom = 12.dp)
-                )
-            }
-            item(span = { GridItemSpan(maxLineSpan) }) {
-                CategoryHeader(
-                    category = "Popular Products",
-                    btnText = "View All",
-                    onClick = {
-                        navController.navigate(Route.BuyCategory.createRoute("Popular Products"))
+
+                    item(span = { GridItemSpan(maxLineSpan) }) {
+                        ImageCarousel(
+                            images = carouselImages, modifier = Modifier.fillMaxWidth()
+                        )
                     }
-                )
-            }
-            items(popularProducts) { product ->
-                CommonProductCard(
-                    product = product, modifier = Modifier.padding(bottom = 12.dp)
-                )
-            }
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
+
+                    item(span = { GridItemSpan(maxLineSpan) }) {
+                        CategoryHeader(
+                            category = "Categories"
+                        )
+                    }
+
+                    item(span = { GridItemSpan(maxLineSpan) }) {
+                        LazyRow(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            items(categories) { category ->
+                                CategoryItem(
+                                    category = category,
+                                    selected = false,
+                                    onClick = {
+                                        val routeCategoryName = category.name
+                                            .replace("\n", " ")
+                                            .trim()
+
+                                        val bannerResId = categoryBannerMap[routeCategoryName] ?: R.drawable.buy_banner
+
+                                        navController.navigate(
+                                            Route.BuyCategory.createRoute(routeCategoryName, bannerResId)
+                                        )
+                                    })
+                            }
+                        }
+                    }
+
+                    item(span = { GridItemSpan(maxLineSpan) }) {
+                        CategoryHeader(
+                            category = "Smart Farming"
+                        )
+                    }
+
+                    items(validVendorProducts) { product ->
+                        CommonProductCard(
+                            product = CommonProductCardData(
+                                imageUrl = product.imageUrl,
+                                productName = product.productName,
+                                brandName = product.sellerName,
+                                currentPrice = product.finalPrice.toInt().toString(),
+                                originalPrice = product.originalPrice.toInt().toString(),
+                                rating = "4.5"
+                            ),
+                            modifier = Modifier.padding(bottom = 12.dp)
+                        )
+                    }
+
+                    item(span = { GridItemSpan(maxLineSpan) }) {
+                        CategoryHeader(
+                            category = "Direct From Farmers",
+                            btnText = "View All",
+                            onClick = {
+                                val bannerResId = categoryBannerMap["Direct From Farmers"] ?: R.drawable.buy_banner
+                                navController.navigate(Route.BuyCategory.createRoute("Direct From Farmers", bannerResId))
+                            }
+                        )
+                    }
+                    items(validDirectFromFarmersProducts) { product ->
+                        CommonProductCard(
+                            product = CommonProductCardData(
+                                imageUrl = product.imageUrl,
+                                productName = product.productName,
+                                brandName = product.sellerName,
+                                currentPrice = product.finalPrice.toInt().toString(),
+                                originalPrice = product.originalPrice.toInt().toString(),
+                                rating = "4.5"
+                            ),
+                            modifier = Modifier.padding(bottom = 12.dp)
+                        )
+                    }
+
+                    item(span = { GridItemSpan(maxLineSpan) }) {
+                        CategoryHeader(
+                            category = "Seeds",
+                            btnText = "View All",
+                            onClick = {
+                                val bannerResId = categoryBannerMap["Seeds"] ?: R.drawable.buy_banner
+                                navController.navigate(Route.BuyCategory.createRoute("Seeds", bannerResId))
+                            }
+                        )
+                    }
+                    items(validSeedProducts) { product ->
+                        CommonProductCard(
+                            product = CommonProductCardData(
+                                imageUrl = product.imageUrl,
+                                productName = product.productName,
+                                brandName = product.sellerName,
+                                currentPrice = product.finalPrice.toInt().toString(),
+                                originalPrice = product.originalPrice.toInt().toString(),
+                                rating = "4.5"
+                            ),
+                            modifier = Modifier.padding(bottom = 12.dp)
+                        )
+                    }
+
+                    item(span = { GridItemSpan(maxLineSpan) }) {
+                        CategoryHeader(
+                            category = "Popular Products",
+                            btnText = "View All",
+                            onClick = {
+                                navController.navigate(Route.BuyCategory.createRoute("Popular Products"))
+                            }
+                        )
+                    }
+                    items(validRandomProducts) { product ->
+                        CommonProductCard(
+                            product = CommonProductCardData(
+                                imageUrl = product.imageUrl,
+                                productName = product.productName,
+                                brandName = product.sellerName,
+                                currentPrice = product.finalPrice.toInt().toString(),
+                                originalPrice = product.originalPrice.toInt().toString(),
+                                rating = "4.5"
+                            ),
+                            modifier = Modifier.padding(bottom = 12.dp)
+                        )
+                    }
+
+                    item {
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
+                }
             }
         }
     }
