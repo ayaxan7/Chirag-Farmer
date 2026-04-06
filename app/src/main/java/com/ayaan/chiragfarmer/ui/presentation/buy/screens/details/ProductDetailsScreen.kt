@@ -117,7 +117,6 @@ fun ProductDetailsScreen(
                 containerColor = BGWhite
             )
         )
-
     }, bottomBar = {
         // Bottom action buttons
         Row(
@@ -318,7 +317,7 @@ fun ProductDetailsScreen(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
                 // Sold by
                 Text(
@@ -327,7 +326,7 @@ fun ProductDetailsScreen(
                     fontWeight = FontWeight.SemiBold,
                     color = Color.Black
                 )
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
