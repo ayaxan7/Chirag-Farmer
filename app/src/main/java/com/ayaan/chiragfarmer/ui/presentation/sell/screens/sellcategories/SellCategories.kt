@@ -30,7 +30,7 @@ import com.ayaan.chiragfarmer.R
 import com.ayaan.chiragfarmer.ui.presentation.common.components.CategoryItem
 import com.ayaan.chiragfarmer.ui.presentation.common.components.ChiragButton
 import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.ChiragTopBar
-import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.Route
+import com.ayaan.chiragfarmer.ui.presentation.navigation.navhost.Route
 import com.ayaan.chiragfarmer.ui.presentation.sell.data.Categories
 import com.ayaan.chiragfarmer.ui.theme.BGBlack
 import com.ayaan.chiragfarmer.ui.theme.BGWhite

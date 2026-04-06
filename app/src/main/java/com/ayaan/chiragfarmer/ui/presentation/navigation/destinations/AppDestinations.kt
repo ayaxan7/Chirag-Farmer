@@ -2,7 +2,7 @@ package com.ayaan.chiragfarmer.ui.presentation.navigation.destinations
 
 import androidx.annotation.DrawableRes
 import com.ayaan.chiragfarmer.R
-import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.Route
+import com.ayaan.chiragfarmer.ui.presentation.navigation.navhost.Route
 
 enum class AppDestinations(
     val label: String,

@@ -1,4 +1,4 @@
-package com.ayaan.chiragfarmer.ui.presentation.buy.screens
+package com.ayaan.chiragfarmer.ui.presentation.buy.screens.categories
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement

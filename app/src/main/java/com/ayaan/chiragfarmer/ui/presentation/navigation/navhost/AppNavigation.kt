@@ -27,11 +27,12 @@ import com.ayaan.chiragfarmer.ui.presentation.assist.AssistScreen
 import com.ayaan.chiragfarmer.ui.presentation.assist.screens.assistImage.AssistImage
 import com.ayaan.chiragfarmer.ui.presentation.bookings.BookingsScreen
 import com.ayaan.chiragfarmer.ui.presentation.buy.BuyScreen
-import com.ayaan.chiragfarmer.ui.presentation.buy.screens.CategoriesScreen
+import com.ayaan.chiragfarmer.ui.presentation.buy.screens.categories.CategoriesScreen
+import com.ayaan.chiragfarmer.ui.presentation.buy.screens.details.ProductDetailsScreen
 import com.ayaan.chiragfarmer.ui.presentation.home.screens.SearchScreen
 import com.ayaan.chiragfarmer.ui.presentation.home.screens.notifications.NotificationsScreen
 import com.ayaan.chiragfarmer.ui.presentation.sell.SellScreen
-import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.Route
+import com.ayaan.chiragfarmer.ui.presentation.navigation.navhost.Route
 import com.ayaan.chiragfarmer.ui.presentation.sell.screens.sellcategories.SellCategoriesScreen
 import com.ayaan.chiragfarmer.ui.presentation.sell.screens.sellproduces.SellProducesScreen
 
@@ -162,6 +163,11 @@ fun AppNavigation(
                 productId = productId,
                 selectedCategory = selectedCategory,
                 viewModel = hiltViewModel()
+            )
+        }
+        composable(Route.ProductDetails.path) {
+            ProductDetailsScreen(
+                navController = navController
             )
         }
     }

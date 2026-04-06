@@ -38,7 +38,7 @@ import com.ayaan.chiragfarmer.ui.presentation.home.components.bookservicecard.Bo
 import com.ayaan.chiragfarmer.ui.presentation.home.components.ImageCarousel
 import com.ayaan.chiragfarmer.ui.presentation.common.components.CommonProductCard
 import com.ayaan.chiragfarmer.ui.presentation.home.components.topbar.HomeTopBar
-import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.Route
+import com.ayaan.chiragfarmer.ui.presentation.navigation.navhost.Route
 import com.ayaan.chiragfarmer.ui.theme.BGWhite
 import kotlinx.coroutines.launch
 

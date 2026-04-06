@@ -36,7 +36,7 @@ import com.ayaan.chiragfarmer.ui.presentation.common.data.CommonProductCardData
 import com.ayaan.chiragfarmer.ui.presentation.home.components.ImageCarousel
 import com.ayaan.chiragfarmer.ui.presentation.home.components.topbar.SearchBarButton
 import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.ChiragTopBar
-import com.ayaan.chiragfarmer.ui.presentation.navigation.navbar.Route
+import com.ayaan.chiragfarmer.ui.presentation.navigation.navhost.Route
 import com.ayaan.chiragfarmer.ui.presentation.sell.data.Categories
 import com.ayaan.chiragfarmer.ui.theme.BGWhite
 
@@ -260,6 +260,9 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
                                 originalPrice = product.originalPrice.toInt().toString(),
                                 rating = "4.5"
                             ),
+                            onClick = {
+                                navController.navigate(Route.ProductDetails.path)
+                            },
                             modifier = Modifier.padding(bottom = 12.dp)
                         )
                     }

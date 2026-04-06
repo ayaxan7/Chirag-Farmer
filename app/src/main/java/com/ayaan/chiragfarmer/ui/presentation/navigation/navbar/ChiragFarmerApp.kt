@@ -17,6 +17,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.ayaan.chiragfarmer.ui.presentation.navigation.destinations.AppDestinations
 import com.ayaan.chiragfarmer.ui.presentation.navigation.navhost.AppNavigation
+import com.ayaan.chiragfarmer.ui.presentation.navigation.navhost.Route
 import com.ayaan.chiragfarmer.ui.theme.BGWhite
 
 @Composable

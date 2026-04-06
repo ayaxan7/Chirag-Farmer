@@ -1,4 +1,4 @@
-package com.ayaan.chiragfarmer.ui.presentation.navigation.navbar
+package com.ayaan.chiragfarmer.ui.presentation.navigation.navhost
 
 import android.net.Uri
 
@@ -38,8 +38,9 @@ sealed class Route(val path: String) {
             return if (queryParams.isEmpty()) {
                 "sell_product"
             } else {
-                "sell_product?${queryParams.joinToString("&")}" 
+                "sell_product?${queryParams.joinToString("&")}"
             }
         }
     }
+    object ProductDetails:Route("productdetails")
 }

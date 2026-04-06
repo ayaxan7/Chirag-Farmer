@@ -56,7 +56,8 @@ fun CommonProductCard(
     onMarkAsSoldClick: () -> Unit = {},
     onEditClick: () -> Unit = {},
     onDeleteClick: () -> Unit = {},
-    isSellScreen: Boolean = false
+    isSellScreen: Boolean = false,
+    onClick: () -> Unit = {}
 ) {
     Card(
         modifier = modifier
@@ -65,7 +66,8 @@ fun CommonProductCard(
             containerColor = BGWhite
         ), border = BorderStroke(
             width = 1.dp, color = BorderGray
-        ), shape = RoundedCornerShape(12.dp)
+        ), shape = RoundedCornerShape(12.dp),
+        onClick = {onClick()}
     ) {
         Column(
             modifier = Modifier.fillMaxSize()
