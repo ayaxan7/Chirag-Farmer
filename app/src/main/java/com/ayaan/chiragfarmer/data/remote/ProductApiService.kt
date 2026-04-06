@@ -46,10 +46,11 @@ interface ProductApiService {
         @Query("subcategory") subcategory: String? = null
     ): ProductResponseDto
 
-    @GET("api/farmers/mixed-products")
-    suspend fun getMixedProducts(
-        @Header("Authorization") token: String
-    ): MixedProductsResponse
+     @GET("api/farmers/mixed-products")
+     suspend fun getMixedProducts(
+         @Header("Authorization") token: String,
+         @Query("screen") screen: String? = null
+     ): MixedProductsResponse
 
     @GET("api/farmers/products/{productId}")
     suspend fun getProductDetails(

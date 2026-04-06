@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -42,15 +44,6 @@ import com.ayaan.chiragfarmer.ui.presentation.navigation.navhost.Route
 import com.ayaan.chiragfarmer.ui.theme.BGWhite
 import kotlinx.coroutines.launch
 
-data class SmartFarmingProduct(
-    val imageRes: Int,
-    val name: String,
-    val brand: String,
-    val currentPrice: String,
-    val originalPrice: String,
-    val rating: String
-)
-
 @Composable
 fun HomeScreen(
     navController: NavHostController,
@@ -58,6 +51,7 @@ fun HomeScreen(
 ) {
     val scope = rememberCoroutineScope()
     val isProfileComplete by viewModel.isProfileComplete.collectAsStateWithLifecycle()
+    val homeMixedProductsUiState by viewModel.homeMixedProductsUiState.collectAsStateWithLifecycle()
 
     val carouselImages = listOf(
         R.drawable.smart_farmer,
@@ -66,29 +60,10 @@ fun HomeScreen(
         R.drawable.smart_farmer
     )
 
-    // Sample Smart Farming Products Data
-    val smartFarmingProducts = listOf(
-        SmartFarmingProduct(
-            imageRes = R.drawable.sprayer,
-            name = "25 LITER POWER SPRAYER",
-            brand = "Snap Export",
-            currentPrice = "1599",
-            originalPrice = "1899.00",
-            rating = "4.8"
-        ),
-        SmartFarmingProduct(
-            imageRes = R.drawable.sprayer,
-            name = "25 LITER POWER SPRAYER",
-            brand = "Snap Export",
-            currentPrice = "1599",
-            originalPrice = "1899.00",
-            rating = "4.8"
-        ),
-    )
-    val productCategories=listOf(
-        Pair("Agriculture\nDrones",R.drawable.agri_drone),
-        Pair("Seeds",R.drawable.agri_seeds),
-        Pair("Sprayer",R.drawable.agri_sprayer)
+    val productCategories = listOf(
+        Pair("Agriculture\nDrones", R.drawable.agri_drone),
+        Pair("Seeds", R.drawable.agri_seeds),
+        Pair("Sprayer", R.drawable.agri_sprayer)
     )
     val bookingStatus by viewModel.bookingStatus.collectAsStateWithLifecycle()
 
@@ -125,8 +100,9 @@ fun HomeScreen(
                 Image(
                     painter = painterResource(R.drawable.profile_incomplete_image),
                     contentDescription = "Profile Incomplete Image",
-                    modifier = Modifier.fillMaxWidth()
-                        .clickable{
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
                             navController.navigate(Route.Register.path)
                         },
                     contentScale = ContentScale.FillWidth
@@ -134,7 +110,7 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(16.dp))
             }
             BookServiceCard(
-                navController=navController
+                navController = navController
             )
             // Smart Farmer Carousel
             ImageCarousel(
@@ -160,92 +136,124 @@ fun HomeScreen(
                 }
             }
 
-            // Smart Farming Section with Full Product Cards
-            CategoryHeader(
-                category = "Smart Farming",
-                btnText = "View All",
-                onClick = {}
-            )
-            LazyRow(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(smartFarmingProducts) { product ->
-                    CommonProductCard(
-                        product = CommonProductCardData(
-                            imageRes = product.imageRes,
-                            productName = product.name,
-                            brandName = product.brand,
-                            currentPrice = product.currentPrice,
-                            originalPrice = product.originalPrice,
-                            rating = product.rating,
-                        )
+            // Display products based on UI state
+            when (homeMixedProductsUiState) {
+                is HomeMixedProductsUiState.Loading -> {
+                    Spacer(modifier = Modifier.height(32.dp))
+                    CircularProgressIndicator(
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        color = Color.Black
                     )
+                    Spacer(modifier = Modifier.height(32.dp))
                 }
-            }
-            CategoryHeader(
-                category = "Seeds",
-                btnText = "View All",
-                onClick = {}
-            )
-            LazyRow(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(smartFarmingProducts) { product ->
-                    CommonProductCard(
-                        product = CommonProductCardData(
-                            imageRes = product.imageRes,
-                            productName = product.name,
-                            brandName = product.brand,
-                            currentPrice = product.currentPrice,
-                            originalPrice = product.originalPrice,
-                            rating = product.rating,
-                        )
-                    )
-                }
-            }
-            CategoryHeader(
-                category = "Popular Products",
-                btnText = "View All",
-                onClick = {}
-            )
-            LazyRow(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(smartFarmingProducts) { product ->
-                    CommonProductCard(
-                        product = CommonProductCardData(
-                            imageRes = product.imageRes,
-                            productName = product.name,
-                            brandName = product.brand,
-                            currentPrice = product.currentPrice,
-                            originalPrice = product.originalPrice,
-                            rating = product.rating,
-                        )
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.height(16.dp))
 
-            LazyRow(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(smartFarmingProducts) { product ->
-                    CommonProductCard(
-                        product = CommonProductCardData(
-                            imageRes = product.imageRes,
-                            productName = product.name,
-                            brandName = product.brand,
-                            currentPrice = product.currentPrice,
-                            originalPrice = product.originalPrice,
-                            rating = product.rating,
+                is HomeMixedProductsUiState.Success -> {
+                    val successState = homeMixedProductsUiState as HomeMixedProductsUiState.Success
+
+                    // Smart Farming Products (Vendor Products)
+                    if (successState.vendorProducts.isNotEmpty()) {
+                        CategoryHeader(
+                            category = "Smart Farming",
+                            btnText = "View All",
+                            onClick = {}
                         )
-                    )
+                        LazyRow(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            items(successState.vendorProducts) { product ->
+                                CommonProductCard(
+                                    product = CommonProductCardData(
+                                        imageRes = 0,
+                                        imageUrl = product.imageUrl ?: "",
+                                        productName = product.productName,
+                                        brandName = product.sellerName,
+                                        currentPrice = product.finalPrice.toString(),
+                                        originalPrice = product.originalPrice.toString(),
+                                        rating = "4.5"
+                                    )
+                                )
+                            }
+                        }
+                    }
+
+                    // Seeds Products
+                    if (successState.seedProducts.isNotEmpty()) {
+                        CategoryHeader(
+                            category = "Seeds",
+                            btnText = "View All",
+                            onClick = {}
+                        )
+                        LazyRow(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            items(successState.seedProducts) { product ->
+                                CommonProductCard(
+                                    product = CommonProductCardData(
+                                        imageRes = 0,
+                                        imageUrl = product.imageUrl ?: "",
+                                        productName = product.productName,
+                                        brandName = product.sellerName,
+                                        currentPrice = product.finalPrice.toString(),
+                                        originalPrice = product.originalPrice.toString(),
+                                        rating = "4.5"
+                                    )
+                                )
+                            }
+                        }
+                    }
+
+                    // Popular Products
+                    if (successState.popularProducts.isNotEmpty()) {
+                        CategoryHeader(
+                            category = "Popular Products",
+                            btnText = "View All",
+                            onClick = {}
+                        )
+                        LazyRow(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            items(successState.popularProducts) { product ->
+                                CommonProductCard(
+                                    product = CommonProductCardData(
+                                        imageRes = 0,
+                                        imageUrl = product.imageUrl ?: "",
+                                        productName = product.productName,
+                                        brandName = product.sellerName,
+                                        currentPrice = product.finalPrice.toString(),
+                                        originalPrice = product.originalPrice.toString(),
+                                        rating = "4.5"
+                                    )
+                                )
+                            }
+                        }
+                    }
+                }
+
+                is HomeMixedProductsUiState.Error -> {
+                    Spacer(modifier = Modifier.height(32.dp))
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = (homeMixedProductsUiState as HomeMixedProductsUiState.Error).message,
+                            color = Color.Red,
+                            fontSize = 14.sp
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Button(onClick = { viewModel.retryHomeMixedProducts() }) {
+                            Text("Retry")
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(32.dp))
                 }
             }
+
             CategoryHeader(
                 category = "Our USPs"
             )

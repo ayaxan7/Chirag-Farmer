@@ -13,6 +13,7 @@ interface ProductRepository {
     fun getAllProducts(category: String, subcategory: String?): Flow<PagingData<Product>>
     fun getSmartFarmingProducts(category: String, subcategory: String?): Flow<PagingData<Product>>
     suspend fun getMixedProducts(): Result<MixedProductsData>
+    suspend fun getMixedProductsForHomeScreen(): Result<MixedProductsData>
     suspend fun getProductDetails(productId: String): Result<ProductDetailsData>
     suspend fun addProduct(request: AddProductRequest): Result<String>
     suspend fun updateProduct(request: UpdateProductRequest): Result<Unit>

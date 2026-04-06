@@ -3,8 +3,10 @@ package com.ayaan.chiragfarmer.ui.presentation.home
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ayaan.chiragfarmer.data.remote.dto.MixedProductItem
 import com.ayaan.chiragfarmer.data.repository.AuthRepository
 import com.ayaan.chiragfarmer.domain.model.Location
+import com.ayaan.chiragfarmer.domain.repository.ProductRepository
 import com.ayaan.chiragfarmer.domain.usecase.GetLocationSuggestionsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,11 +24,22 @@ sealed class BookingStatus {
     data class Error(val message: String) : BookingStatus()
 }
 
+sealed class HomeMixedProductsUiState {
+    object Loading : HomeMixedProductsUiState()
+    data class Success(
+        val vendorProducts: List<MixedProductItem>,
+        val seedProducts: List<MixedProductItem>,
+        val popularProducts: List<MixedProductItem>
+    ) : HomeMixedProductsUiState()
+    data class Error(val message: String) : HomeMixedProductsUiState()
+}
+
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val getLocationSuggestionsUseCase: GetLocationSuggestionsUseCase,
-    private val createBookingUseCase: CreateBookingUseCase
+    private val createBookingUseCase: CreateBookingUseCase,
+    private val productRepository: ProductRepository
 ) : ViewModel() {
 
     private val _isProfileComplete = MutableStateFlow(false)
@@ -56,6 +69,9 @@ class HomeViewModel @Inject constructor(
     private val _bookingStatus = MutableStateFlow<BookingStatus>(BookingStatus.Idle)
     val bookingStatus: StateFlow<BookingStatus> = _bookingStatus.asStateFlow()
 
+    private val _homeMixedProductsUiState = MutableStateFlow<HomeMixedProductsUiState>(HomeMixedProductsUiState.Loading)
+    val homeMixedProductsUiState: StateFlow<HomeMixedProductsUiState> = _homeMixedProductsUiState.asStateFlow()
+
     init {
         // Load profile status from DataStore
         viewModelScope.launch {
@@ -65,6 +81,8 @@ class HomeViewModel @Inject constructor(
         }
         // Fetch fresh profile status from API
         fetchProfileStatus()
+        // Load homescreen mixed products
+        loadHomeMixedProducts()
     }
 
     fun fetchProfileStatus() {
@@ -84,6 +102,32 @@ class HomeViewModel @Inject constructor(
             _isLoading.value = false
         }
     }
+
+    private fun loadHomeMixedProducts() {
+        viewModelScope.launch {
+            _homeMixedProductsUiState.value = HomeMixedProductsUiState.Loading
+            productRepository.getMixedProductsForHomeScreen().fold(
+                onSuccess = { mixedProductsData ->
+                    _homeMixedProductsUiState.value = HomeMixedProductsUiState.Success(
+                        vendorProducts = mixedProductsData.vendorProducts,
+                        seedProducts = mixedProductsData.seedProducts,
+                        popularProducts = mixedProductsData.randomProducts
+                    )
+                },
+                onFailure = { exception ->
+                    _homeMixedProductsUiState.value = HomeMixedProductsUiState.Error(
+                        exception.message ?: "Failed to load products"
+                    )
+                }
+            )
+        }
+    }
+
+    fun retryHomeMixedProducts() {
+        loadHomeMixedProducts()
+    }
+
+    // ...existing code...
 
     fun onLocationQueryChange(query: String) {
         _locationQuery.value = query

@@ -94,23 +94,41 @@ class ProductRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getMixedProducts(): Result<MixedProductsData> {
-        return try {
-            val token = authDataStore.getAuthToken().first()
-            if (token.isNullOrEmpty()) {
-                return Result.failure(Exception("Authentication token not found"))
-            }
+     override suspend fun getMixedProducts(): Result<MixedProductsData> {
+         return try {
+             val token = authDataStore.getAuthToken().first()
+             if (token.isNullOrEmpty()) {
+                 return Result.failure(Exception("Authentication token not found"))
+             }
 
-            val response = apiService.getMixedProducts("Bearer $token")
-            if (response.success && response.data != null) {
-                Result.success(response.data)
-            } else {
-                Result.failure(Exception(response.message))
-            }
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
+             val response = apiService.getMixedProducts("Bearer $token")
+             if (response.success && response.data != null) {
+                 Result.success(response.data)
+             } else {
+                 Result.failure(Exception(response.message))
+             }
+         } catch (e: Exception) {
+             Result.failure(e)
+         }
+     }
+
+     override suspend fun getMixedProductsForHomeScreen(): Result<MixedProductsData> {
+         return try {
+             val token = authDataStore.getAuthToken().first()
+             if (token.isNullOrEmpty()) {
+                 return Result.failure(Exception("Authentication token not found"))
+             }
+
+             val response = apiService.getMixedProducts("Bearer $token", screen = "homeScreen")
+             if (response.success && response.data != null) {
+                 Result.success(response.data)
+             } else {
+                 Result.failure(Exception(response.message))
+             }
+         } catch (e: Exception) {
+             Result.failure(e)
+         }
+     }
 
     override suspend fun getProductDetails(productId: String): Result<ProductDetailsData> {
         return try {
