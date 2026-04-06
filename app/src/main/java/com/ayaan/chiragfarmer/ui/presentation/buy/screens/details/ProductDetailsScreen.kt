@@ -17,7 +17,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -56,6 +57,8 @@ import androidx.navigation.NavHostController
 import com.ayaan.chiragfarmer.R
 import com.ayaan.chiragfarmer.ui.presentation.buy.screens.details.components.RatingProgressBar
 import com.ayaan.chiragfarmer.ui.presentation.buy.screens.details.components.ReviewCard
+import com.ayaan.chiragfarmer.ui.presentation.common.components.CommonProductCard
+import com.ayaan.chiragfarmer.ui.presentation.common.data.CommonProductCardData
 import com.ayaan.chiragfarmer.ui.theme.BGBlack
 import com.ayaan.chiragfarmer.ui.theme.BGWhite
 import com.ayaan.chiragfarmer.ui.theme.BorderColour
@@ -76,47 +79,43 @@ fun ProductDetailsScreen(
         R.drawable.agri_drone
     )
 
-    listOf(
-        Variant("1 unit", "1999", "2799", "20% OFF"), Variant("2 unit", "3998", "5598", "20% OFF")
-    )
-
     Scaffold(modifier = modifier, containerColor = BGWhite, topBar = {
         // Top Bar
         TopAppBar(
             title = {
-            Text(
-                text = "Details",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = Color.Black
-            )
-        }, navigationIcon = {
-            IconButton(onClick = { navController.popBackStack() }) {
-                Icon(
-                    painterResource(R.drawable.ic_arrow),
-                    contentDescription = "Back",
-                    tint = Color.Black
+                Text(
+                    text = "Details",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color.Black
                 )
-            }
-        }, actions = {
-            IconButton(onClick = { /* Share */ }) {
-                Icon(
-                    painterResource(R.drawable.ic_share),
-                    contentDescription = "Share",
-                    tint = Color.Black
-                )
-            }
+            }, navigationIcon = {
+                IconButton(onClick = { navController.popBackStack() }) {
+                    Icon(
+                        painterResource(R.drawable.ic_arrow),
+                        contentDescription = "Back",
+                        tint = Color.Black
+                    )
+                }
+            }, actions = {
+                IconButton(onClick = { /* Share */ }) {
+                    Icon(
+                        painterResource(R.drawable.ic_share),
+                        contentDescription = "Share",
+                        tint = Color.Black
+                    )
+                }
 
-            IconButton(onClick = { /* Cart */ }) {
-                Icon(
-                    painterResource(R.drawable.ic_cart_outlined),
-                    contentDescription = "Cart",
-                    tint = Color.Black
-                )
-            }
-        }, colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = BGWhite
-        )
+                IconButton(onClick = { /* Cart */ }) {
+                    Icon(
+                        painterResource(R.drawable.ic_cart_outlined),
+                        contentDescription = "Cart",
+                        tint = Color.Black
+                    )
+                }
+            }, colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = BGWhite
+            )
         )
 
     }, bottomBar = {
@@ -401,8 +400,7 @@ fun ProductDetailsScreen(
                     Button(
                         onClick = { /* View seller */ },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = BGBlack,
-                            contentColor = BGWhite
+                            containerColor = BGBlack, contentColor = BGWhite
                         ),
                         shape = RoundedCornerShape(6.dp),
                         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
@@ -427,10 +425,27 @@ fun ProductDetailsScreen(
                     color = Color.Black
                 )
                 Spacer(modifier = Modifier.height(12.dp))
-
-                LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    items(2) {
-                        SimilarProductCard()
+                LazyHorizontalGrid(
+                    rows = GridCells.Fixed(1),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(240.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    contentPadding = PaddingValues(horizontal = 4.dp)
+                ) {
+                    items(6) {
+                        CommonProductCard(
+                            product = CommonProductCardData(
+                                imageRes = R.drawable.sprayer,
+                                imageUrl = "",
+                                productName = "NEPTUNE BATTERY OPERATED",
+                                brandName = "Geolite Agritech India Pvt Ltd",
+                                currentPrice = "1599",
+                                originalPrice = "1899",
+                                rating = "4.8"
+                            ), modifier = Modifier.width(180.dp)
+                        )
                     }
                 }
 
@@ -445,9 +460,27 @@ fun ProductDetailsScreen(
                 )
                 Spacer(modifier = Modifier.height(12.dp))
 
-                LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    items(2) {
-                        MoreProductCard()
+                LazyHorizontalGrid(
+                    rows = GridCells.Fixed(1),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(240.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    contentPadding = PaddingValues(horizontal = 4.dp)
+                ) {
+                    items(6) {
+                        CommonProductCard(
+                            product = CommonProductCardData(
+                                imageRes = R.drawable.sprayer,
+                                imageUrl = "",
+                                productName = "NEPTUNE BATTERY OPERATED",
+                                brandName = "Geolite Agritech India Pvt Ltd",
+                                currentPrice = "1599",
+                                originalPrice = "1899",
+                                rating = "4.8"
+                            ), modifier = Modifier.width(180.dp)
+                        )
                     }
                 }
 
@@ -527,137 +560,6 @@ fun ProductDetailsScreen(
                     timeAgo = "1 Day ago",
                     likeCount = 12,
                     onLikeClick = { })
-            }
-        }
-    }
-}
-
-data class Variant(
-    val label: String, val price: String, val originalPrice: String, val discount: String
-)
-
-@Composable
-fun SimilarProductCard() {
-    Card(
-        modifier = Modifier.width(160.dp),
-        colors = CardDefaults.cardColors(containerColor = BGWhite),
-        shape = RoundedCornerShape(8.dp),
-        border = BorderStroke(1.dp, BorderColour)
-    ) {
-        Column {
-            Image(
-                painter = painterResource(R.drawable.sprayer),
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(120.dp),
-                contentScale = ContentScale.Crop
-            )
-            Column(modifier = Modifier.padding(8.dp)) {
-                Text(
-                    "NEPTUNE BATTERY OPERATED",
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Medium,
-                    maxLines = 1
-                )
-                Text(
-                    "Geolite Agritech India Pvt Ltd",
-                    fontSize = 9.sp,
-                    color = Color(0xFF999999),
-                    maxLines = 1
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("₹1599", fontSize = 13.sp, fontWeight = FontWeight.Bold)
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        "₹1899.00",
-                        fontSize = 10.sp,
-                        color = Color(0xFF999999),
-                        textDecoration = TextDecoration.LineThrough
-                    )
-                }
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Row {
-                        Text("Size", fontSize = 11.sp)
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Row(
-                            modifier = Modifier
-                                .border(1.dp, BorderColour, RoundedCornerShape(4.dp))
-                                .padding(horizontal = 6.dp, vertical = 2.dp)
-                        ) {
-                            Text("1 Unit", fontSize = 10.sp)
-                        }
-                    }
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            Icons.Default.Star,
-                            contentDescription = null,
-                            tint = Color(0xFFFFC107),
-                            modifier = Modifier.size(12.dp)
-                        )
-                        Text("4.8", fontSize = 10.sp)
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun MoreProductCard() {
-    Card(
-        modifier = Modifier
-            .width(160.dp)
-            .height(180.dp),
-        colors = CardDefaults.cardColors(containerColor = BGWhite),
-        shape = RoundedCornerShape(8.dp)
-    ) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            Image(
-                painter = painterResource(R.drawable.sprayer),
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
-            )
-            Column(
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .background(Color.Black.copy(alpha = 0.5f))
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            ) {
-                Text(
-                    "4WD TRACTORS",
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Color.White
-                )
-                Text(
-                    "Geolife Agritech India Pvt Ltd",
-                    fontSize = 9.sp,
-                    color = Color.White.copy(alpha = 0.8f)
-                )
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        "₹22990",
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
-                    Spacer(modifier = Modifier.weight(1f))
-                    Icon(
-                        Icons.Default.Star,
-                        contentDescription = null,
-                        tint = Color(0xFFFFC107),
-                        modifier = Modifier.size(12.dp)
-                    )
-                    Text("4.8", fontSize = 10.sp, color = Color.White)
-                }
             }
         }
     }
