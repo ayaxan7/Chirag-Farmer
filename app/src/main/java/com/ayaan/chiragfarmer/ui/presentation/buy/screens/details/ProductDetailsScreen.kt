@@ -23,20 +23,20 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.CameraAlt
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Verified
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -56,17 +56,15 @@ import androidx.navigation.NavHostController
 import com.ayaan.chiragfarmer.R
 import com.ayaan.chiragfarmer.ui.presentation.buy.screens.details.components.RatingProgressBar
 import com.ayaan.chiragfarmer.ui.presentation.buy.screens.details.components.ReviewCard
-import com.ayaan.chiragfarmer.ui.presentation.buy.screens.details.components.VariantChip
 import com.ayaan.chiragfarmer.ui.theme.BGBlack
 import com.ayaan.chiragfarmer.ui.theme.BGWhite
 import com.ayaan.chiragfarmer.ui.theme.BorderColour
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductDetailsScreen(
-    navController: NavHostController,
-    modifier: Modifier = Modifier
+    navController: NavHostController, modifier: Modifier = Modifier
 ) {
-    var selectedVariant by remember { mutableIntStateOf(0) }
     var selectedImageIndex by remember { mutableIntStateOf(0) }
 
     // Sample data
@@ -75,97 +73,101 @@ fun ProductDetailsScreen(
         R.drawable.sprayer,
         R.drawable.sprayer,
         R.drawable.sprayer,
-        R.drawable.sprayer
+        R.drawable.agri_drone
     )
 
-    val variants = listOf(
-        Variant("1 unit", "1999", "2799", "20% OFF"),
-        Variant("2 unit", "3998", "5598", "20% OFF")
+    listOf(
+        Variant("1 unit", "1999", "2799", "20% OFF"), Variant("2 unit", "3998", "5598", "20% OFF")
     )
 
-    Scaffold(
-        modifier = modifier,
-        containerColor = BGWhite,
-        topBar = {
-            // Top Bar
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(BGWhite)
-                    .padding(horizontal = 8.dp, vertical = 12.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconButton(onClick = { navController.popBackStack() }) {
-                    Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.Black)
-                }
-                Text(
-                    text = "Details",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.Black,
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(start = 8.dp)
+    Scaffold(modifier = modifier, containerColor = BGWhite, topBar = {
+        // Top Bar
+        TopAppBar(
+            title = {
+            Text(
+                text = "Details",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = Color.Black
+            )
+        }, navigationIcon = {
+            IconButton(onClick = { navController.popBackStack() }) {
+                Icon(
+                    painterResource(R.drawable.ic_arrow),
+                    contentDescription = "Back",
+                    tint = Color.Black
                 )
-                IconButton(onClick = { /* Share */ }) {
-                    Icon(Icons.Default.Share, contentDescription = "Share", tint = Color.Black)
-                }
-                IconButton(onClick = { /* Camera */ }) {
-                    Icon(Icons.Default.CameraAlt, contentDescription = "Camera", tint = Color.Black)
-                }
             }
-        },
-        bottomBar = {
-            // Bottom action buttons
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(BGWhite)
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                OutlinedButton(
-                    onClick = { /* Add to cart */ },
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(50.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = Color.Black
-                    ),
-                    border = BorderStroke(1.dp, Color.Black)
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_cart),
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("Add to Cart", fontSize = 14.sp, fontWeight = FontWeight.Medium)
-                }
+        }, actions = {
+            IconButton(onClick = { /* Share */ }) {
+                Icon(
+                    painterResource(R.drawable.ic_share),
+                    contentDescription = "Share",
+                    tint = Color.Black
+                )
+            }
 
-                Button(
-                    onClick = { /* Buy now */ },
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(50.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = BGBlack
-                    )
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_cart),
-                        contentDescription = "Cart",
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("Buy Now", fontSize = 14.sp, fontWeight = FontWeight.Medium)
-                }
+            IconButton(onClick = { /* Cart */ }) {
+                Icon(
+                    painterResource(R.drawable.ic_cart_outlined),
+                    contentDescription = "Cart",
+                    tint = Color.Black
+                )
+            }
+        }, colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = BGWhite
+        )
+        )
+
+    }, bottomBar = {
+        // Bottom action buttons
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(BGWhite)
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            OutlinedButton(
+                onClick = { /* Add to cart */ },
+                modifier = Modifier
+                    .weight(1f)
+                    .height(50.dp),
+                shape = RoundedCornerShape(8.dp),
+                colors = ButtonDefaults.outlinedButtonColors(
+                    containerColor = BGBlack, contentColor = BGWhite
+                )
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_cart_outlined),
+                    contentDescription = "Add to Cart",
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text("Add to Cart", fontSize = 14.sp, fontWeight = FontWeight.Medium)
+            }
+
+            Button(
+                onClick = { /* Buy now */ },
+                modifier = Modifier
+                    .weight(1f)
+                    .height(50.dp),
+                shape = RoundedCornerShape(8.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = BGWhite, contentColor = BGBlack
+                ),
+                border = BorderStroke(1.dp, Color.Black)
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_buy_now),
+                    contentDescription = "Buy Now",
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text("Buy Now", fontSize = 14.sp, fontWeight = FontWeight.Medium)
             }
         }
-    ) { paddingValues ->
+    }) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -203,7 +205,9 @@ fun ProductDetailsScreen(
                                 .clip(RoundedCornerShape(8.dp))
                                 .border(
                                     width = if (index == selectedImageIndex) 2.dp else 0.5.dp,
-                                    color = if (index == selectedImageIndex) Color.Black else Color(0xFFE0E0E0),
+                                    color = if (index == selectedImageIndex) Color.Black else Color(
+                                        0xFFE0E0E0
+                                    ),
                                     shape = RoundedCornerShape(8.dp)
                                 )
                                 .clickable { selectedImageIndex = index },
@@ -271,30 +275,29 @@ fun ProductDetailsScreen(
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
+//
+//                // Variants
+//                Text(
+//                    text = "Variants :",
+//                    fontSize = 14.sp,
+//                    fontWeight = FontWeight.SemiBold,
+//                    color = Color.Black
+//                )
+//                Spacer(modifier = Modifier.height(8.dp))
+//
+//                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+//                    variants.forEachIndexed { index, variant ->
+//                        VariantChip(
+//                            label = variant.label,
+//                            price = variant.price,
+//                            originalPrice = variant.originalPrice,
+//                            discountPercentage = variant.discount,
+//                            isSelected = selectedVariant == index,
+//                            onClick = { selectedVariant = index })
+//                    }
+//                }
 
-                // Variants
-                Text(
-                    text = "Variants :",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.Black
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    variants.forEachIndexed { index, variant ->
-                        VariantChip(
-                            label = variant.label,
-                            price = variant.price,
-                            originalPrice = variant.originalPrice,
-                            discountPercentage = variant.discount,
-                            isSelected = selectedVariant == index,
-                            onClick = { selectedVariant = index }
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(20.dp))
+//                Spacer(modifier = Modifier.height(20.dp))
 
                 // Product Description
                 Text(
@@ -397,12 +400,15 @@ fun ProductDetailsScreen(
                     }
                     Button(
                         onClick = { /* View seller */ },
-                        colors = ButtonDefaults.buttonColors(containerColor = BGBlack),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = BGBlack,
+                            contentColor = BGWhite
+                        ),
                         shape = RoundedCornerShape(6.dp),
                         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
                     ) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_cart),
+                            painter = painterResource(R.drawable.ic_view_seller),
                             contentDescription = "Store",
                             modifier = Modifier.size(16.dp)
                         )
@@ -511,8 +517,7 @@ fun ProductDetailsScreen(
                     reviewText = "This Power Sprayer has been a game changer for my farming needs. It is efficient, easy to use, and incredibly reliable. Highly recommended",
                     timeAgo = "1 Day ago",
                     likeCount = 12,
-                    onLikeClick = { }
-                )
+                    onLikeClick = { })
 
                 ReviewCard(
                     userName = "Sandhya",
@@ -521,18 +526,14 @@ fun ProductDetailsScreen(
                     reviewText = "This Power Sprayer has been a game changer for my farming needs. It is efficient, easy to use, and incredibly reliable. Highly recommended",
                     timeAgo = "1 Day ago",
                     likeCount = 12,
-                    onLikeClick = { }
-                )
+                    onLikeClick = { })
             }
         }
     }
 }
 
 data class Variant(
-    val label: String,
-    val price: String,
-    val originalPrice: String,
-    val discount: String
+    val label: String, val price: String, val originalPrice: String, val discount: String
 )
 
 @Composable
@@ -553,13 +554,28 @@ fun SimilarProductCard() {
                 contentScale = ContentScale.Crop
             )
             Column(modifier = Modifier.padding(8.dp)) {
-                Text("NEPTUNE BATTERY OPERATED", fontSize = 11.sp, fontWeight = FontWeight.Medium, maxLines = 1)
-                Text("Geolite Agritech India Pvt Ltd", fontSize = 9.sp, color = Color(0xFF999999), maxLines = 1)
+                Text(
+                    "NEPTUNE BATTERY OPERATED",
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Medium,
+                    maxLines = 1
+                )
+                Text(
+                    "Geolite Agritech India Pvt Ltd",
+                    fontSize = 9.sp,
+                    color = Color(0xFF999999),
+                    maxLines = 1
+                )
                 Spacer(modifier = Modifier.height(4.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text("₹1599", fontSize = 13.sp, fontWeight = FontWeight.Bold)
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text("₹1899.00", fontSize = 10.sp, color = Color(0xFF999999), textDecoration = TextDecoration.LineThrough)
+                    Text(
+                        "₹1899.00",
+                        fontSize = 10.sp,
+                        color = Color(0xFF999999),
+                        textDecoration = TextDecoration.LineThrough
+                    )
                 }
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -578,7 +594,12 @@ fun SimilarProductCard() {
                         }
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(Icons.Default.Star, contentDescription = null, tint = Color(0xFFFFC107), modifier = Modifier.size(12.dp))
+                        Icon(
+                            Icons.Default.Star,
+                            contentDescription = null,
+                            tint = Color(0xFFFFC107),
+                            modifier = Modifier.size(12.dp)
+                        )
                         Text("4.8", fontSize = 10.sp)
                     }
                 }
@@ -610,12 +631,31 @@ fun MoreProductCard() {
                     .fillMaxWidth()
                     .padding(8.dp)
             ) {
-                Text("4WD TRACTORS", fontSize = 11.sp, fontWeight = FontWeight.Medium, color = Color.White)
-                Text("Geolife Agritech India Pvt Ltd", fontSize = 9.sp, color = Color.White.copy(alpha = 0.8f))
+                Text(
+                    "4WD TRACTORS",
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color.White
+                )
+                Text(
+                    "Geolife Agritech India Pvt Ltd",
+                    fontSize = 9.sp,
+                    color = Color.White.copy(alpha = 0.8f)
+                )
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("₹22990", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                    Text(
+                        "₹22990",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
                     Spacer(modifier = Modifier.weight(1f))
-                    Icon(Icons.Default.Star, contentDescription = null, tint = Color(0xFFFFC107), modifier = Modifier.size(12.dp))
+                    Icon(
+                        Icons.Default.Star,
+                        contentDescription = null,
+                        tint = Color(0xFFFFC107),
+                        modifier = Modifier.size(12.dp)
+                    )
                     Text("4.8", fontSize = 10.sp, color = Color.White)
                 }
             }
