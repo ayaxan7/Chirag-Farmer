@@ -188,7 +188,9 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
                                 currentPrice = product.finalPrice.toInt().toString(),
                                 originalPrice = product.originalPrice.toInt().toString(),
                                 rating = "4.5"
-                            ),
+                            ),onClick = {
+                                navController.navigate(Route.ProductDetails.path)
+                            },
                             modifier = Modifier.padding(bottom = 12.dp)
                         )
                     }
@@ -212,7 +214,9 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
                                 currentPrice = product.finalPrice.toInt().toString(),
                                 originalPrice = product.originalPrice.toInt().toString(),
                                 rating = "4.5"
-                            ),
+                            ),onClick = {
+                                navController.navigate(Route.ProductDetails.path)
+                            },
                             modifier = Modifier.padding(bottom = 12.dp)
                         )
                     }
@@ -236,7 +240,9 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
                                 currentPrice = product.finalPrice.toInt().toString(),
                                 originalPrice = product.originalPrice.toInt().toString(),
                                 rating = "4.5"
-                            ),
+                            ),onClick = {
+                                navController.navigate(Route.ProductDetails.path)
+                            },
                             modifier = Modifier.padding(bottom = 12.dp)
                         )
                     }

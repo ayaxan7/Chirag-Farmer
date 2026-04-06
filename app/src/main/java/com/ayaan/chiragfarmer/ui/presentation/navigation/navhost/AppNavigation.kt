@@ -49,8 +49,8 @@ fun AppNavigation(
 
     // Determine start destination based on auth token
     val startDestination = if (authToken != null && authToken!!.isNotEmpty()) {
-//        Route.Home.path
-        Route.ProductDetails.path
+        Route.Home.path
+//        Route.ProductDetails.path
     } else {
         Route.Auth.path
     }

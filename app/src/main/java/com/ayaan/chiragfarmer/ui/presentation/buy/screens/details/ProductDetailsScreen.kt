@@ -61,7 +61,7 @@ import com.ayaan.chiragfarmer.ui.presentation.common.components.CommonProductCar
 import com.ayaan.chiragfarmer.ui.presentation.common.data.CommonProductCardData
 import com.ayaan.chiragfarmer.ui.theme.BGBlack
 import com.ayaan.chiragfarmer.ui.theme.BGWhite
-import com.ayaan.chiragfarmer.ui.theme.BorderColour
+import com.ayaan.chiragfarmer.ui.theme.TextGray
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -274,29 +274,6 @@ fun ProductDetailsScreen(
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
-//
-//                // Variants
-//                Text(
-//                    text = "Variants :",
-//                    fontSize = 14.sp,
-//                    fontWeight = FontWeight.SemiBold,
-//                    color = Color.Black
-//                )
-//                Spacer(modifier = Modifier.height(8.dp))
-//
-//                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-//                    variants.forEachIndexed { index, variant ->
-//                        VariantChip(
-//                            label = variant.label,
-//                            price = variant.price,
-//                            originalPrice = variant.originalPrice,
-//                            discountPercentage = variant.discount,
-//                            isSelected = selectedVariant == index,
-//                            onClick = { selectedVariant = index })
-//                    }
-//                }
-
-//                Spacer(modifier = Modifier.height(20.dp))
 
                 // Product Description
                 Text(
@@ -305,12 +282,12 @@ fun ProductDetailsScreen(
                     fontWeight = FontWeight.SemiBold,
                     color = Color.Black
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(6.dp))
                 Text(
                     text = "Neptune 20 Litre White Knapsack Power Sprayer, NF-767 is a premium quality product. These are far superior to the cheap popular equipment used for spraying insecticides, pesticides in fields a...",
                     fontSize = 13.sp,
-                    color = Color(0xFF666666),
-                    lineHeight = 20.sp
+                    color = TextGray,
+                    lineHeight = 13.sp
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -320,24 +297,23 @@ fun ProductDetailsScreen(
                     text = "Key Features :",
                     fontSize = 15.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = Color.Black
+                    color = BGBlack
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(6.dp))
 
                 listOf(
-                    "Safe, Quick & Reliable.",
-                    "Integrated Battery & Chemical Tank.",
-                    "Recoil Ignition Makes the Starting Easy.",
-                    "Oil Ratio: Add 20W40 Oil Separately in Oil Tank.",
-                    "Spraying Horizontal Range: 10-12 m."
+                    " • Safe, Quick & Reliable.",
+                    " • Integrated Battery & Chemical Tank.",
+                    " • Recoil Ignition Makes the Starting Easy.",
+                    " • Oil Ratio: Add 20W40 Oil Separately in Oil Tank.",
+                    " • Spraying Horizontal Range: 10-12 m."
                 ).forEach { feature ->
-                    Row(modifier = Modifier.padding(vertical = 2.dp)) {
-                        Text("• ", fontSize = 13.sp, color = Color.Black)
+                    Row(modifier = Modifier.padding(vertical = 1.dp)) {
                         Text(
                             text = feature,
                             fontSize = 13.sp,
-                            color = Color(0xFF666666),
-                            lineHeight = 18.sp
+                            color = TextGray,
+                            lineHeight = 13.sp
                         )
                     }
                 }
@@ -550,7 +526,10 @@ fun ProductDetailsScreen(
                     reviewText = "This Power Sprayer has been a game changer for my farming needs. It is efficient, easy to use, and incredibly reliable. Highly recommended",
                     timeAgo = "1 Day ago",
                     likeCount = 12,
-                    onLikeClick = { })
+                    onUnLikeClick = {},
+                    onLikeClick = { },
+                    unLikeCount = 2
+                )
 
                 ReviewCard(
                     userName = "Sandhya",
@@ -559,7 +538,10 @@ fun ProductDetailsScreen(
                     reviewText = "This Power Sprayer has been a game changer for my farming needs. It is efficient, easy to use, and incredibly reliable. Highly recommended",
                     timeAgo = "1 Day ago",
                     likeCount = 12,
-                    onLikeClick = { })
+                    onLikeClick = { },
+                    unLikeCount = 4,
+                    onUnLikeClick = {}
+                )
             }
         }
     }

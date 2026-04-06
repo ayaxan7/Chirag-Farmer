@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.ThumbDown
 import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -37,6 +38,8 @@ fun ReviewCard(
     reviewText: String,
     timeAgo: String,
     likeCount: Int,
+    unLikeCount:Int,
+    onUnLikeClick: () -> Unit,
     onLikeClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -131,6 +134,22 @@ fun ReviewCard(
                     }
                     Text(
                         text = likeCount.toString(),
+                        fontSize = 12.sp,
+                        color = Color(0xFF666666)
+                    )
+                    IconButton(
+                        onClick = onLikeClick,
+                        modifier = Modifier.size(24.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.ThumbDown,
+                            contentDescription = "Unlike",
+                            tint = Color(0xFF666666),
+                            modifier = Modifier.size(16.dp)
+                        )
+                    }
+                    Text(
+                        text = unLikeCount.toString(),
                         fontSize = 12.sp,
                         color = Color(0xFF666666)
                     )
