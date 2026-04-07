@@ -42,5 +42,7 @@ sealed class Route(val path: String) {
             }
         }
     }
-    object ProductDetails:Route("productdetails")
+     object ProductDetails:Route("productdetails/{productId}") {
+         fun createRoute(productId: String): String = "productdetails/$productId"
+     }
 }

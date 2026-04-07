@@ -12,6 +12,7 @@ import com.ayaan.chiragfarmer.data.remote.dto.AddProductRequest
 import com.ayaan.chiragfarmer.data.remote.dto.DeleteProductRequest
 import com.ayaan.chiragfarmer.data.remote.dto.MixedProductsData
 import com.ayaan.chiragfarmer.data.remote.dto.ProductDetailsData
+import com.ayaan.chiragfarmer.data.remote.dto.ProductDetailedData
 import com.ayaan.chiragfarmer.data.remote.dto.ToggleSoldOutRequest
 import com.ayaan.chiragfarmer.data.remote.dto.UpdateProductRequest
 import com.ayaan.chiragfarmer.domain.model.Product
@@ -148,16 +149,16 @@ class ProductRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun addProduct(request: AddProductRequest): Result<String> {
+    override suspend fun getProductDetailsDetailed(productId: String): Result<ProductDetailedData> {
         return try {
             val token = authDataStore.getAuthToken().first()
             if (token.isNullOrEmpty()) {
                 return Result.failure(Exception("Authentication token not found"))
             }
 
-            val response = apiService.addProduct("Bearer $token", request)
+            val response = apiService.getProductDetailsDetailed("Bearer $token", productId)
             if (response.success && response.data != null) {
-                Result.success(response.data.id)
+                Result.success(response.data)
             } else {
                 Result.failure(Exception(response.message))
             }
@@ -165,6 +166,24 @@ class ProductRepositoryImpl @Inject constructor(
             Result.failure(e)
         }
     }
+
+     override suspend fun addProduct(request: AddProductRequest): Result<String> {
+         return try {
+             val token = authDataStore.getAuthToken().first()
+             if (token.isNullOrEmpty()) {
+                 return Result.failure(Exception("Authentication token not found"))
+             }
+
+             val response = apiService.addProduct("Bearer $token", request)
+             if (response.success && response.data != null) {
+                 Result.success(response.data.id)
+             } else {
+                 Result.failure(Exception(response.message))
+             }
+         } catch (e: Exception) {
+             Result.failure(e)
+         }
+     }
 
     override suspend fun updateProduct(request: UpdateProductRequest): Result<Unit> {
         return try {

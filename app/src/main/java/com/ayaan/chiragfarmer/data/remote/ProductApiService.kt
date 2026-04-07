@@ -6,6 +6,7 @@ import com.ayaan.chiragfarmer.data.remote.dto.DeleteProductRequest
 import com.ayaan.chiragfarmer.data.remote.dto.DeleteProductResponse
 import com.ayaan.chiragfarmer.data.remote.dto.MixedProductsResponse
 import com.ayaan.chiragfarmer.data.remote.dto.ProductDetailsResponse
+import com.ayaan.chiragfarmer.data.remote.dto.ProductDetailedResponse
 import com.ayaan.chiragfarmer.data.remote.dto.ProductResponseDto
 import com.ayaan.chiragfarmer.data.remote.dto.ToggleSoldOutRequest
 import com.ayaan.chiragfarmer.data.remote.dto.ToggleSoldOutResponse
@@ -52,13 +53,19 @@ interface ProductApiService {
          @Query("screen") screen: String? = null
      ): MixedProductsResponse
 
-    @GET("api/farmers/products/{productId}")
-    suspend fun getProductDetails(
-        @Header("Authorization") token: String,
-        @Path("productId") productId: String
-    ): ProductDetailsResponse
+     @GET("api/farmers/products/{productId}")
+     suspend fun getProductDetails(
+         @Header("Authorization") token: String,
+         @Path("productId") productId: String
+     ): ProductDetailsResponse
 
-    @POST("api/farmers/add-product")
+      @GET("api/farmers/products/{productId}/detailed")
+      suspend fun getProductDetailsDetailed(
+          @Header("Authorization") token: String,
+          @Path("productId") productId: String
+      ): ProductDetailedResponse
+
+     @POST("api/farmers/add-product")
     suspend fun addProduct(
         @Header("Authorization") token: String,
         @Body request: AddProductRequest

@@ -4,6 +4,7 @@ import androidx.paging.PagingData
 import com.ayaan.chiragfarmer.data.remote.dto.AddProductRequest
 import com.ayaan.chiragfarmer.data.remote.dto.MixedProductsData
 import com.ayaan.chiragfarmer.data.remote.dto.ProductDetailsData
+import com.ayaan.chiragfarmer.data.remote.dto.ProductDetailedData
 import com.ayaan.chiragfarmer.data.remote.dto.UpdateProductRequest
 import com.ayaan.chiragfarmer.domain.model.Product
 import kotlinx.coroutines.flow.Flow
@@ -15,6 +16,7 @@ interface ProductRepository {
     suspend fun getMixedProducts(): Result<MixedProductsData>
     suspend fun getMixedProductsForHomeScreen(): Result<MixedProductsData>
     suspend fun getProductDetails(productId: String): Result<ProductDetailsData>
+    suspend fun getProductDetailsDetailed(productId: String): Result<ProductDetailedData>
     suspend fun addProduct(request: AddProductRequest): Result<String>
     suspend fun updateProduct(request: UpdateProductRequest): Result<Unit>
     suspend fun toggleSoldOut(productId: String): Result<Boolean>
