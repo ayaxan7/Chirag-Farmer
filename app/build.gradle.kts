@@ -18,13 +18,13 @@ val nominatimBaseUrl=localProperties.getProperty("OSM_NOMINATIM_BASE_URL")?:"MIS
 val cloudinaryCloudName=localProperties.getProperty("CLOUD_NAME")?:"MISSING_CLOUD_NAME"
 val cloudinaryUploadPreset=localProperties.getProperty("CLOUDINARY_UPLOAD_PRESET")?:"MISSING_UPLOAD_PRESET"
 android {
-    namespace = "com.ayaan.chiragfarmer"
+    namespace = "com.yash091099.ChiragFarmersApp"
     compileSdk {
         version = release(36)
     }
 
     defaultConfig {
-        applicationId = "com.ayaan.chiragfarmer"
+        applicationId = "com.yash091099.ChiragFarmersApp"
         minSdk = 28
         targetSdk = 36
         versionCode = 7
