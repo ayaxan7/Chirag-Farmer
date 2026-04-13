@@ -71,14 +71,14 @@ fun AssistScreen(navController: NavHostController) {
                 contentScale = ContentScale.FillBounds
             )
             Spacer(modifier = Modifier.height(16.dp))
-            NavigationCard(
+            AssistCard(
                 iconRes = R.drawable.get_help,
                 title = "Got Plant Trouble? We’re\nHere to Help.",
                 description = "Upload plant photos to get instant disease\ndiagnosis",
                 onClick = {navController.navigate(Route.AssistImage.path)}
             )
             Spacer(modifier = Modifier.height(16.dp))
-            NavigationCard(
+            AssistCard(
                 iconRes = R.drawable.qna,
                 title = "Ask. Solve. Farm Help Made\nEasy",
                 description = "Ask anything about your crop, land, or agri\ninputs",
@@ -89,7 +89,7 @@ fun AssistScreen(navController: NavHostController) {
 }
 
 @Composable
-private fun NavigationCard(
+private fun AssistCard(
     onClick: () -> Unit = {},
     iconRes: Int,
     title: String,

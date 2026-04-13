@@ -88,6 +88,11 @@ fun HomeTopBar(navController: NavHostController) {
                             modifier = Modifier
                                 .width(20.dp)
                                 .height(20.dp)
+                                .clickable{
+                                    navController.navigate(
+                                        Route.Cart.path
+                                    )
+                                }
                         )
                         Spacer(modifier = Modifier.width(12.dp))
                         Image(
