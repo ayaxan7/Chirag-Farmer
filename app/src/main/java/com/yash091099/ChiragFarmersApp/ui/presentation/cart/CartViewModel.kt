@@ -48,6 +48,34 @@ class CartViewModel @Inject constructor(
         loadCart()
     }
 
+    fun incrementQuantity(productId: String) {
+        viewModelScope.launch {
+            productRepository.updateQuantity(productId, "increment").fold(
+                onSuccess = { _ ->
+                    loadCart()  // Refresh cart after successful update
+                },
+                onFailure = { exception ->
+                    // Handle error silently, cart will show current state
+                    println("Failed to increment: ${exception.message}")
+                }
+            )
+        }
+    }
+
+    fun decrementQuantity(productId: String) {
+        viewModelScope.launch {
+            productRepository.updateQuantity(productId, "decrement").fold(
+                onSuccess = { _ ->
+                    loadCart()  // Refresh cart after successful update
+                },
+                onFailure = { exception ->
+                    // Handle error silently, cart will show current state
+                    println("Failed to decrement: ${exception.message}")
+                }
+            )
+        }
+    }
+
     fun refreshCart() {
         loadCart()
     }

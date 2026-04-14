@@ -7,6 +7,7 @@ import com.yash091099.ChiragFarmersApp.data.remote.dto.MixedProductsData
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailsData
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailedData
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateProductRequest
+import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateQuantityData
 import com.yash091099.ChiragFarmersApp.domain.model.Product
 import kotlinx.coroutines.flow.Flow
 
@@ -24,4 +25,5 @@ interface ProductRepository {
     suspend fun deleteProduct(productId: String): Result<Unit>
     suspend fun addToCart(productId: String): Result<Int>
     suspend fun getCart(): Result<List<CartItemDto>>
+    suspend fun updateQuantity(productId: String, action: String): Result<UpdateQuantityData>
 }

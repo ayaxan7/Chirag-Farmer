@@ -9,14 +9,16 @@ import com.yash091099.ChiragFarmersApp.data.paging.ProductPagingSource
 import com.yash091099.ChiragFarmersApp.data.paging.SmartFarmingPagingSource
 import com.yash091099.ChiragFarmersApp.data.remote.ProductApiService
 import com.yash091099.ChiragFarmersApp.data.remote.dto.AddProductRequest
+import com.yash091099.ChiragFarmersApp.data.remote.dto.AddToCartRequest
+import com.yash091099.ChiragFarmersApp.data.remote.dto.CartItemDto
 import com.yash091099.ChiragFarmersApp.data.remote.dto.DeleteProductRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.MixedProductsData
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailsData
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailedData
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ToggleSoldOutRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateProductRequest
-import com.yash091099.ChiragFarmersApp.data.remote.dto.AddToCartRequest
-import com.yash091099.ChiragFarmersApp.data.remote.dto.CartItemDto
+import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateQuantityData
+import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateQuantityRequest
 import com.yash091099.ChiragFarmersApp.domain.model.Product
 import com.yash091099.ChiragFarmersApp.domain.repository.ProductRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -281,6 +283,28 @@ class ProductRepositoryImpl @Inject constructor(
             val response = apiService.getCart("Bearer $token")
 
             if (response.success) {
+                Result.success(response.data)
+            } else {
+                Result.failure(Exception(response.message))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun updateQuantity(productId: String, action: String): Result<UpdateQuantityData> {
+        return try {
+            val token = authDataStore.getAuthToken().first()
+            if (token.isNullOrEmpty()) {
+                return Result.failure(Exception("Authentication token not found"))
+            }
+
+            val response = apiService.updateQuantity(
+                "Bearer $token",
+                UpdateQuantityRequest(productId, action)
+            )
+
+            if (response.success && response.data != null) {
                 Result.success(response.data)
             } else {
                 Result.failure(Exception(response.message))

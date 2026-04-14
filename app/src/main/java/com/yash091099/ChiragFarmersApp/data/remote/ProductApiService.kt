@@ -15,9 +15,12 @@ import com.yash091099.ChiragFarmersApp.data.remote.dto.ToggleSoldOutRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ToggleSoldOutResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateProductRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateProductResponse
+import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateQuantityRequest
+import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateQuantityResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -102,4 +105,10 @@ interface ProductApiService {
     suspend fun getCart(
         @Header("Authorization") token: String
     ): GetCartResponse
+
+    @PATCH("api/cart/update-quantity")
+    suspend fun updateQuantity(
+        @Header("Authorization") token: String,
+        @Body request: UpdateQuantityRequest
+    ): UpdateQuantityResponse
 }

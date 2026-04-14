@@ -47,6 +47,7 @@ import com.yash091099.ChiragFarmersApp.ui.theme.TextGray
 
 @Composable
 fun CartItemCard(
+    modifier: Modifier = Modifier,
     imageRes: Int,
     imageUrl: String = "",
     productName: String,
@@ -56,7 +57,6 @@ fun CartItemCard(
     quantity: String,
     onQuantityDecrease: () -> Unit,
     onQuantityIncrease: () -> Unit,
-    modifier: Modifier = Modifier
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
@@ -159,7 +159,6 @@ fun CartItemCard(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 // Decrease Button
-
                 Box(
                     modifier = Modifier
                         .size(24.dp)
@@ -170,7 +169,7 @@ fun CartItemCard(
                             color = BGBlack,
                             shape = RoundedCornerShape(4.dp)
                         )
-                        .clickable { onQuantityIncrease() },
+                        .clickable { onQuantityDecrease() },
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(

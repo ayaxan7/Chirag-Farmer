@@ -188,18 +188,18 @@ fun CartScreen(
                         // Cart Items
                         cartItems.forEach { item ->
                             CartItemCard(
-                                imageRes = R.drawable.sprayer, // Default image, can be replaced with actual image loading
+                                imageRes = R.drawable.sprayer,
                                 imageUrl = item.productImage ?: "",
                                 productName = item.productName,
                                 sellerName = item.sellerName,
                                 price = "₹${item.finalPrice.toInt()}.00",
-                                deliveryDate = "Delivery by 7 June 2025", // You can update this based on API response
+                                deliveryDate = "Delivery by 7 June 2025",
                                 quantity = "${item.quantity}",
                                 onQuantityDecrease = {
-                                    // Handle decrease
+                                    viewModel.decrementQuantity(item.productId)
                                 },
                                 onQuantityIncrease = {
-                                    // Handle increase
+                                    viewModel.incrementQuantity(item.productId)
                                 },
                                 modifier = Modifier.padding(horizontal = 16.dp)
                             )
