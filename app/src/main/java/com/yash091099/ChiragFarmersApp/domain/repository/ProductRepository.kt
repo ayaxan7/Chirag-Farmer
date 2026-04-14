@@ -21,4 +21,5 @@ interface ProductRepository {
     suspend fun updateProduct(request: UpdateProductRequest): Result<Unit>
     suspend fun toggleSoldOut(productId: String): Result<Boolean>
     suspend fun deleteProduct(productId: String): Result<Unit>
+    suspend fun addToCart(productId: String): Result<Int>
 }

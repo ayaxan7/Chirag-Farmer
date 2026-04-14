@@ -29,25 +29,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.presentation.cart.components.CartItemCard
+import com.yash091099.ChiragFarmersApp.ui.presentation.cart.data.CartItem
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragTopBar
 import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
 import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
 import com.yash091099.ChiragFarmersApp.ui.theme.BorderColour
-
-data class CartItem(
-    val id: String,
-    val imageRes: Int,
-    val productName: String,
-    val sellerName: String,
-    val price: Double,
-    val deliveryDate: String,
-    var quantity: String
-)
+import com.yash091099.ChiragFarmersApp.ui.theme.ChiragFarmerTheme
 
 @Composable
 fun CartScreen(
@@ -122,7 +116,7 @@ fun CartScreen(
                     .verticalScroll(rememberScrollState())
                     .padding(bottom = 280.dp)
             ) {
-                Spacer(modifier = Modifier.height(16.dp))
+//                Spacer(modifier = Modifier.height(16.dp))
 
                 // Cart Items
                 cartItems.forEach { item ->
@@ -141,7 +135,12 @@ fun CartScreen(
                         },
                         modifier = Modifier.padding(horizontal = 16.dp)
                     )
-                    Spacer(modifier = Modifier.height(12.dp))
+                    HorizontalDivider(
+                        modifier = Modifier
+                            .fillMaxWidth(0.9f)
+                            .align(Alignment.CenterHorizontally),
+                        thickness = (0.5f).dp
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
@@ -272,5 +271,14 @@ fun CartScreen(
                 }
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CartScreenPreview() {
+    val navController = rememberNavController()
+    ChiragFarmerTheme {
+        CartScreen(navController = navController)
     }
 }

@@ -21,6 +21,9 @@ class ProductDetailsViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<ProductDetailsUiState>(ProductDetailsUiState.Loading)
     val uiState: StateFlow<ProductDetailsUiState> = _uiState.asStateFlow()
 
+    private val _cartState = MutableStateFlow<CartActionState>(CartActionState.Idle)
+    val cartState: StateFlow<CartActionState> = _cartState.asStateFlow()
+
     private val productId: String = checkNotNull(savedStateHandle["productId"])
 
     init {
@@ -44,8 +47,28 @@ class ProductDetailsViewModel @Inject constructor(
         }
     }
 
+    fun addToCart() {
+        viewModelScope.launch {
+            _cartState.value = CartActionState.Loading
+            productRepository.addToCart(productId).fold(
+                onSuccess = { cartItemsCount ->
+                    _cartState.value = CartActionState.Success(cartItemsCount)
+                },
+                onFailure = { exception ->
+                    _cartState.value = CartActionState.Error(
+                        exception.message ?: "Failed to add product to cart"
+                    )
+                }
+            )
+        }
+    }
+
     fun retry() {
         loadProductDetails()
+    }
+
+    fun resetCartState() {
+        _cartState.value = CartActionState.Idle
     }
 }
 
@@ -54,4 +77,12 @@ sealed class ProductDetailsUiState {
     data class Success(val productDetails: ProductDetailedData) : ProductDetailsUiState()
     data class Error(val message: String) : ProductDetailsUiState()
 }
+
+sealed class CartActionState {
+    object Idle : CartActionState()
+    object Loading : CartActionState()
+    data class Success(val cartItemsCount: Int) : CartActionState()
+    data class Error(val message: String) : CartActionState()
+}
+
 

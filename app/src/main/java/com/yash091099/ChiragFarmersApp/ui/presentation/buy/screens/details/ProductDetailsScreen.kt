@@ -36,6 +36,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -44,7 +46,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -65,6 +69,7 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.common.data.CommonProduct
 import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
 import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
 import com.yash091099.ChiragFarmersApp.ui.theme.TextGray
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -75,6 +80,30 @@ fun ProductDetailsScreen(
 ) {
     var selectedImageIndex by remember { mutableIntStateOf(0) }
     val uiState by viewModel.uiState.collectAsState()
+    val cartState by viewModel.cartState.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
+
+    // Show snackbar when cart action completes
+    when (val state = cartState) {
+        is CartActionState.Success -> {
+            LaunchedEffect(state) {
+                coroutineScope.launch {
+                    snackbarHostState.showSnackbar("Product added to cart! (${state.cartItemsCount} items)")
+                    viewModel.resetCartState()
+                }
+            }
+        }
+        is CartActionState.Error -> {
+            LaunchedEffect(state) {
+                coroutineScope.launch {
+                    snackbarHostState.showSnackbar("Error: ${state.message}")
+                    viewModel.resetCartState()
+                }
+            }
+        }
+        else -> {}
+    }
 
     when (val state = uiState) {
         is ProductDetailsUiState.Loading -> {
@@ -123,7 +152,11 @@ fun ProductDetailsScreen(
 
         is ProductDetailsUiState.Success -> {
             val product = state.productDetails
-            Scaffold(modifier = modifier, containerColor = BGWhite, topBar = {
+            Scaffold(
+                modifier = modifier,
+                containerColor = BGWhite,
+                snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+                topBar = {
                 TopAppBar(
                     title = {
                         Text(
@@ -169,21 +202,32 @@ fun ProductDetailsScreen(
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     OutlinedButton(
-                        onClick = { /* Add to cart */ },
+                        onClick = { viewModel.addToCart() },
                         modifier = Modifier
                             .weight(1f)
                             .height(50.dp),
                         shape = RoundedCornerShape(8.dp),
+                        enabled = cartState !is CartActionState.Loading,
                         colors = ButtonDefaults.outlinedButtonColors(
-                            containerColor = BGBlack, contentColor = BGWhite
+                            containerColor = BGBlack,
+                            contentColor = BGWhite,
+                            disabledContainerColor = Color.Gray
                         )
                     ) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_cart_outlined),
-                            contentDescription = "Add to Cart",
-                            modifier = Modifier.size(20.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
+                        if (cartState is CartActionState.Loading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(20.dp),
+                                color = BGWhite,
+                                strokeWidth = 2.dp
+                            )
+                        } else {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_cart_outlined),
+                                contentDescription = "Add to Cart",
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                        }
                         Text("Add to Cart", fontSize = 14.sp, fontWeight = FontWeight.Medium)
                     }
 
@@ -194,7 +238,8 @@ fun ProductDetailsScreen(
                             .height(50.dp),
                         shape = RoundedCornerShape(8.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = BGWhite, contentColor = BGBlack
+                            containerColor = BGWhite,
+                            contentColor = BGBlack
                         ),
                         border = BorderStroke(1.dp, Color.Black)
                     ) {

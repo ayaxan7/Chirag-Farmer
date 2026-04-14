@@ -9,14 +9,18 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -29,11 +33,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
 import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
 import com.yash091099.ChiragFarmersApp.ui.theme.BorderColour
+import com.yash091099.ChiragFarmersApp.ui.theme.ChiragFarmerTheme
+import com.yash091099.ChiragFarmersApp.ui.theme.TextGray
 
 @Composable
 fun CartItemCard(
@@ -53,9 +62,9 @@ fun CartItemCard(
             containerColor = BGWhite
         ),
         shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 1.dp
-        )
+//        elevation = CardDefaults.cardElevation(
+//            defaultElevation = 1.dp
+//        )
     ) {
         Row(
             modifier = Modifier
@@ -70,79 +79,90 @@ fun CartItemCard(
                 modifier = Modifier
                     .size(80.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .background(Color(0xFFF8F8F8)),
+                    .background(Color.Transparent)
+                    .border(1.dp,BorderColour),
                 contentScale = ContentScale.Crop
             )
 
             // Product Details
             Column(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.wrapContentSize(),
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.Top
             ) {
                 // Product Name
                 Text(
                     text = productName,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = Color.Black
+                    color = Color.Black,
+                    maxLines = 1,
+                    overflow = TextOverflow.MiddleEllipsis
                 )
 
-                Spacer(modifier = Modifier.height(2.dp))
+//                Spacer(modifier = Modifier.height(2.dp))
 
                 // Seller Name
                 Text(
                     text = sellerName,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
-                    color = Color(0xFF666666)
+                    color = TextGray,
+                    maxLines = 1,
+                    overflow = TextOverflow.MiddleEllipsis
                 )
 
-                Spacer(modifier = Modifier.height(4.dp))
+//                Spacer(modifier = Modifier.height(4.dp))
 
                 // Price
                 Text(
                     text = price,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                    color = Color.Black,
+                    maxLines = 1,
+                    overflow = TextOverflow.MiddleEllipsis
                 )
 
-                Spacer(modifier = Modifier.height(4.dp))
+//                Spacer(modifier = Modifier.height(4.dp))
 
                 // Delivery Date
                 Text(
                     text = deliveryDate,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
-                    color = Color(0xFF666666)
+                    color = TextGray,
+                    maxLines = 1,
+                    overflow = TextOverflow.MiddleEllipsis
                 )
             }
 
             // Quantity Controls
             Row(
-                modifier = Modifier
-                    .border(
-                        width = 1.dp,
-                        color = BorderColour,
-                        shape = RoundedCornerShape(6.dp)
-                    )
-                    .padding(4.dp),
+                modifier = Modifier.size(80.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 // Decrease Button
+
                 Box(
                     modifier = Modifier
                         .size(24.dp)
                         .clip(RoundedCornerShape(4.dp))
-                        .background(Color.Transparent)
-                        .clickable { onQuantityDecrease() },
+                        .background(BGWhite)
+                        .border(
+                            width = 1.dp,
+                            color = BGBlack,
+                            shape = RoundedCornerShape(4.dp)
+                        )
+                        .clickable { onQuantityIncrease() },
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = "−",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = Color.Black
+                    Icon(
+                        imageVector = Icons.Default.Remove,
+                        contentDescription = "Decrease",
+                        tint = BGBlack,
+                        modifier = Modifier.size(16.dp)
                     )
                 }
 
@@ -152,7 +172,7 @@ fun CartItemCard(
                     fontSize = 13.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Color.Black,
-                    modifier = Modifier.width(40.dp)
+                    modifier = Modifier.wrapContentWidth()
                 )
 
                 // Increase Button
@@ -173,5 +193,22 @@ fun CartItemCard(
                 }
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CartItemCardPreview() {
+    ChiragFarmerTheme {
+        CartItemCard(
+            imageRes = R.drawable.sprayer,
+            productName = "Premium Wheat Seeds",
+            sellerName = "Chirag Seeds Farm",
+            price = "₹1,200",
+            deliveryDate = "Delivery by 25th Oct",
+            quantity = "1 kg",
+            onQuantityDecrease = {},
+            onQuantityIncrease = {}
+        )
     }
 }

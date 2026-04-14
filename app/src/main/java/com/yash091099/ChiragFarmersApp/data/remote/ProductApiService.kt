@@ -2,6 +2,8 @@ package com.yash091099.ChiragFarmersApp.data.remote
 
 import com.yash091099.ChiragFarmersApp.data.remote.dto.AddProductRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.AddProductResponse
+import com.yash091099.ChiragFarmersApp.data.remote.dto.AddToCartRequest
+import com.yash091099.ChiragFarmersApp.data.remote.dto.AddToCartResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.DeleteProductRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.DeleteProductResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.MixedProductsResponse
@@ -88,4 +90,10 @@ interface ProductApiService {
         @Header("Authorization") token: String,
         @Body request: DeleteProductRequest
     ): DeleteProductResponse
+
+    @POST("api/cart/add")
+    suspend fun addToCart(
+        @Header("Authorization") token: String,
+        @Body request: AddToCartRequest
+    ): AddToCartResponse
 }

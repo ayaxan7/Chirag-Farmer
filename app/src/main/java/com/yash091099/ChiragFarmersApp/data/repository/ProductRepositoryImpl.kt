@@ -15,6 +15,7 @@ import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailsData
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailedData
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ToggleSoldOutRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateProductRequest
+import com.yash091099.ChiragFarmersApp.data.remote.dto.AddToCartRequest
 import com.yash091099.ChiragFarmersApp.domain.model.Product
 import com.yash091099.ChiragFarmersApp.domain.repository.ProductRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -239,6 +240,28 @@ class ProductRepositoryImpl @Inject constructor(
 
             if (response.success) {
                 Result.success(Unit)
+            } else {
+                Result.failure(Exception(response.message))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun addToCart(productId: String): Result<Int> {
+        return try {
+            val token = authDataStore.getAuthToken().first()
+            if (token.isNullOrEmpty()) {
+                return Result.failure(Exception("Authentication token not found"))
+            }
+
+            val response = apiService.addToCart(
+                "Bearer $token",
+                AddToCartRequest(productId)
+            )
+
+            if (response.success && response.data != null) {
+                Result.success(response.data.cartItemsCount)
             } else {
                 Result.failure(Exception(response.message))
             }
