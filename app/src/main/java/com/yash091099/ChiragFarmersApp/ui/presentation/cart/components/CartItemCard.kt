@@ -37,6 +37,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
 import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
@@ -47,6 +48,7 @@ import com.yash091099.ChiragFarmersApp.ui.theme.TextGray
 @Composable
 fun CartItemCard(
     imageRes: Int,
+    imageUrl: String = "",
     productName: String,
     sellerName: String,
     price: String,
@@ -73,16 +75,29 @@ fun CartItemCard(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             // Product Image
-            Image(
-                painter = painterResource(id = imageRes),
-                contentDescription = productName,
-                modifier = Modifier
-                    .size(80.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(Color.Transparent)
-                    .border(1.dp,BorderColour),
-                contentScale = ContentScale.Crop
-            )
+            if (imageUrl.isNotEmpty()) {
+                AsyncImage(
+                    model = imageUrl,
+                    contentDescription = productName,
+                    modifier = Modifier
+                        .size(80.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(Color.Transparent)
+                        .border(1.dp, BorderColour),
+                    contentScale = ContentScale.Crop
+                )
+            } else {
+                Image(
+                    painter = painterResource(id = imageRes),
+                    contentDescription = productName,
+                    modifier = Modifier
+                        .size(80.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(Color.Transparent)
+                        .border(1.dp, BorderColour),
+                    contentScale = ContentScale.Crop
+                )
+            }
 
             // Product Details
             Column(

@@ -31,6 +31,7 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.buy.screens.categories.Ca
 import com.yash091099.ChiragFarmersApp.ui.presentation.buy.screens.details.ProductDetailsScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.buy.screens.details.ProductDetailsViewModel
 import com.yash091099.ChiragFarmersApp.ui.presentation.cart.CartScreen
+import com.yash091099.ChiragFarmersApp.ui.presentation.cart.CartViewModel
 import com.yash091099.ChiragFarmersApp.ui.presentation.home.screens.SearchScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.home.screens.notifications.NotificationsScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.SellScreen
@@ -96,7 +97,8 @@ fun AppNavigation(
             HomeScreen(navController = navController, viewModel = viewModel)
         }
         composable(Route.Cart.path) {
-            CartScreen(navController = navController)
+            val viewModel: CartViewModel = hiltViewModel()
+            CartScreen(navController = navController, viewModel = viewModel)
         }
         composable(Route.Search.path) {
             SearchScreen(navController = navController)

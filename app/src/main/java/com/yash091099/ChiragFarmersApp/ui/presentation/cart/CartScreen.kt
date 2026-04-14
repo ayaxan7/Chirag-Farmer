@@ -15,16 +15,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,7 +36,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.presentation.cart.components.CartItemCard
-import com.yash091099.ChiragFarmersApp.ui.presentation.cart.data.CartItem
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragTopBar
 import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
 import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
@@ -46,228 +45,299 @@ import com.yash091099.ChiragFarmersApp.ui.theme.ChiragFarmerTheme
 @Composable
 fun CartScreen(
     navController: NavHostController,
+    viewModel: CartViewModel,
     modifier: Modifier = Modifier
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
+    val cartState by viewModel.cartState.collectAsState()
 
-    // Sample cart items
-    var cartItems by remember {
-        mutableStateOf(
-            listOf(
-                CartItem(
-                    id = "1",
-                    imageRes = R.drawable.sprayer,
-                    productName = "NEPTUNE BATTERY OPERATED",
-                    sellerName = "Geolite Agritech India Pvt Ltd",
-                    price = 1999.00,
-                    deliveryDate = "Delivery by 7 June 2025",
-                    quantity = "1"
-                ),
-                CartItem(
-                    id = "2",
-                    imageRes = R.drawable.sprayer,
-                    productName = "TOMATO - FARM FRESH",
-                    sellerName = "Siddharth kisan",
-                    price = 49.00,
-                    deliveryDate = "Delivery by 7 June 2025",
-                    quantity = "5 kgs"
-                ),
-                CartItem(
-                    id = "3",
-                    imageRes = R.drawable.sprayer,
-                    productName = "ROUND POTATO",
-                    sellerName = "Siddharth kisan",
-                    price = 29.00,
-                    deliveryDate = "Delivery by 7 June 2025",
-                    quantity = "1"
-                )
-            )
-        )
-    }
-
-    // Calculate totals
-    val subTotal = remember(cartItems) {
-        cartItems.sumOf { it.price }
-    }
-    val deliveryFee = 100.00
-    val discount = 875.00
-    val totalCost = subTotal + deliveryFee - discount
-
-    Scaffold(
-        modifier = modifier,
-        containerColor = BGWhite,
-        snackbarHost = { SnackbarHost(snackbarHostState) },
-        topBar = {
-            ChiragTopBar(
-                navController = navController,
-                icon = R.drawable.ic_arrow,
-                title = "My Cart"
-            )
-        }
-    ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
-            Column(
+    when (val state = cartState) {
+        is CartUiState.Loading -> {
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(bottom = 280.dp)
+                    .background(BGWhite),
+                contentAlignment = Alignment.Center
             ) {
-//                Spacer(modifier = Modifier.height(16.dp))
-
-                // Cart Items
-                cartItems.forEach { item ->
-                    CartItemCard(
-                        imageRes = item.imageRes,
-                        productName = item.productName,
-                        sellerName = item.sellerName,
-                        price = "Rs.${item.price.toInt()}.00",
-                        deliveryDate = item.deliveryDate,
-                        quantity = item.quantity,
-                        onQuantityDecrease = {
-                            // Handle decrease
-                        },
-                        onQuantityIncrease = {
-                            // Handle increase
-                        },
-                        modifier = Modifier.padding(horizontal = 16.dp)
-                    )
-                    HorizontalDivider(
-                        modifier = Modifier
-                            .fillMaxWidth(0.9f)
-                            .align(Alignment.CenterHorizontally),
-                        thickness = (0.5f).dp
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(24.dp))
+                CircularProgressIndicator(color = BGBlack)
             }
+        }
 
-            // Price Summary (Fixed at bottom)
-            Column(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
-                    .background(BGWhite)
-                    .padding(16.dp)
-            ) {
-                HorizontalDivider(
-                    color = BorderColour,
-                    thickness = 1.dp
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Sub-Total
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = "Sub-Total",
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Normal,
-                        color = Color.Black
-                    )
-                    Text(
-                        text = "₹${subTotal.toInt()}.00",
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Normal,
-                        color = Color.Black
+        is CartUiState.Error -> {
+            Scaffold(
+                modifier = modifier,
+                containerColor = BGWhite,
+                snackbarHost = { SnackbarHost(snackbarHostState) },
+                topBar = {
+                    ChiragTopBar(
+                        navController = navController,
+                        icon = R.drawable.ic_arrow,
+                        title = "My Cart"
                     )
                 }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Delivery Fee
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = "Delivery Fee",
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Normal,
-                        color = Color.Black
-                    )
-                    Text(
-                        text = "₹${deliveryFee.toInt()}.00",
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Normal,
-                        color = Color.Black
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Discount
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = "Discount",
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Normal,
-                        color = Color.Black
-                    )
-                    Text(
-                        text = "₹${discount.toInt()}.00",
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Normal,
-                        color = Color.Black
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                HorizontalDivider(
-                    color = BorderColour,
-                    thickness = 1.dp
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                // Total Cost
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = "Total Cost",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black
-                    )
-                    Text(
-                        text = "₹${totalCost.toInt()}.00",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Proceed to Checkout Button
-                Button(
-                    onClick = { /* Navigate to checkout */ },
+            ) { paddingValues ->
+                Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = BGBlack
-                    )
+                        .fillMaxSize()
+                        .padding(paddingValues),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = "Proceed to Checkout",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        Text(
+                            text = "Error Loading Cart",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Black
+                        )
+                        Text(
+                            text = state.message,
+                            fontSize = 14.sp,
+                            color = Color.Gray
+                        )
+                        Button(
+                            onClick = { viewModel.retry() },
+                            colors = ButtonDefaults.buttonColors(containerColor = BGBlack)
+                        ) {
+                            Text("Retry", color = BGWhite)
+                        }
+                    }
+                }
+            }
+        }
+
+        is CartUiState.Empty -> {
+            Scaffold(
+                modifier = modifier,
+                containerColor = BGWhite,
+                snackbarHost = { SnackbarHost(snackbarHostState) },
+                topBar = {
+                    ChiragTopBar(
+                        navController = navController,
+                        icon = R.drawable.ic_arrow,
+                        title = "My Cart"
                     )
+                }
+            ) { paddingValues ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        Text(
+                            text = "Your Cart is Empty",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Black
+                        )
+                        Text(
+                            text = "Add items to get started",
+                            fontSize = 14.sp,
+                            color = Color.Gray
+                        )
+                        Button(
+                            onClick = { navController.popBackStack() },
+                            colors = ButtonDefaults.buttonColors(containerColor = BGBlack)
+                        ) {
+                            Text("Continue Shopping", color = BGWhite)
+                        }
+                    }
+                }
+            }
+        }
+
+        is CartUiState.Success -> {
+            val cartItems = state.cartItems
+
+            // Calculate totals
+            val subTotal = cartItems.sumOf { it.finalPrice * it.quantity }
+            val deliveryFee = 100.00
+            val discount = subTotal * 0.1 // 10% discount for example
+            val totalCost = subTotal + deliveryFee - discount
+
+            Scaffold(
+                modifier = modifier,
+                containerColor = BGWhite,
+                snackbarHost = { SnackbarHost(snackbarHostState) },
+                topBar = {
+                    ChiragTopBar(
+                        navController = navController,
+                        icon = R.drawable.ic_arrow,
+                        title = "My Cart"
+                    )
+                }
+            ) { paddingValues ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
+                            .padding(bottom = 280.dp)
+                    ) {
+                        // Cart Items
+                        cartItems.forEach { item ->
+                            CartItemCard(
+                                imageRes = R.drawable.sprayer, // Default image, can be replaced with actual image loading
+                                imageUrl = item.productImage ?: "",
+                                productName = item.productName,
+                                sellerName = item.sellerName,
+                                price = "₹${item.finalPrice.toInt()}.00",
+                                deliveryDate = "Delivery by 7 June 2025", // You can update this based on API response
+                                quantity = "${item.quantity}",
+                                onQuantityDecrease = {
+                                    // Handle decrease
+                                },
+                                onQuantityIncrease = {
+                                    // Handle increase
+                                },
+                                modifier = Modifier.padding(horizontal = 16.dp)
+                            )
+                            HorizontalDivider(
+                                modifier = Modifier
+                                    .fillMaxWidth(0.9f)
+                                    .align(Alignment.CenterHorizontally),
+                                thickness = (0.5f).dp
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(24.dp))
+                    }
+
+                    // Price Summary (Fixed at bottom)
+                    Column(
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .fillMaxWidth()
+                            .background(BGWhite)
+                            .padding(16.dp)
+                    ) {
+                        HorizontalDivider(
+                            color = BorderColour,
+                            thickness = 1.dp
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        // Sub-Total
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = "Sub-Total",
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Normal,
+                                color = Color.Black
+                            )
+                            Text(
+                                text = "₹${subTotal.toInt()}.00",
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Normal,
+                                color = Color.Black
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        // Delivery Fee
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = "Delivery Fee",
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Normal,
+                                color = Color.Black
+                            )
+                            Text(
+                                text = "₹${deliveryFee.toInt()}.00",
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Normal,
+                                color = Color.Black
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        // Discount
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = "Discount",
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Normal,
+                                color = Color.Black
+                            )
+                            Text(
+                                text = "₹${discount.toInt()}.00",
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Normal,
+                                color = Color.Black
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        HorizontalDivider(
+                            color = BorderColour,
+                            thickness = 1.dp
+                        )
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        // Total Cost
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = "Total Cost",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.Black
+                            )
+                            Text(
+                                text = "₹${totalCost.toInt()}.00",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.Black
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        // Proceed to Checkout Button
+                        Button(
+                            onClick = { /* Navigate to checkout */ },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(56.dp),
+                            shape = RoundedCornerShape(8.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = BGBlack
+                            )
+                        ) {
+                            Text(
+                                text = "Proceed to Checkout",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -279,6 +349,7 @@ fun CartScreen(
 fun CartScreenPreview() {
     val navController = rememberNavController()
     ChiragFarmerTheme {
-        CartScreen(navController = navController)
+        // Preview with empty cart state
+        // Note: This is a preview-only state, actual implementation uses CartViewModel
     }
 }
