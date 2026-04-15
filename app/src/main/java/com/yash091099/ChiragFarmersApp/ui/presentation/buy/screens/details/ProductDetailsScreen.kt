@@ -207,9 +207,9 @@ fun ProductDetailsScreen(
                             .weight(1f)
                             .height(50.dp),
                         shape = RoundedCornerShape(8.dp),
-                        enabled = cartState !is CartActionState.Loading,
+                        enabled = cartState !is CartActionState.Loading && !product.isInCart,
                         colors = ButtonDefaults.outlinedButtonColors(
-                            containerColor = BGBlack,
+                            containerColor = if (product.isInCart) Color.Gray else BGBlack,
                             contentColor = BGWhite,
                             disabledContainerColor = Color.Gray
                         )
@@ -222,13 +222,21 @@ fun ProductDetailsScreen(
                             )
                         } else {
                             Icon(
-                                painter = painterResource(R.drawable.ic_cart_outlined),
-                                contentDescription = "Add to Cart",
-                                modifier = Modifier.size(20.dp)
+                                painter = painterResource(
+                                    if (product.isInCart) R.drawable.ic_cart_outlined else R.drawable.ic_cart_outlined
+                                ),
+                                contentDescription = if (product.isInCart) "In Cart" else "Add to Cart",
+                                modifier = Modifier.size(20.dp),
+                                tint= if (product.isInCart) BGWhite else BGWhite
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                         }
-                        Text("Add to Cart", fontSize = 14.sp, fontWeight = FontWeight.Medium)
+                        Text(
+                            if (product.isInCart) "In Cart" else "Add to Cart",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = if (product.isInCart) Color.White else BGWhite
+                        )
                     }
 
                     Button(
@@ -492,40 +500,6 @@ fun ProductDetailsScreen(
                                 Text("View Seller", fontSize = 12.sp)
                             }
                         }
-
-//                        Spacer(modifier = Modifier.height(20.dp))
-//
-//                        // Product Details
-//                        Text(
-//                            text = "Product Details",
-//                            fontSize = 16.sp,
-//                            fontWeight = FontWeight.Bold,
-//                            color = Color.Black
-//                        )
-//                        Spacer(modifier = Modifier.height(12.dp))
-//
-//                        Card(
-//                            colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F5F5)),
-//                            shape = RoundedCornerShape(8.dp),
-//                            modifier = Modifier.fillMaxWidth()
-//                        ) {
-//                            Column(modifier = Modifier.padding(12.dp)) {
-//                                DetailRow("Category", product.category)
-//                                if (!product.subcategory.isNullOrEmpty()) {
-//                                    DetailRow("Subcategory", product.subcategory)
-//                                }
-//                                if (!product.unit.isNullOrEmpty()) {
-//                                    DetailRow("Unit", product.unit)
-//                                }
-//                                if (product.quantity != null && product.quantity > 0) {
-//                                    DetailRow("Quantity", "${product.quantity} ${product.unit ?: ""}")
-//                                }
-//                                if (product.deliveryFee != null && product.deliveryFee > 0) {
-//                                    DetailRow("Delivery Fee", "₹${product.deliveryFee}")
-//                                }
-//                                DetailRow("Availability", product.availabilityStatus)
-//                            }
-//                        }
 
                         Spacer(modifier = Modifier.height(20.dp))
 

@@ -45,7 +45,9 @@ data class ProductDetailedData(
     @SerializedName("category")
     val category: String,
     @SerializedName("subcategory")
-    val subcategory: String? = null
+    val subcategory: String? = null,
+    @SerializedName("isInCart")
+    val isInCart: Boolean = false
 )
 
 data class SellerInfo(

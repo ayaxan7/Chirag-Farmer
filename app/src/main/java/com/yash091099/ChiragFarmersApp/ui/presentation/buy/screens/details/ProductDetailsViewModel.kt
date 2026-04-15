@@ -52,6 +52,8 @@ class ProductDetailsViewModel @Inject constructor(
             _cartState.value = CartActionState.Loading
             productRepository.addToCart(productId).fold(
                 onSuccess = { cartItemsCount ->
+                    // Refresh product details to get updated isInCart status
+                    loadProductDetails()
                     _cartState.value = CartActionState.Success(cartItemsCount)
                 },
                 onFailure = { exception ->
