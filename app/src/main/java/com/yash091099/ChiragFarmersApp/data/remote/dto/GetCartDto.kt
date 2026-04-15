@@ -8,7 +8,25 @@ data class GetCartResponse(
     @SerializedName("message")
     val message: String,
     @SerializedName("data")
-    val data: List<CartItemDto> = emptyList()
+    val data: CartDataWrapper = CartDataWrapper()
+)
+
+data class CartDataWrapper(
+    @SerializedName("items")
+    val items: List<CartItemDto> = emptyList(),
+    @SerializedName("summary")
+    val summary: CartSummary = CartSummary()
+)
+
+data class CartSummary(
+    @SerializedName("subtotal")
+    val subtotal: Double = 0.0,
+    @SerializedName("totalDiscount")
+    val totalDiscount: Double = 0.0,
+    @SerializedName("totalDeliveryFee")
+    val totalDeliveryFee: Double = 0.0,
+    @SerializedName("totalAmount")
+    val totalAmount: Double = 0.0
 )
 
 data class CartItemDto(

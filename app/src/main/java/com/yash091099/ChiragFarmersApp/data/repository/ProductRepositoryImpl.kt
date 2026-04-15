@@ -10,7 +10,7 @@ import com.yash091099.ChiragFarmersApp.data.paging.SmartFarmingPagingSource
 import com.yash091099.ChiragFarmersApp.data.remote.ProductApiService
 import com.yash091099.ChiragFarmersApp.data.remote.dto.AddProductRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.AddToCartRequest
-import com.yash091099.ChiragFarmersApp.data.remote.dto.CartItemDto
+import com.yash091099.ChiragFarmersApp.data.remote.dto.CartDataWrapper
 import com.yash091099.ChiragFarmersApp.data.remote.dto.DeleteProductRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.MixedProductsData
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailsData
@@ -273,7 +273,7 @@ class ProductRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getCart(): Result<List<CartItemDto>> {
+    override suspend fun getCart(): Result<CartDataWrapper> {
         return try {
             val token = authDataStore.getAuthToken().first()
             if (token.isNullOrEmpty()) {

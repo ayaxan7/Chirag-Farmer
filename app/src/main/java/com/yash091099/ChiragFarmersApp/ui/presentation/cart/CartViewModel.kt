@@ -3,6 +3,7 @@ package com.yash091099.ChiragFarmersApp.ui.presentation.cart
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yash091099.ChiragFarmersApp.data.remote.dto.CartItemDto
+import com.yash091099.ChiragFarmersApp.data.remote.dto.CartSummary
 import com.yash091099.ChiragFarmersApp.domain.repository.ProductRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,11 +29,11 @@ class CartViewModel @Inject constructor(
             _cartState.value = CartUiState.Loading
 
             productRepository.getCart().fold(
-                onSuccess = { cartItems ->
-                    _cartState.value = if (cartItems.isEmpty()) {
+                onSuccess = { cartData ->
+                    _cartState.value = if (cartData.items.isEmpty()) {
                         CartUiState.Empty
                     } else {
-                        CartUiState.Success(cartItems)
+                        CartUiState.Success(cartData.items, cartData.summary)
                     }
                 },
                 onFailure = { exception ->
@@ -83,7 +84,7 @@ class CartViewModel @Inject constructor(
 
 sealed class CartUiState {
     object Loading : CartUiState()
-    data class Success(val cartItems: List<CartItemDto>) : CartUiState()
+    data class Success(val cartItems: List<CartItemDto>, val summary: CartSummary) : CartUiState()
     object Empty : CartUiState()
     data class Error(val message: String) : CartUiState()
 }

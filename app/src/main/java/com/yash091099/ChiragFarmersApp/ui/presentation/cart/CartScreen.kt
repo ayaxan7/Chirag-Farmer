@@ -155,12 +155,7 @@ fun CartScreen(
 
         is CartUiState.Success -> {
             val cartItems = state.cartItems
-
-            // Calculate totals
-            val subTotal = cartItems.sumOf { it.finalPrice * it.quantity }
-            val deliveryFee = 100.00
-            val discount = subTotal * 0.1 // 10% discount for example
-            val totalCost = subTotal + deliveryFee - discount
+            val summary = state.summary
 
             Scaffold(
                 modifier = modifier,
@@ -241,7 +236,7 @@ fun CartScreen(
                                 color = Color.Black
                             )
                             Text(
-                                text = "₹${subTotal.toInt()}.00",
+                                text = "₹${summary.subtotal.toInt()}.00",
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Normal,
                                 color = Color.Black
@@ -262,7 +257,7 @@ fun CartScreen(
                                 color = Color.Black
                             )
                             Text(
-                                text = "₹${deliveryFee.toInt()}.00",
+                                text = "₹${summary.totalDeliveryFee.toInt()}.00",
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Normal,
                                 color = Color.Black
@@ -283,7 +278,7 @@ fun CartScreen(
                                 color = Color.Black
                             )
                             Text(
-                                text = "₹${discount.toInt()}.00",
+                                text = "₹${summary.totalDiscount.toInt()}.00",
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Normal,
                                 color = Color.Black
@@ -311,7 +306,7 @@ fun CartScreen(
                                 color = Color.Black
                             )
                             Text(
-                                text = "₹${totalCost.toInt()}.00",
+                                text = "₹${summary.totalAmount.toInt()}.00",
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.Black

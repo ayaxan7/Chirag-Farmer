@@ -2,7 +2,7 @@ package com.yash091099.ChiragFarmersApp.domain.repository
 
 import androidx.paging.PagingData
 import com.yash091099.ChiragFarmersApp.data.remote.dto.AddProductRequest
-import com.yash091099.ChiragFarmersApp.data.remote.dto.CartItemDto
+import com.yash091099.ChiragFarmersApp.data.remote.dto.CartDataWrapper
 import com.yash091099.ChiragFarmersApp.data.remote.dto.MixedProductsData
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailsData
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailedData
@@ -24,6 +24,6 @@ interface ProductRepository {
     suspend fun toggleSoldOut(productId: String): Result<Boolean>
     suspend fun deleteProduct(productId: String): Result<Unit>
     suspend fun addToCart(productId: String): Result<Int>
-    suspend fun getCart(): Result<List<CartItemDto>>
+    suspend fun getCart(): Result<CartDataWrapper>
     suspend fun updateQuantity(productId: String, action: String): Result<UpdateQuantityData>
 }
