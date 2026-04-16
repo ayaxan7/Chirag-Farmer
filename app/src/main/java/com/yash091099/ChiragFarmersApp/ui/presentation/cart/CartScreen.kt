@@ -1,6 +1,7 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.cart
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,24 +30,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.presentation.cart.components.CartItemCard
+import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.ChiragButton
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragTopBar
 import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
 import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
 import com.yash091099.ChiragFarmersApp.ui.theme.BorderColour
-import com.yash091099.ChiragFarmersApp.ui.theme.ChiragFarmerTheme
 
 @Composable
 fun CartScreen(
-    navController: NavHostController,
-    viewModel: CartViewModel,
-    modifier: Modifier = Modifier
+    navController: NavHostController, viewModel: CartViewModel, modifier: Modifier = Modifier
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val cartState by viewModel.cartState.collectAsState()
@@ -70,12 +67,9 @@ fun CartScreen(
                 snackbarHost = { SnackbarHost(snackbarHostState) },
                 topBar = {
                     ChiragTopBar(
-                        navController = navController,
-                        icon = R.drawable.ic_arrow,
-                        title = "My Cart"
+                        navController = navController, icon = R.drawable.ic_arrow, title = "My Cart"
                     )
-                }
-            ) { paddingValues ->
+                }) { paddingValues ->
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -90,12 +84,10 @@ fun CartScreen(
                             text = "Error Loading Cart",
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color.Black
+                            color = BGBlack
                         )
                         Text(
-                            text = state.message,
-                            fontSize = 14.sp,
-                            color = Color.Gray
+                            text = state.message, fontSize = 14.sp, color = Color.Gray
                         )
                         Button(
                             onClick = { viewModel.retry() },
@@ -115,12 +107,9 @@ fun CartScreen(
                 snackbarHost = { SnackbarHost(snackbarHostState) },
                 topBar = {
                     ChiragTopBar(
-                        navController = navController,
-                        icon = R.drawable.ic_arrow,
-                        title = "My Cart"
+                        navController = navController, icon = R.drawable.ic_arrow, title = "My Cart"
                     )
-                }
-            ) { paddingValues ->
+                }) { paddingValues ->
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -135,12 +124,10 @@ fun CartScreen(
                             text = "Your Cart is Empty",
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color.Black
+                            color = BGBlack
                         )
                         Text(
-                            text = "Add items to get started",
-                            fontSize = 14.sp,
-                            color = Color.Gray
+                            text = "Add items to get started", fontSize = 14.sp, color = Color.Gray
                         )
                         Button(
                             onClick = { navController.popBackStack() },
@@ -163,12 +150,9 @@ fun CartScreen(
                 snackbarHost = { SnackbarHost(snackbarHostState) },
                 topBar = {
                     ChiragTopBar(
-                        navController = navController,
-                        icon = R.drawable.ic_arrow,
-                        title = "My Cart"
+                        navController = navController, icon = R.drawable.ic_arrow, title = "My Cart"
                     )
-                }
-            ) { paddingValues ->
+                }) { paddingValues ->
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -187,7 +171,7 @@ fun CartScreen(
                                 imageUrl = item.productImage ?: "",
                                 productName = item.productName,
                                 sellerName = item.sellerName,
-                                price = "₹${item.finalPrice.toInt()}.00",
+                                price = "₹${item.finalPrice}",
                                 deliveryDate = "Delivery by 7 June 2025",
                                 quantity = "${item.quantity}",
                                 onQuantityDecrease = {
@@ -201,8 +185,7 @@ fun CartScreen(
                             HorizontalDivider(
                                 modifier = Modifier
                                     .fillMaxWidth(0.9f)
-                                    .align(Alignment.CenterHorizontally),
-                                thickness = (0.5f).dp
+                                    .align(Alignment.CenterHorizontally), thickness = (0.5f).dp
                             )
                         }
 
@@ -216,13 +199,13 @@ fun CartScreen(
                             .fillMaxWidth()
                             .background(BGWhite)
                             .padding(16.dp)
+                            .border(
+                                width = 1.dp, color = BorderColour, shape = RoundedCornerShape(24.dp)
+                            )
+                            .padding(16.dp)
                     ) {
-                        HorizontalDivider(
-                            color = BorderColour,
-                            thickness = 1.dp
-                        )
 
-                        Spacer(modifier = Modifier.height(16.dp))
+//                        Spacer(modifier = Modifier.height(16.dp))
 
                         // Sub-Total
                         Row(
@@ -231,19 +214,19 @@ fun CartScreen(
                         ) {
                             Text(
                                 text = "Sub-Total",
-                                fontSize = 14.sp,
+                                fontSize = 12.sp,
                                 fontWeight = FontWeight.Normal,
-                                color = Color.Black
+                                color = BGBlack
                             )
                             Text(
-                                text = "₹${summary.subtotal.toInt()}.00",
-                                fontSize = 14.sp,
+                                text = "₹${summary.subtotal}",
+                                fontSize = 12.sp,
                                 fontWeight = FontWeight.Normal,
-                                color = Color.Black
+                                color = BGBlack
                             )
                         }
 
-                        Spacer(modifier = Modifier.height(8.dp))
+//                        Spacer(modifier = Modifier.height(8.dp))
 
                         // Delivery Fee
                         Row(
@@ -252,19 +235,19 @@ fun CartScreen(
                         ) {
                             Text(
                                 text = "Delivery Fee",
-                                fontSize = 14.sp,
+                                fontSize = 12.sp,
                                 fontWeight = FontWeight.Normal,
-                                color = Color.Black
+                                color = BGBlack
                             )
                             Text(
-                                text = "₹${summary.totalDeliveryFee.toInt()}.00",
-                                fontSize = 14.sp,
+                                text = "₹${summary.totalDeliveryFee}",
+                                fontSize = 12.sp,
                                 fontWeight = FontWeight.Normal,
-                                color = Color.Black
+                                color = BGBlack
                             )
                         }
 
-                        Spacer(modifier = Modifier.height(8.dp))
+//                        Spacer(modifier = Modifier.height(8.dp))
 
                         // Discount
                         Row(
@@ -273,26 +256,25 @@ fun CartScreen(
                         ) {
                             Text(
                                 text = "Discount",
-                                fontSize = 14.sp,
+                                fontSize = 12.sp,
                                 fontWeight = FontWeight.Normal,
-                                color = Color.Black
+                                color = BGBlack
                             )
                             Text(
-                                text = "₹${summary.totalDiscount.toInt()}.00",
-                                fontSize = 14.sp,
+                                text = "₹%.2f".format(summary.totalDiscount),
+                                fontSize = 12.sp,
                                 fontWeight = FontWeight.Normal,
-                                color = Color.Black
+                                color = BGBlack
                             )
                         }
 
-                        Spacer(modifier = Modifier.height(12.dp))
+//                        Spacer(modifier = Modifier.height(12.dp))
 
-                        HorizontalDivider(
-                            color = BorderColour,
-                            thickness = 1.dp
-                        )
+//                        HorizontalDivider(
+//                            color = BorderColour, thickness = 1.dp
+//                        )
 
-                        Spacer(modifier = Modifier.height(12.dp))
+//                        Spacer(modifier = Modifier.height(12.dp))
 
                         // Total Cost
                         Row(
@@ -301,50 +283,28 @@ fun CartScreen(
                         ) {
                             Text(
                                 text = "Total Cost",
-                                fontSize = 16.sp,
+                                fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = Color.Black
+                                color = BGBlack
                             )
                             Text(
-                                text = "₹${summary.totalAmount.toInt()}.00",
-                                fontSize = 16.sp,
+                                text = "₹%.2f".format(summary.totalAmount),
+                                fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = Color.Black
+                                color = BGBlack
                             )
                         }
 
                         Spacer(modifier = Modifier.height(16.dp))
-
-                        // Proceed to Checkout Button
-                        Button(
-                            onClick = { /* Navigate to checkout */ },
+                        ChiragButton(
+                            text = "Proceed to Checkout",
+                            onClick = { /* Handle checkout */ },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(56.dp),
-                            shape = RoundedCornerShape(8.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = BGBlack
-                            )
-                        ) {
-                            Text(
-                                text = "Proceed to Checkout",
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Medium
-                            )
-                        }
+                        )
                     }
                 }
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun CartScreenPreview() {
-    val navController = rememberNavController()
-    ChiragFarmerTheme {
-        // Preview with empty cart state
-        // Note: This is a preview-only state, actual implementation uses CartViewModel
     }
 }

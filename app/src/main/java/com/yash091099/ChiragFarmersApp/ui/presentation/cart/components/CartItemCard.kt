@@ -8,15 +8,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -60,21 +57,18 @@ fun CartItemCard(
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = BGWhite
-        ),
-        shape = RoundedCornerShape(12.dp),
-//        elevation = CardDefaults.cardElevation(
-//            defaultElevation = 1.dp
-//        )
+        colors = CardDefaults.cardColors(containerColor = BGWhite),
+        shape = RoundedCornerShape(12.dp)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                .padding(12.dp)
+                .height(90.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            // Product Image
+
             if (imageUrl.isNotEmpty()) {
                 AsyncImage(
                     model = imageUrl,
@@ -82,7 +76,6 @@ fun CartItemCard(
                     modifier = Modifier
                         .size(80.dp)
                         .clip(RoundedCornerShape(8.dp))
-                        .background(Color.Transparent)
                         .border(1.dp, BorderColour),
                     contentScale = ContentScale.Crop
                 )
@@ -93,84 +86,67 @@ fun CartItemCard(
                     modifier = Modifier
                         .size(80.dp)
                         .clip(RoundedCornerShape(8.dp))
-                        .background(Color.Transparent)
                         .border(1.dp, BorderColour),
                     contentScale = ContentScale.Crop
                 )
             }
 
-            // Product Details
             Column(
-                modifier = Modifier.wrapContentSize(),
-                horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.Top
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
-                // Product Name
+
                 Text(
                     text = productName,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Color.Black,
                     maxLines = 1,
-                    overflow = TextOverflow.MiddleEllipsis
+                    overflow = TextOverflow.Ellipsis
                 )
 
-//                Spacer(modifier = Modifier.height(2.dp))
-
-                // Seller Name
                 Text(
                     text = sellerName,
                     fontSize = 11.sp,
-                    fontWeight = FontWeight.Normal,
                     color = TextGray,
                     maxLines = 1,
-                    overflow = TextOverflow.MiddleEllipsis
+                    overflow = TextOverflow.Ellipsis
                 )
 
-//                Spacer(modifier = Modifier.height(4.dp))
-
-                // Price
                 Text(
                     text = price,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black,
-                    maxLines = 1,
-                    overflow = TextOverflow.MiddleEllipsis
+                    maxLines = 1
                 )
 
-//                Spacer(modifier = Modifier.height(4.dp))
-
-                // Delivery Date
                 Text(
                     text = deliveryDate,
                     fontSize = 11.sp,
-                    fontWeight = FontWeight.Normal,
                     color = TextGray,
                     maxLines = 1,
-                    overflow = TextOverflow.MiddleEllipsis
+                    overflow = TextOverflow.Ellipsis
                 )
             }
 
-            // Quantity Controls
             Row(
-                modifier = Modifier.size(80.dp),
+                modifier = Modifier
+                    .width(80.dp)
+                    .fillMaxHeight(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                // Decrease Button
+
                 Box(
                     modifier = Modifier
                         .size(24.dp)
                         .clip(RoundedCornerShape(4.dp))
                         .background(BGWhite)
-                        .border(
-                            width = 1.dp,
-                            color = BGBlack,
-                            shape = RoundedCornerShape(4.dp)
-                        )
-                        .clickable { onQuantityDecrease() },
-                    contentAlignment = Alignment.Center
+                        .border(1.dp, BGBlack, RoundedCornerShape(4.dp))
+                        .clickable { onQuantityDecrease() }, contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         imageVector = Icons.Default.Remove,
@@ -180,16 +156,13 @@ fun CartItemCard(
                     )
                 }
 
-                // Quantity Display
                 Text(
                     text = quantity,
                     fontSize = 13.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = Color.Black,
-                    modifier = Modifier.wrapContentWidth()
+                    color = Color.Black
                 )
 
-                // Increase Button
                 Box(
                     modifier = Modifier
                         .size(24.dp)
@@ -222,7 +195,6 @@ fun CartItemCardPreview() {
             deliveryDate = "Delivery by 25th Oct",
             quantity = "1 kg",
             onQuantityDecrease = {},
-            onQuantityIncrease = {}
-        )
+            onQuantityIncrease = {})
     }
 }
