@@ -11,6 +11,8 @@ import com.yash091099.ChiragFarmersApp.data.remote.dto.MixedProductsResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailsResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailedResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductResponseDto
+import com.yash091099.ChiragFarmersApp.data.remote.dto.RemoveFromCartRequest
+import com.yash091099.ChiragFarmersApp.data.remote.dto.RemoveFromCartResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ToggleSoldOutRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ToggleSoldOutResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateProductRequest
@@ -18,6 +20,7 @@ import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateProductResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateQuantityRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateQuantityResponse
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.PATCH
@@ -106,9 +109,15 @@ interface ProductApiService {
         @Header("Authorization") token: String
     ): GetCartResponse
 
-    @PATCH("api/cart/update-quantity")
-    suspend fun updateQuantity(
-        @Header("Authorization") token: String,
-        @Body request: UpdateQuantityRequest
-    ): UpdateQuantityResponse
+     @PATCH("api/cart/update-quantity")
+     suspend fun updateQuantity(
+         @Header("Authorization") token: String,
+         @Body request: UpdateQuantityRequest
+     ): UpdateQuantityResponse
+
+     @POST("api/cart/remove")
+     suspend fun removeFromCart(
+         @Header("Authorization") token: String,
+         @Body request: RemoveFromCartRequest
+     ): RemoveFromCartResponse
 }

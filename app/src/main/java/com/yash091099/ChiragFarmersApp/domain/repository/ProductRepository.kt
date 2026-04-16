@@ -26,4 +26,5 @@ interface ProductRepository {
     suspend fun addToCart(productId: String): Result<Int>
     suspend fun getCart(): Result<CartDataWrapper>
     suspend fun updateQuantity(productId: String, action: String): Result<UpdateQuantityData>
+    suspend fun removeFromCart(productId: String): Result<Unit>
 }

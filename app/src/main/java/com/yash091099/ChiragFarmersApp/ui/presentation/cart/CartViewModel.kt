@@ -23,7 +23,20 @@ class CartViewModel @Inject constructor(
     init {
         loadCart()
     }
-    fun deleteItem(productId: String){}
+    
+    fun deleteItem(productId: String) {
+        viewModelScope.launch {
+            productRepository.removeFromCart(productId).fold(
+                onSuccess = { _ ->
+                    loadCart()  // Refresh cart after successful deletion
+                },
+                onFailure = { exception ->
+                    println("Failed to delete item: ${exception.message}")
+                }
+            )
+        }
+    }
+    
     private fun loadCart() {
         viewModelScope.launch {
             _cartState.value = CartUiState.Loading

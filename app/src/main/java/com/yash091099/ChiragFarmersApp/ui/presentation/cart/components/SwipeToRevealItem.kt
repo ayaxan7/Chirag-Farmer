@@ -18,7 +18,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -26,6 +25,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
+import com.yash091099.ChiragFarmersApp.ui.theme.DeleteRed
 import kotlin.math.roundToInt
 
 @Composable
@@ -45,7 +45,7 @@ fun SwipeToRevealItem(
             modifier = Modifier
                 .matchParentSize()
                 .padding(horizontal = 16.dp)
-                .background(Color(0xffD32C2C))
+                .background(DeleteRed)
                 .clickable { onDelete() }
                 .padding(end = 28.dp),
             contentAlignment = Alignment.CenterEnd) {

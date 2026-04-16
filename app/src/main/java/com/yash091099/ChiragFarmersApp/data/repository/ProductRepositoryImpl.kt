@@ -15,6 +15,7 @@ import com.yash091099.ChiragFarmersApp.data.remote.dto.DeleteProductRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.MixedProductsData
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailsData
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailedData
+import com.yash091099.ChiragFarmersApp.data.remote.dto.RemoveFromCartRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ToggleSoldOutRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateProductRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateQuantityData
@@ -292,25 +293,47 @@ class ProductRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateQuantity(productId: String, action: String): Result<UpdateQuantityData> {
-        return try {
-            val token = authDataStore.getAuthToken().first()
-            if (token.isNullOrEmpty()) {
-                return Result.failure(Exception("Authentication token not found"))
-            }
+     override suspend fun updateQuantity(productId: String, action: String): Result<UpdateQuantityData> {
+         return try {
+             val token = authDataStore.getAuthToken().first()
+             if (token.isNullOrEmpty()) {
+                 return Result.failure(Exception("Authentication token not found"))
+             }
 
-            val response = apiService.updateQuantity(
-                "Bearer $token",
-                UpdateQuantityRequest(productId, action)
-            )
+             val response = apiService.updateQuantity(
+                 "Bearer $token",
+                 UpdateQuantityRequest(productId, action)
+             )
 
-            if (response.success && response.data != null) {
-                Result.success(response.data)
-            } else {
-                Result.failure(Exception(response.message))
-            }
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
+             if (response.success && response.data != null) {
+                 Result.success(response.data)
+             } else {
+                 Result.failure(Exception(response.message))
+             }
+         } catch (e: Exception) {
+             Result.failure(e)
+         }
+     }
+
+     override suspend fun removeFromCart(productId: String): Result<Unit> {
+         return try {
+             val token = authDataStore.getAuthToken().first()
+             if (token.isNullOrEmpty()) {
+                 return Result.failure(Exception("Authentication token not found"))
+             }
+
+             val response = apiService.removeFromCart(
+                 "Bearer $token",
+                 RemoveFromCartRequest(productId)
+             )
+
+             if (response.success) {
+                 Result.success(Unit)
+             } else {
+                 Result.failure(Exception(response.message))
+             }
+         } catch (e: Exception) {
+             Result.failure(e)
+         }
+     }
 }
