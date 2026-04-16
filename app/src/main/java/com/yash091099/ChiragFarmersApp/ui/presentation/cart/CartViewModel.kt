@@ -23,7 +23,7 @@ class CartViewModel @Inject constructor(
     init {
         loadCart()
     }
-
+    fun deleteItem(productId: String){}
     private fun loadCart() {
         viewModelScope.launch {
             _cartState.value = CartUiState.Loading

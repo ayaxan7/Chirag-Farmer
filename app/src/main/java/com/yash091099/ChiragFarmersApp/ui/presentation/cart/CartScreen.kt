@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.presentation.cart.components.CartItemCard
+import com.yash091099.ChiragFarmersApp.ui.presentation.cart.components.SwipeToRevealItem
 import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.ChiragButton
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragTopBar
 import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
@@ -166,26 +167,34 @@ fun CartScreen(
                     ) {
                         // Cart Items
                         cartItems.forEach { item ->
-                            CartItemCard(
-                                imageRes = R.drawable.sprayer,
-                                imageUrl = item.productImage ?: "",
-                                productName = item.productName,
-                                sellerName = item.sellerName,
-                                price = "₹${item.finalPrice}",
-                                deliveryDate = "Delivery by 7 June 2025",
-                                quantity = "${item.quantity}",
-                                onQuantityDecrease = {
-                                    viewModel.decrementQuantity(item.productId)
-                                },
-                                onQuantityIncrease = {
-                                    viewModel.incrementQuantity(item.productId)
-                                },
-                                modifier = Modifier.padding(horizontal = 16.dp)
-                            )
+                            SwipeToRevealItem(
+                                onDelete = {
+                                    viewModel.deleteItem(item.productId)
+                                }
+                            ) {
+                                CartItemCard(
+                                    imageRes = R.drawable.sprayer,
+                                    imageUrl = item.productImage ?: "",
+                                    productName = item.productName,
+                                    sellerName = item.sellerName,
+                                    price = "₹${item.finalPrice}",
+                                    deliveryDate = "Delivery by 7 June 2025",
+                                    quantity = "${item.quantity}",
+                                    onQuantityDecrease = {
+                                        viewModel.decrementQuantity(item.productId)
+                                    },
+                                    onQuantityIncrease = {
+                                        viewModel.incrementQuantity(item.productId)
+                                    },
+                                    modifier = Modifier.padding(horizontal = 16.dp)
+                                )
+                            }
+
                             HorizontalDivider(
                                 modifier = Modifier
                                     .fillMaxWidth(0.9f)
-                                    .align(Alignment.CenterHorizontally), thickness = (0.5f).dp
+                                    .align(Alignment.CenterHorizontally),
+                                thickness = (0.5f).dp
                             )
                         }
 
