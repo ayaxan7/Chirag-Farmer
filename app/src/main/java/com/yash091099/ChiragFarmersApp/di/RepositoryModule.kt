@@ -2,9 +2,12 @@ package com.yash091099.ChiragFarmersApp.di
 
 import com.yash091099.ChiragFarmersApp.data.local.AuthDataStore
 import com.yash091099.ChiragFarmersApp.data.remote.AuthApiService
+import com.yash091099.ChiragFarmersApp.data.remote.CartApiService
 import com.yash091099.ChiragFarmersApp.data.remote.ProductApiService
 import com.yash091099.ChiragFarmersApp.data.repository.AuthRepository
+import com.yash091099.ChiragFarmersApp.data.repository.CartRepositoryImpl
 import com.yash091099.ChiragFarmersApp.data.repository.ProductRepositoryImpl
+import com.yash091099.ChiragFarmersApp.domain.repository.CartRepository
 import com.yash091099.ChiragFarmersApp.domain.repository.ProductRepository
 import dagger.Module
 import dagger.Provides
@@ -30,5 +33,13 @@ object RepositoryModule {
         api: ProductApiService, authDataStore: AuthDataStore
     ): ProductRepository {
         return ProductRepositoryImpl(api, authDataStore)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCartRepository(
+        api: CartApiService, authDataStore: AuthDataStore
+    ): CartRepository {
+        return CartRepositoryImpl(api, authDataStore)
     }
 }

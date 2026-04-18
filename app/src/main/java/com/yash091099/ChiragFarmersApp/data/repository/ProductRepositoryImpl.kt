@@ -9,17 +9,12 @@ import com.yash091099.ChiragFarmersApp.data.paging.ProductPagingSource
 import com.yash091099.ChiragFarmersApp.data.paging.SmartFarmingPagingSource
 import com.yash091099.ChiragFarmersApp.data.remote.ProductApiService
 import com.yash091099.ChiragFarmersApp.data.remote.dto.AddProductRequest
-import com.yash091099.ChiragFarmersApp.data.remote.dto.AddToCartRequest
-import com.yash091099.ChiragFarmersApp.data.remote.dto.CartDataWrapper
 import com.yash091099.ChiragFarmersApp.data.remote.dto.DeleteProductRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.MixedProductsData
-import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailsData
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailedData
-import com.yash091099.ChiragFarmersApp.data.remote.dto.RemoveFromCartRequest
+import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailsData
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ToggleSoldOutRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateProductRequest
-import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateQuantityData
-import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateQuantityRequest
 import com.yash091099.ChiragFarmersApp.domain.model.Product
 import com.yash091099.ChiragFarmersApp.domain.repository.ProductRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -29,8 +24,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import javax.inject.Inject
 
 class ProductRepositoryImpl @Inject constructor(
-    private val apiService: ProductApiService,
-    private val authDataStore: AuthDataStore
+    private val apiService: ProductApiService, private val authDataStore: AuthDataStore
 ) : ProductRepository {
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -42,18 +36,15 @@ class ProductRepositoryImpl @Inject constructor(
                     initialLoadSize = 10,
                     prefetchDistance = 1,
                     enablePlaceholders = false
-                ),
-                pagingSourceFactory = {
+                ), pagingSourceFactory = {
                     ProductPagingSource(apiService, token ?: "", type, search)
-                }
-            ).flow
+                }).flow
         }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun getAllProducts(
-        category: String,
-        subcategory: String?
+        category: String, subcategory: String?
     ): Flow<PagingData<Product>> {
         return authDataStore.getAuthToken().flatMapLatest { token ->
             Pager(
@@ -62,23 +53,20 @@ class ProductRepositoryImpl @Inject constructor(
                     initialLoadSize = 10,
                     prefetchDistance = 1,
                     enablePlaceholders = false
-                ),
-                pagingSourceFactory = {
+                ), pagingSourceFactory = {
                     AllProductsPagingSource(
                         apiService = apiService,
                         token = token ?: "",
                         category = category,
                         subcategory = subcategory
                     )
-                }
-            ).flow
+                }).flow
         }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun getSmartFarmingProducts(
-        category: String,
-        subcategory: String?
+        category: String, subcategory: String?
     ): Flow<PagingData<Product>> {
         return authDataStore.getAuthToken().flatMapLatest { token ->
             Pager(
@@ -87,54 +75,52 @@ class ProductRepositoryImpl @Inject constructor(
                     initialLoadSize = 10,
                     prefetchDistance = 1,
                     enablePlaceholders = false
-                ),
-                pagingSourceFactory = {
+                ), pagingSourceFactory = {
                     SmartFarmingPagingSource(
                         apiService = apiService,
                         token = token ?: "",
                         category = category,
                         subcategory = subcategory
                     )
-                }
-            ).flow
+                }).flow
         }
     }
 
-     override suspend fun getMixedProducts(): Result<MixedProductsData> {
-         return try {
-             val token = authDataStore.getAuthToken().first()
-             if (token.isNullOrEmpty()) {
-                 return Result.failure(Exception("Authentication token not found"))
-             }
+    override suspend fun getMixedProducts(): Result<MixedProductsData> {
+        return try {
+            val token = authDataStore.getAuthToken().first()
+            if (token.isNullOrEmpty()) {
+                return Result.failure(Exception("Authentication token not found"))
+            }
 
-             val response = apiService.getMixedProducts("Bearer $token")
-             if (response.success && response.data != null) {
-                 Result.success(response.data)
-             } else {
-                 Result.failure(Exception(response.message))
-             }
-         } catch (e: Exception) {
-             Result.failure(e)
-         }
-     }
+            val response = apiService.getMixedProducts("Bearer $token")
+            if (response.success && response.data != null) {
+                Result.success(response.data)
+            } else {
+                Result.failure(Exception(response.message))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 
-     override suspend fun getMixedProductsForHomeScreen(): Result<MixedProductsData> {
-         return try {
-             val token = authDataStore.getAuthToken().first()
-             if (token.isNullOrEmpty()) {
-                 return Result.failure(Exception("Authentication token not found"))
-             }
+    override suspend fun getMixedProductsForHomeScreen(): Result<MixedProductsData> {
+        return try {
+            val token = authDataStore.getAuthToken().first()
+            if (token.isNullOrEmpty()) {
+                return Result.failure(Exception("Authentication token not found"))
+            }
 
-             val response = apiService.getMixedProducts("Bearer $token", screen = "homeScreen")
-             if (response.success && response.data != null) {
-                 Result.success(response.data)
-             } else {
-                 Result.failure(Exception(response.message))
-             }
-         } catch (e: Exception) {
-             Result.failure(e)
-         }
-     }
+            val response = apiService.getMixedProducts("Bearer $token", screen = "homeScreen")
+            if (response.success && response.data != null) {
+                Result.success(response.data)
+            } else {
+                Result.failure(Exception(response.message))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 
     override suspend fun getProductDetails(productId: String): Result<ProductDetailsData> {
         return try {
@@ -172,23 +158,23 @@ class ProductRepositoryImpl @Inject constructor(
         }
     }
 
-     override suspend fun addProduct(request: AddProductRequest): Result<String> {
-         return try {
-             val token = authDataStore.getAuthToken().first()
-             if (token.isNullOrEmpty()) {
-                 return Result.failure(Exception("Authentication token not found"))
-             }
+    override suspend fun addProduct(request: AddProductRequest): Result<String> {
+        return try {
+            val token = authDataStore.getAuthToken().first()
+            if (token.isNullOrEmpty()) {
+                return Result.failure(Exception("Authentication token not found"))
+            }
 
-             val response = apiService.addProduct("Bearer $token", request)
-             if (response.success && response.data != null) {
-                 Result.success(response.data.id)
-             } else {
-                 Result.failure(Exception(response.message))
-             }
-         } catch (e: Exception) {
-             Result.failure(e)
-         }
-     }
+            val response = apiService.addProduct("Bearer $token", request)
+            if (response.success && response.data != null) {
+                Result.success(response.data.id)
+            } else {
+                Result.failure(Exception(response.message))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 
     override suspend fun updateProduct(request: UpdateProductRequest): Result<Unit> {
         return try {
@@ -216,8 +202,7 @@ class ProductRepositoryImpl @Inject constructor(
             }
 
             val response = apiService.toggleSoldOut(
-                "Bearer $token",
-                ToggleSoldOutRequest(productId)
+                "Bearer $token", ToggleSoldOutRequest(productId)
             )
 
             if (response.success && response.data != null) {
@@ -238,8 +223,7 @@ class ProductRepositoryImpl @Inject constructor(
             }
 
             val response = apiService.deleteProduct(
-                "Bearer $token",
-                DeleteProductRequest(productId)
+                "Bearer $token", DeleteProductRequest(productId)
             )
 
             if (response.success) {
@@ -252,88 +236,4 @@ class ProductRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun addToCart(productId: String): Result<Int> {
-        return try {
-            val token = authDataStore.getAuthToken().first()
-            if (token.isNullOrEmpty()) {
-                return Result.failure(Exception("Authentication token not found"))
-            }
-
-            val response = apiService.addToCart(
-                "Bearer $token",
-                AddToCartRequest(productId)
-            )
-
-            if (response.success && response.data != null) {
-                Result.success(response.data.cartItemsCount)
-            } else {
-                Result.failure(Exception(response.message))
-            }
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-
-    override suspend fun getCart(): Result<CartDataWrapper> {
-        return try {
-            val token = authDataStore.getAuthToken().first()
-            if (token.isNullOrEmpty()) {
-                return Result.failure(Exception("Authentication token not found"))
-            }
-
-            val response = apiService.getCart("Bearer $token")
-
-            if (response.success) {
-                Result.success(response.data)
-            } else {
-                Result.failure(Exception(response.message))
-            }
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-
-     override suspend fun updateQuantity(productId: String, action: String): Result<UpdateQuantityData> {
-         return try {
-             val token = authDataStore.getAuthToken().first()
-             if (token.isNullOrEmpty()) {
-                 return Result.failure(Exception("Authentication token not found"))
-             }
-
-             val response = apiService.updateQuantity(
-                 "Bearer $token",
-                 UpdateQuantityRequest(productId, action)
-             )
-
-             if (response.success && response.data != null) {
-                 Result.success(response.data)
-             } else {
-                 Result.failure(Exception(response.message))
-             }
-         } catch (e: Exception) {
-             Result.failure(e)
-         }
-     }
-
-     override suspend fun removeFromCart(productId: String): Result<Unit> {
-         return try {
-             val token = authDataStore.getAuthToken().first()
-             if (token.isNullOrEmpty()) {
-                 return Result.failure(Exception("Authentication token not found"))
-             }
-
-             val response = apiService.removeFromCart(
-                 "Bearer $token",
-                 RemoveFromCartRequest(productId)
-             )
-
-             if (response.success) {
-                 Result.success(Unit)
-             } else {
-                 Result.failure(Exception(response.message))
-             }
-         } catch (e: Exception) {
-             Result.failure(e)
-         }
-     }
 }
