@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yash091099.ChiragFarmersApp.data.remote.dto.CartItemDto
 import com.yash091099.ChiragFarmersApp.data.remote.dto.CartSummary
-import com.yash091099.ChiragFarmersApp.domain.repository.ProductRepository
+import com.yash091099.ChiragFarmersApp.domain.usecase.GetCartUseCase
+import com.yash091099.ChiragFarmersApp.domain.usecase.RemoveFromCartUseCase
+import com.yash091099.ChiragFarmersApp.domain.usecase.UpdateCartQuantityUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,7 +16,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CartViewModel @Inject constructor(
-    private val productRepository: ProductRepository
+    private val getCartUseCase: GetCartUseCase,
+    private val removeFromCartUseCase: RemoveFromCartUseCase,
+    private val updateCartQuantityUseCase: UpdateCartQuantityUseCase
 ) : ViewModel() {
 
     private val _cartState = MutableStateFlow<CartUiState>(CartUiState.Loading)
@@ -26,7 +30,7 @@ class CartViewModel @Inject constructor(
     
     fun deleteItem(productId: String) {
         viewModelScope.launch {
-            productRepository.removeFromCart(productId).fold(
+            removeFromCartUseCase(productId).fold(
                 onSuccess = { _ ->
                     loadCart()  // Refresh cart after successful deletion
                 },
@@ -41,7 +45,7 @@ class CartViewModel @Inject constructor(
         viewModelScope.launch {
             _cartState.value = CartUiState.Loading
 
-            productRepository.getCart().fold(
+            getCartUseCase().fold(
                 onSuccess = { cartData ->
                     _cartState.value = if (cartData.items.isEmpty()) {
                         CartUiState.Empty
@@ -64,7 +68,7 @@ class CartViewModel @Inject constructor(
 
     fun incrementQuantity(productId: String) {
         viewModelScope.launch {
-            productRepository.updateQuantity(productId, "increment").fold(
+            updateCartQuantityUseCase(productId, "increment").fold(
                 onSuccess = { _ ->
                     loadCart()  // Refresh cart after successful update
                 },
@@ -78,7 +82,7 @@ class CartViewModel @Inject constructor(
 
     fun decrementQuantity(productId: String) {
         viewModelScope.launch {
-            productRepository.updateQuantity(productId, "decrement").fold(
+            updateCartQuantityUseCase(productId, "decrement").fold(
                 onSuccess = { _ ->
                     loadCart()  // Refresh cart after successful update
                 },

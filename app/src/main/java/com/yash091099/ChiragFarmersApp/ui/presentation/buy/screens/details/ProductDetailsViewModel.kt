@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailedData
 import com.yash091099.ChiragFarmersApp.domain.repository.ProductRepository
+import com.yash091099.ChiragFarmersApp.domain.usecase.AddToCartUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,6 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ProductDetailsViewModel @Inject constructor(
     private val productRepository: ProductRepository,
+    private val addToCartUseCase: AddToCartUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -50,7 +52,7 @@ class ProductDetailsViewModel @Inject constructor(
     fun addToCart() {
         viewModelScope.launch {
             _cartState.value = CartActionState.Loading
-            productRepository.addToCart(productId).fold(
+            addToCartUseCase(productId).fold(
                 onSuccess = { cartItemsCount ->
                     // Refresh product details to get updated isInCart status
                     loadProductDetails()
