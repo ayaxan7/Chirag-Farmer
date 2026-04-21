@@ -1,11 +1,9 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.cart.address
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,12 +19,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.LocalShipping
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Scaffold
@@ -50,7 +44,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.ChiragButton
@@ -62,10 +55,7 @@ import com.yash091099.ChiragFarmersApp.ui.theme.TextDarkGray
 import com.yash091099.ChiragFarmersApp.ui.theme.TextGray
 
 data class SavedAddress(
-    val id: String,
-    val type: String,
-    val address: String,
-    val pin: String
+    val id: String, val type: String, val address: String, val pin: String
 )
 
 @Composable
@@ -77,8 +67,18 @@ fun AddressScreen(
 ) {
     val addresses = listOf(
         SavedAddress("1", "Home", "123 MG Road, Indiranagar, Bengaluru,\nKarnataka", "560038"),
-        SavedAddress("2", "Office", "4th Floor, TechPark Tower, Hinjawadi Phase 1,\nPune, Maharashtra", "59761"),
-        SavedAddress("3", "Parent's House", "45 Lake View Colony, Banjara Hills, Hyderabad,\nTelangana", "500018"),
+        SavedAddress(
+            "2",
+            "Office",
+            "4th Floor, TechPark Tower, Hinjawadi Phase 1,\nPune, Maharashtra",
+            "59761"
+        ),
+        SavedAddress(
+            "3",
+            "Parent's House",
+            "45 Lake View Colony, Banjara Hills, Hyderabad,\nTelangana",
+            "500018"
+        ),
         SavedAddress("4", "Vacation Cabin", "B-12, Mall Road, Nainital, Uttarakhand", "263001")
     )
 
@@ -86,27 +86,23 @@ fun AddressScreen(
 
     Scaffold(
         topBar = {
-            ChiragTopBar(
-                title="Address",
-                icon =R.drawable.ic_arrow,
-                navController = navController
+        ChiragTopBar(
+            title = "Address", icon = R.drawable.ic_arrow, navController = navController
+        )
+    }, bottomBar = {
+        Column(
+            modifier = Modifier
+                .background(BGWhite)
+                .padding(16.dp)
+        ) {
+            EstimatedDeliveryRow(dateText = "7, 8 Mar 2025")
+            Spacer(modifier = Modifier.height(16.dp))
+            ChiragButton(
+                text = "Continue", onClick = onContinueClick, shape = RoundedCornerShape(12.dp)
             )
-        },
-        bottomBar = {
-            Column(
-                modifier = Modifier
-                    .background(BGWhite)
-                    .padding(16.dp)
-            ) {
-                EstimatedDeliveryRow(dateText = "7, 8 Mar 2025")
-                Spacer(modifier = Modifier.height(16.dp))
-                ChiragButton(
-                    text = "Continue",
-                    onClick = onContinueClick
-                )
-            }
-        },
-        containerColor = BGWhite
+            Spacer(modifier = Modifier.height(24.dp))
+        }
+    }, containerColor = BGWhite
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
@@ -118,9 +114,8 @@ fun AddressScreen(
                 AddressItem(
                     address = address,
                     isSelected = selectedAddressId == address.id,
-                    onSelect = { selectedAddressId = address.id }
-                )
-                if(!addresses.last().equals(address)) {
+                    onSelect = { selectedAddressId = address.id })
+                if (!addresses.last().equals(address)) {
                     HorizontalDivider(
                         modifier = Modifier.padding(vertical = 8.dp),
                         thickness = 1.dp,
@@ -140,21 +135,19 @@ fun AddressScreen(
 
 @Composable
 fun AddressItem(
-    address: SavedAddress,
-    isSelected: Boolean,
-    onSelect: () -> Unit
+    address: SavedAddress, isSelected: Boolean, onSelect: () -> Unit
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onSelect() }
-            .padding(vertical = 12.dp),
-        verticalAlignment = Alignment.Top
-    ) {
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .clickable { onSelect() }
+        .padding(vertical = 12.dp),
+        verticalAlignment = Alignment.Top) {
         Icon(
             painter = painterResource(R.drawable.location),
             contentDescription = "Location",
-            modifier = Modifier.padding(top=6.dp).size(24.dp),
+            modifier = Modifier
+                .padding(top = 6.dp)
+                .size(24.dp),
             tint = Color.Black
         )
         Spacer(modifier = Modifier.width(12.dp))
@@ -167,32 +160,23 @@ fun AddressItem(
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = address.address,
-                fontSize = 13.sp,
-                color = TextDarkGray,
-                lineHeight = 18.sp
+                text = address.address, fontSize = 13.sp, color = TextDarkGray, lineHeight = 18.sp
             )
             Spacer(modifier = Modifier.height(4.dp))
             Row {
                 Text(
-                    text = "Pin : ",
-                    fontSize = 13.sp,
-                    color = TextGray
+                    text = "Pin : ", fontSize = 13.sp, color = TextGray
                 )
                 Text(
-                    text = address.pin,
-                    fontSize = 13.sp,
-                    color = Color.Black
+                    text = address.pin, fontSize = 13.sp, color = Color.Black
                 )
             }
         }
         RadioButton(
-            selected = isSelected,
-            onClick = onSelect,
-            colors = RadioButtonDefaults.colors(
-                selectedColor = Color.Black,
-                unselectedColor = BorderColour
-            )
+            selected = isSelected, onClick = onSelect, colors = RadioButtonDefaults.colors(
+                selectedColor = Color.Black, unselectedColor = BorderColour
+            ),
+            modifier = Modifier.align(Alignment.CenterVertically)
         )
     }
 }
@@ -205,12 +189,9 @@ fun AddAddressButton(onClick: () -> Unit) {
             .height(56.dp)
             .background(Color(0xfff0f0f0), RoundedCornerShape(28.dp))
             .dashedBorder(
-                width = 1.dp,
-                color = BGBlack.copy(alpha = 0.5f),
-                cornerRadius = 28.dp
+                width = 1.dp, color = BGBlack.copy(alpha = 0.5f), cornerRadius = 28.dp
             )
-            .clickable { onClick() },
-        contentAlignment = Alignment.Center
+            .clickable { onClick() }, contentAlignment = Alignment.Center
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
@@ -266,9 +247,7 @@ private fun EstimatedDeliveryRow(dateText: String) {
 
 @SuppressLint("UnnecessaryComposedModifier")
 fun Modifier.dashedBorder(
-    width: Dp,
-    color: Color,
-    cornerRadius: Dp
+    width: Dp, color: Color, cornerRadius: Dp
 ) = composed {
     val density = LocalDensity.current
     val strokeWidthPx = with(density) { width.toPx() }
@@ -276,12 +255,10 @@ fun Modifier.dashedBorder(
 
     drawBehind {
         drawRoundRect(
-            color = color,
-            style = Stroke(
+            color = color, style = Stroke(
                 width = strokeWidthPx,
                 pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
-            ),
-            cornerRadius = CornerRadius(cornerRadiusPx, cornerRadiusPx)
+            ), cornerRadius = CornerRadius(cornerRadiusPx, cornerRadiusPx)
         )
     }
 }

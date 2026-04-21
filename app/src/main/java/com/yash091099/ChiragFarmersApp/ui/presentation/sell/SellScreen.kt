@@ -138,7 +138,7 @@ fun SellScreen(
 
             Spacer(modifier = Modifier.padding(8.dp))
 
-            val tabs = listOf("Active Produces", "Products Sold Out", "Active Orders")
+            val tabs = listOf("Live Products", "Sold Out", "Orders")
 
             TabRow(
                 selectedTabIndex = pagerState.currentPage,

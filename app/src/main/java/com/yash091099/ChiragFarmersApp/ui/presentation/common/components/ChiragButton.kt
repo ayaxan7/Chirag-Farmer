@@ -25,6 +25,7 @@ fun ChiragButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    shape: RoundedCornerShape = RoundedCornerShape(8.dp),
     containerColor: Color = BGBlack,
     contentColor: Color = Color.White,
     disabledContainerColor: Color = BGBlack.copy(alpha = 0.4f),
@@ -36,7 +37,7 @@ fun ChiragButton(
             .fillMaxWidth()
             .height(56.dp),
         enabled = enabled,
-        shape = RoundedCornerShape(8.dp),
+        shape = shape,
         colors = ButtonDefaults.buttonColors(
             containerColor = containerColor,
             contentColor = contentColor,
