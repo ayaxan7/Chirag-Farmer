@@ -25,6 +25,7 @@ sealed class Route(val path: String) {
             }
         }
     }
+    object Address:Route("address")
     object Notifications:Route("notifications")
     object SellCategories:Route("sell_categories")
     object AssistImage:Route("assist_image")

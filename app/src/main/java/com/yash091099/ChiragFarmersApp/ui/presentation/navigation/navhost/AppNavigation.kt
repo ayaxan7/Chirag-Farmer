@@ -32,6 +32,7 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.buy.screens.details.Produ
 import com.yash091099.ChiragFarmersApp.ui.presentation.buy.screens.details.ProductDetailsViewModel
 import com.yash091099.ChiragFarmersApp.ui.presentation.cart.CartScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.cart.CartViewModel
+import com.yash091099.ChiragFarmersApp.ui.presentation.cart.address.AddressScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.home.screens.SearchScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.home.screens.notifications.NotificationsScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.SellScreen
@@ -51,8 +52,8 @@ fun AppNavigation(
 
     // Determine start destination based on auth token
     val startDestination = if (authToken != null && authToken!!.isNotEmpty()) {
-        Route.Home.path
-//        Route.ProductDetails.path
+//        Route.Home.path
+        Route.Address.path
     } else {
         Route.Auth.path
     }
@@ -105,6 +106,9 @@ fun AppNavigation(
         }
         composable(Route.SellCategories.path) {
             SellCategoriesScreen(navController = navController)
+        }
+        composable(Route.Address.path){
+            AddressScreen(navController = navController)
         }
         composable(Route.Assist.path) {
             AssistScreen(navController = navController)
