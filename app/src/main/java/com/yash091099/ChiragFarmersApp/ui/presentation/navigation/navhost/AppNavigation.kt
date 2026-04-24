@@ -111,7 +111,7 @@ fun AppNavigation(
         composable(Route.AddressList.path){
             AddressScreen(navController = navController, onAddAddressClick = {
                 navController.navigate(Route.AddressMap.path){
-                    popUpTo(Route.AddressList.path){
+                    popUpTo(Route.AddressMap.path){
                         inclusive=true
                     }
                 }

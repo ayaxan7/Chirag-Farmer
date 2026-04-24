@@ -16,9 +16,18 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.filled.Apartment
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material.icons.filled.Schedule
+import androidx.compose.material.icons.filled.Work
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -26,6 +35,8 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -40,6 +51,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -63,15 +75,29 @@ fun AddressMapScreen(
     onChangeAddressClick: () -> Unit = {},
     onAddMoreDetailsClick: () -> Unit = {}
 ) {
-    val sheetState = rememberModalBottomSheetState()
-    var showBottomSheet by remember { mutableStateOf(false) }
+    var showLocationSelectionSheet by remember { mutableStateOf(false) }
+    var showAddressDetailsSheet by remember { mutableStateOf(false) }
 
-    if (showBottomSheet) {
+    if (showLocationSelectionSheet) {
         LocationSelectionBottomSheet(
-            onDismissRequest = { showBottomSheet = false },
+            onDismissRequest = { showLocationSelectionSheet = false },
             onLocationSelected = { address ->
                 // Handle address selection
-                showBottomSheet = false
+                showLocationSelectionSheet = false
+            }
+        )
+    }
+
+    if (showAddressDetailsSheet) {
+        AddressDetailsBottomSheet(
+            onDismissRequest = { showAddressDetailsSheet = false },
+            onConfirmClick = {
+                showAddressDetailsSheet = false
+                // Handle address confirmation
+            },
+            onChangeLocationClick = {
+                showAddressDetailsSheet = false
+                showLocationSelectionSheet = true
             }
         )
     }
@@ -147,8 +173,7 @@ fun AddressMapScreen(
                 AddressDetailCard(
                     type = "Home",
                     address = "45 Lake View Colony, Banjara Hills, Hyderabad, Telangana",
-                    onChangeClick ={
-                        showBottomSheet = true}
+                    onChangeClick = { showLocationSelectionSheet = true }
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
@@ -156,6 +181,7 @@ fun AddressMapScreen(
                 ChiragButton(
                     text = "Add more address details",
                     onClick = {
+                        showAddressDetailsSheet = true
                         onAddMoreDetailsClick()
                     },
                     modifier = Modifier.fillMaxWidth()
@@ -486,6 +512,241 @@ fun RecentLocationItem(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AddressDetailsBottomSheet(
+    onDismissRequest: () -> Unit,
+    onConfirmClick: () -> Unit,
+    onChangeLocationClick: () -> Unit
+) {
+    ModalBottomSheet(
+        onDismissRequest = onDismissRequest,
+        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+        containerColor = Color.White,
+        dragHandle = null,
+        shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.9f)
+        ) {
+            // Scrollable Form Content
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                Spacer(modifier = Modifier.height(16.dp))
+                
+                // Header
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Enter address details",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
+                    )
+                    IconButton(onClick = onDismissRequest) {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = "Close",
+                            tint = Color.Black
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Receiver's Name
+                AddressInputField(
+                    label = "Receiver's name",
+                    value = "Nazmathulla Syed",
+                    onValueChange = {}
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Receiver's Contact
+                AddressInputField(
+                    label = "Receiver's contact",
+                    value = "+91 733********",
+                    onValueChange = {}
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                // Address Category Chips
+                val categories = listOf(
+                    "Home" to Icons.Default.Home,
+                    "Work" to Icons.Default.Work,
+                    "Hotel" to Icons.Default.Apartment,
+                    "Other" to Icons.Default.LocationOn
+                )
+                var selectedCategory by remember { mutableStateOf("Home") }
+
+                LazyRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    items(categories) { (name, icon) ->
+                        AddressTypeChip(
+                            name = name,
+                            icon = icon,
+                            isSelected = selectedCategory == name,
+                            onClick = { selectedCategory = name }
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                // Current Address Summary
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .border(1.dp, Color(0xFFE0E0E0), RoundedCornerShape(8.dp))
+                        .padding(12.dp)
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = "45 Lake View Colony, Banjara Hills, Hyderabad, Telangana.",
+                            modifier = Modifier.weight(1f),
+                            fontSize = 13.sp,
+                            color = Color.Gray,
+                            lineHeight = 18.sp
+                        )
+                        Text(
+                            text = "change",
+                            color = Color.Black,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium,
+                            modifier = Modifier.clickable { onChangeLocationClick() }
+                        )
+                    }
+                }
+                
+                Text(
+                    text = "Update based on your exact map Pin",
+                    fontSize = 11.sp,
+                    color = Color.Gray,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                // Additional Form Fields
+                AddressInputField(
+                    label = "Complete Address",
+                    placeholder = "Enter Complete Address",
+                    onValueChange = {}
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                AddressInputField(
+                    label = "Floor",
+                    placeholder = "Floor Number",
+                    onValueChange = {}
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                AddressInputField(
+                    label = "Landmark",
+                    placeholder = "Enter Landmark",
+                    onValueChange = {}
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+            }
+
+            // Sticky Footer for Confirm Button
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                ChiragButton(
+                    text = "Confirm address",
+                    onClick = onConfirmClick,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+        }
+    }
+}
+
+@Composable
+fun AddressInputField(
+    label: String,
+    value: String = "",
+    placeholder: String = "",
+    onValueChange: (String) -> Unit
+) {
+    Column {
+        Text(
+            text = label,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+        OutlinedTextField(
+            value = value,
+            onValueChange = onValueChange,
+            modifier = Modifier.fillMaxWidth(),
+            placeholder = { Text(text = placeholder, color = Color.Gray, fontSize = 14.sp) },
+            shape = RoundedCornerShape(8.dp),
+            colors = OutlinedTextFieldDefaults.colors(
+                unfocusedBorderColor = Color(0xFFE0E0E0),
+                focusedBorderColor = Color.Black,
+                cursorColor = Color.Black
+            ),
+            singleLine = true
+        )
+    }
+}
+
+@Composable
+fun AddressTypeChip(
+    name: String,
+    icon: ImageVector,
+    isSelected: Boolean,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .shadow(if (isSelected) 2.dp else 0.dp, RoundedCornerShape(8.dp))
+            .background(if (isSelected) Color.Black else Color.White, RoundedCornerShape(8.dp))
+            .border(1.dp, if (isSelected) Color.Black else Color(0xFFE0E0E0), RoundedCornerShape(8.dp))
+            .clickable { onClick() }
+            .padding(horizontal = 12.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = if (isSelected) Color.White else Color.Black,
+            modifier = Modifier.size(18.dp)
+        )
+        Spacer(modifier = Modifier.width(6.dp))
+        Text(
+            text = name,
+            color = if (isSelected) Color.White else Color.Black,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Medium
+        )
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun AddressMapScreenPreview() {
@@ -499,5 +760,13 @@ fun AddressMapScreenPreview() {
 fun LocationSelectionBottomSheetPreview() {
     ChiragFarmerTheme {
         LocationSelectionBottomSheet(onDismissRequest = {}, onLocationSelected = {})
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun AddressDetailsBottomSheetPreview() {
+    ChiragFarmerTheme {
+        AddressDetailsBottomSheet(onDismissRequest = {}, onConfirmClick = {}, onChangeLocationClick = {})
     }
 }
