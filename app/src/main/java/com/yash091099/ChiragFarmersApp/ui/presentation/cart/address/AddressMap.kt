@@ -16,13 +16,25 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MyLocation
+import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,6 +55,7 @@ import com.yash091099.ChiragFarmersApp.ui.theme.BorderColour
 import com.yash091099.ChiragFarmersApp.ui.theme.ChiragFarmerTheme
 import com.yash091099.ChiragFarmersApp.ui.theme.TextDarkGray
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddressMapScreen(
     navController: NavHostController,
@@ -50,6 +63,19 @@ fun AddressMapScreen(
     onChangeAddressClick: () -> Unit = {},
     onAddMoreDetailsClick: () -> Unit = {}
 ) {
+    val sheetState = rememberModalBottomSheetState()
+    var showBottomSheet by remember { mutableStateOf(false) }
+
+    if (showBottomSheet) {
+        LocationSelectionBottomSheet(
+            onDismissRequest = { showBottomSheet = false },
+            onLocationSelected = { address ->
+                // Handle address selection
+                showBottomSheet = false
+            }
+        )
+    }
+
     Scaffold(
         topBar = {
             ChiragTopBar(
@@ -121,14 +147,17 @@ fun AddressMapScreen(
                 AddressDetailCard(
                     type = "Home",
                     address = "45 Lake View Colony, Banjara Hills, Hyderabad, Telangana",
-                    onChangeClick = onChangeAddressClick
+                    onChangeClick ={
+                        showBottomSheet = true}
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
 
                 ChiragButton(
                     text = "Add more address details",
-                    onClick = onAddMoreDetailsClick,
+                    onClick = {
+                        onAddMoreDetailsClick()
+                    },
                     modifier = Modifier.fillMaxWidth()
                 )
                 
@@ -184,11 +213,11 @@ fun SearchBarOverlay(modifier: Modifier = Modifier) {
 fun UseCurrentLocationButton(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
-            .shadow(4.dp, RoundedCornerShape(8.dp))
-            .background(Color.White, RoundedCornerShape(8.dp))
-            .border(1.dp, Color.Black, RoundedCornerShape(8.dp))
+            .shadow(4.dp, RoundedCornerShape(14.dp))
+            .background(Color.White, RoundedCornerShape(14.dp))
+            .border(1.dp, Color.Black, RoundedCornerShape(14.dp))
             .clickable { /* Handle current location */ }
-            .padding(horizontal = 16.dp, vertical = 10.dp)
+            .padding(horizontal = 12.dp, vertical = 8.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
@@ -212,7 +241,7 @@ fun UseCurrentLocationButton(modifier: Modifier = Modifier) {
 fun AddressDetailCard(
     type: String,
     address: String,
-    onChangeClick: () -> Unit
+    onChangeClick: () -> Unit={}
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -256,10 +285,219 @@ fun AddressDetailCard(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun LocationSelectionBottomSheet(
+    onDismissRequest: () -> Unit,
+    onLocationSelected: (String) -> Unit
+) {
+    ModalBottomSheet(
+        onDismissRequest = onDismissRequest,
+        sheetState = rememberModalBottomSheetState(),
+        containerColor = Color(0xFFF7F8FA),
+        dragHandle = null,
+        shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .padding(top = 16.dp, bottom = 32.dp)
+        ) {
+            // Header
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Select a location",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
+                IconButton(onClick = onDismissRequest) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Close",
+                        tint = Color.Black
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Search Bar
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
+                    .background(Color.White, RoundedCornerShape(12.dp))
+                    .border(1.dp, Color(0xFFE0E0E0), RoundedCornerShape(12.dp))
+                    .padding(horizontal = 16.dp),
+                contentAlignment = Alignment.CenterStart
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_search),
+                        contentDescription = null,
+                        tint = Color.Black,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Text(
+                        text = "Search For area, street name.....",
+                        color = Color.Gray,
+                        fontSize = 14.sp
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // Use Current Location Item
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onLocationSelected("45 Lake View Colony, Banjara Hills, Hyderabad, Telangana") },
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.White),
+                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+            ) {
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.MyLocation,
+                        contentDescription = null,
+                        tint = Color.Black,
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Column {
+                        Text(
+                            text = "Use Current Location",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp,
+                            color = Color.Black
+                        )
+                        Text(
+                            text = "45 Lake View Colony, Banjara Hills, Hyderabad, Telangana",
+                            fontSize = 13.sp,
+                            color = Color.Gray,
+                            lineHeight = 18.sp
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Recent Locations Divider
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                HorizontalDivider(modifier = Modifier.weight(1f), color = Color(0xFFE0E0E0))
+                Text(
+                    text = "RECENT LOCATIONS",
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color.Gray,
+                    letterSpacing = 1.sp
+                )
+                HorizontalDivider(modifier = Modifier.weight(1f), color = Color(0xFFE0E0E0))
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Recent Location Items
+            RecentLocationItem(
+                title = "Home",
+                address = "Beside Madinna masid 45 Lake View Colony, Banjara Hills, Hyderabad, Telangana.",
+                distance = "0 M",
+                onClick = { onLocationSelected("Beside Madinna masid 45 Lake View Colony, Banjara Hills, Hyderabad, Telangana.") }
+            )
+            
+            // Add more random locations as requested
+            RecentLocationItem(
+                title = "Office",
+                address = "Level 5, Cyber Towers, HITEC City, Hyderabad, Telangana.",
+                distance = "5.2 KM",
+                onClick = { onLocationSelected("Level 5, Cyber Towers, HITEC City, Hyderabad, Telangana.") }
+            )
+        }
+    }
+}
+
+@Composable
+fun RecentLocationItem(
+    title: String,
+    address: String,
+    distance: String,
+    onClick: () -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+            .clickable { onClick() },
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.Top
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Icon(
+                    imageVector = Icons.Default.Schedule,
+                    contentDescription = null,
+                    tint = Color.Black,
+                    modifier = Modifier.size(24.dp)
+                )
+                Text(
+                    text = distance,
+                    fontSize = 10.sp,
+                    color = Color.Black,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+            Column {
+                Text(
+                    text = title,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 15.sp,
+                    color = Color.Black
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = address,
+                    fontSize = 13.sp,
+                    color = Color.Gray,
+                    lineHeight = 18.sp
+                )
+            }
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun AddressMapScreenPreview() {
     ChiragFarmerTheme {
         AddressMapScreen(navController = rememberNavController())
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun LocationSelectionBottomSheetPreview() {
+    ChiragFarmerTheme {
+        LocationSelectionBottomSheet(onDismissRequest = {}, onLocationSelected = {})
     }
 }
