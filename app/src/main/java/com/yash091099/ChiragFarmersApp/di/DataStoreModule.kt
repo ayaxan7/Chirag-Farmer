@@ -1,7 +1,7 @@
 package com.yash091099.ChiragFarmersApp.di
 
 import android.content.Context
-import com.yash091099.ChiragFarmersApp.data.local.AuthDataStore
+import com.yash091099.ChiragFarmersApp.data.local.ChiragDataStore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,7 +17,7 @@ object DataStoreModule {
     @Singleton
     fun provideAuthDataStore(
         @ApplicationContext context: Context
-    ): AuthDataStore {
-        return AuthDataStore(context)
+    ): ChiragDataStore {
+        return ChiragDataStore(context)
     }
 }

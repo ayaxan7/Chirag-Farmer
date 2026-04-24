@@ -1,6 +1,6 @@
 package com.yash091099.ChiragFarmersApp.di
 
-import com.yash091099.ChiragFarmersApp.data.local.AuthDataStore
+import com.yash091099.ChiragFarmersApp.data.local.ChiragDataStore
 import com.yash091099.ChiragFarmersApp.data.remote.AuthApiService
 import com.yash091099.ChiragFarmersApp.data.remote.CartApiService
 import com.yash091099.ChiragFarmersApp.data.remote.ProductApiService
@@ -22,7 +22,7 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideAuthRepository(
-        api: AuthApiService, dataStore: AuthDataStore
+        api: AuthApiService, dataStore: ChiragDataStore
     ): AuthRepository {
         return AuthRepository(api, dataStore)
     }
@@ -30,16 +30,16 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideProductRepository(
-        api: ProductApiService, authDataStore: AuthDataStore
+        api: ProductApiService, chiragDataStore: ChiragDataStore
     ): ProductRepository {
-        return ProductRepositoryImpl(api, authDataStore)
+        return ProductRepositoryImpl(api, chiragDataStore)
     }
 
     @Provides
     @Singleton
     fun provideCartRepository(
-        api: CartApiService, authDataStore: AuthDataStore
+        api: CartApiService, chiragDataStore: ChiragDataStore
     ): CartRepository {
-        return CartRepositoryImpl(api, authDataStore)
+        return CartRepositoryImpl(api, chiragDataStore)
     }
 }

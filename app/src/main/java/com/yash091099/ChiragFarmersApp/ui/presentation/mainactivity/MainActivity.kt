@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
-import com.yash091099.ChiragFarmersApp.data.local.AuthDataStore
+import com.yash091099.ChiragFarmersApp.data.local.ChiragDataStore
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragFarmerApp
 import com.yash091099.ChiragFarmersApp.ui.theme.ChiragFarmerTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         // Log auth token and user data from DataStore
-        val dataStore = AuthDataStore(this)
+        val dataStore = ChiragDataStore(this)
         lifecycleScope.launch {
             val token = dataStore.getAuthToken().first()
             val userRole = dataStore.getUserRole().first()

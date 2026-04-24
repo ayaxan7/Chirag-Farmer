@@ -3,7 +3,7 @@ package com.yash091099.ChiragFarmersApp.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.yash091099.ChiragFarmersApp.data.local.AuthDataStore
+import com.yash091099.ChiragFarmersApp.data.local.ChiragDataStore
 import com.yash091099.ChiragFarmersApp.data.paging.AllProductsPagingSource
 import com.yash091099.ChiragFarmersApp.data.paging.ProductPagingSource
 import com.yash091099.ChiragFarmersApp.data.paging.SmartFarmingPagingSource
@@ -24,12 +24,12 @@ import kotlinx.coroutines.flow.flatMapLatest
 import javax.inject.Inject
 
 class ProductRepositoryImpl @Inject constructor(
-    private val apiService: ProductApiService, private val authDataStore: AuthDataStore
+    private val apiService: ProductApiService, private val chiragDataStore: ChiragDataStore
 ) : ProductRepository {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun getFarmerProducts(type: String, search: String?): Flow<PagingData<Product>> {
-        return authDataStore.getAuthToken().flatMapLatest { token ->
+        return chiragDataStore.getAuthToken().flatMapLatest { token ->
             Pager(
                 config = PagingConfig(
                     pageSize = 10,
@@ -46,7 +46,7 @@ class ProductRepositoryImpl @Inject constructor(
     override fun getAllProducts(
         category: String, subcategory: String?
     ): Flow<PagingData<Product>> {
-        return authDataStore.getAuthToken().flatMapLatest { token ->
+        return chiragDataStore.getAuthToken().flatMapLatest { token ->
             Pager(
                 config = PagingConfig(
                     pageSize = 10,
@@ -68,7 +68,7 @@ class ProductRepositoryImpl @Inject constructor(
     override fun getSmartFarmingProducts(
         category: String, subcategory: String?
     ): Flow<PagingData<Product>> {
-        return authDataStore.getAuthToken().flatMapLatest { token ->
+        return chiragDataStore.getAuthToken().flatMapLatest { token ->
             Pager(
                 config = PagingConfig(
                     pageSize = 10,
@@ -88,7 +88,7 @@ class ProductRepositoryImpl @Inject constructor(
 
     override suspend fun getMixedProducts(): Result<MixedProductsData> {
         return try {
-            val token = authDataStore.getAuthToken().first()
+            val token = chiragDataStore.getAuthToken().first()
             if (token.isNullOrEmpty()) {
                 return Result.failure(Exception("Authentication token not found"))
             }
@@ -106,7 +106,7 @@ class ProductRepositoryImpl @Inject constructor(
 
     override suspend fun getMixedProductsForHomeScreen(): Result<MixedProductsData> {
         return try {
-            val token = authDataStore.getAuthToken().first()
+            val token = chiragDataStore.getAuthToken().first()
             if (token.isNullOrEmpty()) {
                 return Result.failure(Exception("Authentication token not found"))
             }
@@ -124,7 +124,7 @@ class ProductRepositoryImpl @Inject constructor(
 
     override suspend fun getProductDetails(productId: String): Result<ProductDetailsData> {
         return try {
-            val token = authDataStore.getAuthToken().first()
+            val token = chiragDataStore.getAuthToken().first()
             if (token.isNullOrEmpty()) {
                 return Result.failure(Exception("Authentication token not found"))
             }
@@ -142,7 +142,7 @@ class ProductRepositoryImpl @Inject constructor(
 
     override suspend fun getProductDetailsDetailed(productId: String): Result<ProductDetailedData> {
         return try {
-            val token = authDataStore.getAuthToken().first()
+            val token = chiragDataStore.getAuthToken().first()
             if (token.isNullOrEmpty()) {
                 return Result.failure(Exception("Authentication token not found"))
             }
@@ -160,7 +160,7 @@ class ProductRepositoryImpl @Inject constructor(
 
     override suspend fun addProduct(request: AddProductRequest): Result<String> {
         return try {
-            val token = authDataStore.getAuthToken().first()
+            val token = chiragDataStore.getAuthToken().first()
             if (token.isNullOrEmpty()) {
                 return Result.failure(Exception("Authentication token not found"))
             }
@@ -178,7 +178,7 @@ class ProductRepositoryImpl @Inject constructor(
 
     override suspend fun updateProduct(request: UpdateProductRequest): Result<Unit> {
         return try {
-            val token = authDataStore.getAuthToken().first()
+            val token = chiragDataStore.getAuthToken().first()
             if (token.isNullOrEmpty()) {
                 return Result.failure(Exception("Authentication token not found"))
             }
@@ -196,7 +196,7 @@ class ProductRepositoryImpl @Inject constructor(
 
     override suspend fun toggleSoldOut(productId: String): Result<Boolean> {
         return try {
-            val token = authDataStore.getAuthToken().first()
+            val token = chiragDataStore.getAuthToken().first()
             if (token.isNullOrEmpty()) {
                 return Result.failure(Exception("Authentication token not found"))
             }
@@ -217,7 +217,7 @@ class ProductRepositoryImpl @Inject constructor(
 
     override suspend fun deleteProduct(productId: String): Result<Unit> {
         return try {
-            val token = authDataStore.getAuthToken().first()
+            val token = chiragDataStore.getAuthToken().first()
             if (token.isNullOrEmpty()) {
                 return Result.failure(Exception("Authentication token not found"))
             }

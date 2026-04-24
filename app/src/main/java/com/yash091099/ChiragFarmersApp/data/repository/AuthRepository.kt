@@ -1,6 +1,7 @@
 package com.yash091099.ChiragFarmersApp.data.repository
 
-import com.yash091099.ChiragFarmersApp.data.local.AuthDataStore
+import com.google.gson.Gson
+import com.yash091099.ChiragFarmersApp.data.local.ChiragDataStore
 import com.yash091099.ChiragFarmersApp.data.model.auth.AddBusinessInfoRequest
 import com.yash091099.ChiragFarmersApp.data.model.auth.AuthResponse
 import com.yash091099.ChiragFarmersApp.data.model.auth.RegisterRequest
@@ -10,13 +11,15 @@ import com.yash091099.ChiragFarmersApp.data.model.auth.UserDetailsData
 import com.yash091099.ChiragFarmersApp.data.model.auth.VerifyOTPData
 import com.yash091099.ChiragFarmersApp.data.model.auth.VerifyOTPRequest
 import com.yash091099.ChiragFarmersApp.data.remote.AuthApiService
+import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateDefaultLocationRequest
+import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateDefaultLocationResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class AuthRepository @Inject constructor(
     private val apiService: AuthApiService,
-    private val authDataStore: AuthDataStore
+    private val chiragDataStore: ChiragDataStore
 ) {
 
     suspend fun sendLoginOTP(phone: String): Result<AuthResponse<SendOTPData>> {
@@ -52,8 +55,8 @@ class AuthRepository @Inject constructor(
             if (response.success && response.data?.verified == true) {
                 response.data.token?.let { token ->
                     response.data.user?.let { user ->
-                        authDataStore.saveUserSession(token, user.id, user.phone, user.role)
-                        authDataStore.saveProfileStatus(false)
+                        chiragDataStore.saveUserSession(token, user.id, user.phone, user.role)
+                        chiragDataStore.saveProfileStatus(false)
                     }
                 }
             }
@@ -79,9 +82,9 @@ class AuthRepository @Inject constructor(
             if (response.success && response.data?.verified == true) {
                 response.data.token?.let { token ->
                     response.data.user?.let { user ->
-                        authDataStore.saveUserSession(token, user.id, user.phone, user.role)
+                        chiragDataStore.saveUserSession(token, user.id, user.phone, user.role)
                         // Reset profile status to false on registration, will be updated by API call
-                        authDataStore.saveProfileStatus(false)
+                        chiragDataStore.saveProfileStatus(false)
                     }
                 }
             }
@@ -93,16 +96,16 @@ class AuthRepository @Inject constructor(
     }
 
     fun getAuthToken(): Flow<String?> {
-        return authDataStore.getAuthToken()
+        return chiragDataStore.getAuthToken()
     }
 
     fun getUserRole(): Flow<String?> {
-        return authDataStore.getUserRole()
+        return chiragDataStore.getUserRole()
     }
 
     suspend fun getUserDetails(): Result<AuthResponse<UserDetailsData>> {
         return try {
-            val token = authDataStore.getAuthToken().first()
+            val token = chiragDataStore.getAuthToken().first()
             if (token.isNullOrEmpty()) {
                 return Result.failure(Exception("No authentication token found"))
             }
@@ -115,7 +118,7 @@ class AuthRepository @Inject constructor(
 
     suspend fun addBusinessInfo(request: AddBusinessInfoRequest): Result<AuthResponse<UserDetailsData>> {
         return try {
-            val token = authDataStore.getAuthToken().first()
+            val token = chiragDataStore.getAuthToken().first()
             if (token.isNullOrEmpty()) {
                 return Result.failure(Exception("No authentication token found"))
             }
@@ -128,7 +131,7 @@ class AuthRepository @Inject constructor(
 
     suspend fun checkProfileStatus(): Result<AuthResponse<Boolean>> {
         return try {
-            val token = authDataStore.getAuthToken().first()
+            val token = chiragDataStore.getAuthToken().first()
             if (token.isNullOrEmpty()) {
                 return Result.failure(Exception("No authentication token found"))
             }
@@ -136,7 +139,7 @@ class AuthRepository @Inject constructor(
 
             // Save profile status to DataStore
             if (response.success && response.data != null) {
-                authDataStore.saveProfileStatus(response.data)
+                chiragDataStore.saveProfileStatus(response.data)
             }
 
             Result.success(response)
@@ -146,11 +149,42 @@ class AuthRepository @Inject constructor(
     }
 
     fun getProfileStatus(): Flow<Boolean> {
-        return authDataStore.getProfileStatus()
+        return chiragDataStore.getProfileStatus()
     }
 
     suspend fun logout() {
-        authDataStore.clearAuthData()
+        chiragDataStore.clearAuthData()
+        chiragDataStore.saveLocationUpdatedOnLaunch(false)
+    }
+
+    suspend fun updateDefaultLocation(latitude: Double, longitude: Double): Result<UpdateDefaultLocationResponse> {
+        return try {
+            val token = chiragDataStore.getAuthToken().first()
+            if (token.isNullOrEmpty()) {
+                return Result.failure(Exception("No authentication token found"))
+            }
+            val request = UpdateDefaultLocationRequest(latitude = latitude, longitude = longitude)
+            val response = apiService.updateDefaultLocation("Bearer $token", request)
+
+            // Save the default location to DataStore if successful
+            if (response.success && response.data != null) {
+                val locationJson = Gson().toJson(response.data)
+                chiragDataStore.saveDefaultLocation(locationJson)
+                chiragDataStore.saveLocationUpdatedOnLaunch(true)
+            }
+
+            Result.success(response)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    fun getDefaultLocation(): Flow<String?> {
+        return chiragDataStore.getDefaultLocation()
+    }
+
+    fun getLocationUpdatedOnLaunch(): Flow<Boolean> {
+        return chiragDataStore.getLocationUpdatedOnLaunch()
     }
 }
 

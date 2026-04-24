@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.ProcessLifecycleOwner
-import com.yash091099.ChiragFarmersApp.data.local.AuthDataStore
+import com.yash091099.ChiragFarmersApp.data.local.ChiragDataStore
 import com.yash091099.ChiragFarmersApp.utils.Constants.CLOUDINARY_CLOUD_NAME
 import com.cloudinary.android.MediaManager
 import dagger.hilt.android.HiltAndroidApp
@@ -15,7 +15,7 @@ import javax.inject.Inject
 class ChiragFarmerApplication : Application() {
 
     @Inject
-    lateinit var authDataStore: AuthDataStore
+    lateinit var chiragDataStore: ChiragDataStore
 
     private val applicationScope = CoroutineScope(
         SupervisorJob() + Dispatchers.IO
@@ -36,7 +36,7 @@ class ChiragFarmerApplication : Application() {
             LifecycleEventObserver { _, event ->
                 if (event == Lifecycle.Event.ON_STOP) {
                     applicationScope.launch {
-                        authDataStore.clearProfileStatus()
+                        chiragDataStore.clearProfileStatus()
                     }
                 }
             }

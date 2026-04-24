@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.map
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "auth_preferences")
 
-class AuthDataStore(private val context: Context) {
+class ChiragDataStore(private val context: Context) {
 
     companion object {
         private val TOKEN_KEY = stringPreferencesKey("auth_token")
@@ -20,6 +20,8 @@ class AuthDataStore(private val context: Context) {
         private val USER_PHONE_KEY = stringPreferencesKey("user_phone")
         private val USER_ROLE_KEY = stringPreferencesKey("user_role")
         private val PROFILE_COMPLETE_KEY = booleanPreferencesKey("profile_complete")
+        private val DEFAULT_LOCATION_KEY = stringPreferencesKey("default_location")
+        private val LOCATION_UPDATED_ON_LAUNCH_KEY = booleanPreferencesKey("location_updated_on_launch")
     }
 
     suspend fun saveAuthToken(token: String) {
@@ -84,6 +86,30 @@ class AuthDataStore(private val context: Context) {
     suspend fun clearAuthData() {
         context.dataStore.edit { preferences ->
             preferences.clear()
+        }
+    }
+
+    suspend fun saveDefaultLocation(locationJson: String) {
+        context.dataStore.edit { preferences ->
+            preferences[DEFAULT_LOCATION_KEY] = locationJson
+        }
+    }
+
+    fun getDefaultLocation(): Flow<String?> {
+        return context.dataStore.data.map { preferences ->
+            preferences[DEFAULT_LOCATION_KEY]
+        }
+    }
+
+    suspend fun saveLocationUpdatedOnLaunch(updated: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[LOCATION_UPDATED_ON_LAUNCH_KEY] = updated
+        }
+    }
+
+    fun getLocationUpdatedOnLaunch(): Flow<Boolean> {
+        return context.dataStore.data.map { preferences ->
+            preferences[LOCATION_UPDATED_ON_LAUNCH_KEY] ?: false
         }
     }
 }

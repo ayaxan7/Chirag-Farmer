@@ -24,8 +24,8 @@ object BookingModule {
     @Singleton
     fun provideBookingRepository(
         apiService: BookingApiService,
-        authDataStore: com.yash091099.ChiragFarmersApp.data.local.AuthDataStore
+        chiragDataStore: com.yash091099.ChiragFarmersApp.data.local.ChiragDataStore
     ): BookingRepository {
-        return BookingRepositoryImpl(apiService, authDataStore)
+        return BookingRepositoryImpl(apiService, chiragDataStore)
     }
 }

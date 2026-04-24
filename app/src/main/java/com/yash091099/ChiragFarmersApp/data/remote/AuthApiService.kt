@@ -8,6 +8,8 @@ import com.yash091099.ChiragFarmersApp.data.model.auth.SendOTPRequest
 import com.yash091099.ChiragFarmersApp.data.model.auth.UserDetailsData
 import com.yash091099.ChiragFarmersApp.data.model.auth.VerifyOTPData
 import com.yash091099.ChiragFarmersApp.data.model.auth.VerifyOTPRequest
+import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateDefaultLocationRequest
+import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateDefaultLocationResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -50,5 +52,11 @@ interface AuthApiService {
     suspend fun checkProfileStatus(
         @Header("Authorization") authorization: String
     ): AuthResponse<Boolean>
+
+    @POST("api/farmers/update-default-location")
+    suspend fun updateDefaultLocation(
+        @Header("Authorization") authorization: String,
+        @Body request: UpdateDefaultLocationRequest
+    ): UpdateDefaultLocationResponse
 }
 

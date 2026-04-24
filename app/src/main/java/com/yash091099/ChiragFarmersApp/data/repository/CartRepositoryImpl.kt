@@ -1,6 +1,6 @@
 package com.yash091099.ChiragFarmersApp.data.repository
 
-import com.yash091099.ChiragFarmersApp.data.local.AuthDataStore
+import com.yash091099.ChiragFarmersApp.data.local.ChiragDataStore
 import com.yash091099.ChiragFarmersApp.data.remote.CartApiService
 import com.yash091099.ChiragFarmersApp.data.remote.dto.AddToCartRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.CartDataWrapper
@@ -13,12 +13,12 @@ import javax.inject.Inject
 
 class CartRepositoryImpl @Inject constructor(
     private val cartApiService: CartApiService,
-    private val authDataStore: AuthDataStore
+    private val chiragDataStore: ChiragDataStore
 ) : CartRepository {
 
     override suspend fun addToCart(productId: String): Result<Int> {
         return try {
-            val token = authDataStore.getAuthToken().first()
+            val token = chiragDataStore.getAuthToken().first()
             if (token.isNullOrEmpty()) {
                 return Result.failure(Exception("Authentication token not found"))
             }
@@ -40,7 +40,7 @@ class CartRepositoryImpl @Inject constructor(
 
     override suspend fun getCart(): Result<CartDataWrapper> {
         return try {
-            val token = authDataStore.getAuthToken().first()
+            val token = chiragDataStore.getAuthToken().first()
             if (token.isNullOrEmpty()) {
                 return Result.failure(Exception("Authentication token not found"))
             }
@@ -59,7 +59,7 @@ class CartRepositoryImpl @Inject constructor(
 
     override suspend fun updateQuantity(productId: String, action: String): Result<UpdateQuantityData> {
         return try {
-            val token = authDataStore.getAuthToken().first()
+            val token = chiragDataStore.getAuthToken().first()
             if (token.isNullOrEmpty()) {
                 return Result.failure(Exception("Authentication token not found"))
             }
@@ -81,7 +81,7 @@ class CartRepositoryImpl @Inject constructor(
 
     override suspend fun removeFromCart(productId: String): Result<Unit> {
         return try {
-            val token = authDataStore.getAuthToken().first()
+            val token = chiragDataStore.getAuthToken().first()
             if (token.isNullOrEmpty()) {
                 return Result.failure(Exception("Authentication token not found"))
             }

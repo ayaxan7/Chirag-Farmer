@@ -1,6 +1,6 @@
 package com.yash091099.ChiragFarmersApp.data.repository
 
-import com.yash091099.ChiragFarmersApp.data.local.AuthDataStore
+import com.yash091099.ChiragFarmersApp.data.local.ChiragDataStore
 import com.yash091099.ChiragFarmersApp.data.remote.BookingApiService
 import com.yash091099.ChiragFarmersApp.data.remote.dto.BookingRequestDto
 import com.yash091099.ChiragFarmersApp.domain.model.BookingRequest
@@ -10,12 +10,12 @@ import javax.inject.Inject
 
 class BookingRepositoryImpl @Inject constructor(
     private val apiService: BookingApiService,
-    private val authDataStore: AuthDataStore
+    private val chiragDataStore: ChiragDataStore
 ) : BookingRepository {
 
     override suspend fun createBooking(request: BookingRequest): Result<Unit> {
         return try {
-            val token = authDataStore.getAuthToken().first()
+            val token = chiragDataStore.getAuthToken().first()
             if (token.isNullOrEmpty()) {
                 return Result.failure(Exception("Not authenticated"))
             }

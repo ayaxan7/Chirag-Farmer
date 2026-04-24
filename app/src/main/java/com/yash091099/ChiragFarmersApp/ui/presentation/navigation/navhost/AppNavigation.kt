@@ -13,7 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.yash091099.ChiragFarmersApp.R
-import com.yash091099.ChiragFarmersApp.data.local.AuthDataStore
+import com.yash091099.ChiragFarmersApp.data.local.ChiragDataStore
 import com.yash091099.ChiragFarmersApp.ui.presentation.auth.common.screens.AuthScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.auth.common.screens.AuthViewModel
 import com.yash091099.ChiragFarmersApp.ui.presentation.auth.common.screens.OTPVerificationScreen
@@ -46,7 +46,7 @@ fun AppNavigation(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val dataStore = AuthDataStore(context = context)
+    val dataStore = ChiragDataStore(context = context)
 
     // Collect auth token from DataStore
     val authToken by dataStore.getAuthToken().collectAsState(initial = null)

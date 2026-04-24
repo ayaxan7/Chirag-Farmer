@@ -8,6 +8,7 @@ import com.yash091099.ChiragFarmersApp.data.repository.AuthRepository
 import com.yash091099.ChiragFarmersApp.domain.model.Location
 import com.yash091099.ChiragFarmersApp.domain.repository.ProductRepository
 import com.yash091099.ChiragFarmersApp.domain.usecase.GetLocationSuggestionsUseCase
+import com.yash091099.ChiragFarmersApp.domain.usecase.UpdateDefaultLocationUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -39,6 +40,7 @@ class HomeViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val getLocationSuggestionsUseCase: GetLocationSuggestionsUseCase,
     private val createBookingUseCase: CreateBookingUseCase,
+    private val updateDefaultLocationUseCase: UpdateDefaultLocationUseCase,
     private val productRepository: ProductRepository
 ) : ViewModel() {
 
@@ -83,6 +85,8 @@ class HomeViewModel @Inject constructor(
         fetchProfileStatus()
         // Load homescreen mixed products
         loadHomeMixedProducts()
+        // Update default location on app launch (only if not already updated in this session)
+        updateDefaultLocationOnAppLaunch()
     }
 
     fun fetchProfileStatus() {
@@ -233,6 +237,42 @@ class HomeViewModel @Inject constructor(
 
     suspend fun logout() {
         authRepository.logout()
+    }
+
+    private fun updateDefaultLocationOnAppLaunch() {
+        viewModelScope.launch {
+            try {
+                // Check if location was already updated on this app launch session
+                authRepository.getLocationUpdatedOnLaunch().collect { wasUpdated ->
+                    if (!wasUpdated) {
+                        // Get user's current GPS location
+                        // Note: For production, you would integrate with Location Services
+                        // For now, using default coordinates (New Delhi) as a fallback
+                        val latitude = 28.6139
+                        val longitude = 77.2090
+
+                        Log.d("HomeViewModel", "Updating default location on app launch with coordinates: $latitude, $longitude")
+
+                        // Call the API to update default location
+                        val result = updateDefaultLocationUseCase(latitude, longitude)
+                        result.fold(
+                            onSuccess = { response ->
+                                if (response.success) {
+                                    Log.d("HomeViewModel", "Default location updated successfully: ${response.message}")
+                                } else {
+                                    Log.w("HomeViewModel", "Failed to update default location: ${response.message}")
+                                }
+                            },
+                            onFailure = { exception ->
+                                Log.e("HomeViewModel", "Error updating default location: ${exception.message}")
+                            }
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("HomeViewModel", "Exception in updateDefaultLocationOnAppLaunch: ${e.message}")
+            }
+        }
     }
 }
 
