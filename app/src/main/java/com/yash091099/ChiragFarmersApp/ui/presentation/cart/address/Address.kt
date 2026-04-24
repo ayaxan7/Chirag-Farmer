@@ -1,6 +1,5 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.cart.address
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -32,16 +31,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.PathEffect
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -53,6 +45,7 @@ import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
 import com.yash091099.ChiragFarmersApp.ui.theme.BorderColour
 import com.yash091099.ChiragFarmersApp.ui.theme.TextDarkGray
 import com.yash091099.ChiragFarmersApp.ui.theme.TextGray
+import com.yash091099.ChiragFarmersApp.utils.dashedBorder
 
 data class SavedAddress(
     val id: String, val type: String, val address: String, val pin: String
@@ -175,8 +168,7 @@ fun AddressItem(
         RadioButton(
             selected = isSelected, onClick = onSelect, colors = RadioButtonDefaults.colors(
                 selectedColor = Color.Black, unselectedColor = BorderColour
-            ),
-            modifier = Modifier.align(Alignment.CenterVertically)
+            ), modifier = Modifier.align(Alignment.CenterVertically)
         )
     }
 }
@@ -245,20 +237,3 @@ private fun EstimatedDeliveryRow(dateText: String) {
     }
 }
 
-@SuppressLint("UnnecessaryComposedModifier")
-fun Modifier.dashedBorder(
-    width: Dp, color: Color, cornerRadius: Dp
-) = composed {
-    val density = LocalDensity.current
-    val strokeWidthPx = with(density) { width.toPx() }
-    val cornerRadiusPx = with(density) { cornerRadius.toPx() }
-
-    drawBehind {
-        drawRoundRect(
-            color = color, style = Stroke(
-                width = strokeWidthPx,
-                pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
-            ), cornerRadius = CornerRadius(cornerRadiusPx, cornerRadiusPx)
-        )
-    }
-}

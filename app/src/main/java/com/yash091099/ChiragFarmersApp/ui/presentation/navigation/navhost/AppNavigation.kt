@@ -32,6 +32,7 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.buy.screens.details.Produ
 import com.yash091099.ChiragFarmersApp.ui.presentation.buy.screens.details.ProductDetailsViewModel
 import com.yash091099.ChiragFarmersApp.ui.presentation.cart.CartScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.cart.CartViewModel
+import com.yash091099.ChiragFarmersApp.ui.presentation.cart.address.AddressMapScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.cart.address.AddressScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.home.screens.SearchScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.home.screens.notifications.NotificationsScreen
@@ -107,8 +108,14 @@ fun AppNavigation(
         composable(Route.SellCategories.path) {
             SellCategoriesScreen(navController = navController)
         }
-        composable(Route.Address.path){
-            AddressScreen(navController = navController)
+        composable(Route.AddressList.path){
+            AddressScreen(navController = navController, onContinueClick = {
+                navController.navigate(Route.AddressMap.path){
+                    popUpTo(Route.AddressList.path){
+                        inclusive=true
+                    }
+                }
+            })
         }
         composable(Route.Assist.path) {
             AssistScreen(navController = navController)
@@ -164,6 +171,9 @@ fun AppNavigation(
                 selectedCategory = selectedCategory,
                 viewModel = hiltViewModel()
             )
+        }
+        composable(Route.AddressMap.path){
+            AddressMapScreen(navController=navController)
         }
         composable(
             Route.ProductDetails.path, arguments = listOf(

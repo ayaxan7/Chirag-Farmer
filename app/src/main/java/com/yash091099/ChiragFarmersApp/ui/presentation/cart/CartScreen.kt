@@ -38,6 +38,7 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.cart.components.CartItemC
 import com.yash091099.ChiragFarmersApp.ui.presentation.cart.components.SwipeToRevealItem
 import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.ChiragButton
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragTopBar
+import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost.Route
 import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
 import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
 import com.yash091099.ChiragFarmersApp.ui.theme.BorderColour
@@ -307,7 +308,7 @@ fun CartScreen(
                         Spacer(modifier = Modifier.height(16.dp))
                         ChiragButton(
                             text = "Proceed to Checkout",
-                            onClick = { /* Handle checkout */ },
+                            onClick = { navController.navigate(Route.AddressList.path) },
                             modifier = Modifier
                                 .fillMaxWidth()
                         )
