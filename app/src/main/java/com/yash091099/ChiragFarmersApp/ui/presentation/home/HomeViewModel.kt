@@ -1,8 +1,15 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.home
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
 import android.util.Log
+import androidx.core.content.ContextCompat
+import dagger.hilt.android.qualifiers.ApplicationContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.yash091099.ChiragFarmersApp.data.remote.dto.MixedProductItem
 import com.yash091099.ChiragFarmersApp.data.repository.AuthRepository
 import com.yash091099.ChiragFarmersApp.domain.model.Location
@@ -14,6 +21,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import com.yash091099.ChiragFarmersApp.domain.model.BookingRequest
 import com.yash091099.ChiragFarmersApp.domain.usecase.CreateBookingUseCase
@@ -41,8 +49,12 @@ class HomeViewModel @Inject constructor(
     private val getLocationSuggestionsUseCase: GetLocationSuggestionsUseCase,
     private val createBookingUseCase: CreateBookingUseCase,
     private val updateDefaultLocationUseCase: UpdateDefaultLocationUseCase,
-    private val productRepository: ProductRepository
+    private val productRepository: ProductRepository,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
+
+    private val fusedLocationProviderClient: FusedLocationProviderClient =
+        LocationServices.getFusedLocationProviderClient(context)
 
     private val _isProfileComplete = MutableStateFlow(false)
     val isProfileComplete: StateFlow<Boolean> = _isProfileComplete.asStateFlow()
@@ -85,8 +97,6 @@ class HomeViewModel @Inject constructor(
         fetchProfileStatus()
         // Load homescreen mixed products
         loadHomeMixedProducts()
-        // Update default location on app launch (only if not already updated in this session)
-        updateDefaultLocationOnAppLaunch()
     }
 
     fun fetchProfileStatus() {
@@ -239,39 +249,71 @@ class HomeViewModel @Inject constructor(
         authRepository.logout()
     }
 
-    private fun updateDefaultLocationOnAppLaunch() {
+    // Called every time HomeScreen is displayed to update default location based on current GPS coordinates
+    fun updateDefaultLocationOnScreenOpen() {
         viewModelScope.launch {
             try {
-                // Check if location was already updated on this app launch session
-                authRepository.getLocationUpdatedOnLaunch().collect { wasUpdated ->
-                    if (!wasUpdated) {
-                        // Get user's current GPS location
-                        // Note: For production, you would integrate with Location Services
-                        // For now, using default coordinates (New Delhi) as a fallback
-                        val latitude = 28.6139
-                        val longitude = 77.2090
-
-                        Log.d("HomeViewModel", "Updating default location on app launch with coordinates: $latitude, $longitude")
-
-                        // Call the API to update default location
-                        val result = updateDefaultLocationUseCase(latitude, longitude)
-                        result.fold(
-                            onSuccess = { response ->
-                                if (response.success) {
-                                    Log.d("HomeViewModel", "Default location updated successfully: ${response.message}")
-                                } else {
-                                    Log.w("HomeViewModel", "Failed to update default location: ${response.message}")
-                                }
-                            },
-                            onFailure = { exception ->
-                                Log.e("HomeViewModel", "Error updating default location: ${exception.message}")
-                            }
-                        )
-                    }
-                }
+                // Get user's current GPS location
+                fetchCurrentLocationAndUpdateDefault()
             } catch (e: Exception) {
-                Log.e("HomeViewModel", "Exception in updateDefaultLocationOnAppLaunch: ${e.message}")
+                Log.e("HomeViewModel", "Exception in updateDefaultLocationOnScreenOpen: ${e.message}")
             }
+        }
+    }
+
+    private suspend fun fetchCurrentLocationAndUpdateDefault() {
+        try {
+            // Check location permissions
+            val hasLocationPermission = ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+
+            if (!hasLocationPermission) {
+                Log.w("HomeViewModel", "Location permission not granted")
+                // Use fallback coordinates if permission not granted
+                updateLocationWithCoordinates(28.6139, 77.2090, "fallback")
+                return
+            }
+
+            // Try to get current location from FusedLocationProviderClient
+            val location = fusedLocationProviderClient.lastLocation.await()
+
+            if (location != null) {
+                Log.d("HomeViewModel", "Current location obtained: ${location.latitude}, ${location.longitude}")
+                updateLocationWithCoordinates(location.latitude, location.longitude, "gps")
+            } else {
+                Log.w("HomeViewModel", "Location is null, using fallback coordinates")
+                // Use fallback coordinates if current location is unavailable
+                updateLocationWithCoordinates(28.6139, 77.2090, "fallback")
+            }
+        } catch (e: Exception) {
+            Log.e("HomeViewModel", "Error fetching current location: ${e.message}", e)
+            // Use fallback coordinates on error
+            updateLocationWithCoordinates(28.6139, 77.2090, "fallback")
+        }
+    }
+
+    private suspend fun updateLocationWithCoordinates(latitude: Double, longitude: Double, source: String) {
+        try {
+            Log.d("HomeViewModel", "Updating default location on app launch (source: $source) with coordinates: $latitude, $longitude")
+
+            // Call the API to update default location
+            val result = updateDefaultLocationUseCase(latitude, longitude)
+            result.fold(
+                onSuccess = { response ->
+                    if (response.success) {
+                        Log.d("HomeViewModel", "Default location updated successfully: ${response.message}")
+                    } else {
+                        Log.w("HomeViewModel", "Failed to update default location: ${response.message}")
+                    }
+                },
+                onFailure = { exception ->
+                    Log.e("HomeViewModel", "Error updating default location: ${exception.message}")
+                }
+            )
+        } catch (e: Exception) {
+            Log.e("HomeViewModel", "Exception in updateLocationWithCoordinates: ${e.message}")
         }
     }
 }

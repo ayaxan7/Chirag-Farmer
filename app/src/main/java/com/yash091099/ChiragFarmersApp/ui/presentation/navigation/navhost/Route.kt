@@ -3,6 +3,7 @@ package com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost
 import android.net.Uri
 
 sealed class Route(val path: String) {
+    object Splash : Route("splash")
     object Home : Route("home")
     object Assist : Route("assist")
     object Bookings : Route("bookings")

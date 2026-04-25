@@ -67,6 +67,11 @@ fun HomeScreen(
     )
     val bookingStatus by viewModel.bookingStatus.collectAsStateWithLifecycle()
 
+    // Update default location every time HomeScreen is displayed
+    LaunchedEffect(Unit) {
+        viewModel.updateDefaultLocationOnScreenOpen()
+    }
+
     LaunchedEffect(bookingStatus) {
         when (bookingStatus) {
             is BookingStatus.Success -> {

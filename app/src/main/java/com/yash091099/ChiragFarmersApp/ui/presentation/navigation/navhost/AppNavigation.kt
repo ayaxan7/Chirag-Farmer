@@ -2,8 +2,6 @@ package com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost
 
 import android.net.Uri
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -39,29 +37,21 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.home.screens.notification
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.SellScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.screens.sellcategories.SellCategoriesScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.screens.sellproduces.SellProducesScreen
+import com.yash091099.ChiragFarmersApp.ui.presentation.splash.SplashScreen
+import com.yash091099.ChiragFarmersApp.ui.presentation.splash.SplashScreen
 
 @Composable
 fun AppNavigation(
     navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
-    val dataStore = ChiragDataStore(context = context)
-
-    // Collect auth token from DataStore
-    val authToken by dataStore.getAuthToken().collectAsState(initial = null)
-
-    // Determine start destination based on auth token
-    val startDestination = if (authToken != null && authToken!!.isNotEmpty()) {
-        Route.Home.path
-//        Route.Address.path
-    } else {
-        Route.Auth.path
-    }
-
+    // Splash screen as initial destination - authentication logic is handled there
     NavHost(
-        modifier = modifier, startDestination = startDestination, navController = navController
+        modifier = modifier, startDestination = Route.Splash.path, navController = navController
     ) {
+        composable(Route.Splash.path) {
+            SplashScreen(navController = navController)
+        }
         composable(Route.Auth.path) {
             val viewModel: AuthViewModel = hiltViewModel()
             AuthScreen(
