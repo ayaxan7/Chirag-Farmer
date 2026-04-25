@@ -25,9 +25,15 @@ fun ChiragFarmerApp(navController: NavHostController, modifier: Modifier = Modif
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     val bottomBarState = rememberNavigationSuiteScaffoldState()
-    val showBottomBar = currentRoute in listOf(
+
+    // Define routes that should show the bottom navigation bar
+    val routesWithBottomBar = listOf(
         Route.Home.path, Route.Assist.path, Route.Bookings.path, Route.Buy.path, Route.Sell.path
     )
+
+    // Splash, Auth, and other unauthenticated screens should NOT show bottom bar
+    val showBottomBar = currentRoute in routesWithBottomBar
+
     LaunchedEffect(showBottomBar) {
         if (!showBottomBar) {
             bottomBarState.hide()
