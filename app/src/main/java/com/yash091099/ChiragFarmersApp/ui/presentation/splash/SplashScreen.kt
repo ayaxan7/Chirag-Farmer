@@ -1,5 +1,8 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.splash
 
+import android.Manifest
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -12,6 +15,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,7 +39,22 @@ fun SplashScreen(
 ) {
     val authCheckStatus by viewModel.authCheckStatus.collectAsStateWithLifecycle()
 
-    // Handle navigation based on auth check status
+    var showLocationPermissionDialog by remember { mutableStateOf(false) }
+    var showLocationPermissionMandatoryDialog by remember { mutableStateOf(false) }
+    var showLocationServiceDisabledDialog by remember { mutableStateOf(false) }
+
+    // Permission launcher
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            viewModel.onLocationPermissionGrantedByUser()
+        } else {
+            viewModel.onLocationPermissionDeniedByUser()
+        }
+    }
+
+    // Handle different auth check statuses
     LaunchedEffect(authCheckStatus) {
         when (authCheckStatus) {
             AuthCheckStatus.NavigateToHome -> {
@@ -46,8 +67,59 @@ fun SplashScreen(
                     popUpTo(Route.Splash.path) { inclusive = true }
                 }
             }
-            AuthCheckStatus.Loading -> {}
+            AuthCheckStatus.ShowLocationPermissionDialog -> {
+                showLocationPermissionDialog = true
+            }
+            AuthCheckStatus.ShowLocationPermissionMandatoryDialog -> {
+                showLocationPermissionMandatoryDialog = true
+            }
+            AuthCheckStatus.ShowLocationServiceDisabledDialog -> {
+                showLocationServiceDisabledDialog = true
+            }
+            else -> {}
         }
+    }
+
+    // Show location permission dialog
+    if (showLocationPermissionDialog) {
+        LocationPermissionDialog(
+            onPermissionGranted = {
+                showLocationPermissionDialog = false
+                permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            },
+            onPermissionDenied = {
+                showLocationPermissionDialog = false
+                viewModel.onLocationPermissionDeniedByUser()
+            }
+        )
+    }
+
+    // Show mandatory location permission dialog
+    if (showLocationPermissionMandatoryDialog) {
+        LocationPermissionMandatoryDialog(
+            onRetry = {
+                showLocationPermissionMandatoryDialog = false
+                permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            },
+            onCancel = {
+                showLocationPermissionMandatoryDialog = false
+                viewModel.onMandatoryPermissionDialogCancelled()
+            }
+        )
+    }
+
+    // Show location service disabled dialog
+    if (showLocationServiceDisabledDialog) {
+        LocationServiceDisabledDialog(
+            onGoToSettings = {
+                showLocationServiceDisabledDialog = false
+                viewModel.onUserReturnedFromSettings()
+            },
+            onCancel = {
+                showLocationServiceDisabledDialog = false
+                viewModel.onLocationServiceDialogCancelled()
+            }
+        )
     }
 
     Box(
@@ -60,28 +132,25 @@ fun SplashScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
-                painter = painterResource(R.drawable.app_icon),
-                contentDescription = null,
+                painter = painterResource(R.drawable.logo_with_text),
+                contentDescription = "Logo with text",
                 modifier = Modifier.height(100.dp)
             )
-//            Text(
-//                text = "Chirag Farmer",
-//                fontSize = 32.sp,
-//                fontWeight = FontWeight.Bold,
-//                color = Color.Black
-//            )
-//            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 //            CircularProgressIndicator(
 //                color = Color.Black,
 //                strokeWidth = 3.dp
 //            )
 //            Spacer(modifier = Modifier.height(24.dp))
 //            Text(
-//                text = "Checking authentication...",
+//                text = when (authCheckStatus) {
+//                    AuthCheckStatus.CheckingLocationPermission -> "Checking location permission..."
+//                    AuthCheckStatus.CheckingLocationService -> "Checking location service..."
+//                    else -> "Checking authentication..."
+//                },
 //                fontSize = 14.sp,
 //                color = Color.Gray
 //            )
         }
     }
 }
-

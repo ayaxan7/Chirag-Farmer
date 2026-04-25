@@ -1,15 +1,9 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.home
 
-import android.Manifest
-import android.content.Context
-import android.content.pm.PackageManager
 import android.util.Log
-import androidx.core.content.ContextCompat
-import dagger.hilt.android.qualifiers.ApplicationContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
+import com.yash091099.ChiragFarmersApp.data.location.LocationManager
 import com.yash091099.ChiragFarmersApp.data.remote.dto.MixedProductItem
 import com.yash091099.ChiragFarmersApp.data.repository.AuthRepository
 import com.yash091099.ChiragFarmersApp.domain.model.Location
@@ -21,7 +15,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import com.yash091099.ChiragFarmersApp.domain.model.BookingRequest
 import com.yash091099.ChiragFarmersApp.domain.usecase.CreateBookingUseCase
@@ -50,11 +43,9 @@ class HomeViewModel @Inject constructor(
     private val createBookingUseCase: CreateBookingUseCase,
     private val updateDefaultLocationUseCase: UpdateDefaultLocationUseCase,
     private val productRepository: ProductRepository,
-    @ApplicationContext private val context: Context
+    private val locationManager: LocationManager
 ) : ViewModel() {
 
-    private val fusedLocationProviderClient: FusedLocationProviderClient =
-        LocationServices.getFusedLocationProviderClient(context)
 
     private val _isProfileComplete = MutableStateFlow(false)
     val isProfileComplete: StateFlow<Boolean> = _isProfileComplete.asStateFlow()
@@ -263,40 +254,25 @@ class HomeViewModel @Inject constructor(
 
     private suspend fun fetchCurrentLocationAndUpdateDefault() {
         try {
-            // Check location permissions
-            val hasLocationPermission = ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
+            // Use LocationManager to get current location
+            val currentLocation = locationManager.getCurrentLocation()
 
-            if (!hasLocationPermission) {
-                Log.w("HomeViewModel", "Location permission not granted")
-                // Use fallback coordinates if permission not granted
-                updateLocationWithCoordinates(28.6139, 77.2090, "fallback")
-                return
-            }
-
-            // Try to get current location from FusedLocationProviderClient
-            val location = fusedLocationProviderClient.lastLocation.await()
-
-            if (location != null) {
-                Log.d("HomeViewModel", "Current location obtained: ${location.latitude}, ${location.longitude}")
-                updateLocationWithCoordinates(location.latitude, location.longitude, "gps")
+            if (currentLocation != null) {
+                val (latitude, longitude) = currentLocation
+                Log.d("HomeViewModel", "Current location obtained: $latitude, $longitude")
+                updateLocationWithCoordinates(latitude, longitude)
             } else {
-                Log.w("HomeViewModel", "Location is null, using fallback coordinates")
-                // Use fallback coordinates if current location is unavailable
-                updateLocationWithCoordinates(28.6139, 77.2090, "fallback")
+                Log.w("HomeViewModel", "Unable to get current location from device")
+                // Location unavailable - don't send any API request
             }
         } catch (e: Exception) {
             Log.e("HomeViewModel", "Error fetching current location: ${e.message}", e)
-            // Use fallback coordinates on error
-            updateLocationWithCoordinates(28.6139, 77.2090, "fallback")
         }
     }
 
-    private suspend fun updateLocationWithCoordinates(latitude: Double, longitude: Double, source: String) {
+    private suspend fun updateLocationWithCoordinates(latitude: Double, longitude: Double) {
         try {
-            Log.d("HomeViewModel", "Updating default location on app launch (source: $source) with coordinates: $latitude, $longitude")
+            Log.d("HomeViewModel", "Updating default location with coordinates: $latitude, $longitude")
 
             // Call the API to update default location
             val result = updateDefaultLocationUseCase(latitude, longitude)

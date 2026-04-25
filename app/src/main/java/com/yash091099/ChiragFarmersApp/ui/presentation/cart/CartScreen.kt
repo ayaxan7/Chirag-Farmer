@@ -5,12 +5,16 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -18,6 +22,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -29,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -42,6 +48,8 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost.Route
 import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
 import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
 import com.yash091099.ChiragFarmersApp.ui.theme.BorderColour
+import com.yash091099.ChiragFarmersApp.ui.theme.TextDarkGray
+import com.yash091099.ChiragFarmersApp.ui.theme.TextGray
 
 @Composable
 fun CartScreen(
@@ -152,7 +160,9 @@ fun CartScreen(
                 snackbarHost = { SnackbarHost(snackbarHostState) },
                 topBar = {
                     ChiragTopBar(
-                        navController = navController, icon = R.drawable.ic_arrow, title = "My Cart"
+                        navController = navController,
+                        icon = R.drawable.ic_arrow,
+                        title = "Checkout"
                     )
                 }) { paddingValues ->
                 Box(
@@ -166,13 +176,93 @@ fun CartScreen(
                             .verticalScroll(rememberScrollState())
                             .padding(bottom = 280.dp)
                     ) {
+                        // Shipping Address Section
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp)
+                        ) {
+                            Text(
+                                text = "Shipping Address",
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = BGBlack
+                            )
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.Top
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.location),
+                                    contentDescription = "Location",
+                                    modifier = Modifier.size(24.dp),
+                                    tint = BGBlack
+                                )
+                                Spacer(modifier = Modifier.width(12.dp))
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(
+                                        text = "Home",
+                                        fontSize = 14.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = BGBlack
+                                    )
+                                    Spacer(modifier = Modifier.height(4.dp))
+                                    Text(
+                                        text = "123 MG Road, Indiranagar, Bengaluru,\nKarnataka",
+                                        fontSize = 13.sp,
+                                        color = TextDarkGray,
+                                        lineHeight = 13.sp
+                                    )
+                                    Spacer(modifier = Modifier.height(2.dp))
+                                    Row {
+                                        Text(
+                                            text = "Pin : ", fontSize = 13.sp, color = TextGray
+                                        )
+                                        Text(
+                                            text = "560038", fontSize = 13.sp, color = BGBlack
+                                        )
+                                    }
+                                }
+                                Button(
+                                    onClick = { navController.navigate(Route.AddressList.path) },
+                                    colors = ButtonDefaults.buttonColors(containerColor = BGBlack),
+                                    shape = RoundedCornerShape(12.dp),
+                                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
+                                    modifier = Modifier.defaultMinSize(
+                                        minWidth = 1.dp,
+                                        minHeight = 1.dp
+                                    )
+                                ) {
+                                    Text(
+                                        text = "Change",
+                                        fontSize = 12.sp,
+                                        color = BGWhite,
+                                        fontWeight = FontWeight.Medium,
+                                        modifier = Modifier.padding(0.dp)
+                                    )
+                                }
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        // Listed Products Section
+                        Text(
+                            text = "Listed Products",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = BGBlack,
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+
                         // Cart Items
                         cartItems.forEach { item ->
                             SwipeToRevealItem(
                                 onDelete = {
                                     viewModel.deleteItem(item.productId)
-                                }
-                            ) {
+                                }) {
                                 CartItemCard(
                                     imageRes = R.drawable.sprayer,
                                     imageUrl = item.productImage ?: "",
@@ -194,8 +284,7 @@ fun CartScreen(
                             HorizontalDivider(
                                 modifier = Modifier
                                     .fillMaxWidth(0.9f)
-                                    .align(Alignment.CenterHorizontally),
-                                thickness = (0.5f).dp
+                                    .align(Alignment.CenterHorizontally), thickness = (0.5f).dp
                             )
                         }
 
@@ -210,7 +299,9 @@ fun CartScreen(
                             .background(BGWhite)
                             .padding(16.dp)
                             .border(
-                                width = 1.dp, color = BorderColour, shape = RoundedCornerShape(24.dp)
+                                width = 1.dp,
+                                color = BorderColour,
+                                shape = RoundedCornerShape(24.dp)
                             )
                             .padding(16.dp)
                     ) {
