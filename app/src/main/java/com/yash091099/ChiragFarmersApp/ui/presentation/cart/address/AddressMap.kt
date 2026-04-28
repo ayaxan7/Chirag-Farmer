@@ -223,7 +223,7 @@ fun AddressMapScreen(
 fun SearchBarOverlay(modifier: Modifier = Modifier,onClick: () -> Unit={}) {
     Card(
         modifier = modifier
-            .clickable{}
+            .clickable{onClick()}
             .fillMaxWidth()
             .height(56.dp)
             .shadow(4.dp, RoundedCornerShape(8.dp)),
