@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -155,83 +156,113 @@ fun HomeScreen(
                 is HomeMixedProductsUiState.Success -> {
                     val successState = homeMixedProductsUiState as HomeMixedProductsUiState.Success
 
-                    // Smart Farming Products (Vendor Products)
+                    // Smart Farming Products (Vendor Products) — show max 2 items, 1 row of 2
                     if (successState.vendorProducts.isNotEmpty()) {
                         CategoryHeader(
                             category = "Smart Farming",
                             btnText = "View All",
                             onClick = {}
                         )
-                        LazyRow(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(12.dp)
-                        ) {
-                            items(successState.vendorProducts) { product ->
-                                CommonProductCard(
-                                    product = CommonProductCardData(
-                                        imageRes = 0,
-                                        imageUrl = product.imageUrl ?: "",
-                                        productName = product.productName,
-                                        brandName = product.sellerName,
-                                        currentPrice = product.finalPrice.toString(),
-                                        originalPrice = product.originalPrice.toString(),
-                                        rating = "4.5"
+                        val smartFarmingItems = successState.vendorProducts.take(2)
+                        smartFarmingItems.chunked(2).forEach { rowItems ->
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                            ) {
+                                rowItems.forEach { product ->
+                                    CommonProductCard(
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .padding(bottom = 12.dp),
+                                        product = CommonProductCardData(
+                                            imageRes = 0,
+                                            imageUrl = product.imageUrl ?: "",
+                                            productName = product.productName,
+                                            brandName = product.sellerName,
+                                            currentPrice = product.finalPrice.toString(),
+                                            originalPrice = product.originalPrice.toString(),
+                                            rating = "4.5"
+                                        )
                                     )
-                                )
+                                }
+                                // Fill empty slot if odd number
+                                if (rowItems.size == 1) {
+                                    Spacer(modifier = Modifier.weight(1f))
+                                }
                             }
                         }
                     }
 
-                    // Seeds Products
+                    // Seeds Products — show max 2 items, 1 row of 2
                     if (successState.seedProducts.isNotEmpty()) {
                         CategoryHeader(
                             category = "Seeds",
                             btnText = "View All",
                             onClick = {}
                         )
-                        LazyRow(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(12.dp)
-                        ) {
-                            items(successState.seedProducts) { product ->
-                                CommonProductCard(
-                                    product = CommonProductCardData(
-                                        imageRes = 0,
-                                        imageUrl = product.imageUrl ?: "",
-                                        productName = product.productName,
-                                        brandName = product.sellerName,
-                                        currentPrice = product.finalPrice.toString(),
-                                        originalPrice = product.originalPrice.toString(),
-                                        rating = "4.5"
+                        val seedItems = successState.seedProducts.take(2)
+                        seedItems.chunked(2).forEach { rowItems ->
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                            ) {
+                                rowItems.forEach { product ->
+                                    CommonProductCard(
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .padding(bottom = 12.dp),
+                                        product = CommonProductCardData(
+                                            imageRes = 0,
+                                            imageUrl = product.imageUrl ?: "",
+                                            productName = product.productName,
+                                            brandName = product.sellerName,
+                                            currentPrice = product.finalPrice.toString(),
+                                            originalPrice = product.originalPrice.toString(),
+                                            rating = "4.5"
+                                        )
                                     )
-                                )
+                                }
+                                // Fill empty slot if odd number
+                                if (rowItems.size == 1) {
+                                    Spacer(modifier = Modifier.weight(1f))
+                                }
                             }
                         }
                     }
 
-                    // Popular Products
+                    // Popular Products — show max 4 items, 2 rows of 2
                     if (successState.popularProducts.isNotEmpty()) {
                         CategoryHeader(
                             category = "Popular Products",
                             btnText = "View All",
                             onClick = {}
                         )
-                        LazyRow(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(12.dp)
-                        ) {
-                            items(successState.popularProducts) { product ->
-                                CommonProductCard(
-                                    product = CommonProductCardData(
-                                        imageRes = 0,
-                                        imageUrl = product.imageUrl ?: "",
-                                        productName = product.productName,
-                                        brandName = product.sellerName,
-                                        currentPrice = product.finalPrice.toString(),
-                                        originalPrice = product.originalPrice.toString(),
-                                        rating = "4.5"
+                        val popularItems = successState.popularProducts.take(4)
+                        popularItems.chunked(2).forEach { rowItems ->
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                            ) {
+                                rowItems.forEach { product ->
+                                    CommonProductCard(
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .padding(bottom = 12.dp),
+                                        product = CommonProductCardData(
+                                            imageRes = 0,
+                                            imageUrl = product.imageUrl ?: "",
+                                            productName = product.productName,
+                                            brandName = product.sellerName,
+                                            currentPrice = product.finalPrice.toString(),
+                                            originalPrice = product.originalPrice.toString(),
+                                            rating = "4.5"
+                                        )
                                     )
-                                )
+                                }
+                                // Fill empty slot if odd number
+                                if (rowItems.size == 1) {
+                                    Spacer(modifier = Modifier.weight(1f))
+                                }
                             }
                         }
                     }
@@ -280,8 +311,7 @@ fun HomeScreen(
                     scope.launch {
                         // Logout using ViewModel
                         viewModel.logout()
-
-                        // Navigate back to login screen
+                        // Navigate back to log in screen
                         navController.navigate(Route.Auth.path) {
                             popUpTo(0) { inclusive = true }
                         }
