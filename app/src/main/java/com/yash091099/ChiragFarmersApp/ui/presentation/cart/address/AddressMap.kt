@@ -1,5 +1,6 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.cart.address
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -30,6 +31,7 @@ import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Work
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -38,23 +40,29 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.yash091099.ChiragFarmersApp.R
@@ -63,23 +71,40 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragT
 import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
 import com.yash091099.ChiragFarmersApp.ui.theme.ChiragFarmerTheme
 import com.yash091099.ChiragFarmersApp.ui.theme.TextDarkGray
+import kotlinx.coroutines.launch
+import org.osmdroid.util.GeoPoint
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddressMapScreen(
     navController: NavHostController,
-    onBackClick: () -> Unit = { navController.popBackStack() },
-    onChangeAddressClick: () -> Unit = {},
+    viewModel: AddressMapViewModel = hiltViewModel(),
     onAddMoreDetailsClick: () -> Unit = {}
 ) {
+    val currentLocation by viewModel.currentLocation.collectAsState()
+    val currentAddress by viewModel.currentAddress.collectAsState()
+    val isLoadingLocation by viewModel.isLoadingLocation.collectAsState()
+    val errorMessage by viewModel.errorMessage.collectAsState()
+
     var showLocationSelectionSheet by remember { mutableStateOf(false) }
     var showAddressDetailsSheet by remember { mutableStateOf(false) }
+
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
+    // Show error snackbar
+    if (!errorMessage.isNullOrEmpty()) {
+        scope.launch {
+            snackbarHostState.showSnackbar(errorMessage ?: "Unknown error")
+            viewModel.clearError()
+        }
+    }
 
     if (showLocationSelectionSheet) {
         LocationSelectionBottomSheet(
             onDismissRequest = { showLocationSelectionSheet = false },
             onLocationSelected = { address ->
-                // Handle address selection
                 showLocationSelectionSheet = false
             })
     }
@@ -102,7 +127,9 @@ fun AddressMapScreen(
             ChiragTopBar(
                 navController = navController, title = "Address", icon = R.drawable.ic_arrow
             )
-        }, containerColor = BGWhite
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        containerColor = BGWhite
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -114,10 +141,18 @@ fun AddressMapScreen(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth()
-                    .background(Color(0xFFE0E0E0)) // Map placeholder background
             ) {
-                // Placeholder Map Drawing (Simple Lines)
-                MapPlaceholder()
+                // OpenStreetMap View
+                OpenStreetMapView(
+                    modifier = Modifier.fillMaxSize(),
+                    currentLocation = currentLocation,
+                    onMapLongClick = { geoPoint ->
+                        viewModel.updateLocationFromCoordinates(
+                            geoPoint.latitude,
+                            geoPoint.longitude
+                        )
+                    }
+                )
 
                 // Search Bar Overlay
                 SearchBarOverlay(
@@ -130,45 +165,22 @@ fun AddressMapScreen(
                 UseCurrentLocationButton(
                     modifier = Modifier
                         .padding(bottom = 24.dp)
-                        .align(Alignment.BottomCenter)
+                        .align(Alignment.BottomCenter),
+                    isLoading = isLoadingLocation,
+                    onClick = { viewModel.fetchCurrentLocation() }
                 )
-
-                // Map Marker Placeholder (Center of map)
-                Box(modifier = Modifier.align(Alignment.Center)) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.map_pin),
-                                contentDescription = null,
-                                tint = Color(0xFFD32F2F),
-                                modifier = Modifier.size(40.dp)
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text(
-                                text = "Home",
-                                color = Color(0xFFD32F2F),
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 16.sp,
-                                modifier = Modifier
-                                    .background(
-                                        Color.White.copy(alpha = 0.7f), RoundedCornerShape(4.dp)
-                                    )
-                                    .padding(horizontal = 4.dp)
-                            )
-                        }
-                    }
-                }
             }
 
             // Bottom Details Section
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .background(BGWhite)
                     .padding(16.dp)
             ) {
                 AddressDetailCard(
-                    type = "Home",
-                    address = "45 Lake View Colony, Banjara Hills, Hyderabad, Telangana",
+                    type = "Location",
+                    address = currentAddress,
                     onChangeClick = { showLocationSelectionSheet = true })
 
                 Spacer(modifier = Modifier.height(20.dp))
@@ -183,15 +195,6 @@ fun AddressMapScreen(
                 Spacer(modifier = Modifier.height(12.dp))
             }
         }
-    }
-}
-
-@Composable
-fun MapPlaceholder() {
-    // This is just a visual placeholder for the map
-    Box(modifier = Modifier.fillMaxSize()) {
-        // You could draw some lines here or use a static image
-        // For now, let's just keep it a solid color as defined in the parent Box
     }
 }
 
@@ -227,24 +230,40 @@ fun SearchBarOverlay(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun UseCurrentLocationButton(modifier: Modifier = Modifier) {
+fun UseCurrentLocationButton(
+    modifier: Modifier = Modifier,
+    isLoading: Boolean = false,
+    onClick: () -> Unit = {}
+) {
     Box(
         modifier = modifier
             .shadow(4.dp, RoundedCornerShape(14.dp))
             .background(Color.White, RoundedCornerShape(14.dp))
             .border(1.dp, Color.Black, RoundedCornerShape(14.dp))
-            .clickable { /* Handle current location */ }
-            .padding(horizontal = 12.dp, vertical = 8.dp)) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                imageVector = Icons.Default.MyLocation,
-                contentDescription = null,
-                tint = Color.Black,
-                modifier = Modifier.size(20.dp)
-            )
+            .clickable(enabled = !isLoading) { onClick() }
+            .padding(horizontal = 12.dp, vertical = 8.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(20.dp),
+                    strokeWidth = 2.dp,
+                    color = Color.Black
+                )
+            } else {
+                Icon(
+                    imageVector = Icons.Default.MyLocation,
+                    contentDescription = null,
+                    tint = Color.Black,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "Use Current Location",
+                text = if (isLoading) "Fetching location..." else "Use Current Location",
                 color = Color.Black,
                 fontWeight = FontWeight.Bold,
                 fontSize = 14.sp

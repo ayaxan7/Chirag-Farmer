@@ -9,6 +9,7 @@ import com.yash091099.ChiragFarmersApp.utils.Constants.CLOUDINARY_CLOUD_NAME
 import com.cloudinary.android.MediaManager
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.*
+import org.osmdroid.config.Configuration
 import javax.inject.Inject
 
 @HiltAndroidApp
@@ -23,6 +24,9 @@ class ChiragFarmerApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        // Initialize OSMDroid
+        Configuration.getInstance().userAgentValue = BuildConfig.APPLICATION_ID
 
         // Cloudinary init
         val config = mapOf(

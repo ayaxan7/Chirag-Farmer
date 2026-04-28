@@ -121,4 +121,7 @@ dependencies {
     implementation(libs.review.ktx)
     implementation(libs.androidx.compose.material3.window.size.class1)
     implementation(libs.cloudinary.android)
+
+    // OpenStreetMap
+    implementation(libs.osmdroid)
 }
