@@ -15,7 +15,9 @@ data class CartDataWrapper(
     @SerializedName("items")
     val items: List<CartItemDto> = emptyList(),
     @SerializedName("summary")
-    val summary: CartSummary = CartSummary()
+    val summary: CartSummary = CartSummary(),
+    @SerializedName("currentDefaultAddress")
+    val currentDefaultAddress: CartAddressDto? = null
 )
 
 data class CartSummary(
@@ -42,5 +44,16 @@ data class CartItemDto(
     val finalPrice: Double,
     @SerializedName("quantity")
     val quantity: Int
+)
+
+data class CartAddressDto(
+    @SerializedName("_id")
+    val id: String? = null,
+    @SerializedName("address")
+    val address: String = "",
+    @SerializedName("city")
+    val city: String = "",
+    @SerializedName("pincode")
+    val pincode: String = ""
 )
 

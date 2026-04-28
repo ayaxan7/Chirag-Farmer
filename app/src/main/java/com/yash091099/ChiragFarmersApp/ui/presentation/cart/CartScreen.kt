@@ -57,6 +57,7 @@ fun CartScreen(
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val cartState by viewModel.cartState.collectAsState()
+    val isOperationInProgress by viewModel.isOperationInProgress.collectAsState()
 
     when (val state = cartState) {
         is CartUiState.Loading -> {
@@ -153,6 +154,7 @@ fun CartScreen(
         is CartUiState.Success -> {
             val cartItems = state.cartItems
             val summary = state.summary
+            val address = state.address
 
             Scaffold(
                 modifier = modifier,
@@ -202,14 +204,14 @@ fun CartScreen(
                                 Spacer(modifier = Modifier.width(12.dp))
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text(
-                                        text = "Home",
+                                        text = address?.city ?: "Home",
                                         fontSize = 14.sp,
                                         fontWeight = FontWeight.Bold,
                                         color = BGBlack
                                     )
                                     Spacer(modifier = Modifier.height(4.dp))
                                     Text(
-                                        text = "123 MG Road, Indiranagar, Bengaluru,\nKarnataka",
+                                        text = address?.address ?: "123 Farm Lane",
                                         fontSize = 13.sp,
                                         color = TextDarkGray,
                                         lineHeight = 13.sp
@@ -220,7 +222,7 @@ fun CartScreen(
                                             text = "Pin : ", fontSize = 13.sp, color = TextGray
                                         )
                                         Text(
-                                            text = "560038", fontSize = 13.sp, color = BGBlack
+                                            text = address?.pincode ?: "123456", fontSize = 13.sp, color = BGBlack
                                         )
                                     }
                                 }
@@ -397,12 +399,30 @@ fun CartScreen(
                         }
 
                         Spacer(modifier = Modifier.height(16.dp))
-                        ChiragButton(
-                            text = "Proceed to Checkout",
-                            onClick = { navController.navigate(Route.AddressList.path) },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                        )
+
+                        // Show loading indicator or button based on operation status
+                        if (isOperationInProgress) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(48.dp)
+                                    .background(BGBlack, shape = RoundedCornerShape(8.dp)),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(24.dp),
+                                    color = BGWhite,
+                                    strokeWidth = 2.dp
+                                )
+                            }
+                        } else {
+                            ChiragButton(
+                                text = "Proceed to Checkout",
+                                onClick = { navController.navigate(Route.AddressList.path) },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                            )
+                        }
                     }
                 }
             }
