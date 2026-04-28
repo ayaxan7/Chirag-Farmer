@@ -178,86 +178,89 @@ fun CartScreen(
                             .verticalScroll(rememberScrollState())
                             .padding(bottom = 280.dp)
                     ) {
-                        // Shipping Address Section
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp)
-                        ) {
-                            Text(
-                                text = "Shipping Address",
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = BGBlack
-                            )
-                            Spacer(modifier = Modifier.height(16.dp))
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.Top
+                        // Shipping Address Section - Only shown if address is available
+                        if (address != null) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp)
                             ) {
-                                Icon(
-                                    painter = painterResource(R.drawable.location),
-                                    contentDescription = "Location",
-                                    modifier = Modifier.size(24.dp),
-                                    tint = BGBlack
+                                Text(
+                                    text = "Shipping Address",
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = BGBlack
                                 )
-                                Spacer(modifier = Modifier.width(12.dp))
-                                Column(modifier = Modifier.weight(1f)) {
-                                    Text(
-                                        text = address?.city ?: "Home",
-                                        fontSize = 14.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        color = BGBlack
+                                Spacer(modifier = Modifier.height(16.dp))
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    verticalAlignment = Alignment.Top
+                                ) {
+                                    Icon(
+                                        painter = painterResource(R.drawable.location),
+                                        contentDescription = "Location",
+                                        modifier = Modifier.size(24.dp),
+                                        tint = BGBlack
                                     )
-                                    Spacer(modifier = Modifier.height(4.dp))
-                                    Text(
-                                        text = address?.address ?: "123 Farm Lane",
-                                        fontSize = 13.sp,
-                                        color = TextDarkGray,
-                                        lineHeight = 13.sp
-                                    )
-                                    Spacer(modifier = Modifier.height(2.dp))
-                                    Row {
+                                    Spacer(modifier = Modifier.width(12.dp))
+                                    Column(modifier = Modifier.weight(1f)) {
                                         Text(
-                                            text = "Pin : ", fontSize = 13.sp, color = TextGray
+                                            text = address.city,
+                                            fontSize = 14.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            color = BGBlack
                                         )
+                                        Spacer(modifier = Modifier.height(4.dp))
                                         Text(
-                                            text = address?.pincode ?: "123456", fontSize = 13.sp, color = BGBlack
+                                            text = address.address,
+                                            fontSize = 13.sp,
+                                            color = TextDarkGray,
+                                            lineHeight = 13.sp
+                                        )
+                                        Spacer(modifier = Modifier.height(2.dp))
+                                        Row {
+                                            Text(
+                                                text = "Pin : ", fontSize = 13.sp, color = TextGray
+                                            )
+                                            Text(
+                                                text = address.pincode, fontSize = 13.sp, color = BGBlack
+                                            )
+                                        }
+                                    }
+                                    Button(
+                                        onClick = { navController.navigate(Route.AddressList.path) },
+                                        colors = ButtonDefaults.buttonColors(containerColor = BGBlack),
+                                        shape = RoundedCornerShape(12.dp),
+                                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
+                                        modifier = Modifier.defaultMinSize(
+                                            minWidth = 1.dp,
+                                            minHeight = 1.dp
+                                        )
+                                    ) {
+                                        Text(
+                                            text = "Change",
+                                            fontSize = 12.sp,
+                                            color = BGWhite,
+                                            fontWeight = FontWeight.Medium,
+                                            modifier = Modifier.padding(0.dp)
                                         )
                                     }
                                 }
-                                Button(
-                                    onClick = { navController.navigate(Route.AddressList.path) },
-                                    colors = ButtonDefaults.buttonColors(containerColor = BGBlack),
-                                    shape = RoundedCornerShape(12.dp),
-                                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
-                                    modifier = Modifier.defaultMinSize(
-                                        minWidth = 1.dp,
-                                        minHeight = 1.dp
-                                    )
-                                ) {
-                                    Text(
-                                        text = "Change",
-                                        fontSize = 12.sp,
-                                        color = BGWhite,
-                                        fontWeight = FontWeight.Medium,
-                                        modifier = Modifier.padding(0.dp)
-                                    )
-                                }
                             }
+
+                            Spacer(modifier = Modifier.height(8.dp))
+                            // Listed Products Section
+                            Text(
+                                text = "Listed Products",
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = BGBlack,
+                                modifier = Modifier.padding(horizontal = 16.dp)
+                            )
                         }
 
-                        Spacer(modifier = Modifier.height(8.dp))
 
-                        // Listed Products Section
-                        Text(
-                            text = "Listed Products",
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = BGBlack,
-                            modifier = Modifier.padding(horizontal = 16.dp)
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
+//                        Spacer(modifier = Modifier.height(16.dp))
 
                         // Cart Items
                         cartItems.forEach { item ->
