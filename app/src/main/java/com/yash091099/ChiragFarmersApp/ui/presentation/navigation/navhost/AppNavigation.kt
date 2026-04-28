@@ -32,6 +32,7 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.cart.CartScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.cart.CartViewModel
 import com.yash091099.ChiragFarmersApp.ui.presentation.cart.address.AddressMapScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.cart.address.AddressScreen
+import com.yash091099.ChiragFarmersApp.ui.presentation.cart.address.AddressListViewModel
 import com.yash091099.ChiragFarmersApp.ui.presentation.home.screens.SearchScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.home.screens.notifications.NotificationsScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.SellScreen
@@ -99,7 +100,11 @@ fun AppNavigation(
             SellCategoriesScreen(navController = navController)
         }
         composable(Route.AddressList.path){
-            AddressScreen(navController = navController, onAddAddressClick = {
+            val viewModel: AddressListViewModel = hiltViewModel()
+            AddressScreen(
+                navController = navController,
+                viewModel = viewModel,
+                onAddAddressClick = {
                 navController.navigate(Route.AddressMap.path){
                     popUpTo(Route.AddressMap.path){
                         inclusive=true

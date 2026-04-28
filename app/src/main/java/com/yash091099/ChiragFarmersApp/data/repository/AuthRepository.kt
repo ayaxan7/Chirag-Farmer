@@ -13,6 +13,7 @@ import com.yash091099.ChiragFarmersApp.data.model.auth.VerifyOTPRequest
 import com.yash091099.ChiragFarmersApp.data.remote.AuthApiService
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateDefaultLocationRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateDefaultLocationResponse
+import com.yash091099.ChiragFarmersApp.data.remote.dto.FarmerAddressDto
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
@@ -185,6 +186,24 @@ class AuthRepository @Inject constructor(
 
     fun getLocationUpdatedOnLaunch(): Flow<Boolean> {
         return chiragDataStore.getLocationUpdatedOnLaunch()
+    }
+
+    suspend fun getFarmerAddresses(): Result<List<FarmerAddressDto>> {
+        return try {
+            val token = chiragDataStore.getAuthToken().first()
+            if (token.isNullOrEmpty()) {
+                return Result.failure(Exception("No authentication token found"))
+            }
+            val response = apiService.getFarmerAddresses("Bearer $token")
+
+            if (response.success) {
+                Result.success(response.data)
+            } else {
+                Result.failure(Exception(response.message))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 }
 
