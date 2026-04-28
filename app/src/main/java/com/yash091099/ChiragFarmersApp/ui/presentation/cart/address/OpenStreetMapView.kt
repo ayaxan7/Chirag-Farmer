@@ -21,7 +21,7 @@ fun OpenStreetMapView(
             MapView(context).apply {
                 setTileSource(TileSourceFactory.MAPNIK)
                 setMultiTouchControls(true)
-                controller.setZoom(15.0)
+                controller.setZoom(19.5)
 
                 // Set initial location or default to Hyderabad
                 val startLocation = currentLocation ?: GeoPoint(17.3850, 78.4867)
@@ -30,6 +30,7 @@ fun OpenStreetMapView(
                 // Add marker for current location
                 if (currentLocation != null) {
                     val marker = Marker(this).apply {
+                        icon=null
                         position = currentLocation
                         setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
                     }

@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
+import com.yash091099.ChiragFarmersApp.domain.usecase.GetDefaultDeliveryLocationUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,7 +22,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddressMapViewModel @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val getDefaultDeliveryLocationUseCase: GetDefaultDeliveryLocationUseCase
 ) : ViewModel() {
 
     private val fusedLocationClient: FusedLocationProviderClient =
@@ -39,6 +41,38 @@ class AddressMapViewModel @Inject constructor(
 
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
+
+    private val _hasDefaultLocation = MutableStateFlow(false)
+    val hasDefaultLocation: StateFlow<Boolean> = _hasDefaultLocation.asStateFlow()
+
+    init {
+        fetchDefaultDeliveryLocation()
+    }
+
+    private fun fetchDefaultDeliveryLocation() {
+        viewModelScope.launch {
+            getDefaultDeliveryLocationUseCase().fold(
+                onSuccess = { locationData ->
+                    if (locationData != null) {
+                        _hasDefaultLocation.value = true
+                        _currentAddress.value = locationData.addressString ?: "45 Lake View Colony, Banjara Hills, Hyderabad, Telangana"
+                        // Set location from coordinates if available
+                        locationData.coordinates?.let { coords ->
+                            if (coords.size >= 2) {
+                                val geoPoint = GeoPoint(coords[1], coords[0])
+                                _currentLocation.value = geoPoint
+                            }
+                        }
+                    } else {
+                        _hasDefaultLocation.value = false
+                    }
+                },
+                onFailure = {
+                    _hasDefaultLocation.value = false
+                }
+            )
+        }
+    }
 
     fun fetchCurrentLocation() {
         viewModelScope.launch {

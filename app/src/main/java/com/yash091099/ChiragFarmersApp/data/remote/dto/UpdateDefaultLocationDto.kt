@@ -13,13 +13,3 @@ data class UpdateDefaultLocationResponse(
     val data: DefaultLocationData? = null
 )
 
-data class DefaultLocationData(
-    val name: String,
-    val addressString: String,
-    val pincode: String? = null,
-    @SerializedName("coordinates")
-    val coordinates: List<Double>? = null,
-    @SerializedName("_id")
-    val id: String? = null
-)
-

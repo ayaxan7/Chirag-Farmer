@@ -11,6 +11,7 @@ import com.yash091099.ChiragFarmersApp.data.model.auth.VerifyOTPRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateDefaultLocationRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateDefaultLocationResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.FarmerAddressesResponse
+import com.yash091099.ChiragFarmersApp.data.remote.dto.DefaultLocationResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -64,5 +65,10 @@ interface AuthApiService {
     suspend fun getFarmerAddresses(
         @Header("Authorization") authorization: String
     ): FarmerAddressesResponse
+
+    @GET("api/farmers/default-location")
+    suspend fun getDefaultLocation(
+        @Header("Authorization") authorization: String
+    ): DefaultLocationResponse
 }
 

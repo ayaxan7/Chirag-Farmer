@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -56,7 +57,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -72,7 +72,6 @@ import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
 import com.yash091099.ChiragFarmersApp.ui.theme.ChiragFarmerTheme
 import com.yash091099.ChiragFarmersApp.ui.theme.TextDarkGray
 import kotlinx.coroutines.launch
-import org.osmdroid.util.GeoPoint
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -86,6 +85,7 @@ fun AddressMapScreen(
     val currentAddress by viewModel.currentAddress.collectAsState()
     val isLoadingLocation by viewModel.isLoadingLocation.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
+    val hasDefaultLocation by viewModel.hasDefaultLocation.collectAsState()
 
     var showLocationSelectionSheet by remember { mutableStateOf(false) }
     var showAddressDetailsSheet by remember { mutableStateOf(false) }
@@ -164,6 +164,7 @@ fun AddressMapScreen(
                 // Use Current Location Button
                 UseCurrentLocationButton(
                     modifier = Modifier
+                        .width(200.dp)
                         .padding(bottom = 24.dp)
                         .align(Alignment.BottomCenter),
                     isLoading = isLoadingLocation,
@@ -171,28 +172,47 @@ fun AddressMapScreen(
                 )
             }
 
-            // Bottom Details Section
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(BGWhite)
-                    .padding(16.dp)
-            ) {
-                AddressDetailCard(
-                    type = "Location",
-                    address = currentAddress,
-                    onChangeClick = { showLocationSelectionSheet = true })
+            // Bottom Details Section - Only show if default location exists
+            if (hasDefaultLocation) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(BGWhite)
+                        .padding(16.dp)
+                ) {
+                    AddressDetailCard(
+                        type = "Location",
+                        address = currentAddress,
+                        onChangeClick = { showLocationSelectionSheet = true })
 
-                Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
 
-                ChiragButton(
-                    text = "Add more address details", onClick = {
-                        showAddressDetailsSheet = true
-                        onAddMoreDetailsClick()
-                    }, modifier = Modifier.fillMaxWidth()
-                )
+                    ChiragButton(
+                        text = "Add more address details", onClick = {
+                            showAddressDetailsSheet = true
+                            onAddMoreDetailsClick()
+                        }, modifier = Modifier.fillMaxWidth()
+                    )
 
-                Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
+            } else {
+                // Show only the "Add more address details" button when no default location
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(BGWhite)
+                        .padding(16.dp)
+                ) {
+                    ChiragButton(
+                        text = "Add more address details", onClick = {
+                            showAddressDetailsSheet = true
+                            onAddMoreDetailsClick()
+                        }, modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
             }
         }
     }
