@@ -158,7 +158,8 @@ fun AddressMapScreen(
                 SearchBarOverlay(
                     modifier = Modifier
                         .padding(16.dp)
-                        .align(Alignment.TopCenter)
+                        .align(Alignment.TopCenter),
+                    onClick = {showLocationSelectionSheet = true }
                 )
 
                 // Use Current Location Button
@@ -219,9 +220,10 @@ fun AddressMapScreen(
 }
 
 @Composable
-fun SearchBarOverlay(modifier: Modifier = Modifier) {
+fun SearchBarOverlay(modifier: Modifier = Modifier,onClick: () -> Unit={}) {
     Card(
         modifier = modifier
+            .clickable{}
             .fillMaxWidth()
             .height(56.dp)
             .shadow(4.dp, RoundedCornerShape(8.dp)),

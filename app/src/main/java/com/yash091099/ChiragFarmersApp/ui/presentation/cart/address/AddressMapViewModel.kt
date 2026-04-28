@@ -64,11 +64,15 @@ class AddressMapViewModel @Inject constructor(
                             }
                         }
                     } else {
+                        // If no default location found, fetch current device location
                         _hasDefaultLocation.value = false
+                        fetchCurrentLocation()
                     }
                 },
                 onFailure = {
                     _hasDefaultLocation.value = false
+                    // On failure, also try to fetch current location
+                    fetchCurrentLocation()
                 }
             )
         }

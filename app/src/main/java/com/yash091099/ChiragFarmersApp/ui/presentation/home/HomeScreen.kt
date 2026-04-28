@@ -182,7 +182,10 @@ fun HomeScreen(
                                             currentPrice = product.finalPrice.toString(),
                                             originalPrice = product.originalPrice.toString(),
                                             rating = "4.5"
-                                        )
+                                        ),
+                                        onClick = {
+                                            navController.navigate(Route.ProductDetails.createRoute(product.id))
+                                        }
                                     )
                                 }
                                 // Fill empty slot if odd number
@@ -219,7 +222,10 @@ fun HomeScreen(
                                             currentPrice = product.finalPrice.toString(),
                                             originalPrice = product.originalPrice.toString(),
                                             rating = "4.5"
-                                        )
+                                        ),
+                                        onClick={
+                                            navController.navigate(Route.ProductDetails.createRoute(product.id))
+                                        }
                                     )
                                 }
                                 // Fill empty slot if odd number
@@ -256,7 +262,10 @@ fun HomeScreen(
                                             currentPrice = product.finalPrice.toString(),
                                             originalPrice = product.originalPrice.toString(),
                                             rating = "4.5"
-                                        )
+                                        ),
+                                        onClick = {
+                                            navController.navigate(Route.ProductDetails.createRoute(product.id))
+                                        }
                                     )
                                 }
                                 // Fill empty slot if odd number

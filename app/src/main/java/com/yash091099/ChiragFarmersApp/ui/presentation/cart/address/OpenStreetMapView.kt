@@ -4,6 +4,8 @@ import android.view.MotionEvent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.ContextCompat
+import com.yash091099.ChiragFarmersApp.R
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
@@ -21,16 +23,19 @@ fun OpenStreetMapView(
             MapView(context).apply {
                 setTileSource(TileSourceFactory.MAPNIK)
                 setMultiTouchControls(true)
-                controller.setZoom(19.5)
-
-                // Set initial location or default to Hyderabad
-                val startLocation = currentLocation ?: GeoPoint(17.3850, 78.4867)
+                controller.setZoom(20.0)
+                val drawable = ContextCompat.getDrawable(context, R.drawable.osmpin)
+                val scaledDrawable = drawable?.apply {
+                    setBounds(0, 0, 2, 2) // width, height in px
+                }
+                // Set initial location or default to Delhi
+                val startLocation = currentLocation ?: GeoPoint(28.6448, 77.2167)
                 controller.setCenter(startLocation)
 
                 // Add marker for current location
                 if (currentLocation != null) {
                     val marker = Marker(this).apply {
-                        icon=null
+                        icon = scaledDrawable
                         position = currentLocation
                         setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
                     }
@@ -56,6 +61,7 @@ fun OpenStreetMapView(
             if (currentLocation != null) {
                 mapView.overlays.clear()
                 val marker = Marker(mapView).apply {
+                    icon = mapView.context.getDrawable(R.drawable.osmpin)
                     position = currentLocation
                     setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
                 }
