@@ -17,6 +17,8 @@ import com.yash091099.ChiragFarmersApp.data.remote.dto.FarmerAddressDto
 import com.yash091099.ChiragFarmersApp.data.remote.dto.DefaultLocationData
 import com.yash091099.ChiragFarmersApp.data.remote.dto.AddDeliveryLocationRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.AddDeliveryLocationResponse
+import com.yash091099.ChiragFarmersApp.data.remote.dto.SetDefaultAddressRequest
+import com.yash091099.ChiragFarmersApp.data.remote.dto.SetDefaultAddressResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
@@ -200,7 +202,7 @@ class AuthRepository @Inject constructor(
             val response = apiService.getFarmerAddresses("Bearer $token")
 
             if (response.success) {
-                Result.success(response.data)
+                Result.success(response.data?.locations ?: emptyList())
             } else {
                 Result.failure(Exception(response.message))
             }
@@ -252,6 +254,28 @@ class AuthRepository @Inject constructor(
                     coordinates = latestLocation.coordinates
                 )
                 val locationJson = Gson().toJson(defaultLocationData)
+                chiragDataStore.saveDefaultLocation(locationJson)
+                chiragDataStore.saveLocationUpdatedOnLaunch(true)
+            }
+
+            Result.success(response)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun setDefaultAddress(addressId: String): Result<SetDefaultAddressResponse> {
+        return try {
+            val token = chiragDataStore.getAuthToken().first()
+            if (token.isNullOrEmpty()) {
+                return Result.failure(Exception("No authentication token found"))
+            }
+            val request = SetDefaultAddressRequest(addressId)
+            val response = apiService.setDefaultAddress("Bearer $token", request)
+
+            if (response.success && response.data != null) {
+                // Save the updated default location to DataStore
+                val locationJson = Gson().toJson(response.data.address)
                 chiragDataStore.saveDefaultLocation(locationJson)
                 chiragDataStore.saveLocationUpdatedOnLaunch(true)
             }

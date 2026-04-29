@@ -27,6 +27,7 @@ import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,12 +45,14 @@ import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.data.remote.dto.FarmerAddressDto
 import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.ChiragButton
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragTopBar
+import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost.Route
 import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
 import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
 import com.yash091099.ChiragFarmersApp.ui.theme.BorderColour
 import com.yash091099.ChiragFarmersApp.ui.theme.TextDarkGray
 import com.yash091099.ChiragFarmersApp.ui.theme.TextGray
 import com.yash091099.ChiragFarmersApp.utils.dashedBorder
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun AddressScreen(
@@ -59,7 +62,18 @@ fun AddressScreen(
     onAddAddressClick: () -> Unit = {}
 ) {
     val addressState by viewModel.addressState.collectAsState()
+    val isOperationInProgress by viewModel.isOperationInProgress.collectAsState()
     var selectedAddressId by remember { mutableStateOf<String?>(null) }
+
+    LaunchedEffect(Unit) {
+        viewModel.navigationEvent.collectLatest { event ->
+            when (event) {
+                AddressListNavigationEvent.NavigateBackToCart -> {
+                    navController.popBackStack()
+                }
+            }
+        }
+    }
 
     when (val state = addressState) {
         is AddressListUiState.Loading -> {
@@ -194,8 +208,13 @@ fun AddressScreen(
                         Spacer(modifier = Modifier.height(12.dp))
                     }
                     ChiragButton(
-                        text = "Continue",
-                        onClick = onContinueClick,
+                        text = if (isOperationInProgress) "Updating..." else "Continue",
+                        onClick = {
+                            selectedAddressId?.let { id ->
+                                viewModel.setDefaultAddress(id)
+                            } ?: onContinueClick()
+                        },
+                        enabled = !isOperationInProgress,
                         shape = RoundedCornerShape(12.dp)
                     )
                     Spacer(modifier = Modifier.height(24.dp))
@@ -253,14 +272,17 @@ fun FarmerAddressItem(
         Spacer(modifier = Modifier.width(12.dp))
         Column(modifier = Modifier.weight(1.0f)) {
             Text(
-                text = address.city,
+                text = address.name ?: "Address",
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = address.address, fontSize = 13.sp, color = TextDarkGray, lineHeight = 18.sp
+                text = address.addressString ?: "",
+                fontSize = 13.sp,
+                color = TextDarkGray,
+                lineHeight = 18.sp
             )
             Spacer(modifier = Modifier.height(4.dp))
             Row {
@@ -268,18 +290,18 @@ fun FarmerAddressItem(
                     text = "Pin : ", fontSize = 13.sp, color = TextGray
                 )
                 Text(
-                    text = address.pincode, fontSize = 13.sp, color = Color.Black
+                    text = address.pincode ?: "", fontSize = 13.sp, color = Color.Black
                 )
             }
-            // Show landmark if available
-            if (!address.landmark.isNullOrBlank()) {
+            // Show receiver details if available
+            if (!address.receiverName.isNullOrBlank()) {
                 Spacer(modifier = Modifier.height(4.dp))
                 Row {
                     Text(
-                        text = "Landmark: ", fontSize = 12.sp, color = TextGray
+                        text = "Receiver: ", fontSize = 12.sp, color = TextGray
                     )
                     Text(
-                        text = address.landmark, fontSize = 12.sp, color = TextDarkGray
+                        text = address.receiverName, fontSize = 12.sp, color = TextDarkGray
                     )
                 }
             }

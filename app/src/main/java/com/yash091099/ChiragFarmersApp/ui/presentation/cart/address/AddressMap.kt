@@ -63,6 +63,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -424,79 +425,8 @@ fun LocationSelectionBottomSheet(
                 }
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // Use Current Location Item
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onLocationSelected("45 Lake View Colony, Banjara Hills, Hyderabad, Telangana") },
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
-                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
-            ) {
-                Row(
-                    modifier = Modifier.padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.MyLocation,
-                        contentDescription = null,
-                        tint = Color.Black,
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Column {
-                        Text(
-                            text = "Use Current Location",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp,
-                            color = Color.Black
-                        )
-                        Text(
-                            text = "45 Lake View Colony, Banjara Hills, Hyderabad, Telangana",
-                            fontSize = 13.sp,
-                            color = Color.Gray,
-                            lineHeight = 18.sp
-                        )
-                    }
-                }
+            Spacer(modifier = Modifier.height(300.dp))
             }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // Recent Locations Divider
-            Row(
-                modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
-            ) {
-                HorizontalDivider(modifier = Modifier.weight(1f), color = Color(0xFFE0E0E0))
-                Text(
-                    text = "RECENT LOCATIONS",
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Color.Gray,
-                    letterSpacing = 1.sp
-                )
-                HorizontalDivider(modifier = Modifier.weight(1f), color = Color(0xFFE0E0E0))
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Recent Location Items
-            RecentLocationItem(
-                title = "Home",
-                address = "Beside Madinna masid 45 Lake View Colony, Banjara Hills, Hyderabad, Telangana.",
-                distance = "0 M",
-                onClick = { onLocationSelected("Beside Madinna masid 45 Lake View Colony, Banjara Hills, Hyderabad, Telangana.") })
-
-            // Add more random locations as requested
-            RecentLocationItem(
-                title = "Office",
-                address = "Level 5, Cyber Towers, HITEC City, Hyderabad, Telangana.",
-                distance = "5.2 KM",
-                onClick = { onLocationSelected("Level 5, Cyber Towers, HITEC City, Hyderabad, Telangana.") })
-        }
     }
 }
 
@@ -623,7 +553,8 @@ fun AddressDetailsBottomSheet(
                     label = "Receiver's contact",
                     value = receiverContact,
                     onValueChange = { viewModel.receiverContact.value = it },
-                    placeholder = "Enter receiver's contact"
+                    placeholder = "Enter receiver's contact",
+                    keyboardType= KeyboardType.Phone
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
@@ -724,7 +655,7 @@ fun AddressDetailsBottomSheet(
 
 @Composable
 fun AddressInputField(
-    label: String, value: String = "", placeholder: String = "", onValueChange: (String) -> Unit
+    label: String, value: String = "", placeholder: String = "", onValueChange: (String) -> Unit,keyboardType: KeyboardType= KeyboardType.Text
 ) {
     Column {
         Text(

@@ -14,6 +14,8 @@ import com.yash091099.ChiragFarmersApp.data.remote.dto.FarmerAddressesResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.DefaultLocationResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.AddDeliveryLocationRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.AddDeliveryLocationResponse
+import com.yash091099.ChiragFarmersApp.data.remote.dto.SetDefaultAddressRequest
+import com.yash091099.ChiragFarmersApp.data.remote.dto.SetDefaultAddressResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -62,6 +64,12 @@ interface AuthApiService {
         @Header("Authorization") authorization: String,
         @Body request: AddDeliveryLocationRequest
     ): AddDeliveryLocationResponse
+
+    @POST("api/farmers/set-default-address")
+    suspend fun setDefaultAddress(
+        @Header("Authorization") authorization: String,
+        @Body request: SetDefaultAddressRequest
+    ): SetDefaultAddressResponse
 
     @POST("api/farmers/update-default-location")
     suspend fun updateDefaultLocation(

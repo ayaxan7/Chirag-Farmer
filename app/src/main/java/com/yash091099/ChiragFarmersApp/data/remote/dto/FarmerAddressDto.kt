@@ -8,20 +8,29 @@ data class FarmerAddressesResponse(
     @SerializedName("message")
     val message: String,
     @SerializedName("data")
-    val data: List<FarmerAddressDto> = emptyList()
+    val data: FarmerAddressesDataWrapper? = null
+)
+
+data class FarmerAddressesDataWrapper(
+    @SerializedName("locations")
+    val locations: List<FarmerAddressDto> = emptyList()
 )
 
 data class FarmerAddressDto(
     @SerializedName("_id")
     val id: String,
-    @SerializedName("address")
-    val address: String,
-    @SerializedName("city")
-    val city: String,
-    @SerializedName("state")
-    val state: String,
+    @SerializedName("name")
+    val name: String? = null,
+    @SerializedName("receiverName")
+    val receiverName: String? = null,
+    @SerializedName("receiverContact")
+    val receiverContact: String? = null,
+    @SerializedName("addressString")
+    val addressString: String? = null,
+    @SerializedName("completeAddress")
+    val completeAddress: String? = null,
     @SerializedName("pincode")
-    val pincode: String,
+    val pincode: String? = null,
     @SerializedName("landmark")
     val landmark: String? = null
 )
