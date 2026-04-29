@@ -69,7 +69,7 @@ interface AuthApiService {
         @Body request: UpdateDefaultLocationRequest
     ): UpdateDefaultLocationResponse
 
-    @GET("api/farmers/addresses")
+    @GET("api/farmers/delivery-locations")
     suspend fun getFarmerAddresses(
         @Header("Authorization") authorization: String
     ): FarmerAddressesResponse
