@@ -2,9 +2,12 @@ package com.yash091099.ChiragFarmersApp.ui.presentation.sell.screens.sellcategor
 
 import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -21,6 +24,7 @@ import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -42,14 +46,33 @@ fun SellCategoriesScreen(navController: NavHostController) {
     val categories = remember {
         Categories.sellCategories
     }
-    Scaffold(
-        topBar = {
+    Scaffold(topBar = {
         ChiragTopBar(
             title = "Sell Produces", navController = navController, icon = R.drawable.ic_arrow
         )
-    },
-        containerColor = BGWhite,
-        snackbarHost = { SnackbarHost(snackBarHostState) }) { innerPadding ->
+    }, containerColor = BGWhite, bottomBar = {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp, vertical = 24.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            ChiragButton(
+                text = "Continue", containerColor = BGBlack, contentColor = BGWhite, onClick = {
+                    val selectedCategoryName =
+                        categories.firstOrNull { it.id == selectedCategory }?.name
+                    val sanitizedCategory = sanitizeCategoryForForm(selectedCategoryName.orEmpty())
+                    if (sanitizedCategory.isNotEmpty()) {
+                        navController.navigate(
+                            Route.SellProduct.createRoute(
+                                selectedCategory = Uri.encode(sanitizedCategory)
+                            )
+                        )
+                    }
+                }, enabled = (selectedCategory != 0.0)
+            )
+        }
+    }, snackbarHost = { SnackbarHost(snackBarHostState) }) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -83,20 +106,8 @@ fun SellCategoriesScreen(navController: NavHostController) {
                         })
                 }
             }
-            Spacer(Modifier.weight(1f))
-            ChiragButton(
-                text = "Continue", containerColor = BGBlack, contentColor = BGWhite, onClick = {
-                    val selectedCategoryName = categories.firstOrNull { it.id == selectedCategory }?.name
-                    val sanitizedCategory = sanitizeCategoryForForm(selectedCategoryName.orEmpty())
-                    if (sanitizedCategory.isNotEmpty()) {
-                        navController.navigate(
-                            Route.SellProduct.createRoute(
-                                selectedCategory = Uri.encode(sanitizedCategory)
-                            )
-                        )
-                    }
-                }, enabled = (selectedCategory != 0.0)
-            )
+//            Spacer(Modifier.weight(1f))
+
         }
     }
 }
