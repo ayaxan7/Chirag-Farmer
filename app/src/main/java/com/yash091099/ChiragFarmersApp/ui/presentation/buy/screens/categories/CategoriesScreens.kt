@@ -44,6 +44,7 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.Categor
 import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.CommonProductCard
 import com.yash091099.ChiragFarmersApp.ui.presentation.common.data.CommonProductCardData
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragTopBar
+import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost.Route
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.data.BuySellCategory
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.data.Categories
 import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
@@ -196,7 +197,10 @@ fun CategoriesScreen(
                         rating = "4.8",
                         imageUrl = product.imageUrl
                     ),
-                    isSellScreen = false
+                    isSellScreen = false,
+                    onClick = {
+                        navController.navigate(Route.ProductDetails.createRoute(product.productId))
+                    }
                 )
             }
 

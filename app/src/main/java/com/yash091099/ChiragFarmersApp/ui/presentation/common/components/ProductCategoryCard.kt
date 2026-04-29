@@ -1,6 +1,7 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.common.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,12 +24,13 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun ProductCategoryCard(
-    title: String, imageRes: Int
+    title: String, imageRes: Int, onClick: () -> Unit = {}
 ) {
     Card(
         modifier = Modifier
             .height(120.dp)
-            .width(116.dp),
+            .width(116.dp)
+            .clickable { onClick() },
         colors = CardDefaults.cardColors(
             containerColor = Color.Transparent
         )

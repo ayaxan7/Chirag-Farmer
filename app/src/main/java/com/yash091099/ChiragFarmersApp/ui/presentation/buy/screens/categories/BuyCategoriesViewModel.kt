@@ -34,6 +34,8 @@ class BuyCategoriesViewModel @Inject constructor(
             categoryName.equals("Sprayers", ignoreCase = true) -> "sprayers"
             categoryName.equals("Agriculture Drone", ignoreCase = true) -> "drones"
             categoryName.equals("Tractors", ignoreCase = true) -> "tractors"
+            categoryName.equals("Smart Farming", ignoreCase = true) -> "smart farming"
+            categoryName.equals("Popular Products", ignoreCase = true) -> "popular products"
             else -> null
         }
     }

@@ -128,7 +128,9 @@ fun HomeScreen(
             CategoryHeader(
                 category = "Buy Products For Your Farm",
                 btnText = "View All",
-                onClick = {}
+                onClick = {
+                    navController.navigate(Route.Buy.path)
+                }
             )
             LazyRow(
                 modifier = Modifier.fillMaxWidth(),
@@ -137,7 +139,20 @@ fun HomeScreen(
                 items(productCategories) { category ->
                     ProductCategoryCard(
                         title = category.first,
-                        imageRes = category.second
+                        imageRes = category.second,
+                        onClick = {
+                            val categoryName = when {
+                                category.first.contains("Agriculture", ignoreCase = true) -> "Agriculture Drone"
+                                category.first.equals("Seeds", ignoreCase = true) -> "Seeds"
+                                category.first.equals("Sprayer", ignoreCase = true) -> "Sprayers"
+                                else -> ""
+                            }
+                            if (categoryName.isNotEmpty()) {
+                                navController.navigate(
+                                    Route.BuyCategory.createRoute(categoryName, R.drawable.buy_banner)
+                                )
+                            }
+                        }
                     )
                 }
             }
@@ -161,7 +176,9 @@ fun HomeScreen(
                         CategoryHeader(
                             category = "Smart Farming",
                             btnText = "View All",
-                            onClick = {}
+                            onClick = {
+                                navController.navigate(Route.BuyCategory.createRoute("Smart Farming", R.drawable.buy_banner))
+                            }
                         )
                         val smartFarmingItems = successState.vendorProducts.take(2)
                         smartFarmingItems.chunked(2).forEach { rowItems ->
@@ -201,7 +218,9 @@ fun HomeScreen(
                         CategoryHeader(
                             category = "Seeds",
                             btnText = "View All",
-                            onClick = {}
+                            onClick = {
+                                navController.navigate(Route.BuyCategory.createRoute("Seeds", R.drawable.buy_banner))
+                            }
                         )
                         val seedItems = successState.seedProducts.take(2)
                         seedItems.chunked(2).forEach { rowItems ->
@@ -241,7 +260,9 @@ fun HomeScreen(
                         CategoryHeader(
                             category = "Popular Products",
                             btnText = "View All",
-                            onClick = {}
+                            onClick = {
+                                navController.navigate(Route.BuyCategory.createRoute("Popular Products", R.drawable.buy_banner))
+                            }
                         )
                         val popularItems = successState.popularProducts.take(4)
                         popularItems.chunked(2).forEach { rowItems ->
