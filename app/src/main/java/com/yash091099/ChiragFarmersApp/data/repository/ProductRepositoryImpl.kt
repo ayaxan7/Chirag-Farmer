@@ -13,6 +13,7 @@ import com.yash091099.ChiragFarmersApp.data.remote.dto.DeleteProductRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.MixedProductsData
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailedData
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailsData
+import com.yash091099.ChiragFarmersApp.data.remote.dto.SearchProductItem
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ToggleSoldOutRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateProductRequest
 import com.yash091099.ChiragFarmersApp.domain.model.Product
@@ -228,6 +229,24 @@ class ProductRepositoryImpl @Inject constructor(
 
             if (response.success) {
                 Result.success(Unit)
+            } else {
+                Result.failure(Exception(response.message))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun searchProducts(query: String): Result<List<SearchProductItem>> {
+        return try {
+            val token = chiragDataStore.getAuthToken().first()
+            if (token.isNullOrEmpty()) {
+                return Result.failure(Exception("Authentication token not found"))
+            }
+
+            val response = apiService.searchProducts("Bearer $token", query)
+            if (response.success) {
+                Result.success(response.data)
             } else {
                 Result.failure(Exception(response.message))
             }

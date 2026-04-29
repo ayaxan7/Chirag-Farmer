@@ -16,6 +16,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,36 +28,39 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.presentation.home.components.search.RecentSearchItem
 import com.yash091099.ChiragFarmersApp.ui.presentation.home.components.search.SearchBox
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragTopBar
+import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost.Route
 import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
 import com.yash091099.ChiragFarmersApp.ui.theme.Teal
 
 data class RecentSearch(
-    val id: Int,
-    val imageRes: Int,
+    val id: String,
+    val imageRes: String,
     val searchText: String
 )
 
 @Composable
-fun SearchScreen(navController: NavHostController) {
-    var searchQuery by remember { mutableStateOf("") }
+fun SearchScreen(
+    navController: NavHostController,
+    viewModel: SearchViewModel = hiltViewModel()
+) {
+    val searchQuery by viewModel.searchQuery.collectAsState()
+    val searchResults by viewModel.searchResults.collectAsState()
+    val isSearching by viewModel.isSearching.collectAsState()
+
     val focusRequester = remember { FocusRequester() }
 
-    // Sample recent searches data
-    val recentSearches = remember {
-        mutableStateListOf(
-            RecentSearch(1, R.drawable.agri_seeds, "Seeds"),
-            RecentSearch(2, R.drawable.agri_seeds, "Drone"),
-            RecentSearch(3, R.drawable.agri_seeds, "Power Sprayer"),
-            RecentSearch(4, R.drawable.agri_seeds, "Tomato's")
-        )
+    // Map the search results to the RecentSearch data class for compatibility with RecentSearchItem UI
+    val recentSearches = searchResults.map { 
+        RecentSearch(id = it.productId, imageRes = it.imageUrl, searchText = it.name)
     }
 
-    // Auto-focus the search field when screen opens
+    // Autofocus the search field when screen opens
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
     }
@@ -83,14 +87,14 @@ fun SearchScreen(navController: NavHostController) {
             // Search Box Component
             SearchBox(
                 value = searchQuery,
-                onValueChange = { searchQuery = it },
-                placeholder = "Search For",
+                onValueChange = { viewModel.onSearchQueryChange(it) },
+                placeholder = "Search For Products/Services/Rentals",
                 focusRequester = focusRequester
             )
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Recent Section Header
+            // Recent Section Header (Reused for search results to match UI exactly)
             if (recentSearches.isNotEmpty()) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -98,36 +102,40 @@ fun SearchScreen(navController: NavHostController) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Recent",
+                        text = if (searchQuery.length < 2) "Recent" else "Results",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = Color.Black
                     )
-                    TextButton(
-                        onClick = {
-                            recentSearches.clear()
+                    
+                    if (searchQuery.length < 2) {
+                        TextButton(
+                            onClick = {
+                                // Logic to clear recent if stored locally
+                            }
+                        ) {
+                            Text(
+                                text = "Clear all",
+                                fontSize = 14.sp,
+                                color = Teal
+                            )
                         }
-                    ) {
-                        Text(
-                            text = "Clear all",
-                            fontSize = 14.sp,
-                            color = Teal// Teal/Cyan color
-                        )
                     }
                 }
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // Recent Searches List
+                // Results List using the same visual component
                 recentSearches.forEach { search ->
                     RecentSearchItem(
-                        imageRes = search.imageRes,
+                        imageUrl = search.imageRes, // Assuming RecentSearchItem supports imageUrl now
                         searchText = search.searchText,
                         onItemClick = {
-                            searchQuery = search.searchText
+                            // Navigate to product details
+                            navController.navigate(Route.ProductDetails.createRoute(search.id))
                         },
                         onRemoveClick = {
-                            recentSearches.remove(search)
+                            // Optional: logic to remove from recent list if implemented
                         }
                     )
                 }

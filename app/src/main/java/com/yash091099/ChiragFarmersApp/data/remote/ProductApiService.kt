@@ -8,6 +8,7 @@ import com.yash091099.ChiragFarmersApp.data.remote.dto.MixedProductsResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailedResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailsResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductResponseDto
+import com.yash091099.ChiragFarmersApp.data.remote.dto.SearchProductResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ToggleSoldOutRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ToggleSoldOutResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateProductRequest
@@ -81,4 +82,10 @@ interface ProductApiService {
     suspend fun deleteProduct(
         @Header("Authorization") token: String, @Body request: DeleteProductRequest
     ): DeleteProductResponse
+
+    @GET("api/farmers/search")
+    suspend fun searchProducts(
+        @Header("Authorization") token: String,
+        @Query("query") query: String
+    ): SearchProductResponse
 }
