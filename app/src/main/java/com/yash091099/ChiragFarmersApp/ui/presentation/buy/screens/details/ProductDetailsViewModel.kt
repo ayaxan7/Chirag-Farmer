@@ -26,6 +26,9 @@ class ProductDetailsViewModel @Inject constructor(
     private val _cartState = MutableStateFlow<CartActionState>(CartActionState.Idle)
     val cartState: StateFlow<CartActionState> = _cartState.asStateFlow()
 
+    private val _isInCart = MutableStateFlow(false)
+    val isInCart: StateFlow<Boolean> = _isInCart.asStateFlow()
+
     private val productId: String = checkNotNull(savedStateHandle["productId"])
 
 //    init {
@@ -38,6 +41,7 @@ class ProductDetailsViewModel @Inject constructor(
 
             productRepository.getProductDetailsDetailed(productId).fold(
                 onSuccess = { productDetails ->
+                    _isInCart.value = productDetails.isInCart
                     _uiState.value = ProductDetailsUiState.Success(productDetails)
                 },
                 onFailure = { exception ->
@@ -54,8 +58,8 @@ class ProductDetailsViewModel @Inject constructor(
             _cartState.value = CartActionState.Loading
             addToCartUseCase(productId).fold(
                 onSuccess = { cartItemsCount ->
-                    // Refresh product details to get updated isInCart status
-                    loadProductDetails()
+                    // Don't reload product details, just update the local isInCart state
+                    _isInCart.value = true
                     _cartState.value = CartActionState.Success(cartItemsCount)
                 },
                 onFailure = { exception ->

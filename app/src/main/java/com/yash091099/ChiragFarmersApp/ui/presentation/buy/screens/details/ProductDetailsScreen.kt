@@ -83,6 +83,7 @@ fun ProductDetailsScreen(
     var selectedImageIndex by remember { mutableIntStateOf(0) }
     val uiState by viewModel.uiState.collectAsState()
     val cartState by viewModel.cartState.collectAsState()
+    val isInCart by viewModel.isInCart.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
@@ -91,12 +92,12 @@ fun ProductDetailsScreen(
     // Show snackbar when cart action completes
     when (val state = cartState) {
         is CartActionState.Success -> {
-//            LaunchedEffect(state) {
-//                coroutineScope.launch {
-//                    snackbarHostState.showSnackbar("Product added to cart! (${state.cartItemsCount} items)")
-//                    viewModel.resetCartState()
-//                }
-//            }
+            LaunchedEffect(state) {
+                coroutineScope.launch {
+                    snackbarHostState.showSnackbar("Product added to cart! (${state.cartItemsCount} items)")
+                    viewModel.resetCartState()
+                }
+            }
         }
         is CartActionState.Error -> {
             LaunchedEffect(state) {
@@ -201,8 +202,8 @@ fun ProductDetailsScreen(
                 )
             }, bottomBar = {
                 ProductDetailsBottomBar(
-                    product = product,
                     cartState = cartState,
+                    isInCart = isInCart,
                     onAddToCart = { viewModel.addToCart() }
                 )
             }) { paddingValues ->
@@ -608,8 +609,8 @@ fun ProductDetailsScreen(
 
 @Composable
 private fun ProductDetailsBottomBar(
-    product: ProductDetailedData,
     cartState: CartActionState,
+    isInCart: Boolean,
     onAddToCart: () -> Unit
 ) {
     Row(
@@ -625,9 +626,9 @@ private fun ProductDetailsBottomBar(
                 .weight(1f)
                 .height(50.dp),
             shape = RoundedCornerShape(8.dp),
-            enabled = cartState !is CartActionState.Loading && !product.isInCart,
+            enabled = cartState !is CartActionState.Loading && !isInCart,
             colors = ButtonDefaults.outlinedButtonColors(
-                containerColor = if (product.isInCart) Color.Gray else BGBlack,
+                containerColor = if (isInCart) Color.Gray else BGBlack,
                 contentColor = BGWhite,
                 disabledContainerColor = Color.Gray
             )
@@ -641,19 +642,19 @@ private fun ProductDetailsBottomBar(
             } else {
                 Icon(
                     painter = painterResource(
-                        if (product.isInCart) R.drawable.ic_cart_outlined else R.drawable.ic_cart_outlined
+                        if (isInCart) R.drawable.ic_cart_outlined else R.drawable.ic_cart_outlined
                     ),
-                    contentDescription = if (product.isInCart) "In Cart" else "Add to Cart",
+                    contentDescription = if (isInCart) "In Cart" else "Add to Cart",
                     modifier = Modifier.size(20.dp),
-                    tint = if (product.isInCart) BGWhite else BGWhite
+                    tint = if (isInCart) BGWhite else BGWhite
                 )
                 Spacer(modifier = Modifier.width(8.dp))
             }
             Text(
-                if (product.isInCart) "In Cart" else "Add to Cart",
+                if (isInCart) "In Cart" else "Add to Cart",
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
-                color = if (product.isInCart) Color.White else BGWhite
+                color = if (isInCart) Color.White else BGWhite
             )
         }
 
