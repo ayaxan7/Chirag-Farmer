@@ -5,22 +5,28 @@ import com.google.gson.annotations.SerializedName
 data class AddProductRequest(
     @SerializedName("title")
     val title: String,
-    @SerializedName("images")
-    val images: List<String>,
-    @SerializedName("category")
-    val category: String?,
     @SerializedName("description")
     val description: String?,
-    @SerializedName("availableStockWeight")
-    val availableStockWeight: Double?,
+    @SerializedName("category")
+    val category: String,
+    @SerializedName("subcategory")
+    val subcategory: String? = null,
     @SerializedName("price")
     val price: Double,
     @SerializedName("discount")
     val discount: Double? = null,
     @SerializedName("deliveryFee")
     val deliveryFee: Double? = null,
+    @SerializedName("unit")
+    val unit: String? = null,
+    @SerializedName("quantity")
+    val quantity: Int? = null,
+    @SerializedName("images")
+    val images: List<String>,
     @SerializedName("location")
-    val location: LocationRequestDto
+    val location: LocationRequestDto,
+    @SerializedName("keyFeatures")
+    val keyFeatures: List<String>? = null
 )
 
 data class LocationRequestDto(

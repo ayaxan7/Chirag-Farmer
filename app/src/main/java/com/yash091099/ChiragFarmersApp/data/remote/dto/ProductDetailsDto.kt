@@ -34,6 +34,8 @@ data class ProductDetailsData(
     val discount: Double? = null,
     @SerializedName("deliveryFee")
     val deliveryFee: Double? = null,
+    @SerializedName("keyFeatures")
+    val keyFeatures: List<String>? = null,
     @SerializedName("isAvailable")
     val isAvailable: Boolean,
     @SerializedName("createdAt")

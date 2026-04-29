@@ -85,6 +85,7 @@ fun SellProducesScreen(
     var discountPercent by remember { mutableStateOf("") }
     var deliveryFeePerKm by remember { mutableStateOf("") }
     var productDescription by remember { mutableStateOf("") }
+    var productFeatures by remember { mutableStateOf("") }
 
     val selectedImageUris by viewModel.selectedImageUris.collectAsStateWithLifecycle()
     val existingImageUrls by viewModel.existingImageUrls.collectAsStateWithLifecycle()
@@ -148,6 +149,8 @@ fun SellProducesScreen(
                 discountPercent = product.discount?.toString() ?: ""
                 deliveryFeePerKm = product.deliveryFee?.toString() ?: ""
                 productDescription = product.description ?: ""
+                val featuresList = state.product.keyFeatures ?: emptyList()
+                productFeatures = featuresList.joinToString(", ")
                 viewModel.resetFetchState()
             }
 
@@ -384,12 +387,15 @@ fun SellProducesScreen(
                     minHeight = 120
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                FieldLabel(text = "Produce Features")
+                FieldLabel(text = "Produce Features (Comma separated)")
                 Spacer(modifier = Modifier.height(6.dp))
                 MultiLineTextField(
-                    value = productDescription,
-                    onValueChange = { productDescription = it },
-                    placeholder = "Add Produce Features",
+                    value = productFeatures,
+                    onValueChange = { 
+                        productFeatures = it
+                        viewModel.onKeyFeaturesChange(it)
+                    },
+                    placeholder = "Feature 1, Feature 2, Feature 3",
                     minHeight = 80
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -410,6 +416,7 @@ fun SellProducesScreen(
                     else if (addProductState is AddProductState.Loading) "Submitting..."
                     else if (isEditMode) "Update Product"
                     else "Submit", onClick = {
+                        val keyFeaturesList = productFeatures.split(",").map { it.trim() }.filter { it.isNotEmpty() }
                         viewModel.submitProduct(
                             context = context,
                             category = productCategory,
@@ -419,7 +426,10 @@ fun SellProducesScreen(
                             discount = discountPercent,
                             deliveryFee = deliveryFeePerKm,
                             description = productDescription,
-                            isUpdate = isEditMode
+                            isUpdate = isEditMode,
+                            unit = selectedUnit,
+                            quantity = availableStock.toIntOrNull(),
+                            keyFeatures = keyFeaturesList
                         )
                     }, enabled = if (isEditMode) {
                         productCategory.isNotEmpty() && productTitle.isNotEmpty() && pricing.isNotEmpty() && addProductState !is AddProductState.Loading && addProductState !is AddProductState.UploadingProduct && fetchProductState !is FetchProductState.Loading

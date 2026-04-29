@@ -67,6 +67,9 @@ class SellProducesViewModel @Inject constructor(
     private val _existingImageUrls = MutableStateFlow<List<String>>(emptyList())
     val existingImageUrls: StateFlow<List<String>> = _existingImageUrls.asStateFlow()
 
+    private val _keyFeatures = MutableStateFlow<List<String>>(emptyList())
+    val keyFeatures: StateFlow<List<String>> = _keyFeatures.asStateFlow()
+
     private val _productId = MutableStateFlow<String?>(null)
 
     private var searchJob: Job? = null
@@ -148,6 +151,10 @@ class SellProducesViewModel @Inject constructor(
         }
     }
 
+    fun onKeyFeaturesChange(featuresString: String) {
+        _keyFeatures.value = featuresString.split(",").map { it.trim() }.filter { it.isNotEmpty() }
+    }
+
     fun submitProduct(
         context: Context,
         category: String,
@@ -157,7 +164,11 @@ class SellProducesViewModel @Inject constructor(
         discount: String,
         deliveryFee: String,
         description: String,
-        isUpdate: Boolean = false
+        isUpdate: Boolean = false,
+        subcategory: String? = null,
+        unit: String? = null,
+        quantity: Int? = null,
+        keyFeatures: List<String>? = null
     ) {
         viewModelScope.launch {
             try {
@@ -193,7 +204,6 @@ class SellProducesViewModel @Inject constructor(
                     }
 
                     // Parse numeric values
-                    val stockWeight = availableStock.toDoubleOrNull()
                     val priceValue = price.toDoubleOrNull()
                     val discountValue = discount.takeIf { it.isNotBlank() }?.toDoubleOrNull()
                     val deliveryFeeValue = deliveryFee.takeIf { it.isNotBlank() }?.toDoubleOrNull()
@@ -219,11 +229,13 @@ class SellProducesViewModel @Inject constructor(
                         title = title.takeIf { it.isNotEmpty() },
                         images = if (allImageUrls.isNotEmpty()) allImageUrls else null,
                         category = category.takeIf { it.isNotEmpty() },
+                        subcategory = subcategory,
                         description = description.takeIf { it.isNotEmpty() },
-                        availableStockWeight = stockWeight,
                         price = priceValue,
                         discount = discountValue,
                         deliveryFee = deliveryFeeValue,
+                        quantity = quantity,
+                        keyFeatures = keyFeatures,
                         location = selectedLoc?.let {
                             LocationRequestDto(
                                 name = it.displayName,
@@ -269,7 +281,6 @@ class SellProducesViewModel @Inject constructor(
                     }
 
                     // Parse numeric values
-                    val stockWeight = availableStock.toDoubleOrNull()
                     val priceValue = price.toDoubleOrNull()
                     val discountValue = discount.takeIf { it.isNotBlank() }?.toDoubleOrNull()
                     val deliveryFeeValue = deliveryFee.takeIf { it.isNotBlank() }?.toDoubleOrNull()
@@ -293,12 +304,15 @@ class SellProducesViewModel @Inject constructor(
                     val request = AddProductRequest(
                         title = title,
                         images = uploadedImageUrls, // All uploaded images
-                        category = category.takeIf { it.isNotEmpty() },
-                        description = description.takeIf { it.isNotEmpty() },
-                        availableStockWeight = stockWeight,
+                        category = category,
+                        subcategory = subcategory,
+                        description = description.takeIf { it.isNotBlank() },
                         price = priceValue,
                         discount = discountValue,
                         deliveryFee = deliveryFeeValue,
+                        unit = unit,
+                        quantity = quantity,
+                        keyFeatures = keyFeatures,
                         location = LocationRequestDto(
                             name = selectedLoc.displayName,
                             coordinates = listOf(selectedLoc.longitude, selectedLoc.latitude)
