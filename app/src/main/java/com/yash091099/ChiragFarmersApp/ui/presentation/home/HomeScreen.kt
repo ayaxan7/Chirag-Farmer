@@ -171,8 +171,8 @@ fun HomeScreen(
                 is HomeMixedProductsUiState.Success -> {
                     val successState = homeMixedProductsUiState as HomeMixedProductsUiState.Success
 
-                    // Smart Farming Products (Vendor Products) — show max 2 items, 1 row of 2
-                    if (successState.vendorProducts.isNotEmpty()) {
+                    // Smart Farming Products — show max 2 items, 1 row of 2
+                    if (successState.smartFarmingProducts.isNotEmpty()) {
                         CategoryHeader(
                             category = "Smart Farming",
                             btnText = "View All",
@@ -180,7 +180,7 @@ fun HomeScreen(
                                 navController.navigate(Route.BuyCategory.createRoute("Smart Farming", R.drawable.buy_banner))
                             }
                         )
-                        val smartFarmingItems = successState.vendorProducts.take(2)
+                        val smartFarmingItems = successState.smartFarmingProducts.take(2)
                         smartFarmingItems.chunked(2).forEach { rowItems ->
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
@@ -242,7 +242,7 @@ fun HomeScreen(
                                             originalPrice = product.originalPrice.toString(),
                                             rating = "4.5"
                                         ),
-                                        onClick={
+                                        onClick = {
                                             navController.navigate(Route.ProductDetails.createRoute(product.id))
                                         }
                                     )

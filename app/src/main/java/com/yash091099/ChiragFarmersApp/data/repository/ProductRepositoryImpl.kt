@@ -112,7 +112,7 @@ class ProductRepositoryImpl @Inject constructor(
                 return Result.failure(Exception("Authentication token not found"))
             }
 
-            val response = apiService.getMixedProducts("Bearer $token", screen = "homeScreen")
+            val response = apiService.getMixedProducts("Bearer $token")
             if (response.success && response.data != null) {
                 Result.success(response.data)
             } else {

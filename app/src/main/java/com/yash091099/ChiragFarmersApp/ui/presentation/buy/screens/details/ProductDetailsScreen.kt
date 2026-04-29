@@ -308,46 +308,52 @@ fun ProductDetailsScreen(
                         Row(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(
-                                text = "₹${product.discountedPrice}",
-                                fontSize = 24.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color.Black
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
+                            if(product.discountedPrice!=product.originalPrice) {
+                                Text(
+                                    text = "₹${product.discountedPrice}",
+                                    fontSize = 24.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.Black
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                            }
                             Text(
                                 text = "₹${product.originalPrice}",
                                 fontSize = 14.sp,
-                                color = Color(0xFF999999),
-                                textDecoration = TextDecoration.LineThrough
+                                fontWeight = if(product.discountedPrice!=product.originalPrice) FontWeight.Normal else FontWeight.Bold,
+                                color = if(product.discountedPrice!=product.originalPrice) Color(0xFF999999) else BGBlack,
+                                textDecoration = if(product.discountedPrice!=product.originalPrice) TextDecoration.LineThrough else null
                             )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = "${product.discountPercent.toInt()}% OFF",
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color(0xFF4CAF50)
-                            )
+                            if(product.discountedPrice!=product.originalPrice) {
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    text = "${product.discountPercent.toInt()}% OFF",
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color(0xFF4CAF50)
+                                )
+                            }
                         }
 
                         Spacer(modifier = Modifier.height(16.dp))
 
                         // Product Description
-                        Text(
-                            text = "Product Description",
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = Color.Black
-                        )
-                        Spacer(modifier = Modifier.height(6.dp))
-                        Text(
-                            text = product.productDescription ?: "No description available",
-                            fontSize = 13.sp,
-                            color = TextGray,
-                            lineHeight = 13.sp
-                        )
-
-                        Spacer(modifier = Modifier.height(16.dp))
+                        if(!product.productDescription.isNullOrEmpty()) {
+                            Text(
+                                text = "Product Description",
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = Color.Black
+                            )
+                            Spacer(modifier = Modifier.height(6.dp))
+                            Text(
+                                text = product.productDescription,
+                                fontSize = 13.sp,
+                                color = TextGray,
+                                lineHeight = 13.sp
+                            )
+                            Spacer(modifier = Modifier.height(16.dp))
+                        }
 
                         // Key Features
                         if (product.keyFeatures.isNotEmpty()) {

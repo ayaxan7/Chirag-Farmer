@@ -29,7 +29,8 @@ sealed class BookingStatus {
 sealed class HomeMixedProductsUiState {
     object Loading : HomeMixedProductsUiState()
     data class Success(
-        val vendorProducts: List<MixedProductItem>,
+        val smartFarmingProducts: List<MixedProductItem>,
+        val directFromFarmersProducts: List<MixedProductItem>,
         val seedProducts: List<MixedProductItem>,
         val popularProducts: List<MixedProductItem>
     ) : HomeMixedProductsUiState()
@@ -114,7 +115,8 @@ class HomeViewModel @Inject constructor(
             productRepository.getMixedProductsForHomeScreen().fold(
                 onSuccess = { mixedProductsData ->
                     _homeMixedProductsUiState.value = HomeMixedProductsUiState.Success(
-                        vendorProducts = mixedProductsData.vendorProducts,
+                        smartFarmingProducts = mixedProductsData.vendorProducts,
+                        directFromFarmersProducts = mixedProductsData.directFromFarmersProducts,
                         seedProducts = mixedProductsData.seedProducts,
                         popularProducts = mixedProductsData.randomProducts
                     )
