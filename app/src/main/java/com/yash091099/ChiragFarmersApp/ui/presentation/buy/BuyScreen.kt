@@ -173,104 +173,112 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
                         }
                     }
 
-                    item(span = { GridItemSpan(maxLineSpan) }) {
-                        CategoryHeader(
-                            category = "Smart Farming"
-                        )
+                    if (validVendorProducts.isNotEmpty()) {
+                        item(span = { GridItemSpan(maxLineSpan) }) {
+                            CategoryHeader(
+                                category = "Smart Farming"
+                            )
+                        }
+
+                        items(validVendorProducts) { product ->
+                            CommonProductCard(
+                                product = CommonProductCardData(
+                                    imageUrl = product.imageUrl,
+                                    productName = product.productName,
+                                    brandName = product.sellerName,
+                                    currentPrice = product.finalPrice.toInt().toString(),
+                                    originalPrice = product.originalPrice.toInt().toString(),
+                                    rating = "4.5"
+                                ),onClick = {
+                                    navController.navigate(Route.ProductDetails.createRoute(product.id))
+                                },
+                                modifier = Modifier.padding(bottom = 12.dp)
+                            )
+                        }
                     }
 
-                    items(validVendorProducts) { product ->
-                        CommonProductCard(
-                            product = CommonProductCardData(
-                                imageUrl = product.imageUrl,
-                                productName = product.productName,
-                                brandName = product.sellerName,
-                                currentPrice = product.finalPrice.toInt().toString(),
-                                originalPrice = product.originalPrice.toInt().toString(),
-                                rating = "4.5"
-                            ),onClick = {
-                                navController.navigate(Route.ProductDetails.createRoute(product.id))
-                            },
-                            modifier = Modifier.padding(bottom = 12.dp)
-                        )
+                    if (validDirectFromFarmersProducts.isNotEmpty()) {
+                        item(span = { GridItemSpan(maxLineSpan) }) {
+                            CategoryHeader(
+                                category = "Direct From Farmers",
+                                btnText = "View All",
+                                onClick = {
+                                    val bannerResId = categoryBannerMap["Direct From Farmers"] ?: R.drawable.buy_banner
+                                    navController.navigate(Route.BuyCategory.createRoute("Direct From Farmers", bannerResId))
+                                }
+                            )
+                        }
+                        items(validDirectFromFarmersProducts) { product ->
+                            CommonProductCard(
+                                product = CommonProductCardData(
+                                    imageUrl = product.imageUrl,
+                                    productName = product.productName,
+                                    brandName = product.sellerName,
+                                    currentPrice = product.finalPrice.toInt().toString(),
+                                    originalPrice = product.originalPrice.toInt().toString(),
+                                    rating = "4.5"
+                                ),onClick = {
+                                    navController.navigate(Route.ProductDetails.createRoute(product.id))
+                                },
+                                modifier = Modifier.padding(bottom = 12.dp)
+                            )
+                        }
                     }
 
-                    item(span = { GridItemSpan(maxLineSpan) }) {
-                        CategoryHeader(
-                            category = "Direct From Farmers",
-                            btnText = "View All",
-                            onClick = {
-                                val bannerResId = categoryBannerMap["Direct From Farmers"] ?: R.drawable.buy_banner
-                                navController.navigate(Route.BuyCategory.createRoute("Direct From Farmers", bannerResId))
-                            }
-                        )
-                    }
-                    items(validDirectFromFarmersProducts) { product ->
-                        CommonProductCard(
-                            product = CommonProductCardData(
-                                imageUrl = product.imageUrl,
-                                productName = product.productName,
-                                brandName = product.sellerName,
-                                currentPrice = product.finalPrice.toInt().toString(),
-                                originalPrice = product.originalPrice.toInt().toString(),
-                                rating = "4.5"
-                            ),onClick = {
-                                navController.navigate(Route.ProductDetails.createRoute(product.id))
-                            },
-                            modifier = Modifier.padding(bottom = 12.dp)
-                        )
-                    }
-
-                    item(span = { GridItemSpan(maxLineSpan) }) {
-                        CategoryHeader(
-                            category = "Seeds",
-                            btnText = "View All",
-                            onClick = {
-                                val bannerResId = categoryBannerMap["Seeds"] ?: R.drawable.buy_banner
-                                navController.navigate(Route.BuyCategory.createRoute("Seeds", bannerResId))
-                            }
-                        )
-                    }
-                    items(validSeedProducts) { product ->
-                        CommonProductCard(
-                            product = CommonProductCardData(
-                                imageUrl = product.imageUrl,
-                                productName = product.productName,
-                                brandName = product.sellerName,
-                                currentPrice = product.finalPrice.toInt().toString(),
-                                originalPrice = product.originalPrice.toInt().toString(),
-                                rating = "4.5"
-                            ),onClick = {
-                                navController.navigate(Route.ProductDetails.createRoute(product.id))
-                            },
-                            modifier = Modifier.padding(bottom = 12.dp)
-                        )
+                    if (validSeedProducts.isNotEmpty()) {
+                        item(span = { GridItemSpan(maxLineSpan) }) {
+                            CategoryHeader(
+                                category = "Seeds",
+                                btnText = "View All",
+                                onClick = {
+                                    val bannerResId = categoryBannerMap["Seeds"] ?: R.drawable.buy_banner
+                                    navController.navigate(Route.BuyCategory.createRoute("Seeds", bannerResId))
+                                }
+                            )
+                        }
+                        items(validSeedProducts) { product ->
+                            CommonProductCard(
+                                product = CommonProductCardData(
+                                    imageUrl = product.imageUrl,
+                                    productName = product.productName,
+                                    brandName = product.sellerName,
+                                    currentPrice = product.finalPrice.toInt().toString(),
+                                    originalPrice = product.originalPrice.toInt().toString(),
+                                    rating = "4.5"
+                                ),onClick = {
+                                    navController.navigate(Route.ProductDetails.createRoute(product.id))
+                                },
+                                modifier = Modifier.padding(bottom = 12.dp)
+                            )
+                        }
                     }
 
-                    item(span = { GridItemSpan(maxLineSpan) }) {
-                        CategoryHeader(
-                            category = "Popular Products",
-                            btnText = "View All",
-                            onClick = {
-                                navController.navigate(Route.BuyCategory.createRoute("Popular Products"))
-                            }
-                        )
-                    }
-                    items(validRandomProducts) { product ->
-                        CommonProductCard(
-                            product = CommonProductCardData(
-                                imageUrl = product.imageUrl,
-                                productName = product.productName,
-                                brandName = product.sellerName,
-                                currentPrice = product.finalPrice.toInt().toString(),
-                                originalPrice = product.originalPrice.toInt().toString(),
-                                rating = "4.5"
-                            ),
-                            onClick = {
-                                navController.navigate(Route.ProductDetails.createRoute(product.id))
-                            },
-                            modifier = Modifier.padding(bottom = 12.dp)
-                        )
+                    if (validRandomProducts.isNotEmpty()) {
+                        item(span = { GridItemSpan(maxLineSpan) }) {
+                            CategoryHeader(
+                                category = "Popular Products",
+                                btnText = "View All",
+                                onClick = {
+                                    navController.navigate(Route.BuyCategory.createRoute("Popular Products"))
+                                }
+                            )
+                        }
+                        items(validRandomProducts) { product ->
+                            CommonProductCard(
+                                product = CommonProductCardData(
+                                    imageUrl = product.imageUrl,
+                                    productName = product.productName,
+                                    brandName = product.sellerName,
+                                    currentPrice = product.finalPrice.toInt().toString(),
+                                    originalPrice = product.originalPrice.toInt().toString(),
+                                    rating = "4.5"
+                                ),
+                                onClick = {
+                                    navController.navigate(Route.ProductDetails.createRoute(product.id))
+                                },
+                                modifier = Modifier.padding(bottom = 12.dp)
+                            )
+                        }
                     }
 
                     item {

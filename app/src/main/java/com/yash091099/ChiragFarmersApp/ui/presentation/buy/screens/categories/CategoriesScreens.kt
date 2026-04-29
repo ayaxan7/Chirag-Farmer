@@ -68,12 +68,19 @@ fun CategoriesScreen(
 
     val products = viewModel.products.collectAsLazyPagingItems()
 
+    // Check if categoryName is a dynamic category (not in predefined list)
+    val isDynamicCategory = categoryName.isNotEmpty() && allCategories.none {
+        it.name.replace("\n", " ").equals(categoryName, ignoreCase = true)
+    }
+
     LaunchedEffect(categoryName) {
         viewModel.setCategoryName(categoryName)
     }
 
     LaunchedEffect(Unit) {
-        viewModel.onCategoryChipSelected("All Produces")
+        if (!isDynamicCategory) {
+            viewModel.onCategoryChipSelected("All Produces")
+        }
     }
 
     val categoryDisplayText =
@@ -129,14 +136,16 @@ fun CategoriesScreen(
                                 selectedCategoryId =
                                     if (selectedCategoryId == category.id) 0.0 else category.id
                                 val selectedCategoryName =
-                                    allCategories.find { it.id == selectedCategoryId }?.name
-                                        ?.replace("\n", " ")
-                                        ?: "All Produces"
+                                    allCategories.find { it.id == selectedCategoryId }?.name?.replace(
+                                            "\n",
+                                            " "
+                                        ) ?: "All Produces"
                                 viewModel.onCategoryChipSelected(selectedCategoryName)
                             })
                     }
                 }
             }
+
 
             item(span = { GridItemSpan(maxLineSpan) }) {
                 Row(
@@ -145,7 +154,9 @@ fun CategoriesScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = categoryDisplayText, fontSize = 16.sp, fontWeight = FontWeight.W600
+                        text = if (isDynamicCategory) categoryName else categoryDisplayText,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.W600
                     )
 
                     Row(
@@ -196,12 +207,9 @@ fun CategoriesScreen(
                         originalPrice = product.originalPrice.takeIf { it > 0 }?.toString(),
                         rating = "4.8",
                         imageUrl = product.imageUrl
-                    ),
-                    isSellScreen = false,
-                    onClick = {
+                    ), isSellScreen = false, onClick = {
                         navController.navigate(Route.ProductDetails.createRoute(product.productId))
-                    }
-                )
+                    })
             }
 
             when (val appendState = products.loadState.append) {

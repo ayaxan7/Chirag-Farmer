@@ -66,6 +66,7 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.buy.screens.details.compo
 import com.yash091099.ChiragFarmersApp.ui.presentation.buy.screens.details.components.ReviewCard
 import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.CommonProductCard
 import com.yash091099.ChiragFarmersApp.ui.presentation.common.data.CommonProductCardData
+import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost.Route
 import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
 import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
 import com.yash091099.ChiragFarmersApp.ui.theme.TextGray
@@ -182,7 +183,9 @@ fun ProductDetailsScreen(
                             )
                         }
 
-                        IconButton(onClick = { /* Cart */ }) {
+                        IconButton(onClick = { navController.navigate(
+                            Route.Cart.path
+                        ) }) {
                             Icon(
                                 painterResource(R.drawable.ic_cart_outlined),
                                 contentDescription = "Cart",
