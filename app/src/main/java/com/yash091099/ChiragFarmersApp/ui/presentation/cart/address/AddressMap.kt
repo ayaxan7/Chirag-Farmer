@@ -83,6 +83,8 @@ fun AddressMapScreen(
 ) {
     val currentLocation by viewModel.currentLocation.collectAsState()
     val currentAddress by viewModel.currentAddress.collectAsState()
+    val locationQuery by viewModel.locationQuery.collectAsState()
+    val locationSuggestions by viewModel.locationSuggestions.collectAsState()
     val isLoadingLocation by viewModel.isLoadingLocation.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
     val hasDefaultLocation by viewModel.hasDefaultLocation.collectAsState()
@@ -105,8 +107,14 @@ fun AddressMapScreen(
         LocationSelectionBottomSheet(
             onDismissRequest = { showLocationSelectionSheet = false },
             onLocationSelected = { address ->
+                // ViewModel now handles marker relocation and address update in onLocationSelected
                 showLocationSelectionSheet = false
-            })
+            },
+            locationQuery = locationQuery,
+            locationSuggestions = locationSuggestions,
+            onLocationQueryChange = { viewModel.onLocationQueryChange(it) },
+            onSuggestionClick = { viewModel.onLocationSelected(it) }
+        )
     }
 
     if (showAddressDetailsSheet) {
@@ -119,7 +127,9 @@ fun AddressMapScreen(
             onChangeLocationClick = {
                 showAddressDetailsSheet = false
                 showLocationSelectionSheet = true
-            })
+            },
+            currentAddress = currentAddress
+        )
     }
 
     Scaffold(
@@ -335,7 +345,12 @@ fun AddressDetailCard(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LocationSelectionBottomSheet(
-    onDismissRequest: () -> Unit, onLocationSelected: (String) -> Unit
+    onDismissRequest: () -> Unit,
+    onLocationSelected: (String) -> Unit,
+    locationQuery: String,
+    locationSuggestions: List<com.yash091099.ChiragFarmersApp.domain.model.Location>,
+    onLocationQueryChange: (String) -> Unit,
+    onSuggestionClick: (com.yash091099.ChiragFarmersApp.domain.model.Location) -> Unit
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
@@ -377,23 +392,19 @@ fun LocationSelectionBottomSheet(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(50.dp)
                     .background(Color.White, RoundedCornerShape(12.dp))
                     .border(1.dp, Color(0xFFE0E0E0), RoundedCornerShape(12.dp))
-                    .padding(horizontal = 16.dp), contentAlignment = Alignment.CenterStart
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_search),
-                        contentDescription = null,
-                        tint = Color.Black,
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Spacer(modifier = Modifier.width(12.dp))
-                    Text(
-                        text = "Search For area, street name.....",
-                        color = Color.Gray,
-                        fontSize = 14.sp
+                Column {
+                    com.yash091099.ChiragFarmersApp.ui.presentation.home.components.bookservicecard.components.LocationInputField(
+                        value = locationQuery,
+                        onValueChange = onLocationQueryChange,
+                        placeholder = "Search For area, street name.....",
+                        suggestions = locationSuggestions,
+                        onSuggestionClick = {
+                            onSuggestionClick(it)
+                            onLocationSelected(it.displayName)
+                        }
                     )
                 }
             }
@@ -524,7 +535,10 @@ fun RecentLocationItem(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddressDetailsBottomSheet(
-    onDismissRequest: () -> Unit, onConfirmClick: () -> Unit, onChangeLocationClick: () -> Unit
+    onDismissRequest: () -> Unit,
+    onConfirmClick: () -> Unit,
+    onChangeLocationClick: () -> Unit,
+    currentAddress: String
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
@@ -616,7 +630,7 @@ fun AddressDetailsBottomSheet(
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            text = "45 Lake View Colony, Banjara Hills, Hyderabad, Telangana.",
+                            text = currentAddress,
                             modifier = Modifier.weight(1f),
                             fontSize = 13.sp,
                             color = Color.Gray,
@@ -746,7 +760,14 @@ fun AddressMapScreenPreview() {
 @Composable
 fun LocationSelectionBottomSheetPreview() {
     ChiragFarmerTheme {
-        LocationSelectionBottomSheet(onDismissRequest = {}, onLocationSelected = {})
+        LocationSelectionBottomSheet(
+            onDismissRequest = {},
+            onLocationSelected = {},
+            locationQuery = "",
+            locationSuggestions = emptyList(),
+            onLocationQueryChange = {},
+            onSuggestionClick = {}
+        )
     }
 }
 
@@ -757,6 +778,7 @@ fun AddressDetailsBottomSheetPreview() {
         AddressDetailsBottomSheet(
             onDismissRequest = {},
             onConfirmClick = {},
-            onChangeLocationClick = {})
+            onChangeLocationClick = {},
+            currentAddress = "Sample Address")
     }
 }

@@ -8,9 +8,13 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
+import com.yash091099.ChiragFarmersApp.domain.model.Location
 import com.yash091099.ChiragFarmersApp.domain.usecase.GetDefaultDeliveryLocationUseCase
+import com.yash091099.ChiragFarmersApp.domain.usecase.GetLocationSuggestionsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,7 +27,8 @@ import javax.inject.Inject
 @HiltViewModel
 class AddressMapViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val getDefaultDeliveryLocationUseCase: GetDefaultDeliveryLocationUseCase
+    private val getDefaultDeliveryLocationUseCase: GetDefaultDeliveryLocationUseCase,
+    private val getLocationSuggestionsUseCase: GetLocationSuggestionsUseCase
 ) : ViewModel() {
 
     private val fusedLocationClient: FusedLocationProviderClient =
@@ -33,8 +38,14 @@ class AddressMapViewModel @Inject constructor(
     private val _currentLocation = MutableStateFlow<GeoPoint?>(null)
     val currentLocation: StateFlow<GeoPoint?> = _currentLocation.asStateFlow()
 
-    private val _currentAddress = MutableStateFlow<String>("45 Lake View Colony, Banjara Hills, Hyderabad, Telangana")
+    private val _currentAddress = MutableStateFlow("Fetching location...")
     val currentAddress: StateFlow<String> = _currentAddress.asStateFlow()
+
+    private val _locationQuery = MutableStateFlow("")
+    val locationQuery: StateFlow<String> = _locationQuery.asStateFlow()
+
+    private val _locationSuggestions = MutableStateFlow<List<Location>>(emptyList())
+    val locationSuggestions: StateFlow<List<Location>> = _locationSuggestions.asStateFlow()
 
     private val _isLoadingLocation = MutableStateFlow(false)
     val isLoadingLocation: StateFlow<Boolean> = _isLoadingLocation.asStateFlow()
@@ -44,6 +55,8 @@ class AddressMapViewModel @Inject constructor(
 
     private val _hasDefaultLocation = MutableStateFlow(false)
     val hasDefaultLocation: StateFlow<Boolean> = _hasDefaultLocation.asStateFlow()
+
+    private var searchJob: Job? = null
 
     init {
         fetchDefaultDeliveryLocation()
@@ -55,7 +68,7 @@ class AddressMapViewModel @Inject constructor(
                 onSuccess = { locationData ->
                     if (locationData != null) {
                         _hasDefaultLocation.value = true
-                        _currentAddress.value = locationData.addressString ?: "45 Lake View Colony, Banjara Hills, Hyderabad, Telangana"
+                        _currentAddress.value = locationData.addressString ?: ""
                         // Set location from coordinates if available
                         locationData.coordinates?.let { coords ->
                             if (coords.size >= 2) {
@@ -132,25 +145,8 @@ class AddressMapViewModel @Inject constructor(
     }
 
     private fun buildAddressString(address: Address): String {
-        val addressParts = mutableListOf<String>()
-
-        // Add street address
-        address.thoroughfare?.let { addressParts.add(it) }
-
-        // Add locality (city)
-        address.locality?.let { addressParts.add(it) }
-
-        // Add admin area (state/province)
-        address.adminArea?.let { addressParts.add(it) }
-
-        // Add postal code
-        address.postalCode?.let { addressParts.add(it) }
-
-        return if (addressParts.isNotEmpty()) {
-            addressParts.joinToString(", ")
-        } else {
-            address.getAddressLine(0) ?: "Unknown Location"
-        }
+        val addressLines = (0..address.maxAddressLineIndex).map { address.getAddressLine(it) }
+        return addressLines.joinToString(", ")
     }
 
     fun updateLocationFromCoordinates(latitude: Double, longitude: Double) {
@@ -166,9 +162,34 @@ class AddressMapViewModel @Inject constructor(
         }
     }
 
+    fun onLocationQueryChange(query: String) {
+        _locationQuery.value = query
+        searchJob?.cancel()
+        if (query.isNotEmpty()) {
+            searchJob = viewModelScope.launch {
+                delay(300)
+                getLocationSuggestionsUseCase(query).onSuccess {
+                    _locationSuggestions.value = it
+                }.onFailure {
+                    _locationSuggestions.value = emptyList()
+                }
+            }
+        } else {
+            _locationSuggestions.value = emptyList()
+        }
+    }
+
+    fun onLocationSelected(location: Location) {
+        _currentLocation.value = GeoPoint(location.latitude, location.longitude)
+        _currentAddress.value = location.displayName
+        _locationSuggestions.value = emptyList()
+        _locationQuery.value = ""
+    }
+
     fun clearError() {
         _errorMessage.value = null
     }
 }
+
 
 
