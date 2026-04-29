@@ -11,12 +11,17 @@ import com.google.android.gms.location.Priority
 import com.yash091099.ChiragFarmersApp.domain.model.Location
 import com.yash091099.ChiragFarmersApp.domain.usecase.GetDefaultDeliveryLocationUseCase
 import com.yash091099.ChiragFarmersApp.domain.usecase.GetLocationSuggestionsUseCase
+import com.yash091099.ChiragFarmersApp.domain.usecase.AddDeliveryLocationUseCase
+import com.yash091099.ChiragFarmersApp.data.remote.dto.AddDeliveryLocationRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -28,7 +33,8 @@ import javax.inject.Inject
 class AddressMapViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val getDefaultDeliveryLocationUseCase: GetDefaultDeliveryLocationUseCase,
-    private val getLocationSuggestionsUseCase: GetLocationSuggestionsUseCase
+    private val getLocationSuggestionsUseCase: GetLocationSuggestionsUseCase,
+    private val addDeliveryLocationUseCase: AddDeliveryLocationUseCase
 ) : ViewModel() {
 
     private val fusedLocationClient: FusedLocationProviderClient =
@@ -56,7 +62,17 @@ class AddressMapViewModel @Inject constructor(
     private val _hasDefaultLocation = MutableStateFlow(false)
     val hasDefaultLocation: StateFlow<Boolean> = _hasDefaultLocation.asStateFlow()
 
+    private val _navigationEvent = MutableSharedFlow<AddressMapNavigationEvent>()
+    val navigationEvent: SharedFlow<AddressMapNavigationEvent> = _navigationEvent.asSharedFlow()
+
     private var searchJob: Job? = null
+
+    // Form fields
+    var receiverName = MutableStateFlow("")
+    var receiverContact = MutableStateFlow("")
+    var floor = MutableStateFlow("")
+    var landmark = MutableStateFlow("")
+    var selectedCategory = MutableStateFlow("Home")
 
     init {
         fetchDefaultDeliveryLocation()
@@ -69,6 +85,11 @@ class AddressMapViewModel @Inject constructor(
                     if (locationData != null) {
                         _hasDefaultLocation.value = true
                         _currentAddress.value = locationData.addressString ?: ""
+
+                        // pre-fill some fields if they exist
+                        receiverName.value = locationData.receiverName ?: ""
+                        receiverContact.value = locationData.receiverContact ?: ""
+
                         // Set location from coordinates if available
                         locationData.coordinates?.let { coords ->
                             if (coords.size >= 2) {
@@ -86,6 +107,42 @@ class AddressMapViewModel @Inject constructor(
                     _hasDefaultLocation.value = false
                     // On failure, also try to fetch current location
                     fetchCurrentLocation()
+                }
+            )
+        }
+    }
+
+    fun addDeliveryLocation() {
+        val location = _currentLocation.value ?: return
+        val addressString = _currentAddress.value
+        
+        // Extract pincode if possible, or leave empty for user to fill if we had a field
+        // For now using empty or a placeholder if geocoder doesn't provide it
+        val pincode = "123456" // Default or extracted
+
+        val request = AddDeliveryLocationRequest(
+            name = selectedCategory.value,
+            receiverName = receiverName.value,
+            receiverContact = receiverContact.value,
+            addressString = addressString,
+            completeAddress = addressString, // Using addressString as completeAddress for now
+            pincode = pincode,
+            latitude = location.latitude,
+            longitude = location.longitude,
+            floor = floor.value.takeIf { it.isNotBlank() },
+            landmark = landmark.value.takeIf { it.isNotBlank() }
+        )
+
+        viewModelScope.launch {
+            _isLoadingLocation.value = true
+            addDeliveryLocationUseCase(request).fold(
+                onSuccess = {
+                    _isLoadingLocation.value = false
+                    _navigationEvent.emit(AddressMapNavigationEvent.NavigateBackToCart)
+                },
+                onFailure = {
+                    _isLoadingLocation.value = false
+                    _errorMessage.value = it.message ?: "Failed to add location"
                 }
             )
         }
@@ -189,6 +246,10 @@ class AddressMapViewModel @Inject constructor(
     fun clearError() {
         _errorMessage.value = null
     }
+}
+
+sealed class AddressMapNavigationEvent {
+    object NavigateBackToCart : AddressMapNavigationEvent()
 }
 
 

@@ -7,8 +7,18 @@ data class DefaultLocationData(
     val id: String? = null,
     @SerializedName("name")
     val name: String? = null,
+    @SerializedName("receiverName")
+    val receiverName: String? = null,
+    @SerializedName("receiverContact")
+    val receiverContact: String? = null,
     @SerializedName("addressString")
     val addressString: String? = null,
+    @SerializedName("completeAddress")
+    val completeAddress: String? = null,
+    @SerializedName("floor")
+    val floor: String? = null,
+    @SerializedName("landmark")
+    val landmark: String? = null,
     @SerializedName("pincode")
     val pincode: String? = null,
     @SerializedName("coordinates")

@@ -219,16 +219,18 @@ fun CartScreen(
                                     Spacer(modifier = Modifier.width(12.dp))
                                     Column(modifier = Modifier.weight(1f)) {
                                         Text(
-                                            text = address.city,
+                                            text = address.name,
                                             fontSize = 14.sp,
-                                            fontWeight = FontWeight.Bold,
-                                            color = BGBlack
-                                        )
-                                        Spacer(modifier = Modifier.height(4.dp))
-                                        Text(
-                                            text = address.address,
-                                            fontSize = 13.sp,
                                             color = TextDarkGray,
+                                            lineHeight = 13.sp,
+                                            fontWeight = FontWeight.Bold,
+                                        )
+                                        Spacer(modifier = Modifier.height(2.dp))
+                                        Text(
+                                            text = address.addressString,
+                                            fontSize = 12.sp,
+                                            fontWeight = FontWeight.Normal,
+                                            color = BGBlack,
                                             lineHeight = 13.sp
                                         )
                                         Spacer(modifier = Modifier.height(2.dp))

@@ -15,6 +15,8 @@ import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateDefaultLocationRequ
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateDefaultLocationResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.FarmerAddressDto
 import com.yash091099.ChiragFarmersApp.data.remote.dto.DefaultLocationData
+import com.yash091099.ChiragFarmersApp.data.remote.dto.AddDeliveryLocationRequest
+import com.yash091099.ChiragFarmersApp.data.remote.dto.AddDeliveryLocationResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
@@ -220,6 +222,41 @@ class AuthRepository @Inject constructor(
             } else {
                 Result.failure(Exception(response.message))
             }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun addDeliveryLocation(request: AddDeliveryLocationRequest): Result<AddDeliveryLocationResponse> {
+        return try {
+            val token = chiragDataStore.getAuthToken().first()
+            if (token.isNullOrEmpty()) {
+                return Result.failure(Exception("No authentication token found"))
+            }
+            val response = apiService.addDeliveryLocation("Bearer $token", request)
+
+            if (response.success && response.data.isNotEmpty()) {
+                // The new location becomes the default address. 
+                // We update the data store with the latest added location info if applicable.
+                val latestLocation = response.data.first()
+                val defaultLocationData = DefaultLocationData(
+                    id = latestLocation.id,
+                    name = latestLocation.name,
+                    receiverName = latestLocation.receiverName,
+                    receiverContact = latestLocation.receiverContact,
+                    addressString = latestLocation.addressString,
+                    completeAddress = latestLocation.completeAddress,
+                    floor = latestLocation.floor,
+                    landmark = latestLocation.landmark,
+                    pincode = latestLocation.pincode,
+                    coordinates = latestLocation.coordinates
+                )
+                val locationJson = Gson().toJson(defaultLocationData)
+                chiragDataStore.saveDefaultLocation(locationJson)
+                chiragDataStore.saveLocationUpdatedOnLaunch(true)
+            }
+
+            Result.success(response)
         } catch (e: Exception) {
             Result.failure(e)
         }

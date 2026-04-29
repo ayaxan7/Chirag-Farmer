@@ -62,15 +62,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.ChiragButton
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragTopBar
+import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost.Route
 import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
 import com.yash091099.ChiragFarmersApp.ui.theme.ChiragFarmerTheme
 import com.yash091099.ChiragFarmersApp.ui.theme.TextDarkGray
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @SuppressLint("CoroutineCreationDuringComposition")
@@ -94,6 +97,18 @@ fun AddressMapScreen(
 
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        viewModel.navigationEvent.collectLatest { event ->
+            when (event) {
+                AddressMapNavigationEvent.NavigateBackToCart -> {
+                    navController.navigate(Route.Cart.path) {
+                        popUpTo(Route.Cart.path) { this.inclusive = true }
+                    }
+                }
+            }
+        }
+    }
 
     // Show error snackbar
     if (!errorMessage.isNullOrEmpty()) {
@@ -121,14 +136,14 @@ fun AddressMapScreen(
         AddressDetailsBottomSheet(
             onDismissRequest = { showAddressDetailsSheet = false },
             onConfirmClick = {
-                showAddressDetailsSheet = false
-                // Handle address confirmation
+                viewModel.addDeliveryLocation()
             },
             onChangeLocationClick = {
                 showAddressDetailsSheet = false
                 showLocationSelectionSheet = true
             },
-            currentAddress = currentAddress
+            currentAddress = currentAddress,
+            viewModel = viewModel
         )
     }
 
@@ -538,8 +553,16 @@ fun AddressDetailsBottomSheet(
     onDismissRequest: () -> Unit,
     onConfirmClick: () -> Unit,
     onChangeLocationClick: () -> Unit,
-    currentAddress: String
+    currentAddress: String,
+    viewModel: AddressMapViewModel = hiltViewModel()
 ) {
+    val receiverName by viewModel.receiverName.collectAsState()
+    val receiverContact by viewModel.receiverContact.collectAsState()
+    val floor by viewModel.floor.collectAsState()
+    val landmark by viewModel.landmark.collectAsState()
+    val selectedCategory by viewModel.selectedCategory.collectAsState()
+    val isLoading by viewModel.isLoadingLocation.collectAsState()
+
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
@@ -587,13 +610,21 @@ fun AddressDetailsBottomSheet(
 
                 // Receiver's Name
                 AddressInputField(
-                    label = "Receiver's name", value = "Nazmathulla Syed", onValueChange = {})
+                    label = "Receiver's name",
+                    value = receiverName,
+                    onValueChange = { viewModel.receiverName.value = it },
+                    placeholder = "Enter receiver's name"
+                )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Receiver's Contact
                 AddressInputField(
-                    label = "Receiver's contact", value = "+91 733********", onValueChange = {})
+                    label = "Receiver's contact",
+                    value = receiverContact,
+                    onValueChange = { viewModel.receiverContact.value = it },
+                    placeholder = "Enter receiver's contact"
+                )
 
                 Spacer(modifier = Modifier.height(20.dp))
 
@@ -604,7 +635,6 @@ fun AddressDetailsBottomSheet(
                     "Hotel" to Icons.Default.Apartment,
                     "Other" to Icons.Default.LocationOn
                 )
-                var selectedCategory by remember { mutableStateOf("Home") }
 
                 LazyRow(
                     modifier = Modifier.fillMaxWidth(),
@@ -615,7 +645,7 @@ fun AddressDetailsBottomSheet(
                             name = name,
                             icon = icon,
                             isSelected = selectedCategory == name,
-                            onClick = { selectedCategory = name })
+                            onClick = { viewModel.selectedCategory.value = name })
                     }
                 }
 
@@ -656,19 +686,20 @@ fun AddressDetailsBottomSheet(
 
                 // Additional Form Fields
                 AddressInputField(
-                    label = "Complete Address",
-                    placeholder = "Enter Complete Address",
-                    onValueChange = {})
+                    label = "Floor",
+                    value = floor,
+                    placeholder = "Floor Number",
+                    onValueChange = { viewModel.floor.value = it }
+                )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 AddressInputField(
-                    label = "Floor", placeholder = "Floor Number", onValueChange = {})
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                AddressInputField(
-                    label = "Landmark", placeholder = "Enter Landmark", onValueChange = {})
+                    label = "Landmark",
+                    value = landmark,
+                    placeholder = "Enter Landmark",
+                    onValueChange = { viewModel.landmark.value = it }
+                )
 
                 Spacer(modifier = Modifier.height(24.dp))
             }
@@ -680,8 +711,9 @@ fun AddressDetailsBottomSheet(
                     .padding(16.dp)
             ) {
                 ChiragButton(
-                    text = "Confirm address",
+                    text = if (isLoading) "Saving..." else "Confirm address",
                     onClick = onConfirmClick,
+                    enabled = !isLoading && receiverName.isNotBlank() && receiverContact.isNotBlank(),
                     modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.height(16.dp))

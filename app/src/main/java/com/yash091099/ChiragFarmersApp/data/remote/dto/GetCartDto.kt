@@ -49,10 +49,10 @@ data class CartItemDto(
 data class CartAddressDto(
     @SerializedName("_id")
     val id: String? = null,
-    @SerializedName("address")
-    val address: String = "",
-    @SerializedName("city")
-    val city: String = "",
+    @SerializedName("name")
+    val name: String = "",
+    @SerializedName("addressString")
+    val addressString: String = "",
     @SerializedName("pincode")
     val pincode: String = ""
 )
