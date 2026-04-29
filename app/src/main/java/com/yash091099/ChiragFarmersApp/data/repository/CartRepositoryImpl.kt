@@ -138,8 +138,8 @@ class CartRepositoryImpl @Inject constructor(
 
                 val address = buyNowData.defaultLocation?.let {
                     CartAddressDto(
-                        name = it.completeAddress ?: "",
-                        addressString = it.completeAddress?.split(",")?.lastOrNull()?.trim() ?: "",
+                        name = it.name ?: "",
+                        addressString = it.completeAddress ?: "",
                         pincode = it.pincode ?: ""
                     )
                 }

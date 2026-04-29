@@ -231,7 +231,8 @@ fun CartScreen(
                                             fontSize = 12.sp,
                                             fontWeight = FontWeight.Normal,
                                             color = BGBlack,
-                                            lineHeight = 13.sp
+                                            lineHeight = 16.sp,
+                                            maxLines = 2
                                         )
                                         Spacer(modifier = Modifier.height(2.dp))
                                         Row {
