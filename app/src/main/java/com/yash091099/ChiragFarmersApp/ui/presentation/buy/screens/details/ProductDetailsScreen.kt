@@ -62,6 +62,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.yash091099.ChiragFarmersApp.R
+import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailedData
 import com.yash091099.ChiragFarmersApp.ui.presentation.buy.screens.details.components.RatingProgressBar
 import com.yash091099.ChiragFarmersApp.ui.presentation.buy.screens.details.components.ReviewCard
 import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.CommonProductCard
@@ -84,16 +85,18 @@ fun ProductDetailsScreen(
     val cartState by viewModel.cartState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
-
+    LaunchedEffect(Unit) {
+        viewModel.loadProductDetails()
+    }
     // Show snackbar when cart action completes
     when (val state = cartState) {
         is CartActionState.Success -> {
-            LaunchedEffect(state) {
-                coroutineScope.launch {
-                    snackbarHostState.showSnackbar("Product added to cart! (${state.cartItemsCount} items)")
-                    viewModel.resetCartState()
-                }
-            }
+//            LaunchedEffect(state) {
+//                coroutineScope.launch {
+//                    snackbarHostState.showSnackbar("Product added to cart! (${state.cartItemsCount} items)")
+//                    viewModel.resetCartState()
+//                }
+//            }
         }
         is CartActionState.Error -> {
             LaunchedEffect(state) {
@@ -197,72 +200,11 @@ fun ProductDetailsScreen(
                     )
                 )
             }, bottomBar = {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(BGWhite)
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    OutlinedButton(
-                        onClick = { viewModel.addToCart() },
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(50.dp),
-                        shape = RoundedCornerShape(8.dp),
-                        enabled = cartState !is CartActionState.Loading && !product.isInCart,
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            containerColor = if (product.isInCart) Color.Gray else BGBlack,
-                            contentColor = BGWhite,
-                            disabledContainerColor = Color.Gray
-                        )
-                    ) {
-                        if (cartState is CartActionState.Loading) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(20.dp),
-                                color = BGWhite,
-                                strokeWidth = 2.dp
-                            )
-                        } else {
-                            Icon(
-                                painter = painterResource(
-                                    if (product.isInCart) R.drawable.ic_cart_outlined else R.drawable.ic_cart_outlined
-                                ),
-                                contentDescription = if (product.isInCart) "In Cart" else "Add to Cart",
-                                modifier = Modifier.size(20.dp),
-                                tint= if (product.isInCart) BGWhite else BGWhite
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                        }
-                        Text(
-                            if (product.isInCart) "In Cart" else "Add to Cart",
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = if (product.isInCart) Color.White else BGWhite
-                        )
-                    }
-
-                    Button(
-                        onClick = { /* Buy now */ },
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(50.dp),
-                        shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = BGWhite,
-                            contentColor = BGBlack
-                        ),
-                        border = BorderStroke(1.dp, Color.Black)
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_buy_now),
-                            contentDescription = "Buy Now",
-                            modifier = Modifier.size(20.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text("Buy Now", fontSize = 14.sp, fontWeight = FontWeight.Medium)
-                    }
-                }
+                ProductDetailsBottomBar(
+                    product = product,
+                    cartState = cartState,
+                    onAddToCart = { viewModel.addToCart() }
+                )
             }) { paddingValues ->
                 Column(
                     modifier = Modifier
@@ -663,3 +605,78 @@ fun ProductDetailsScreen(
         }
     }
 }
+
+@Composable
+private fun ProductDetailsBottomBar(
+    product: ProductDetailedData,
+    cartState: CartActionState,
+    onAddToCart: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(BGWhite)
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        OutlinedButton(
+            onClick = onAddToCart,
+            modifier = Modifier
+                .weight(1f)
+                .height(50.dp),
+            shape = RoundedCornerShape(8.dp),
+            enabled = cartState !is CartActionState.Loading && !product.isInCart,
+            colors = ButtonDefaults.outlinedButtonColors(
+                containerColor = if (product.isInCart) Color.Gray else BGBlack,
+                contentColor = BGWhite,
+                disabledContainerColor = Color.Gray
+            )
+        ) {
+            if (cartState is CartActionState.Loading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(20.dp),
+                    color = BGWhite,
+                    strokeWidth = 2.dp
+                )
+            } else {
+                Icon(
+                    painter = painterResource(
+                        if (product.isInCart) R.drawable.ic_cart_outlined else R.drawable.ic_cart_outlined
+                    ),
+                    contentDescription = if (product.isInCart) "In Cart" else "Add to Cart",
+                    modifier = Modifier.size(20.dp),
+                    tint = if (product.isInCart) BGWhite else BGWhite
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+            }
+            Text(
+                if (product.isInCart) "In Cart" else "Add to Cart",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium,
+                color = if (product.isInCart) Color.White else BGWhite
+            )
+        }
+
+        Button(
+            onClick = { /* Buy now */ },
+            modifier = Modifier
+                .weight(1f)
+                .height(50.dp),
+            shape = RoundedCornerShape(8.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = BGWhite,
+                contentColor = BGBlack
+            ),
+            border = BorderStroke(1.dp, Color.Black)
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_buy_now),
+                contentDescription = "Buy Now",
+                modifier = Modifier.size(20.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text("Buy Now", fontSize = 14.sp, fontWeight = FontWeight.Medium)
+        }
+    }
+}
+

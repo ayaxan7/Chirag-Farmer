@@ -28,11 +28,11 @@ class ProductDetailsViewModel @Inject constructor(
 
     private val productId: String = checkNotNull(savedStateHandle["productId"])
 
-    init {
-        loadProductDetails()
-    }
+//    init {
+//        loadProductDetails()
+//    }
 
-    private fun loadProductDetails() {
+    fun loadProductDetails() {
         viewModelScope.launch {
             _uiState.value = ProductDetailsUiState.Loading
 
