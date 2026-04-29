@@ -3,7 +3,6 @@ package com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost
 import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -11,7 +10,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.yash091099.ChiragFarmersApp.R
-import com.yash091099.ChiragFarmersApp.data.local.ChiragDataStore
 import com.yash091099.ChiragFarmersApp.ui.presentation.auth.common.screens.AuthScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.auth.common.screens.AuthViewModel
 import com.yash091099.ChiragFarmersApp.ui.presentation.auth.common.screens.OTPVerificationScreen
@@ -38,7 +36,6 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.home.screens.notification
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.SellScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.screens.sellcategories.SellCategoriesScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.screens.sellproduces.SellProducesScreen
-import com.yash091099.ChiragFarmersApp.ui.presentation.splash.SplashScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.splash.SplashScreen
 
 @Composable
@@ -89,9 +86,27 @@ fun AppNavigation(
             val viewModel: HomeViewModel = hiltViewModel()
             HomeScreen(navController = navController, viewModel = viewModel)
         }
-        composable(Route.Cart.path) {
+        composable(Route.Cart.path, arguments = listOf(
+            navArgument("isBuyNow") {
+                type = NavType.BoolType
+                defaultValue = false
+            },
+            navArgument("productId") {
+                type = NavType.StringType
+                nullable = true
+                defaultValue = null
+            },
+            navArgument("quantity") {
+                type = NavType.IntType
+                defaultValue = 1
+            }
+        )) {
             val viewModel: CartViewModel = hiltViewModel()
-            CartScreen(navController = navController, viewModel = viewModel)
+            val isBuyNow = it.arguments?.getBoolean("isBuyNow") ?: false
+            val productId = it.arguments?.getString("productId")
+            val quantity = it.arguments?.getInt("quantity") ?: 1
+
+            CartScreen(navController = navController, viewModel = viewModel, isBuyNow = isBuyNow, productId = productId, quantity = quantity)
         }
         composable(Route.Search.path) {
             SearchScreen(navController = navController)

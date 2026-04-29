@@ -3,7 +3,10 @@ package com.yash091099.ChiragFarmersApp.data.repository
 import com.yash091099.ChiragFarmersApp.data.local.ChiragDataStore
 import com.yash091099.ChiragFarmersApp.data.remote.CartApiService
 import com.yash091099.ChiragFarmersApp.data.remote.dto.AddToCartRequest
+import com.yash091099.ChiragFarmersApp.data.remote.dto.CartAddressDto
 import com.yash091099.ChiragFarmersApp.data.remote.dto.CartDataWrapper
+import com.yash091099.ChiragFarmersApp.data.remote.dto.CartItemDto
+import com.yash091099.ChiragFarmersApp.data.remote.dto.CartSummary
 import com.yash091099.ChiragFarmersApp.data.remote.dto.RemoveFromCartRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateQuantityData
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateQuantityRequest
@@ -93,6 +96,61 @@ class CartRepositoryImpl @Inject constructor(
 
             if (response.success) {
                 Result.success(Unit)
+            } else {
+                Result.failure(Exception(response.message))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun buyNow(productId: String, quantity: Int): Result<CartDataWrapper> {
+        return try {
+            val token = chiragDataStore.getAuthToken().first()
+            if (token.isNullOrEmpty()) {
+                return Result.failure(Exception("Authentication token not found"))
+            }
+
+            val response = cartApiService.buyNow(
+                "Bearer $token",
+                productId,
+                quantity
+            )
+
+            if (response.success && response.data != null) {
+                val buyNowData = response.data
+                // Convert BuyNowData to CartDataWrapper format
+                val cartItem = CartItemDto(
+                    productId = buyNowData.productId,
+                    productName = buyNowData.name,
+                    productImage = buyNowData.imageUrl,
+                    sellerName = buyNowData.sellerName,
+                    finalPrice = buyNowData.finalPrice,
+                    quantity = buyNowData.quantity
+                )
+
+                val cartSummary = CartSummary(
+                    subtotal = buyNowData.subtotal,
+                    totalDiscount = buyNowData.discount,
+                    totalDeliveryFee = buyNowData.deliveryFee,
+                    totalAmount = buyNowData.totalCost
+                )
+
+                val address = buyNowData.defaultLocation?.let {
+                    CartAddressDto(
+                        address = it.completeAddress ?: "",
+                        city = it.completeAddress?.split(",")?.lastOrNull()?.trim() ?: "",
+                        pincode = it.pincode ?: ""
+                    )
+                }
+
+                val cartDataWrapper = CartDataWrapper(
+                    items = listOf(cartItem),
+                    summary = cartSummary,
+                    currentDefaultAddress = address
+                )
+
+                Result.success(cartDataWrapper)
             } else {
                 Result.failure(Exception(response.message))
             }

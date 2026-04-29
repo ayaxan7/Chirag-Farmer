@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.yash091099.ChiragFarmersApp.data.remote.dto.CartAddressDto
 import com.yash091099.ChiragFarmersApp.data.remote.dto.CartItemDto
 import com.yash091099.ChiragFarmersApp.data.remote.dto.CartSummary
+import com.yash091099.ChiragFarmersApp.domain.usecase.GetBuyNowUseCase
 import com.yash091099.ChiragFarmersApp.domain.usecase.GetCartUseCase
 import com.yash091099.ChiragFarmersApp.domain.usecase.RemoveFromCartUseCase
 import com.yash091099.ChiragFarmersApp.domain.usecase.UpdateCartQuantityUseCase
@@ -18,6 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CartViewModel @Inject constructor(
     private val getCartUseCase: GetCartUseCase,
+    private val getBuyNowUseCase: GetBuyNowUseCase,
     private val removeFromCartUseCase: RemoveFromCartUseCase,
     private val updateCartQuantityUseCase: UpdateCartQuantityUseCase
 ) : ViewModel() {
@@ -29,10 +31,16 @@ class CartViewModel @Inject constructor(
     private val _isOperationInProgress = MutableStateFlow(false)
     val isOperationInProgress: StateFlow<Boolean> = _isOperationInProgress.asStateFlow()
 
-    init {
+//    init {
+//        loadCart()
+//    }
+    fun initLoadCart(){
         loadCart()
     }
-    
+    fun initBuyNow(productId: String, quantity: Int = 1) {
+        loadBuyNow(productId, quantity)
+    }
+
     fun deleteItem(productId: String) {
         viewModelScope.launch {
             _isOperationInProgress.value = true
@@ -47,7 +55,28 @@ class CartViewModel @Inject constructor(
             )
         }
     }
-    
+
+    private fun loadBuyNow(productId: String, quantity: Int) {
+        viewModelScope.launch {
+            _cartState.value = CartUiState.Loading
+
+            getBuyNowUseCase(productId, quantity).fold(
+                onSuccess = { cartData ->
+                    _cartState.value = if (cartData.items.isEmpty()) {
+                        CartUiState.Empty
+                    } else {
+                        CartUiState.Success(cartData.items, cartData.summary, cartData.currentDefaultAddress)
+                    }
+                },
+                onFailure = { exception ->
+                    _cartState.value = CartUiState.Error(
+                        exception.message ?: "Failed to load buy now checkout"
+                    )
+                }
+            )
+        }
+    }
+
     private fun loadCart() {
         viewModelScope.launch {
             _cartState.value = CartUiState.Loading

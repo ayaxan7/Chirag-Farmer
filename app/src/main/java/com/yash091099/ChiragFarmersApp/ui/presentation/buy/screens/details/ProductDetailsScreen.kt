@@ -62,7 +62,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.yash091099.ChiragFarmersApp.R
-import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailedData
 import com.yash091099.ChiragFarmersApp.ui.presentation.buy.screens.details.components.RatingProgressBar
 import com.yash091099.ChiragFarmersApp.ui.presentation.buy.screens.details.components.ReviewCard
 import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.CommonProductCard
@@ -204,7 +203,16 @@ fun ProductDetailsScreen(
                 ProductDetailsBottomBar(
                     cartState = cartState,
                     isInCart = isInCart,
-                    onAddToCart = { viewModel.addToCart() }
+                    onAddToCart = { viewModel.addToCart() },
+                    onBuyNow = {
+                        navController.navigate(
+                            Route.Cart.createRoute(
+                                isBuyNow = true,
+                                productId = product.productId,
+                                quantity = 1
+                            )
+                        )
+                    }
                 )
             }) { paddingValues ->
                 Column(
@@ -611,7 +619,8 @@ fun ProductDetailsScreen(
 private fun ProductDetailsBottomBar(
     cartState: CartActionState,
     isInCart: Boolean,
-    onAddToCart: () -> Unit
+    onAddToCart: () -> Unit,
+    onBuyNow: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -659,7 +668,7 @@ private fun ProductDetailsBottomBar(
         }
 
         Button(
-            onClick = { /* Buy now */ },
+            onClick = onBuyNow,
             modifier = Modifier
                 .weight(1f)
                 .height(50.dp),

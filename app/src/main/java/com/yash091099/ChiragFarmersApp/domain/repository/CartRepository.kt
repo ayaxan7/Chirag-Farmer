@@ -8,5 +8,6 @@ interface CartRepository {
     suspend fun getCart(): Result<CartDataWrapper>
     suspend fun updateQuantity(productId: String, action: String): Result<UpdateQuantityData>
     suspend fun removeFromCart(productId: String): Result<Unit>
+    suspend fun buyNow(productId: String, quantity: Int = 1): Result<CartDataWrapper>
 }
 

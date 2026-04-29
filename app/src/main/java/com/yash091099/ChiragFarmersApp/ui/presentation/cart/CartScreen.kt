@@ -31,6 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -53,11 +54,24 @@ import com.yash091099.ChiragFarmersApp.ui.theme.TextGray
 
 @Composable
 fun CartScreen(
-    navController: NavHostController, viewModel: CartViewModel, modifier: Modifier = Modifier
+    navController: NavHostController,
+    viewModel: CartViewModel,
+    isBuyNow: Boolean = false,
+    productId: String? = null,
+    quantity: Int = 1,
+    modifier: Modifier = Modifier
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val cartState by viewModel.cartState.collectAsState()
     val isOperationInProgress by viewModel.isOperationInProgress.collectAsState()
+
+    LaunchedEffect(isBuyNow) {
+        if (isBuyNow && productId != null) {
+            viewModel.initBuyNow(productId, quantity)
+        }else{
+            viewModel.initLoadCart()
+        }
+    }
 
     when (val state = cartState) {
         is CartUiState.Loading -> {
@@ -78,7 +92,7 @@ fun CartScreen(
                 snackbarHost = { SnackbarHost(snackbarHostState) },
                 topBar = {
                     ChiragTopBar(
-                        navController = navController, icon = R.drawable.ic_arrow, title = "My Cart"
+                        navController = navController, icon = R.drawable.ic_arrow, title = if (isBuyNow) "Checkout" else "My Cart"
                     )
                 }) { paddingValues ->
                 Box(
@@ -118,7 +132,7 @@ fun CartScreen(
                 snackbarHost = { SnackbarHost(snackbarHostState) },
                 topBar = {
                     ChiragTopBar(
-                        navController = navController, icon = R.drawable.ic_arrow, title = "My Cart"
+                        navController = navController, icon = R.drawable.ic_arrow, title = if (isBuyNow) "Checkout" else "My Cart"
                     )
                 }) { paddingValues ->
                 Box(
@@ -164,7 +178,7 @@ fun CartScreen(
                     ChiragTopBar(
                         navController = navController,
                         icon = R.drawable.ic_arrow,
-                        title = "Checkout"
+                        title = if (isBuyNow) "Checkout" else "My Cart"
                     )
                 }) { paddingValues ->
                 Box(

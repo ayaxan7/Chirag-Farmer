@@ -48,6 +48,14 @@ sealed class Route(val path: String) {
      object ProductDetails:Route("productdetails/{productId}") {
          fun createRoute(productId: String): String = "productdetails/$productId"
      }
-    object Cart: Route("cart")
-    object Profile: Route("profile")
+     object Cart: Route("cart?isBuyNow={isBuyNow}&productId={productId}&quantity={quantity}") {
+         fun createRoute(isBuyNow: Boolean = false, productId: String? = null, quantity: Int = 1): String {
+             return if (isBuyNow && productId != null) {
+                 "cart?isBuyNow=true&productId=$productId&quantity=$quantity"
+             } else {
+                 "cart"
+             }
+         }
+     }
+     object Profile: Route("profile")
 }
