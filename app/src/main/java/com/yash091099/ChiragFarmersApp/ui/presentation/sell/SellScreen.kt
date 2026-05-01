@@ -33,6 +33,7 @@ import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.presentation.home.components.search.SearchBox
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragTopBar
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost.Route
+import com.yash091099.ChiragFarmersApp.ui.presentation.sell.tabs.ActiveOrdersScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.tabs.ActiveProductsScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.tabs.SoldOutProductsScreen
 import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
@@ -49,7 +50,7 @@ fun SellScreen(
     val toggleState by viewModel.toggleState.collectAsStateWithLifecycle()
     val deleteState by viewModel.deleteState.collectAsStateWithLifecycle()
 
-    val pagerState = rememberPagerState(pageCount = { 2 })
+    val pagerState = rememberPagerState(pageCount = { 3 })
     val scope = rememberCoroutineScope()
 
     val activeProducts = viewModel.activeProducts.collectAsLazyPagingItems()
@@ -96,10 +97,9 @@ fun SellScreen(
 
     // Update search query based on current tab
     LaunchedEffect(pagerState.currentPage, searchQuery) {
-        if (pagerState.currentPage == 0) {
-            viewModel.fetchActive(searchQuery)
-        } else {
-            viewModel.fetchSoldOut(searchQuery)
+        when (pagerState.currentPage) {
+            0 -> viewModel.fetchActive(searchQuery)
+            1 -> viewModel.fetchSoldOut(searchQuery)
         }
     }
 
@@ -137,7 +137,7 @@ fun SellScreen(
 
             Spacer(modifier = Modifier.padding(8.dp))
 
-            val tabs = listOf("Live Products", "Sold Out", "Orders")
+            val tabs = listOf("Active Products", "Products Sold Out", "Active Orders")
 
             TabRow(
                 selectedTabIndex = pagerState.currentPage,
@@ -195,6 +195,8 @@ fun SellScreen(
                         onDeleteProduct = { productId ->
                             viewModel.deleteProduct(productId)
                         })
+
+                    2 -> ActiveOrdersScreen()
                 }
             }
         }

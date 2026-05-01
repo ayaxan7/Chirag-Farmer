@@ -116,26 +116,30 @@ fun CommonProductCard(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 12.dp, vertical = 2.dp)
+                    .padding(horizontal = 12.dp)
             ) {
+                Spacer(modifier = Modifier.height(4.dp))
                 // Product Name
                 Text(
                     text = product.productName,
                     fontSize = 12.sp,
-                    lineHeight = 14.sp,
+                    lineHeight = 12.sp,
                     fontWeight = FontWeight.W600,
                     color = Color.Black,
-                    maxLines = 1
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
 
-                Spacer(modifier = Modifier.height(2.dp))
+//                Spacer(modifier = Modifier.height(2.dp))
 
                 // Brand Name
                 Text(
-                    text = product.brandName, fontSize = 10.sp, fontWeight = W400, color = TextDarkGray
+                    text = product.brandName, fontSize = 10.sp, fontWeight = W400, color = TextDarkGray,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
 
-                Spacer(modifier = Modifier.height(3.dp))
+//                Spacer(modifier = Modifier.height(3.dp))
 
                 // Price and Rating Row
                 Row(
@@ -152,7 +156,9 @@ fun CommonProductCard(
                             text = "₹${product.currentPrice}",
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Bold,
-                            color = BGBlack
+                            color = BGBlack,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
                         if (product.originalPrice != null) {
                             Text(
@@ -160,6 +166,8 @@ fun CommonProductCard(
                                 fontSize = 10.sp,
                                 fontWeight = FontWeight.Normal,
                                 color = TextDarkGray,
+                                maxLines = 1,
+                                overflow = TextOverflow.Clip,
                                 style = TextStyle(
                                     textDecoration = TextDecoration.LineThrough
                                 )
@@ -185,7 +193,7 @@ fun CommonProductCard(
                 }
 
                 if(isSellScreen) {
-                    Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(4.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically

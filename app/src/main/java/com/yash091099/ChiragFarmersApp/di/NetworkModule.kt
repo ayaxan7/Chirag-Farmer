@@ -1,5 +1,6 @@
 package com.yash091099.ChiragFarmersApp.di
 
+import com.yash091099.ChiragFarmersApp.BuildConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,8 +16,8 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private const val BASE_URL = "http://142.93.221.145/"
-//private const val BASE_URL = "http://10.0.2.2:5001/"
+//    private const val BASE_URL = "http://142.93.221.145/"
+    private const val BASE_URL = BuildConfig.BASE_URL
     @Provides
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
