@@ -22,9 +22,12 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,51 +36,116 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.yash091099.ChiragFarmersApp.domain.model.Order
 import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
 import com.yash091099.ChiragFarmersApp.ui.theme.BorderColour
 import com.yash091099.ChiragFarmersApp.ui.theme.TextGray
 
 @Composable
-fun ActiveOrdersScreen() {
-    val mockOrders = listOf(
-        OrderItem(
-            orderId = "ORD-458926",
-            productName = "ORGANIC BEAN SEEDS",
-            buyerName = "Ramesh Kumar",
-            contact = "7858 **** **",
-            quantity = "5 Kg",
-            amount = "₹1,999",
-            location = "Sagar, MP",
-            status = "Shipping Pending",
-            imageUrl = "https://images.unsplash.com/photo-1592919016327-50503e41b04e?q=80&w=200&auto=format&fit=crop"
-        ),
-        OrderItem(
-            orderId = "ORD-458926",
-            productName = "HYBRID TOMATO SEEDS",
-            buyerName = "Anita Sharma",
-            contact = "7858 **** **",
-            quantity = "5 Kg",
-            amount = "₹850",
-            location = "Bhopal , MP",
-            status = "Packing in Progress",
-            imageUrl = "https://images.unsplash.com/photo-1592919016327-50503e41b04e?q=80&w=200&auto=format&fit=crop"
-        )
-    )
+fun ActiveOrdersScreen(
+    viewModel: ActiveOrdersViewModel = hiltViewModel()
+) {
+    val ordersState by viewModel.ordersState.collectAsState()
+    val currentPage by viewModel.currentPage.collectAsState()
 
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(vertical = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        items(mockOrders) { order ->
-            OrderCard(order)
+    when (val state = ordersState) {
+        is ActiveOrdersState.Loading -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = BGBlack)
+            }
+        }
+
+        is ActiveOrdersState.Error -> {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "Error Loading Orders",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = BGBlack
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = state.message,
+                    fontSize = 14.sp,
+                    color = Color.Gray
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(
+                    onClick = { viewModel.retry() },
+                    colors = ButtonDefaults.buttonColors(containerColor = BGBlack)
+                ) {
+                    Text("Retry", color = Color.White)
+                }
+            }
+        }
+
+        is ActiveOrdersState.Success -> {
+            Column(modifier = Modifier.fillMaxSize()) {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                    contentPadding = PaddingValues(vertical = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    items(state.orders) { order ->
+                        OrderCard(order)
+                    }
+                }
+
+                // Pagination Controls
+                if (state.totalPages > 1) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Button(
+                            onClick = { viewModel.previousPage() },
+                            enabled = currentPage > 1,
+                            modifier = Modifier.weight(1f),
+                            colors = ButtonDefaults.buttonColors(containerColor = BGBlack)
+                        ) {
+                            Text("← Previous", color = Color.White)
+                        }
+
+                        Text(
+                            text = "Page $currentPage/${state.totalPages}",
+                            modifier = Modifier.weight(1f),
+                            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                            fontWeight = FontWeight.Bold
+                        )
+
+                        Button(
+                            onClick = { viewModel.nextPage() },
+                            enabled = currentPage < state.totalPages,
+                            modifier = Modifier.weight(1f),
+                            colors = ButtonDefaults.buttonColors(containerColor = BGBlack)
+                        ) {
+                            Text("Next →", color = Color.White)
+                        }
+                    }
+                }
+            }
         }
     }
 }
 
 @Composable
-fun OrderCard(order: OrderItem) {
+fun OrderCard(order: Order) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -100,7 +168,7 @@ fun OrderCard(order: OrderItem) {
                         .background(Color(0xFFE0E0E0))
                 ) {
                     AsyncImage(
-                        model = order.imageUrl,
+                        model = order.productImage,
                         contentDescription = null,
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop
@@ -137,7 +205,7 @@ fun OrderCard(order: OrderItem) {
                             modifier = Modifier.width(60.dp)
                         )
                         Text(
-                            text = ": ${order.contact}",
+                            text = ": ${order.buyerContact}",
                             fontSize = 14.sp,
                             color = TextGray
                         )
@@ -160,7 +228,7 @@ fun OrderCard(order: OrderItem) {
             Row(modifier = Modifier.fillMaxWidth()) {
                 DetailItem(
                     label = "AMOUNT",
-                    value = order.amount,
+                    value = "₹${order.amountPaid}",
                     valueColor = Color(0xFF3BB69A),
                     modifier = Modifier.weight(1f)
                 )
@@ -234,14 +302,3 @@ fun DetailItem(
     }
 }
 
-data class OrderItem(
-    val orderId: String,
-    val productName: String,
-    val buyerName: String,
-    val contact: String,
-    val quantity: String,
-    val amount: String,
-    val location: String,
-    val status: String,
-    val imageUrl: String
-)

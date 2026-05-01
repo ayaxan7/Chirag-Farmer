@@ -36,6 +36,7 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.home.screens.notification
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.SellScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.screens.sellcategories.SellCategoriesScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.screens.sellproduces.SellProducesScreen
+import com.yash091099.ChiragFarmersApp.ui.presentation.cart.payment.PaymentScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.splash.SplashScreen
 
 @Composable
@@ -197,6 +198,9 @@ fun AppNavigation(
             ProductDetailsScreen(
                 navController = navController, viewModel = viewModel
             )
+        }
+        composable(Route.Payment.path) {
+            PaymentScreen(navController = navController)
         }
     }
 }

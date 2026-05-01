@@ -438,7 +438,7 @@ fun CartScreen(
                         } else {
                             ChiragButton(
                                 text = "Proceed to Checkout",
-                                onClick = {  },
+                                onClick = { navController.navigate(Route.Payment.path) },
                                 modifier = Modifier
                                     .fillMaxWidth()
                             )

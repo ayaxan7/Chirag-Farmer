@@ -2,6 +2,7 @@ package com.yash091099.ChiragFarmersApp.di
 
 import com.yash091099.ChiragFarmersApp.data.remote.AuthApiService
 import com.yash091099.ChiragFarmersApp.data.remote.CartApiService
+import com.yash091099.ChiragFarmersApp.data.remote.OrderApiService
 import com.yash091099.ChiragFarmersApp.data.remote.ProductApiService
 import dagger.Module
 import dagger.Provides
@@ -30,5 +31,11 @@ object ApiModule {
     @Singleton
     fun provideCartApiService(retrofit: Retrofit): CartApiService {
         return retrofit.create(CartApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideOrderApiService(retrofit: Retrofit): OrderApiService {
+        return retrofit.create(OrderApiService::class.java)
     }
 }

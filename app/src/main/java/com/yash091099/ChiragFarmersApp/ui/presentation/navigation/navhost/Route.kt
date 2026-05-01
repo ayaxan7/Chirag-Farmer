@@ -58,4 +58,5 @@ sealed class Route(val path: String) {
          }
      }
      object Profile: Route("profile")
+     object Payment: Route("payment")
 }
