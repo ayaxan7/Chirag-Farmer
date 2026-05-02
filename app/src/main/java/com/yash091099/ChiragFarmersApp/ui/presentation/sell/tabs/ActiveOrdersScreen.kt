@@ -25,6 +25,9 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost.Route
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -47,6 +50,7 @@ import com.yash091099.ChiragFarmersApp.ui.theme.TextGray
 
 @Composable
 fun ActiveOrdersScreen(
+    navController: NavHostController,
     viewModel: ActiveOrdersViewModel = hiltViewModel()
 ) {
     val ordersState by viewModel.ordersState.collectAsState()
@@ -55,6 +59,7 @@ fun ActiveOrdersScreen(
     ActiveOrdersContent(
         state = ordersState,
         currentPage = currentPage,
+        navController = navController,
         onRetry = { viewModel.retry() },
         onPreviousPage = { viewModel.previousPage() },
         onNextPage = { viewModel.nextPage() }
@@ -65,6 +70,7 @@ fun ActiveOrdersScreen(
 fun ActiveOrdersContent(
     state: ActiveOrdersState,
     currentPage: Int,
+    navController: NavHostController,
     onRetry: () -> Unit,
     onPreviousPage: () -> Unit,
     onNextPage: () -> Unit
@@ -119,7 +125,7 @@ fun ActiveOrdersContent(
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     items(state.orders) { order ->
-                        OrderCard(order)
+                        OrderCard(order, navController)
                     }
                 }
 
@@ -164,7 +170,7 @@ fun ActiveOrdersContent(
 }
 
 @Composable
-fun OrderCard(order: Order) {
+fun OrderCard(order: Order, navController: NavHostController) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -281,7 +287,9 @@ fun OrderCard(order: Order) {
             Spacer(modifier = Modifier.height(12.dp))
 
             Button(
-                onClick = { /* Handle click */ },
+                onClick = { 
+                    navController.navigate(Route.OrderStatus.createRoute(order.orderId))
+                },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(8.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = BGBlack)
@@ -336,8 +344,9 @@ fun OrderCardPreview() {
         location = "Mumbai, Maharashtra",
         status = "Pending"
     )
+    val navController = rememberNavController()
     Box(modifier = Modifier.padding(16.dp)) {
-        OrderCard(order = mockOrder)
+        OrderCard(order = mockOrder, navController = navController)
     }
 }
 
@@ -370,6 +379,7 @@ fun ActiveOrdersScreenPreview() {
             status = "Pending"
         )
     )
+    val navController = rememberNavController()
     ActiveOrdersContent(
         state = ActiveOrdersState.Success(
             orders = mockOrders,
@@ -378,6 +388,7 @@ fun ActiveOrdersScreenPreview() {
             totalPages = 1
         ),
         currentPage = 1,
+        navController = navController,
         onRetry = {},
         onPreviousPage = {},
         onNextPage = {}

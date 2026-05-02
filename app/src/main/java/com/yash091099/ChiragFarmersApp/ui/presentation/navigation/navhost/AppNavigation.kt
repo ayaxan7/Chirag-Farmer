@@ -37,6 +37,7 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.sell.SellScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.screens.sellcategories.SellCategoriesScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.screens.sellproduces.SellProducesScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.cart.payment.PaymentScreen
+import com.yash091099.ChiragFarmersApp.ui.presentation.sell.screens.orderstatus.OrderStatusScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.splash.SplashScreen
 
 @Composable
@@ -201,6 +202,13 @@ fun AppNavigation(
         }
         composable(Route.Payment.path) {
             PaymentScreen(navController = navController)
+        }
+        composable(
+            Route.OrderStatus.path,
+            arguments = listOf(navArgument("orderId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val orderId = backStackEntry.arguments?.getString("orderId") ?: ""
+            OrderStatusScreen(navController = navController, orderId = orderId)
         }
     }
 }

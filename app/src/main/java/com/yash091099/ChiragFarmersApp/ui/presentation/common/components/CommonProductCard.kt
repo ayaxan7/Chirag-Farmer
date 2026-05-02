@@ -38,9 +38,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
-import com.valentinilk.shimmer.shimmer
 import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.presentation.common.data.CommonProductCardData
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.components.DeleteItemBox
@@ -70,9 +68,7 @@ fun CommonProductCard(
             containerColor = BGWhite
         ), border = BorderStroke(
             width = 1.dp, color = BorderGray
-        ), shape = RoundedCornerShape(12.dp),
-        onClick = { onClick() }
-    ) {
+        ), shape = RoundedCornerShape(12.dp), onClick = { onClick() }) {
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
@@ -93,13 +89,12 @@ fun CommonProductCard(
                         },
                         error = {
                             Image(
-                                painter = painterResource(R.drawable.sprayer),
+                                painter = painterResource(R.drawable.sell_category_other),
                                 contentDescription = "Error Image",
                                 modifier = Modifier.fillMaxSize(),
                                 contentScale = ContentScale.Crop
                             )
-                        }
-                    )
+                        })
                 } else if (product.imageRes != null) {
                     Box(
                         modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
@@ -176,7 +171,7 @@ fun CommonProductCard(
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
-                        if (product.originalPrice != null) {
+                        if (product.originalPrice != null && product.originalPrice != product.currentPrice) {
                             Text(
                                 text = product.originalPrice,
                                 fontSize = 10.sp,

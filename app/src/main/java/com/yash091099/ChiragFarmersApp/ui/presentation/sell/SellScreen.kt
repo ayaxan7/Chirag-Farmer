@@ -196,7 +196,7 @@ fun SellScreen(
                             viewModel.deleteProduct(productId)
                         })
 
-                    2 -> ActiveOrdersScreen()
+                    2 -> ActiveOrdersScreen(navController = navController)
                 }
             }
         }

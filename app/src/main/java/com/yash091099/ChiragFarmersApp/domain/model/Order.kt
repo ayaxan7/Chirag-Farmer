@@ -6,7 +6,7 @@ data class Order(
     val productName: String,
     val productImage: String,
     val buyerName: String,
-    val buyerContact: String,
+    val buyerContact: String? = null,
     val quantity: String,
     val amountPaid: Int,
     val location: String,
