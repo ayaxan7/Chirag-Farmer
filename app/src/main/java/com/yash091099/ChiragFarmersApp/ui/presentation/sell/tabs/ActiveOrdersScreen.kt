@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.yash091099.ChiragFarmersApp.domain.model.Order
+import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.ChiragButton
 import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
 import com.yash091099.ChiragFarmersApp.ui.theme.BorderColour
 import com.yash091099.ChiragFarmersApp.ui.theme.LightGray
@@ -288,22 +289,15 @@ fun OrderCard(order: Order, navController: NavHostController) {
             }
 
             Spacer(modifier = Modifier.height(12.dp))
-
-            Button(
-                onClick = { 
+            ChiragButton(
+                text = "Update Order Status",
+                onClick = {
                     navController.navigate(Route.OrderStatus.createRoute(order.orderId))
                 },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().height(40.dp),
                 shape = RoundedCornerShape(8.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = BGBlack)
-            ) {
-                Text(
-                    text = "Update Order Status",
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp
-                )
-            }
+                fontSize = 14.sp
+            )
         }
     }
 }

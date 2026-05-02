@@ -14,6 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
@@ -30,6 +32,7 @@ fun ChiragButton(
     contentColor: Color = Color.White,
     disabledContainerColor: Color = BGBlack.copy(alpha = 0.4f),
     disabledContentColor: Color = Color.White,
+    fontSize: TextUnit = 16.sp,
 ) {
     Button(
         onClick = onClick,
@@ -47,7 +50,7 @@ fun ChiragButton(
     ) {
         Text(
             text = text,
-            fontSize = 16.sp,
+            fontSize = fontSize,
             fontWeight = FontWeight.Medium
         )
     }
