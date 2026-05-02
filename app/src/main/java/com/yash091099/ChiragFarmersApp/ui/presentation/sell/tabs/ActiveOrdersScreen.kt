@@ -46,6 +46,7 @@ import coil.compose.AsyncImage
 import com.yash091099.ChiragFarmersApp.domain.model.Order
 import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
 import com.yash091099.ChiragFarmersApp.ui.theme.BorderColour
+import com.yash091099.ChiragFarmersApp.ui.theme.LightGray
 import com.yash091099.ChiragFarmersApp.ui.theme.TextGray
 
 @Composable
@@ -99,12 +100,12 @@ fun ActiveOrdersContent(
                     fontWeight = FontWeight.Bold,
                     color = BGBlack
                 )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = state.message,
-                    fontSize = 14.sp,
-                    color = Color.Gray
-                )
+//                Spacer(modifier = Modifier.height(16.dp))
+//                Text(
+//                    text = state.message,
+//                    fontSize = 14.sp,
+//                    color = Color.Gray
+//                )
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
                     onClick = onRetry,
@@ -121,7 +122,7 @@ fun ActiveOrdersContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f),
-                    contentPadding = PaddingValues(16.dp),
+                    contentPadding = PaddingValues(top=16.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     items(state.orders) { order ->
@@ -238,9 +239,9 @@ fun OrderCard(order: Order, navController: NavHostController) {
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
             HorizontalDivider(color = BorderColour.copy(alpha = 0.5f), thickness = 1.dp)
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             // Grid Details
             Row(modifier = Modifier.fillMaxWidth()) {
@@ -259,9 +260,11 @@ fun OrderCard(order: Order, navController: NavHostController) {
                 )
                 DetailItem(label = "LOCATION", value = order.location, modifier = Modifier.weight(1f))
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
+            Spacer(modifier = Modifier.height(8.dp))
+            HorizontalDivider(
+                modifier = Modifier.fillMaxWidth(), thickness = 1.dp, color = LightGray
+            )
+            Spacer(modifier = Modifier.height(8.dp))
             // Status Badge
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -324,7 +327,9 @@ fun DetailItem(
             text = value,
             fontSize = 15.sp,
             color = valueColor,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            maxLines = 1,
+            overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
         )
     }
 }
