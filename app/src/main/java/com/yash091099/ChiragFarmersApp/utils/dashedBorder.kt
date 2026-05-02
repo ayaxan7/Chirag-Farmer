@@ -1,6 +1,10 @@
 package com.yash091099.ChiragFarmersApp.utils
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.drawBehind
@@ -10,6 +14,7 @@ import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
+import com.valentinilk.shimmer.shimmer
 
 @SuppressLint("UnnecessaryComposedModifier")
 fun Modifier.dashedBorder(
@@ -27,4 +32,13 @@ fun Modifier.dashedBorder(
             ), cornerRadius = CornerRadius(cornerRadiusPx, cornerRadiusPx)
         )
     }
+}
+@Composable
+fun ShimmerProductPlaceholder() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .shimmer()
+            .background(Color.LightGray)
+    )
 }

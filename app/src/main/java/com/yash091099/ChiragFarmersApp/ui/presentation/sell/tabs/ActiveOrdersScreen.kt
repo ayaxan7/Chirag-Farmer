@@ -34,6 +34,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -50,7 +52,24 @@ fun ActiveOrdersScreen(
     val ordersState by viewModel.ordersState.collectAsState()
     val currentPage by viewModel.currentPage.collectAsState()
 
-    when (val state = ordersState) {
+    ActiveOrdersContent(
+        state = ordersState,
+        currentPage = currentPage,
+        onRetry = { viewModel.retry() },
+        onPreviousPage = { viewModel.previousPage() },
+        onNextPage = { viewModel.nextPage() }
+    )
+}
+
+@Composable
+fun ActiveOrdersContent(
+    state: ActiveOrdersState,
+    currentPage: Int,
+    onRetry: () -> Unit,
+    onPreviousPage: () -> Unit,
+    onNextPage: () -> Unit
+) {
+    when (state) {
         is ActiveOrdersState.Loading -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -82,7 +101,7 @@ fun ActiveOrdersScreen(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
-                    onClick = { viewModel.retry() },
+                    onClick = onRetry,
                     colors = ButtonDefaults.buttonColors(containerColor = BGBlack)
                 ) {
                     Text("Retry", color = Color.White)
@@ -96,7 +115,7 @@ fun ActiveOrdersScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f),
-                    contentPadding = PaddingValues(vertical = 16.dp),
+                    contentPadding = PaddingValues(16.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     items(state.orders) { order ->
@@ -114,7 +133,7 @@ fun ActiveOrdersScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Button(
-                            onClick = { viewModel.previousPage() },
+                            onClick = onPreviousPage,
                             enabled = currentPage > 1,
                             modifier = Modifier.weight(1f),
                             colors = ButtonDefaults.buttonColors(containerColor = BGBlack)
@@ -125,12 +144,12 @@ fun ActiveOrdersScreen(
                         Text(
                             text = "Page $currentPage/${state.totalPages}",
                             modifier = Modifier.weight(1f),
-                            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                            textAlign = TextAlign.Center,
                             fontWeight = FontWeight.Bold
                         )
 
                         Button(
-                            onClick = { viewModel.nextPage() },
+                            onClick = onNextPage,
                             enabled = currentPage < state.totalPages,
                             modifier = Modifier.weight(1f),
                             colors = ButtonDefaults.buttonColors(containerColor = BGBlack)
@@ -302,3 +321,65 @@ fun DetailItem(
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+fun OrderCardPreview() {
+    val mockOrder = Order(
+        orderObjectId = "1",
+        orderId = "ORD12345",
+        productName = "Organic Tomatoes",
+        productImage = "",
+        buyerName = "John Doe",
+        buyerContact = "+91 9876543210",
+        quantity = "10 kg",
+        amountPaid = 500,
+        location = "Mumbai, Maharashtra",
+        status = "Pending"
+    )
+    Box(modifier = Modifier.padding(16.dp)) {
+        OrderCard(order = mockOrder)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ActiveOrdersScreenPreview() {
+    val mockOrders = listOf(
+        Order(
+            orderObjectId = "1",
+            orderId = "ORD12345",
+            productName = "Organic Tomatoes",
+            productImage = "",
+            buyerName = "John Doe",
+            buyerContact = "+91 9876543210",
+            quantity = "10 kg",
+            amountPaid = 500,
+            location = "Mumbai, Maharashtra",
+            status = "Pending"
+        ),
+        Order(
+            orderObjectId = "2",
+            orderId = "ORD12346",
+            productName = "Fresh Potatoes",
+            productImage = "",
+            buyerName = "Jane Smith",
+            buyerContact = "+91 9123456789",
+            quantity = "20 kg",
+            amountPaid = 800,
+            location = "Pune, Maharashtra",
+            status = "Pending"
+        )
+    )
+    ActiveOrdersContent(
+        state = ActiveOrdersState.Success(
+            orders = mockOrders,
+            total = 2,
+            page = 1,
+            totalPages = 1
+        ),
+        currentPage = 1,
+        onRetry = {},
+        onPreviousPage = {},
+        onNextPage = {}
+    )
+}

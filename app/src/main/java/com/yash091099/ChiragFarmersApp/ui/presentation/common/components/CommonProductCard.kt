@@ -1,6 +1,7 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.common.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -38,6 +39,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
+import com.valentinilk.shimmer.shimmer
 import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.presentation.common.data.CommonProductCardData
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.components.DeleteItemBox
@@ -47,6 +50,7 @@ import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
 import com.yash091099.ChiragFarmersApp.ui.theme.BorderGray
 import com.yash091099.ChiragFarmersApp.ui.theme.DisabledButtonGray
 import com.yash091099.ChiragFarmersApp.ui.theme.TextDarkGray
+import com.yash091099.ChiragFarmersApp.utils.ShimmerProductPlaceholder
 
 
 @Composable
@@ -67,7 +71,7 @@ fun CommonProductCard(
         ), border = BorderStroke(
             width = 1.dp, color = BorderGray
         ), shape = RoundedCornerShape(12.dp),
-        onClick = {onClick()}
+        onClick = { onClick() }
     ) {
         Column(
             modifier = Modifier.fillMaxSize()
@@ -79,13 +83,22 @@ fun CommonProductCard(
             ) {
 
                 if (product.imageUrl != null) {
-                    AsyncImage(
+                    SubcomposeAsyncImage(
                         model = product.imageUrl,
                         contentDescription = product.productName,
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop,
-                        placeholder = painterResource(R.drawable.sprayer),
-                        error = painterResource(R.drawable.sprayer)
+                        loading = {
+                            ShimmerProductPlaceholder()
+                        },
+                        error = {
+                            Image(
+                                painter = painterResource(R.drawable.sprayer),
+                                contentDescription = "Error Image",
+                                modifier = Modifier.fillMaxSize(),
+                                contentScale = ContentScale.Crop
+                            )
+                        }
                     )
                 } else if (product.imageRes != null) {
                     Box(
@@ -134,7 +147,10 @@ fun CommonProductCard(
 
                 // Brand Name
                 Text(
-                    text = product.brandName, fontSize = 10.sp, fontWeight = W400, color = TextDarkGray,
+                    text = product.brandName,
+                    fontSize = 10.sp,
+                    fontWeight = W400,
+                    color = TextDarkGray,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -187,12 +203,15 @@ fun CommonProductCard(
                             modifier = Modifier.size(12.dp)
                         )
                         Text(
-                            text = product.rating, fontSize = 10.sp, fontWeight = W400, color = Color.Black
+                            text = product.rating,
+                            fontSize = 10.sp,
+                            fontWeight = W400,
+                            color = Color.Black
                         )
                     }
                 }
 
-                if(isSellScreen) {
+                if (isSellScreen) {
                     Spacer(modifier = Modifier.height(4.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),

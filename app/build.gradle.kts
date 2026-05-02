@@ -90,7 +90,10 @@ dependencies {
     implementation(libs.androidx.compose.foundation)
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
-
+    //coil-compose
+    implementation(libs.coil.compose.v260)
+    //shimmer-compose
+    implementation(libs.compose.shimmer)
     // ViewModel Compose
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
