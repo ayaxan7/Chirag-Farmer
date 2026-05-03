@@ -25,6 +25,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -52,6 +53,7 @@ import com.yash091099.ChiragFarmersApp.ui.theme.ChiragFarmerTheme
 @Composable
 fun PaymentScreen(
     navController: NavHostController,
+    viewModel: PaymentViewModel,
     subtotal: Double = 0.0,
     totalDiscount: Double = 0.0,
     totalDeliveryFee: Double = 0.0,
@@ -59,6 +61,7 @@ fun PaymentScreen(
     modifier: Modifier = Modifier
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
+    val installedUpiApps by viewModel.installedUpiApps.collectAsState()
     var selectedPayment by remember { mutableStateOf("Google pay") }
 
     Scaffold(
@@ -94,7 +97,7 @@ fun PaymentScreen(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 PaymentOptionItem(
-                    iconRes = R.drawable.ic_card,
+                    icon = R.drawable.ic_card,
                     title = "Add Card",
                     isSelected = false,
                     showChevron = true,
@@ -105,52 +108,28 @@ fun PaymentScreen(
                 Spacer(modifier = Modifier.height(20.dp))
 
                 // UPI Payments Section
-                Text(
-                    text = "UPI Payments",
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.Black,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
+                if (installedUpiApps.isNotEmpty()) {
+                    Text(
+                        text = "UPI Payments",
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color.Black,
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    )
 
-                Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
 
-                // Google Pay with special treatment
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                ) {
-                    PaymentOptionItem(
-                        iconRes = R.drawable.ic_card,
-                        title = "Google pay",
-                        offersText = "2 Offers",
-                        isSelected = selectedPayment == "Google pay",
-                        onClick = { selectedPayment = "Google pay" })
+                    installedUpiApps.forEach { app ->
+                        PaymentOptionItem(
+                            icon = app.icon,
+                            title = app.name,
+                            isSelected = selectedPayment == app.packageName,
+                            onClick = { selectedPayment = app.packageName },
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                    }
                 }
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                PaymentOptionItem(
-                    iconRes = R.drawable.ic_card,
-                    title = "Paytm",
-                    isSelected = selectedPayment == "Paytm",
-                    onClick = { selectedPayment = "Paytm" },
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                PaymentOptionItem(
-                    iconRes = R.drawable.ic_card,
-                    title = "Phonepe",
-                    offersText = "2 Offers",
-                    isSelected = selectedPayment == "Phonepe",
-                    onClick = { selectedPayment = "Phonepe" },
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-
-                Spacer(modifier = Modifier.height(20.dp))
 
                 // More Payment Options Section
                 Text(
@@ -164,7 +143,7 @@ fun PaymentScreen(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 PaymentOptionItem(
-                    iconRes = R.drawable.ic_card,
+                    icon = R.drawable.ic_card,
                     title = "Add Kisan Card",
                     isSelected = selectedPayment == "Add Kisan Card",
                     onClick = { selectedPayment = "Add Kisan Card" },
@@ -174,7 +153,7 @@ fun PaymentScreen(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 PaymentOptionItem(
-                    iconRes = R.drawable.ic_card,
+                    icon = R.drawable.ic_card,
                     title = "Kisan Wallet",
                     isSelected = selectedPayment == "Kisan Wallet",
                     onClick = { selectedPayment = "Kisan Wallet" },
@@ -184,7 +163,7 @@ fun PaymentScreen(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 PaymentOptionItem(
-                    iconRes = R.drawable.ic_card,
+                    icon = R.drawable.ic_card,
                     title = "Net Banking",
                     isSelected = selectedPayment == "Net Banking",
                     onClick = { selectedPayment = "Net Banking" },
@@ -194,7 +173,7 @@ fun PaymentScreen(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 PaymentOptionItem(
-                    iconRes = R.drawable.ic_card,
+                    icon = R.drawable.ic_card,
                     title = "Slice",
                     isSelected = selectedPayment == "Slice",
                     onClick = { selectedPayment = "Slice" },
@@ -204,7 +183,7 @@ fun PaymentScreen(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 PaymentOptionItem(
-                    iconRes = R.drawable.ic_card,
+                    icon = R.drawable.ic_card,
                     title = "Cash On Delivery",
                     isSelected = selectedPayment == "Cash On Delivery",
                     onClick = { selectedPayment = "Cash On Delivery" },
@@ -317,7 +296,7 @@ fun PaymentScreen(
 
 @Composable
 fun PaymentOptionItem(
-    iconRes: Int?,
+    icon: Any?,
     title: String,
     modifier: Modifier = Modifier,
     offersText: String? = null,
@@ -338,7 +317,7 @@ fun PaymentOptionItem(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)) {
         // Icon
-        if (iconRes != null) {
+        if (icon != null) {
             Box(
                 modifier = Modifier
                     .size(24.dp)
@@ -351,9 +330,10 @@ fun PaymentOptionItem(
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    painter = painterResource(id = iconRes),
+                    painter = coil.compose.rememberAsyncImagePainter(model = icon),
                     contentDescription = title,
-                    modifier = Modifier.fillMaxSize(0.8f)
+                    modifier = Modifier.fillMaxSize(0.8f),
+                    tint = Color.Unspecified
                 )
             }
         }
@@ -406,24 +386,25 @@ fun PaymentOptionItem(
 @Preview(showBackground = true)
 @Composable
 fun PaymentScreenPreview() {
-    PaymentScreen(navController = rememberNavController())
+    // Note: This won't show the real list of apps in preview
+    // PaymentScreen(navController = rememberNavController(), viewModel = ...)
 }
 
 @Preview(showBackground = true)
 @Composable
 fun PaymentOptionItemPreview() {
     ChiragFarmerTheme {
-        Column(
-            modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            PaymentOptionItem(
-                iconRes = R.drawable.ic_card,
-                title = "Google pay",
-                offersText = "2 Offers",
-                isSelected = true,
-                onClick = {})
-            PaymentOptionItem(
-                iconRes = R.drawable.ic_card, title = "Paytm", isSelected = false, onClick = {})
-        }
+//        Column(
+//            modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)
+//        ) {
+//            PaymentOptionItem(
+//                iconRes = R.drawable.ic_card,
+//                title = "Google pay",
+//                offersText = "2 Offers",
+//                isSelected = true,
+//                onClick = {})
+//            PaymentOptionItem(
+//                iconRes = R.drawable.ic_card, title = "Paytm", isSelected = false, onClick = {})
+//        }
     }
 }

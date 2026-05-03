@@ -37,6 +37,7 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.sell.SellScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.screens.sellcategories.SellCategoriesScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.screens.sellproduces.SellProducesScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.cart.payment.PaymentScreen
+import com.yash091099.ChiragFarmersApp.ui.presentation.cart.payment.PaymentViewModel
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.screens.orderstatus.OrderStatusScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.splash.SplashScreen
 
@@ -213,9 +214,11 @@ fun AppNavigation(
             val totalDiscount = backStackEntry.arguments?.getFloat("totalDiscount")?.toDouble() ?: 0.0
             val totalDeliveryFee = backStackEntry.arguments?.getFloat("totalDeliveryFee")?.toDouble() ?: 0.0
             val totalAmount = backStackEntry.arguments?.getFloat("totalAmount")?.toDouble() ?: 0.0
+            val viewModel: PaymentViewModel = hiltViewModel()
 
             PaymentScreen(
                 navController = navController,
+                viewModel = viewModel,
                 subtotal = subtotal,
                 totalDiscount = totalDiscount,
                 totalDeliveryFee = totalDeliveryFee,
