@@ -51,7 +51,12 @@ import com.yash091099.ChiragFarmersApp.ui.theme.ChiragFarmerTheme
 
 @Composable
 fun PaymentScreen(
-    navController: NavHostController, modifier: Modifier = Modifier
+    navController: NavHostController,
+    subtotal: Double = 0.0,
+    totalDiscount: Double = 0.0,
+    totalDeliveryFee: Double = 0.0,
+    totalAmount: Double = 0.0,
+    modifier: Modifier = Modifier
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     var selectedPayment by remember { mutableStateOf("Google pay") }
@@ -233,7 +238,7 @@ fun PaymentScreen(
                         color = BGBlack
                     )
                     Text(
-                        text = "₹4000",
+                        text = "₹%.2f".format(subtotal),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Normal,
                         color = BGBlack
@@ -251,7 +256,7 @@ fun PaymentScreen(
                         color = BGBlack
                     )
                     Text(
-                        text = "₹4000",
+                        text = "₹%.2f".format(totalDeliveryFee),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Normal,
                         color = BGBlack
@@ -272,7 +277,7 @@ fun PaymentScreen(
                         color = BGBlack
                     )
                     Text(
-                        text = "₹4000",
+                        text = "₹%.2f".format(totalDiscount),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Normal,
                         color = BGBlack
@@ -290,7 +295,7 @@ fun PaymentScreen(
                         color = BGBlack
                     )
                     Text(
-                        text = "₹4000",
+                        text = "₹%.2f".format(totalAmount),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         color = BGBlack

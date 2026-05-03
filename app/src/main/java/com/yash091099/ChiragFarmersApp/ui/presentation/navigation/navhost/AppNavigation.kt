@@ -200,8 +200,27 @@ fun AppNavigation(
                 navController = navController, viewModel = viewModel
             )
         }
-        composable(Route.Payment.path) {
-            PaymentScreen(navController = navController)
+        composable(
+            Route.Payment.path,
+            arguments = listOf(
+                navArgument("subtotal") { type = NavType.FloatType; defaultValue = 0.0f },
+                navArgument("totalDiscount") { type = NavType.FloatType; defaultValue = 0.0f },
+                navArgument("totalDeliveryFee") { type = NavType.FloatType; defaultValue = 0.0f },
+                navArgument("totalAmount") { type = NavType.FloatType; defaultValue = 0.0f }
+            )
+        ) { backStackEntry ->
+            val subtotal = backStackEntry.arguments?.getFloat("subtotal")?.toDouble() ?: 0.0
+            val totalDiscount = backStackEntry.arguments?.getFloat("totalDiscount")?.toDouble() ?: 0.0
+            val totalDeliveryFee = backStackEntry.arguments?.getFloat("totalDeliveryFee")?.toDouble() ?: 0.0
+            val totalAmount = backStackEntry.arguments?.getFloat("totalAmount")?.toDouble() ?: 0.0
+
+            PaymentScreen(
+                navController = navController,
+                subtotal = subtotal,
+                totalDiscount = totalDiscount,
+                totalDeliveryFee = totalDeliveryFee,
+                totalAmount = totalAmount
+            )
         }
         composable(
             Route.OrderStatus.path,
