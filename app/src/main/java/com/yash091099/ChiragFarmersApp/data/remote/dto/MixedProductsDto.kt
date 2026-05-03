@@ -23,7 +23,7 @@ data class MixedProductsData(
 data class MixedProductItem(
     val id: String,
     val productName: String,
-    val imageUrl: String,
+    val imageUrl: String?,
     val sellerName: String,
     val originalPrice: Double,
     val finalPrice: Double

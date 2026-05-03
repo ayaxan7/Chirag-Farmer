@@ -95,18 +95,13 @@ fun CommonProductCard(
                                 contentScale = ContentScale.Crop
                             )
                         })
-                } else if (product.imageRes != null) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator(
-                            modifier = Modifier
-                                .size(24.dp)
-                                .align(Alignment.Center),
-                            color = BGBlack,
-                            strokeWidth = 2.dp
-                        )
-                    }
+                } else {
+                    Image(
+                        painter = painterResource(id = product.imageRes ?: R.drawable.sell_category_other),
+                        contentDescription = product.productName,
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
                 }
 
                 // Edit button overlay
@@ -251,7 +246,7 @@ fun CommonProductCard(
                         DeleteItemBox(onDelete = onDeleteClick)
                     }
                 }
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(2.dp))
             }
         }
     }
