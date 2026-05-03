@@ -236,6 +236,13 @@ fun ProductDetailsScreen(
                                 modifier = Modifier.fillMaxSize(),
                                 contentScale = ContentScale.Fit
                             )
+                        }else{
+                            Image(
+                                painter = painterResource(R.drawable.sell_category_other),
+                                contentDescription = "Product",
+                                modifier = Modifier.fillMaxSize(),
+                                contentScale = ContentScale.Fit
+                            )
                         }
 
                         // Thumbnail images on left
