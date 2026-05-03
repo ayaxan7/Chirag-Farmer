@@ -19,9 +19,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -38,19 +35,23 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
-import com.yash091099.ChiragFarmersApp.ui.theme.BorderColour
+import androidx.navigation.compose.rememberNavController
 import com.yash091099.ChiragFarmersApp.R
+import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.ChiragButton
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragTopBar
+import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost.Route
+import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
 import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
+import com.yash091099.ChiragFarmersApp.ui.theme.BorderColour
+import com.yash091099.ChiragFarmersApp.ui.theme.ChiragFarmerTheme
 
 @Composable
 fun PaymentScreen(
-    navController: NavHostController,
-    modifier: Modifier = Modifier
+    navController: NavHostController, modifier: Modifier = Modifier
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     var selectedPayment by remember { mutableStateOf("Google pay") }
@@ -61,12 +62,9 @@ fun PaymentScreen(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             ChiragTopBar(
-                navController = navController,
-                icon = R.drawable.ic_back_arrow,
-                title = "Payment"
+                navController = navController, icon = R.drawable.ic_arrow, title = "Payment"
             )
-        }
-    ) { paddingValues ->
+        }) { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -123,30 +121,7 @@ fun PaymentScreen(
                         title = "Google pay",
                         offersText = "2 Offers",
                         isSelected = selectedPayment == "Google pay",
-                        onClick = { selectedPayment = "Google pay" }
-                    )
-
-                    // Show button when Google Pay is selected
-                    if (selectedPayment == "Google pay") {
-                        Spacer(modifier = Modifier.height(12.dp))
-                        Button(
-                            onClick = { /* Pay with Google Pay */ },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(50.dp)
-                                .padding(horizontal = 16.dp),
-                            shape = RoundedCornerShape(8.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = BGBlack
-                            )
-                        ) {
-                            Text(
-                                text = "Pay using Google Pay",
-                                fontSize = 15.sp,
-                                fontWeight = FontWeight.Medium
-                            )
-                        }
-                    }
+                        onClick = { selectedPayment = "Google pay" })
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
@@ -241,14 +216,11 @@ fun PaymentScreen(
                     .fillMaxWidth()
                     .background(BGWhite)
                     .padding(16.dp)
+                    .border(
+                        width = 1.dp, color = BorderColour, shape = RoundedCornerShape(24.dp)
+                    )
+                    .padding(16.dp)
             ) {
-                HorizontalDivider(
-                    color = BorderColour,
-                    thickness = 1.dp
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
                 // Sub-Total
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -256,20 +228,17 @@ fun PaymentScreen(
                 ) {
                     Text(
                         text = "Sub-Total",
-                        fontSize = 14.sp,
+                        fontSize = 12.sp,
                         fontWeight = FontWeight.Normal,
-                        color = Color.Black
+                        color = BGBlack
                     )
                     Text(
-                        text = "₹3,135.00",
-                        fontSize = 14.sp,
+                        text = "₹4000",
+                        fontSize = 12.sp,
                         fontWeight = FontWeight.Normal,
-                        color = Color.Black
+                        color = BGBlack
                     )
                 }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
                 // Delivery Fee
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -277,19 +246,19 @@ fun PaymentScreen(
                 ) {
                     Text(
                         text = "Delivery Fee",
-                        fontSize = 14.sp,
+                        fontSize = 12.sp,
                         fontWeight = FontWeight.Normal,
-                        color = Color.Black
+                        color = BGBlack
                     )
                     Text(
-                        text = "₹100.00",
-                        fontSize = 14.sp,
+                        text = "₹4000",
+                        fontSize = 12.sp,
                         fontWeight = FontWeight.Normal,
-                        color = Color.Black
+                        color = BGBlack
                     )
                 }
 
-                Spacer(modifier = Modifier.height(8.dp))
+//                        Spacer(modifier = Modifier.height(8.dp))
 
                 // Discount
                 Row(
@@ -298,27 +267,17 @@ fun PaymentScreen(
                 ) {
                     Text(
                         text = "Discount",
-                        fontSize = 14.sp,
+                        fontSize = 12.sp,
                         fontWeight = FontWeight.Normal,
-                        color = Color.Black
+                        color = BGBlack
                     )
                     Text(
-                        text = "₹875.00",
-                        fontSize = 14.sp,
+                        text = "₹4000",
+                        fontSize = 12.sp,
                         fontWeight = FontWeight.Normal,
-                        color = Color.Black
+                        color = BGBlack
                     )
                 }
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                HorizontalDivider(
-                    color = BorderColour,
-                    thickness = 1.dp
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
                 // Total Cost
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -326,50 +285,40 @@ fun PaymentScreen(
                 ) {
                     Text(
                         text = "Total Cost",
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.Black
+                        color = BGBlack
                     )
                     Text(
-                        text = "₹2,378.00",
-                        fontSize = 16.sp,
+                        text = "₹4000",
+                        fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.Black
+                        color = BGBlack
                     )
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Pay Now Button
-                Button(
-                    onClick = { /* Navigate to checkout */ },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = BGBlack
-                    )
-                ) {
-                    Text(
-                        text = "Pay Now",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium
-                    )
-                }
+                // Show loading indicator or button based on operation status
+                ChiragButton(
+                    text = "Pay Now",
+                    onClick = { navController.navigate(Route.Payment.path) },
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
         }
     }
 }
+
 @Composable
 fun PaymentOptionItem(
     iconRes: Int?,
     title: String,
+    modifier: Modifier = Modifier,
     offersText: String? = null,
     isSelected: Boolean,
     showChevron: Boolean = false,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier
@@ -382,22 +331,24 @@ fun PaymentOptionItem(
             .clickable { onClick() }
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
+        horizontalArrangement = Arrangement.spacedBy(12.dp)) {
         // Icon
         if (iconRes != null) {
             Box(
                 modifier = Modifier
-                    .size(32.dp)
+                    .size(24.dp)
                     .clip(RoundedCornerShape(6.dp))
-                    .background(Color(0xFFF8F8F8)),
+                    .border(
+                        width = 1.dp,
+                        color = if (isSelected) BGBlack else BorderColour,
+                        shape = RoundedCornerShape(6.dp)
+                    ),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     painter = painterResource(id = iconRes),
                     contentDescription = title,
-                    modifier = Modifier.size(20.dp),
-                    tint = Color.Unspecified
+                    modifier = Modifier.fillMaxSize(0.8f)
                 )
             }
         }
@@ -409,20 +360,8 @@ fun PaymentOptionItem(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(
-                text = title,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Medium,
-                color = Color.Black
+                text = title, fontSize = 14.sp, fontWeight = FontWeight.Medium, color = Color.Black
             )
-
-            if (offersText != null) {
-                Text(
-                    text = offersText,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Color(0xFF00BCD4)
-                )
-            }
         }
 
         // Right Icon (Chevron or Radio)
@@ -439,23 +378,47 @@ fun PaymentOptionItem(
                 modifier = Modifier
                     .size(20.dp)
                     .clip(CircleShape)
-                    .background(if (isSelected) BGBlack else Color.Transparent)
+                    .background(if (isSelected) BGWhite else Color.Transparent)
                     .border(
-                        width = 2.dp,
+                        width = 1.dp,
                         color = if (isSelected) BGBlack else BorderColour,
                         shape = CircleShape
-                    ),
-                contentAlignment = Alignment.Center
+                    ), contentAlignment = Alignment.Center
             ) {
                 if (isSelected) {
                     Box(
                         modifier = Modifier
-                            .size(10.dp)
+                            .size(12.dp)
                             .clip(CircleShape)
-                            .background(Color.White)
+                            .background(BGBlack)
                     )
                 }
             }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PaymentScreenPreview() {
+    PaymentScreen(navController = rememberNavController())
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PaymentOptionItemPreview() {
+    ChiragFarmerTheme {
+        Column(
+            modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            PaymentOptionItem(
+                iconRes = R.drawable.ic_card,
+                title = "Google pay",
+                offersText = "2 Offers",
+                isSelected = true,
+                onClick = {})
+            PaymentOptionItem(
+                iconRes = R.drawable.ic_card, title = "Paytm", isSelected = false, onClick = {})
         }
     }
 }
