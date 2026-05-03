@@ -34,13 +34,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.ChiragButton
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragTopBar
@@ -48,21 +45,20 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost.Route
 import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
 import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
 import com.yash091099.ChiragFarmersApp.ui.theme.BorderColour
-import com.yash091099.ChiragFarmersApp.ui.theme.ChiragFarmerTheme
 
 @Composable
 fun PaymentScreen(
     navController: NavHostController,
     viewModel: PaymentViewModel,
+    modifier: Modifier = Modifier,
     subtotal: Double = 0.0,
     totalDiscount: Double = 0.0,
     totalDeliveryFee: Double = 0.0,
-    totalAmount: Double = 0.0,
-    modifier: Modifier = Modifier
+    totalAmount: Double = 0.0
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val installedUpiApps by viewModel.installedUpiApps.collectAsState()
-    var selectedPayment by remember { mutableStateOf("Google pay") }
+    var selectedPayment by remember { mutableStateOf<String?>(null) }
 
     Scaffold(
         modifier = modifier,
@@ -287,6 +283,7 @@ fun PaymentScreen(
                 ChiragButton(
                     text = "Pay Now",
                     onClick = { navController.navigate(Route.Payment.path) },
+                    enabled = selectedPayment != null,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -326,8 +323,7 @@ fun PaymentOptionItem(
                         width = 1.dp,
                         color = if (isSelected) BGBlack else BorderColour,
                         shape = RoundedCornerShape(6.dp)
-                    ),
-                contentAlignment = Alignment.Center
+                    ), contentAlignment = Alignment.Center
             ) {
                 Icon(
                     painter = coil.compose.rememberAsyncImagePainter(model = icon),
@@ -380,31 +376,5 @@ fun PaymentOptionItem(
                 }
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PaymentScreenPreview() {
-    // Note: This won't show the real list of apps in preview
-    // PaymentScreen(navController = rememberNavController(), viewModel = ...)
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PaymentOptionItemPreview() {
-    ChiragFarmerTheme {
-//        Column(
-//            modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)
-//        ) {
-//            PaymentOptionItem(
-//                iconRes = R.drawable.ic_card,
-//                title = "Google pay",
-//                offersText = "2 Offers",
-//                isSelected = true,
-//                onClick = {})
-//            PaymentOptionItem(
-//                iconRes = R.drawable.ic_card, title = "Paytm", isSelected = false, onClick = {})
-//        }
     }
 }

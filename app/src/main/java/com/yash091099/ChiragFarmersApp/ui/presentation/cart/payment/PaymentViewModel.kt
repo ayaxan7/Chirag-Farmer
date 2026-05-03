@@ -35,11 +35,10 @@ class PaymentViewModel @Inject constructor(
 
     private fun fetchInstalledUpiApps() {
         val upiIntent = Intent(Intent.ACTION_VIEW).apply {
-            data = Uri.parse("upi://pay?pa=dummy@upi")
+            data = "upi://pay?pa=dummy@upi".toUri()
         }
         
         val packageManager = context.packageManager
-        // Use MATCH_ALL (0x00020000) for more comprehensive results across different Android versions
         val resolveInfoList = packageManager.queryIntentActivities(upiIntent, PackageManager.MATCH_ALL)
         Log.d("PaymentViewModel", "Found ${resolveInfoList.size} UPI apps")
         var upiApps = resolveInfoList.map { resolveInfo ->
@@ -75,6 +74,7 @@ class PaymentViewModel @Inject constructor(
                     }
                 } catch (e: PackageManager.NameNotFoundException) {
                     // App not installed
+                    Log.d("PaymentViewModel", "App not installed: $pkg with ${e.stackTrace}")
                 }
             }
             upiApps = fallbackApps
