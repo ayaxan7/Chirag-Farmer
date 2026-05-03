@@ -65,4 +65,5 @@ sealed class Route(val path: String) {
      object OrderStatus: Route("order_status/{orderId}") {
          fun createRoute(orderId: String) = "order_status/$orderId"
      }
+    object PaymentSuccess: Route("payment_success")
 }

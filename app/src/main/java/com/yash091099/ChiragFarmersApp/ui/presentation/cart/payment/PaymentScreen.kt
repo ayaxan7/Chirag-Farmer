@@ -260,7 +260,7 @@ fun PaymentScreen(
                 // Show loading indicator or button based on operation status
                 ChiragButton(
                     text = "Pay Now",
-                    onClick = { navController.navigate(Route.Payment.path) },
+                    onClick = { navController.navigate(Route.PaymentSuccess.path) },
                     enabled = selectedPayment != null,
                     modifier = Modifier.fillMaxWidth()
                 )
