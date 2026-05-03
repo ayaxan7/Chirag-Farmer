@@ -149,7 +149,7 @@ fun PaymentScreen(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 PaymentOptionItem(
-                    icon = R.drawable.ic_card,
+                    icon = R.drawable.ic_wallet,
                     title = "Kisan Wallet",
                     isSelected = selectedPayment == "Kisan Wallet",
                     onClick = { selectedPayment = "Kisan Wallet" },
@@ -159,27 +159,7 @@ fun PaymentScreen(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 PaymentOptionItem(
-                    icon = R.drawable.ic_card,
-                    title = "Net Banking",
-                    isSelected = selectedPayment == "Net Banking",
-                    onClick = { selectedPayment = "Net Banking" },
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                PaymentOptionItem(
-                    icon = R.drawable.ic_card,
-                    title = "Slice",
-                    isSelected = selectedPayment == "Slice",
-                    onClick = { selectedPayment = "Slice" },
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                PaymentOptionItem(
-                    icon = R.drawable.ic_card,
+                    icon = R.drawable.icon_cod,
                     title = "Cash On Delivery",
                     isSelected = selectedPayment == "Cash On Delivery",
                     onClick = { selectedPayment = "Cash On Delivery" },
@@ -238,8 +218,6 @@ fun PaymentScreen(
                     )
                 }
 
-//                        Spacer(modifier = Modifier.height(8.dp))
-
                 // Discount
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -296,7 +274,6 @@ fun PaymentOptionItem(
     icon: Any?,
     title: String,
     modifier: Modifier = Modifier,
-    offersText: String? = null,
     isSelected: Boolean,
     showChevron: Boolean = false,
     onClick: () -> Unit,
@@ -318,17 +295,13 @@ fun PaymentOptionItem(
             Box(
                 modifier = Modifier
                     .size(24.dp)
-                    .clip(RoundedCornerShape(6.dp))
-                    .border(
-                        width = 1.dp,
-                        color = if (isSelected) BGBlack else BorderColour,
-                        shape = RoundedCornerShape(6.dp)
-                    ), contentAlignment = Alignment.Center
+                    .clip(RoundedCornerShape(6.dp)),
+                contentAlignment = Alignment.Center
             ) {
                 Icon(
                     painter = coil.compose.rememberAsyncImagePainter(model = icon),
                     contentDescription = title,
-                    modifier = Modifier.fillMaxSize(0.8f),
+                    modifier = Modifier.fillMaxSize(),
                     tint = Color.Unspecified
                 )
             }
