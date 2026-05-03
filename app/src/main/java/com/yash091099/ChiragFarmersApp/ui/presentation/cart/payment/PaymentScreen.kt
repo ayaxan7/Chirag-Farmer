@@ -101,7 +101,7 @@ fun PaymentScreen(
 
                 // UPI Payments Section
                 Text(
-                    text = "Upi Payments",
+                    text = "UPI Payments",
                     fontSize = 15.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Color.Black,
@@ -329,7 +329,7 @@ fun PaymentOptionItem(
                 shape = RoundedCornerShape(12.dp)
             )
             .clickable { onClick() }
-            .padding(16.dp),
+            .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)) {
         // Icon
