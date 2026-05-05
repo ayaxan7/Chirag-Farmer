@@ -19,12 +19,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -58,7 +60,24 @@ fun PaymentScreen(
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val installedUpiApps by viewModel.installedUpiApps.collectAsState()
+    val paymentState by viewModel.paymentState.collectAsState()
     var selectedPayment by remember { mutableStateOf<String?>(null) }
+
+    LaunchedEffect(paymentState) {
+        when (val state = paymentState) {
+            is PaymentUiState.Success -> {
+                navController.navigate(Route.PaymentSuccess.path) {
+                    popUpTo(navController.currentDestination?.id ?: 0) { inclusive = false }
+                }
+                viewModel.resetPaymentState()
+            }
+            is PaymentUiState.Error -> {
+                snackbarHostState.showSnackbar(state.message)
+                viewModel.resetPaymentState()
+            }
+            else -> {}
+        }
+    }
 
     Scaffold(
         modifier = modifier,
@@ -258,12 +277,34 @@ fun PaymentScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Show loading indicator or button based on operation status
-                ChiragButton(
-                    text = "Pay Now",
-                    onClick = { navController.navigate(Route.PaymentSuccess.path) },
-                    enabled = selectedPayment != null,
-                    modifier = Modifier.fillMaxWidth()
-                )
+                if (paymentState is PaymentUiState.Loading) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp)
+                            .background(BGBlack, shape = RoundedCornerShape(8.dp)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp),
+                            color = BGWhite,
+                            strokeWidth = 2.dp
+                        )
+                    }
+                } else {
+                    ChiragButton(
+                        text = "Pay Now",
+                        onClick = {
+                            if (selectedPayment != null) {
+                                viewModel.placeOrder(
+                                    paymentMethod = selectedPayment ?: "Cash on Delivery"
+                                )
+                            }
+                        },
+                        enabled = selectedPayment != null,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
             }
         }
     }

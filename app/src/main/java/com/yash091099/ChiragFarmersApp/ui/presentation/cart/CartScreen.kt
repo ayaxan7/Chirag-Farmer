@@ -59,7 +59,7 @@ fun CartScreen(
     isBuyNow: Boolean = false,
     productId: String? = null,
     quantity: Int = 1,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val cartState by viewModel.cartState.collectAsState()
@@ -68,7 +68,7 @@ fun CartScreen(
     LaunchedEffect(isBuyNow) {
         if (isBuyNow && productId != null) {
             viewModel.initBuyNow(productId, quantity)
-        }else{
+        } else {
             viewModel.initLoadCart()
         }
     }
@@ -92,7 +92,9 @@ fun CartScreen(
                 snackbarHost = { SnackbarHost(snackbarHostState) },
                 topBar = {
                     ChiragTopBar(
-                        navController = navController, icon = R.drawable.ic_arrow, title = if (isBuyNow) "Checkout" else "My Cart"
+                        navController = navController,
+                        icon = R.drawable.ic_arrow,
+                        title = if (isBuyNow) "Checkout" else "My Cart"
                     )
                 }) { paddingValues ->
                 Box(
@@ -132,7 +134,9 @@ fun CartScreen(
                 snackbarHost = { SnackbarHost(snackbarHostState) },
                 topBar = {
                     ChiragTopBar(
-                        navController = navController, icon = R.drawable.ic_arrow, title = if (isBuyNow) "Checkout" else "My Cart"
+                        navController = navController,
+                        icon = R.drawable.ic_arrow,
+                        title = if (isBuyNow) "Checkout" else "My Cart"
                     )
                 }) { paddingValues ->
                 Box(
@@ -240,7 +244,9 @@ fun CartScreen(
                                                 text = "Pin : ", fontSize = 13.sp, color = TextGray
                                             )
                                             Text(
-                                                text = address.pincode, fontSize = 13.sp, color = BGBlack
+                                                text = address.pincode,
+                                                fontSize = 13.sp,
+                                                color = BGBlack
                                             )
                                         }
                                     }
@@ -248,7 +254,10 @@ fun CartScreen(
                                         onClick = { navController.navigate(Route.AddressList.path) },
                                         colors = ButtonDefaults.buttonColors(containerColor = BGBlack),
                                         shape = RoundedCornerShape(12.dp),
-                                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
+                                        contentPadding = PaddingValues(
+                                            horizontal = 12.dp,
+                                            vertical = 4.dp
+                                        ),
                                         modifier = Modifier.defaultMinSize(
                                             minWidth = 1.dp,
                                             minHeight = 1.dp
@@ -439,6 +448,13 @@ fun CartScreen(
                             ChiragButton(
                                 text = "Proceed to Checkout",
                                 onClick = {
+                                    // Cache cart items and address for payment screen
+                                    viewModel.cacheCartDataForPayment(
+                                        cartItems = cartItems,
+                                        address = address?.addressString ?: ""
+                                    )
+
+                                    // Navigate to payment screen
                                     navController.navigate(
                                         Route.Payment.createRoute(
                                             subtotal = summary.subtotal,

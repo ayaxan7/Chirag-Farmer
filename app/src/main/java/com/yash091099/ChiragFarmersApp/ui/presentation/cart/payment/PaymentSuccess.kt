@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -29,11 +30,22 @@ import com.yash091099.ChiragFarmersApp.ui.theme.TextGray
 fun PaymentSuccess(
     navController: NavHostController,
 ) {
+    LaunchedEffect(Unit) {
+        // The order response is cached in OrderResponseCache (singleton)
+        // Retrieve it via dependency injection if needed in the future
+    }
+
     Scaffold(
         containerColor = BGWhite, bottomBar = {
             ChiragButton(
                 text = "Continue Shopping",
-                onClick = { navController.navigate(Route.Home.path) },
+                onClick = {
+                    // Navigate to home - the order response cache will persist
+                    // and will be cleared on the next order placement or when needed
+                    navController.navigate(Route.Home.path) {
+                        popUpTo(navController.graph.startDestinationId) { inclusive = false }
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 30.dp, start = 16.dp, end = 16.dp)

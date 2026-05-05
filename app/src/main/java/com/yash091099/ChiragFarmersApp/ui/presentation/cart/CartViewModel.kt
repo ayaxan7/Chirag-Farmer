@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.yash091099.ChiragFarmersApp.data.remote.dto.CartAddressDto
 import com.yash091099.ChiragFarmersApp.data.remote.dto.CartItemDto
 import com.yash091099.ChiragFarmersApp.data.remote.dto.CartSummary
+import com.yash091099.ChiragFarmersApp.data.CartDataCache
 import com.yash091099.ChiragFarmersApp.domain.usecase.GetBuyNowUseCase
 import com.yash091099.ChiragFarmersApp.domain.usecase.GetCartUseCase
 import com.yash091099.ChiragFarmersApp.domain.usecase.RemoveFromCartUseCase
@@ -21,7 +22,8 @@ class CartViewModel @Inject constructor(
     private val getCartUseCase: GetCartUseCase,
     private val getBuyNowUseCase: GetBuyNowUseCase,
     private val removeFromCartUseCase: RemoveFromCartUseCase,
-    private val updateCartQuantityUseCase: UpdateCartQuantityUseCase
+    private val updateCartQuantityUseCase: UpdateCartQuantityUseCase,
+    private val cartDataCache: CartDataCache
 ) : ViewModel() {
 
     private val _cartState = MutableStateFlow<CartUiState>(CartUiState.Loading)
@@ -156,6 +158,14 @@ class CartViewModel @Inject constructor(
 
     fun refreshCart() {
         loadCart()
+    }
+
+    fun cacheCartDataForPayment(cartItems: List<CartItemDto>, address: String) {
+        cartDataCache.setCartData(cartItems, address)
+    }
+
+    fun clearCachedCartData() {
+        cartDataCache.clearCartData()
     }
 }
 
