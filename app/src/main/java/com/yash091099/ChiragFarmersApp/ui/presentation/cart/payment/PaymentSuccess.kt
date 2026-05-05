@@ -1,6 +1,5 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.cart.payment
 
-import android.widget.Space
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,11 +16,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.ChiragButton
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost.Route
@@ -33,8 +30,7 @@ fun PaymentSuccess(
     navController: NavHostController,
 ) {
     Scaffold(
-        containerColor = BGWhite,
-        bottomBar = {
+        containerColor = BGWhite, bottomBar = {
             ChiragButton(
                 text = "Continue Shopping",
                 onClick = { navController.navigate(Route.Home.path) },
@@ -42,8 +38,7 @@ fun PaymentSuccess(
                     .fillMaxWidth()
                     .padding(bottom = 30.dp, start = 16.dp, end = 16.dp)
             )
-        }
-    ) { paddingValues ->
+        }) { paddingValues ->
 
         Column(
             modifier = Modifier
@@ -62,9 +57,7 @@ fun PaymentSuccess(
             Spacer(modifier = Modifier.height(24.dp))
 
             Text(
-                text = "Payment Successful",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
+                text = "Payment Successful", fontSize = 24.sp, fontWeight = FontWeight.Bold
             )
 
             Spacer(modifier = Modifier.height(8.dp))

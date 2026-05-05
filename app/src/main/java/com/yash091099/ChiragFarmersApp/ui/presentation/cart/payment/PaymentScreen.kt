@@ -136,25 +136,25 @@ fun PaymentScreen(
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
 
-                Spacer(modifier = Modifier.height(12.dp))
-
-                PaymentOptionItem(
-                    icon = R.drawable.ic_card,
-                    title = "Add Kisan Card",
-                    isSelected = selectedPayment == "Add Kisan Card",
-                    onClick = { selectedPayment = "Add Kisan Card" },
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                PaymentOptionItem(
-                    icon = R.drawable.ic_wallet,
-                    title = "Kisan Wallet",
-                    isSelected = selectedPayment == "Kisan Wallet",
-                    onClick = { selectedPayment = "Kisan Wallet" },
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
+//                Spacer(modifier = Modifier.height(12.dp))
+//
+//                PaymentOptionItem(
+//                    icon = R.drawable.ic_card,
+//                    title = "Add Kisan Card",
+//                    isSelected = selectedPayment == "Add Kisan Card",
+//                    onClick = { selectedPayment = "Add Kisan Card" },
+//                    modifier = Modifier.padding(horizontal = 16.dp)
+//                )
+//
+//                Spacer(modifier = Modifier.height(12.dp))
+//
+//                PaymentOptionItem(
+//                    icon = R.drawable.ic_wallet,
+//                    title = "Kisan Wallet",
+//                    isSelected = selectedPayment == "Kisan Wallet",
+//                    onClick = { selectedPayment = "Kisan Wallet" },
+//                    modifier = Modifier.padding(horizontal = 16.dp)
+//                )
 
                 Spacer(modifier = Modifier.height(12.dp))
 

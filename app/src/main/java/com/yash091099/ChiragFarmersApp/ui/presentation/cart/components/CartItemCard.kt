@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -36,12 +37,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
 import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
 import com.yash091099.ChiragFarmersApp.ui.theme.BorderColour
 import com.yash091099.ChiragFarmersApp.ui.theme.ChiragFarmerTheme
 import com.yash091099.ChiragFarmersApp.ui.theme.TextGray
+import com.yash091099.ChiragFarmersApp.utils.ShimmerProductPlaceholder
 
 @Composable
 fun CartItemCard(
@@ -71,15 +74,34 @@ fun CartItemCard(
         ) {
 
             if (imageUrl.isNotEmpty()) {
-                AsyncImage(
+//                AsyncImage(
+//                    model = imageUrl,
+//                    contentDescription = productName,
+//                    modifier = Modifier
+//                        .size(80.dp)
+//                        .clip(RoundedCornerShape(8.dp))
+//                        .border(1.dp, BorderColour),
+//                    contentScale = ContentScale.Crop
+//                )
+                SubcomposeAsyncImage(
                     model = imageUrl,
                     contentDescription = productName,
                     modifier = Modifier
                         .size(80.dp)
                         .clip(RoundedCornerShape(8.dp))
                         .border(1.dp, BorderColour),
-                    contentScale = ContentScale.Crop
-                )
+                    contentScale = ContentScale.Crop,
+                    loading = {
+                        ShimmerProductPlaceholder()
+                    },
+                    error = {
+                        Image(
+                            painter = painterResource(R.drawable.sell_category_other),
+                            contentDescription = "Error Image",
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
+                    })
             } else {
                 Image(
                     painter = painterResource(id = imageRes),
