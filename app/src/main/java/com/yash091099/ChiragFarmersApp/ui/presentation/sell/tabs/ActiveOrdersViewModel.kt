@@ -29,6 +29,13 @@ class ActiveOrdersViewModel @Inject constructor(
     val currentPage: StateFlow<Int> = _currentPage.asStateFlow()
 
     private val _pageSize = MutableStateFlow(10)
+    
+    private val _selectedOrderId = MutableStateFlow<String?>(null)
+    val selectedOrderId: StateFlow<String?> = _selectedOrderId.asStateFlow()
+
+    fun selectOrder(orderId: String?) {
+        _selectedOrderId.value = orderId
+    }
 
     init {
         loadOrders()

@@ -49,6 +49,13 @@ class SellViewModel @Inject constructor(
     private val _deleteState = MutableStateFlow<DeleteProductState>(DeleteProductState.Idle)
     val deleteState: StateFlow<DeleteProductState> = _deleteState.asStateFlow()
 
+    private val _selectedOrderId = MutableStateFlow<String?>(null)
+    val selectedOrderId: StateFlow<String?> = _selectedOrderId.asStateFlow()
+
+    fun selectOrder(orderId: String?) {
+        _selectedOrderId.value = orderId
+    }
+
     @OptIn(ExperimentalCoroutinesApi::class)
     val activeProducts: Flow<PagingData<Product>> = _activeSearchQuery
         .flatMapLatest { query ->

@@ -1,5 +1,6 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.sell
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -56,6 +57,12 @@ fun SellScreen(
     val activeProducts = viewModel.activeProducts.collectAsLazyPagingItems()
     val soldOutProducts = viewModel.soldOutProducts.collectAsLazyPagingItems()
 
+    val selectedOrderId by viewModel.selectedOrderId.collectAsStateWithLifecycle()
+
+    BackHandler(enabled = selectedOrderId != null) {
+        viewModel.selectOrder(null)
+    }
+
     // Handle toggle state changes
     LaunchedEffect(toggleState) {
         when (val state = toggleState) {
@@ -109,7 +116,7 @@ fun SellScreen(
         topBar = {
             ChiragTopBar(
                 navController = navController,
-                title = "Sell",
+                title = if (selectedOrderId != null) "Order Status" else "Sell",
                 icon = R.drawable.ic_arrow,
                 buttonText = "Sell Product",
                 buttonIcon = Icons.Default.Add,
@@ -196,7 +203,11 @@ fun SellScreen(
                             viewModel.deleteProduct(productId)
                         })
 
-                    2 -> ActiveOrdersScreen(navController = navController)
+                    2 -> ActiveOrdersScreen(
+                        navController = navController,
+                        selectedOrderId = selectedOrderId,
+                        onOrderClick = { viewModel.selectOrder(it) }
+                    )
                 }
             }
         }

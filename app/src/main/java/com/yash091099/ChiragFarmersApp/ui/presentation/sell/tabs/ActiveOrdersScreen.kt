@@ -1,5 +1,6 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.sell.tabs
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -16,6 +17,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -25,6 +28,8 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
+import com.yash091099.ChiragFarmersApp.ui.presentation.sell.screens.orderstatus.OrderSummaryCard
+import com.yash091099.ChiragFarmersApp.ui.presentation.sell.screens.orderstatus.ProgressTimeline
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost.Route
@@ -54,19 +59,33 @@ import com.yash091099.ChiragFarmersApp.ui.theme.TextGray
 @Composable
 fun ActiveOrdersScreen(
     navController: NavHostController,
+    selectedOrderId: String? = null,
+    onOrderClick: (String?) -> Unit = {},
     viewModel: ActiveOrdersViewModel = hiltViewModel()
 ) {
     val ordersState by viewModel.ordersState.collectAsState()
     val currentPage by viewModel.currentPage.collectAsState()
 
-    ActiveOrdersContent(
-        state = ordersState,
-        currentPage = currentPage,
-        navController = navController,
-        onRetry = { viewModel.retry() },
-        onPreviousPage = { viewModel.previousPage() },
-        onNextPage = { viewModel.nextPage() }
-    )
+    BackHandler(enabled = selectedOrderId != null) {
+        onOrderClick(null)
+    }
+
+    if (selectedOrderId == null) {
+        ActiveOrdersContent(
+            state = ordersState,
+            currentPage = currentPage,
+            navController = navController,
+            onRetry = { viewModel.retry() },
+            onPreviousPage = { viewModel.previousPage() },
+            onNextPage = { viewModel.nextPage() },
+            onOrderClick = onOrderClick
+        )
+    } else {
+        OrderDetailsView(
+            orderId = selectedOrderId,
+            navController = navController
+        )
+    }
 }
 
 @Composable
@@ -76,7 +95,8 @@ fun ActiveOrdersContent(
     navController: NavHostController,
     onRetry: () -> Unit,
     onPreviousPage: () -> Unit,
-    onNextPage: () -> Unit
+    onNextPage: () -> Unit,
+    onOrderClick: (String?) -> Unit
 ) {
     when (state) {
         is ActiveOrdersState.Loading -> {
@@ -128,7 +148,7 @@ fun ActiveOrdersContent(
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     items(state.orders) { order ->
-                        OrderCard(order, navController)
+                        OrderCard(order, navController, onOrderClick)
                     }
                 }
 
@@ -173,7 +193,7 @@ fun ActiveOrdersContent(
 }
 
 @Composable
-fun OrderCard(order: Order, navController: NavHostController) {
+fun OrderCard(order: Order, navController: NavHostController, onOrderClick: (String?) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -293,13 +313,38 @@ fun OrderCard(order: Order, navController: NavHostController) {
             ChiragButton(
                 text = "Update Order Status",
                 onClick = {
-                    navController.navigate(Route.OrderStatus.createRoute(order.orderId))
+                    onOrderClick(order.orderId)
                 },
                 modifier = Modifier.fillMaxWidth().height(40.dp),
                 shape = RoundedCornerShape(8.dp),
                 fontSize = 14.sp
             )
         }
+    }
+}
+
+@Composable
+fun OrderDetailsView(
+    orderId: String,
+    navController: NavHostController
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(top = 16.dp)
+    ) {
+        OrderSummaryCard()
+        Spacer(modifier = Modifier.height(24.dp))
+        Text(
+            text = "Update Progress",
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF1A1C1E),
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+        ProgressTimeline()
+        Spacer(modifier = Modifier.height(24.dp))
     }
 }
 
@@ -346,7 +391,7 @@ fun OrderCardPreview() {
     )
     val navController = rememberNavController()
     Box(modifier = Modifier.padding(16.dp)) {
-        OrderCard(order = mockOrder, navController = navController)
+        OrderCard(order = mockOrder, navController = navController, onOrderClick = {})
     }
 }
 
@@ -391,6 +436,7 @@ fun ActiveOrdersScreenPreview() {
         navController = navController,
         onRetry = {},
         onPreviousPage = {},
-        onNextPage = {}
+        onNextPage = {},
+        onOrderClick = {}
     )
 }
