@@ -34,6 +34,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost.Route
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -65,6 +66,13 @@ fun ActiveOrdersScreen(
 ) {
     val ordersState by viewModel.ordersState.collectAsState()
     val currentPage by viewModel.currentPage.collectAsState()
+    val orderTrackingState by viewModel.orderTrackingState.collectAsState()
+
+    LaunchedEffect(selectedOrderId) {
+        if (selectedOrderId != null) {
+            viewModel.selectOrder(selectedOrderId)
+        }
+    }
 
     BackHandler(enabled = selectedOrderId != null) {
         onOrderClick(null)
@@ -81,10 +89,33 @@ fun ActiveOrdersScreen(
             onOrderClick = onOrderClick
         )
     } else {
-        OrderDetailsView(
-            orderId = selectedOrderId,
-            navController = navController
-        )
+        when (val state = orderTrackingState) {
+            is OrderTrackingState.Loading -> {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(color = BGBlack)
+                }
+            }
+            is OrderTrackingState.Error -> {
+                Column(
+                    modifier = Modifier.fillMaxSize().padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(text = state.message, color = Color.Red, textAlign = TextAlign.Center)
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Button(onClick = { onOrderClick(selectedOrderId) }, colors = ButtonDefaults.buttonColors(containerColor = BGBlack)) {
+                        Text("Retry", color = Color.White)
+                    }
+                }
+            }
+            is OrderTrackingState.Success -> {
+                OrderDetailsView(
+                    data = state.data,
+                    navController = navController
+                )
+            }
+            is OrderTrackingState.Idle -> Unit
+        }
     }
 }
 
@@ -325,7 +356,7 @@ fun OrderCard(order: Order, navController: NavHostController, onOrderClick: (Str
 
 @Composable
 fun OrderDetailsView(
-    orderId: String,
+    data: com.yash091099.ChiragFarmersApp.data.remote.dto.OrderTrackingData,
     navController: NavHostController
 ) {
     Column(
@@ -334,7 +365,7 @@ fun OrderDetailsView(
             .verticalScroll(rememberScrollState())
             .padding(top = 16.dp)
     ) {
-        OrderSummaryCard()
+        OrderSummaryCard(data = data)
         Spacer(modifier = Modifier.height(24.dp))
         Text(
             text = "Update Progress",
@@ -343,7 +374,10 @@ fun OrderDetailsView(
             color = Color(0xFF1A1C1E),
             modifier = Modifier.padding(bottom = 16.dp)
         )
-        ProgressTimeline()
+        ProgressTimeline(
+            currentStatus = data.orderStatus,
+            deliveryDate = data.deliveryDate
+        )
         Spacer(modifier = Modifier.height(24.dp))
     }
 }

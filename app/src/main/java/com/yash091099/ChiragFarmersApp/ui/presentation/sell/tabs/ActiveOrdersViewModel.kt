@@ -3,7 +3,9 @@ package com.yash091099.ChiragFarmersApp.ui.presentation.sell.tabs
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yash091099.ChiragFarmersApp.domain.model.Order
+import com.yash091099.ChiragFarmersApp.data.remote.dto.OrderTrackingData
 import com.yash091099.ChiragFarmersApp.domain.usecase.GetActiveOrdersUseCase
+import com.yash091099.ChiragFarmersApp.domain.usecase.GetOrderTrackingUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,13 +19,24 @@ sealed class ActiveOrdersState {
     data class Error(val message: String) : ActiveOrdersState()
 }
 
+sealed class OrderTrackingState {
+    data object Idle : OrderTrackingState()
+    data object Loading : OrderTrackingState()
+    data class Success(val data: OrderTrackingData) : OrderTrackingState()
+    data class Error(val message: String) : OrderTrackingState()
+}
+
 @HiltViewModel
 class ActiveOrdersViewModel @Inject constructor(
-    private val getActiveOrdersUseCase: GetActiveOrdersUseCase
+    private val getActiveOrdersUseCase: GetActiveOrdersUseCase,
+    private val getOrderTrackingUseCase: GetOrderTrackingUseCase
 ) : ViewModel() {
 
     private val _ordersState = MutableStateFlow<ActiveOrdersState>(ActiveOrdersState.Loading)
     val ordersState: StateFlow<ActiveOrdersState> = _ordersState.asStateFlow()
+
+    private val _orderTrackingState = MutableStateFlow<OrderTrackingState>(OrderTrackingState.Idle)
+    val orderTrackingState: StateFlow<OrderTrackingState> = _orderTrackingState.asStateFlow()
 
     private val _currentPage = MutableStateFlow(1)
     val currentPage: StateFlow<Int> = _currentPage.asStateFlow()
@@ -35,6 +48,27 @@ class ActiveOrdersViewModel @Inject constructor(
 
     fun selectOrder(orderId: String?) {
         _selectedOrderId.value = orderId
+        if (orderId != null) {
+            fetchOrderTracking(orderId)
+        } else {
+            _orderTrackingState.value = OrderTrackingState.Idle
+        }
+    }
+
+    private fun fetchOrderTracking(id: String) {
+        viewModelScope.launch {
+            _orderTrackingState.value = OrderTrackingState.Loading
+            getOrderTrackingUseCase(id).fold(
+                onSuccess = { response ->
+                    _orderTrackingState.value = OrderTrackingState.Success(response.data)
+                },
+                onFailure = { exception ->
+                    _orderTrackingState.value = OrderTrackingState.Error(
+                        exception.message ?: "Failed to load tracking details"
+                    )
+                }
+            )
+        }
     }
 
     init {

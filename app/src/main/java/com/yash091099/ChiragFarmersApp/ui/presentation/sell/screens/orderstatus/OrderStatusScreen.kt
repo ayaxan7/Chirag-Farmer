@@ -1,5 +1,8 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.sell.screens.orderstatus
 
+import coil.compose.AsyncImage
+import com.yash091099.ChiragFarmersApp.data.remote.dto.OrderTrackingData
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -53,7 +56,7 @@ fun TabItem(text: String, isSelected: Boolean) {
 }
 
 @Composable
-fun OrderSummaryCard() {
+fun OrderSummaryCard(data: OrderTrackingData) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -63,18 +66,17 @@ fun OrderSummaryCard() {
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                // Product Image Placeholder
+                // Product Image
                 Box(
                     modifier = Modifier
                         .size(100.dp)
                         .clip(RoundedCornerShape(8.dp))
-                        .background(Color(0xFFFDE7D2)) // Mocking the image color from screenshot
+                        .background(Color(0xFFF5F5F5))
                 ) {
-                    Icon(
-                        Icons.Default.Image,
-                        contentDescription = null,
-                        modifier = Modifier.align(Alignment.Center).size(40.dp),
-                        tint = Color.White.copy(alpha = 0.5f)
+                    AsyncImage(
+                        model = data.imageUrl,
+                        contentDescription = data.productName,
+                        modifier = Modifier.fillMaxSize()
                     )
                 }
 
@@ -87,22 +89,22 @@ fun OrderSummaryCard() {
                         verticalAlignment = Alignment.Top
                     ) {
                         Text(
-                            text = "HYBRID TOMATO\nSEEDS",
+                            text = data.productName.uppercase(),
                             fontWeight = FontWeight.ExtraBold,
                             fontSize = 16.sp,
                             lineHeight = 20.sp,
                             color = Color(0xFF1A1C1E)
                         )
                         Text(
-                            text = "₹850",
+                            text = "₹${data.amountPaid.toInt()}",
                             fontWeight = FontWeight.Bold,
                             fontSize = 18.sp,
                             color = Teal
                         )
                     }
                     Spacer(modifier = Modifier.height(8.dp))
-                    Text(text = "Order ID: TRK456898268", fontSize = 13.sp, color = TextGray)
-                    Text(text = "Quantity : 2kg", fontSize = 13.sp, color = TextGray)
+                    Text(text = "Order ID: ${data.orderNumber}", fontSize = 13.sp, color = TextGray)
+                    Text(text = "Quantity : ${data.quantity}", fontSize = 13.sp, color = TextGray)
                 }
             }
 
@@ -115,7 +117,10 @@ fun OrderSummaryCard() {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = "Delivery Address", fontWeight = FontWeight.Bold, fontSize = 15.sp, color = TextGray)
+                Column {
+                    Text(text = "Delivery Address", fontWeight = FontWeight.Bold, fontSize = 15.sp, color = TextGray)
+                    Text(text = data.deliveryAddress.completeAddress, fontSize = 13.sp, color = TextGray)
+                }
                 Icon(Icons.Default.KeyboardArrowDown, contentDescription = null, tint = TextGray)
             }
         }
@@ -123,71 +128,73 @@ fun OrderSummaryCard() {
 }
 
 @Composable
-fun ProgressTimeline() {
+fun ProgressTimeline(currentStatus: String, deliveryDate: String?) {
+    val statuses = listOf("Pending", "Packed", "Shipped", "Out for Delivery", "Delivered")
+    val currentIndex = statuses.indexOfFirst { it.equals(currentStatus, ignoreCase = true) }
+    
     Column {
+        // Delivery Date (Estimated) - Index 0
         TimelineItem(
             title = "Delivery Date",
             subtitle = "Estimated delivery",
             icon = Icons.Default.ShoppingCart,
-            isCompleted = true,
+            isCompleted = currentIndex == 0,
+            isActive = currentIndex == -1, // No status yet, first one is active
             showLine = true
         ) {
-            CustomDateField("10/12/2023")
+            CustomDateField(deliveryDate?.split("T")?.get(0) ?: "Pending")
         }
 
+        // Packing Stage - Index 1
         TimelineItem(
             title = "Packing Stage",
             subtitle = "Packing Date",
             icon = Icons.Default.Inventory,
-            isCompleted = true,
+            isCompleted = currentIndex == 1,
+            isActive = currentIndex == 0,
+            isFaded = currentIndex < 0,
             showLine = true
         ) {
-            Column {
-                CustomDateField("10/12/2023")
-                Spacer(modifier = Modifier.height(12.dp))
-                Text("Notes (Optional)", fontSize = 13.sp, color = TextGray)
-                Spacer(modifier = Modifier.height(4.dp))
-                CustomTextField("Add specific packing notes...")
-            }
+            CustomDateField(if (currentIndex >= 1) "Completed" else "Pending")
         }
 
+        // Shipping Stage - Index 2
         TimelineItem(
             title = "Shipping Stage",
             subtitle = "Shipping Date",
             icon = Icons.Default.Inventory2,
-            isCompleted = false,
-            isActive = true,
+            isCompleted = currentIndex == 2,
+            isActive = currentIndex == 1,
+            isFaded = currentIndex < 1,
             showLine = true
         ) {
-            Column {
-                CustomDateField("mm/dd/yyyy")
-                Spacer(modifier = Modifier.height(12.dp))
-                Text("Tracking Number", fontSize = 13.sp, color = TextGray)
-                Spacer(modifier = Modifier.height(4.dp))
-                CustomTextField("Enter tracking ID")
-            }
+            CustomDateField(if (currentIndex >= 2) "Completed" else "Pending")
         }
 
+        // Out for Delivery - Index 3
         TimelineItem(
             title = "Out for Delivery",
             subtitle = "Delivery Date",
             icon = Icons.Default.LocalShipping,
-            isCompleted = false,
-            isFaded = true,
+            isCompleted = currentIndex == 3,
+            isActive = currentIndex == 2,
+            isFaded = currentIndex < 2,
             showLine = true
         ) {
-            CustomDateField("mm/dd/yyyy")
+            CustomDateField(if (currentIndex >= 3) "Completed" else "Pending")
         }
 
+        // Delivered - Index 4
         TimelineItem(
             title = "Delivered",
             subtitle = "Confirmation Delivered Date",
             icon = Icons.Default.CheckCircleOutline,
-            isCompleted = false,
-            isFaded = true,
+            isCompleted = currentIndex == 4,
+            isActive = currentIndex == 3,
+            isFaded = currentIndex < 3,
             showLine = false
         ) {
-            CustomDateField("mm/dd/yyyy")
+            CustomDateField(if (currentIndex >= 4) "Delivered" else "Pending")
         }
     }
 }
