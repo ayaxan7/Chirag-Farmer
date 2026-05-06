@@ -36,7 +36,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
 import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
@@ -51,7 +50,7 @@ fun CartItemCard(
     modifier: Modifier = Modifier,
     imageRes: Int,
     imageUrl: String = "",
-    productName: String,
+    productName: String?,
     sellerName: String,
     price: String,
     deliveryDate: String,
@@ -122,7 +121,7 @@ fun CartItemCard(
             ) {
 
                 Text(
-                    text = productName,
+                    text = productName?:"",
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Color.Black,

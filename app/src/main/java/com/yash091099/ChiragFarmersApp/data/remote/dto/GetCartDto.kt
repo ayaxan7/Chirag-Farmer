@@ -35,7 +35,7 @@ data class CartItemDto(
     @SerializedName("productId")
     val productId: String,
     @SerializedName("productName")
-    val productName: String,
+    val productName: String?="",
     @SerializedName("productImage")
     val productImage: String? = null,
     @SerializedName("sellerName")

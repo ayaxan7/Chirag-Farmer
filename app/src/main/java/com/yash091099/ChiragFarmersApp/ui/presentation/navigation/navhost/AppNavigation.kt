@@ -41,6 +41,7 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.cart.payment.PaymentSucce
 import com.yash091099.ChiragFarmersApp.ui.presentation.cart.payment.PaymentViewModel
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.screens.orderstatus.OrderStatusScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.splash.SplashScreen
+import com.yash091099.ChiragFarmersApp.ui.presentation.profile.ProfileScreen
 
 @Composable
 fun AppNavigation(
@@ -235,6 +236,9 @@ fun AppNavigation(
         }
         composable(Route.PaymentSuccess.path){
             PaymentSuccess(navController = navController)
+        }
+        composable(Route.Profile.path) {
+            ProfileScreen(navController = navController)
         }
     }
 }

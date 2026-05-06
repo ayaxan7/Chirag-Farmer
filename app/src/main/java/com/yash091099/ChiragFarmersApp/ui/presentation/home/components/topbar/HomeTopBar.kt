@@ -101,6 +101,9 @@ fun HomeTopBar(navController: NavHostController) {
                             modifier = Modifier
                                 .width(32.dp)
                                 .height(32.dp)
+                                .clickable {
+                                    navController.navigate(Route.Profile.path)
+                                }
                         )
                         Spacer(modifier = Modifier.width(12.dp))
                     }
