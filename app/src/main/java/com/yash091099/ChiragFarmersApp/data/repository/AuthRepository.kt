@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import com.yash091099.ChiragFarmersApp.data.local.ChiragDataStore
 import com.yash091099.ChiragFarmersApp.data.model.auth.AddBusinessInfoRequest
 import com.yash091099.ChiragFarmersApp.data.model.auth.AuthResponse
+import com.yash091099.ChiragFarmersApp.data.model.auth.FarmerProfileResponse
 import com.yash091099.ChiragFarmersApp.data.model.auth.RegisterRequest
 import com.yash091099.ChiragFarmersApp.data.model.auth.SendOTPData
 import com.yash091099.ChiragFarmersApp.data.model.auth.SendOTPRequest
@@ -156,6 +157,20 @@ class AuthRepository @Inject constructor(
 
     fun getProfileStatus(): Flow<Boolean> {
         return chiragDataStore.getProfileStatus()
+    }
+
+    suspend fun getFarmerProfile(): Result<FarmerProfileResponse> {
+        return try {
+            val token = chiragDataStore.getAuthToken().first()
+            if (token.isNullOrEmpty()) {
+                return Result.failure(Exception("No authentication token found"))
+            }
+
+            val response = apiService.getFarmerProfile("Bearer $token")
+            Result.success(response)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
     suspend fun logout() {

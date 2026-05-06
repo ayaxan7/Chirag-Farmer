@@ -2,6 +2,7 @@ package com.yash091099.ChiragFarmersApp.data.remote
 
 import com.yash091099.ChiragFarmersApp.data.model.auth.AddBusinessInfoRequest
 import com.yash091099.ChiragFarmersApp.data.model.auth.AuthResponse
+import com.yash091099.ChiragFarmersApp.data.model.auth.FarmerProfileResponse
 import com.yash091099.ChiragFarmersApp.data.model.auth.RegisterRequest
 import com.yash091099.ChiragFarmersApp.data.model.auth.SendOTPData
 import com.yash091099.ChiragFarmersApp.data.model.auth.SendOTPRequest
@@ -86,5 +87,10 @@ interface AuthApiService {
     suspend fun getDefaultLocation(
         @Header("Authorization") authorization: String
     ): DefaultLocationResponse
+
+    @GET("api/farmers/profile")
+    suspend fun getFarmerProfile(
+        @Header("Authorization") authorization: String
+    ): FarmerProfileResponse
 }
 

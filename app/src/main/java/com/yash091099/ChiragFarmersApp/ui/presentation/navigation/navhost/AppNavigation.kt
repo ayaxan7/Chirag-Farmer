@@ -42,6 +42,7 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.cart.payment.PaymentViewM
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.screens.orderstatus.OrderStatusScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.splash.SplashScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.profile.ProfileScreen
+import com.yash091099.ChiragFarmersApp.ui.presentation.profile.ProfileViewModel
 
 @Composable
 fun AppNavigation(
@@ -238,7 +239,8 @@ fun AppNavigation(
             PaymentSuccess(navController = navController)
         }
         composable(Route.Profile.path) {
-            ProfileScreen(navController = navController)
+            val viewModel: ProfileViewModel = hiltViewModel()
+            ProfileScreen(navController = navController, viewModel = viewModel)
         }
     }
 }
