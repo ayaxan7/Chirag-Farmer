@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -26,13 +27,18 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.ChiragButton
+import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragTopBar
 import com.yash091099.ChiragFarmersApp.ui.theme.*
 
 @Composable
 fun ProfileScreen(navController: NavHostController) {
     Scaffold(
         topBar = {
-            ProfileTopBar(onBackClick = { navController.popBackStack() })
+            ChiragTopBar(
+                navController=navController,
+                title = "My Account",
+                icon = R.drawable.ic_arrow,
+            )
         },
         containerColor = BGWhite
     ) { paddingValues ->
@@ -192,12 +198,12 @@ fun QuickActionsRow() {
     ) {
         QuickActionCard(
             title = "Orders\nplaced",
-            icon = R.drawable.shipping, // Using shipping as a box placeholder
+            icon = R.drawable.ic_ordersplaced,
             modifier = Modifier.weight(1f)
         )
         QuickActionCard(
             title = "Help &\nSupport",
-            icon = R.drawable.get_help,
+            icon = R.drawable.ic_help_n_support,
             modifier = Modifier.weight(1f)
         )
     }
@@ -272,7 +278,7 @@ fun MenuItem(icon: Int, title: String, onClick: () -> Unit = {}) {
             color = Color.Black
         )
         Icon(
-            imageVector = Icons.Default.KeyboardArrowRight,
+            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
             contentDescription = null,
             tint = TextGray
         )
