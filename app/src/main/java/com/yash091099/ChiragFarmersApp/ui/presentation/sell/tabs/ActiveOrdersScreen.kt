@@ -50,6 +50,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.yash091099.ChiragFarmersApp.domain.model.Order
 import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.ChiragButton
 import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
@@ -64,8 +67,7 @@ fun ActiveOrdersScreen(
     onOrderClick: (String?) -> Unit = {},
     viewModel: ActiveOrdersViewModel = hiltViewModel()
 ) {
-    val ordersState by viewModel.ordersState.collectAsState()
-    val currentPage by viewModel.currentPage.collectAsState()
+    val orders = viewModel.activeOrders.collectAsLazyPagingItems()
     val orderTrackingState by viewModel.orderTrackingState.collectAsState()
 
     LaunchedEffect(selectedOrderId) {
@@ -80,12 +82,8 @@ fun ActiveOrdersScreen(
 
     if (selectedOrderId == null) {
         ActiveOrdersContent(
-            state = ordersState,
-            currentPage = currentPage,
+            orders = orders,
             navController = navController,
-            onRetry = { viewModel.retry() },
-            onPreviousPage = { viewModel.previousPage() },
-            onNextPage = { viewModel.nextPage() },
             onOrderClick = onOrderClick
         )
     } else {
@@ -121,16 +119,12 @@ fun ActiveOrdersScreen(
 
 @Composable
 fun ActiveOrdersContent(
-    state: ActiveOrdersState,
-    currentPage: Int,
+    orders: LazyPagingItems<Order>,
     navController: NavHostController,
-    onRetry: () -> Unit,
-    onPreviousPage: () -> Unit,
-    onNextPage: () -> Unit,
     onOrderClick: (String?) -> Unit
 ) {
-    when (state) {
-        is ActiveOrdersState.Loading -> {
+    when {
+        orders.loadState.refresh is LoadState.Loading && orders.itemCount == 0 -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -139,7 +133,7 @@ fun ActiveOrdersContent(
             }
         }
 
-        is ActiveOrdersState.Error -> {
+        orders.loadState.refresh is LoadState.Error && orders.itemCount == 0 -> {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -151,17 +145,12 @@ fun ActiveOrdersContent(
                     text = "Error Loading Orders",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    color = BGBlack
+                    color = BGBlack,
+                    textAlign = TextAlign.Center
                 )
-//                Spacer(modifier = Modifier.height(16.dp))
-//                Text(
-//                    text = state.message,
-//                    fontSize = 14.sp,
-//                    color = Color.Gray
-//                )
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
-                    onClick = onRetry,
+                    onClick = { orders.retry() },
                     colors = ButtonDefaults.buttonColors(containerColor = BGBlack)
                 ) {
                     Text("Retry", color = Color.White)
@@ -169,56 +158,97 @@ fun ActiveOrdersContent(
             }
         }
 
-        is ActiveOrdersState.Success -> {
-            Column(modifier = Modifier.fillMaxSize()) {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
-                    contentPadding = PaddingValues(top=16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    items(state.orders) { order ->
+        orders.itemCount == 0 -> {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "No active orders yet",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = TextGray,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+
+        else -> {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                items(
+                    count = orders.itemCount,
+                    key = { index -> orders[index]?.orderObjectId ?: index }
+                ) { index ->
+                    orders[index]?.let { order ->
                         OrderCard(order, navController, onOrderClick)
                     }
                 }
 
-                // Pagination Controls
-                if (state.totalPages > 1) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Button(
-                            onClick = onPreviousPage,
-                            enabled = currentPage > 1,
-                            modifier = Modifier.weight(1f),
-                            colors = ButtonDefaults.buttonColors(containerColor = BGBlack)
-                        ) {
-                            Text("← Previous", color = Color.White)
-                        }
-
-                        Text(
-                            text = "Page $currentPage/${state.totalPages}",
-                            modifier = Modifier.weight(1f),
-                            textAlign = TextAlign.Center,
-                            fontWeight = FontWeight.Bold
-                        )
-
-                        Button(
-                            onClick = onNextPage,
-                            enabled = currentPage < state.totalPages,
-                            modifier = Modifier.weight(1f),
-                            colors = ButtonDefaults.buttonColors(containerColor = BGBlack)
-                        ) {
-                            Text("Next →", color = Color.White)
+                when (orders.loadState.append) {
+                    is LoadState.Loading -> {
+                        item {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 12.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                CircularProgressIndicator(color = BGBlack)
+                            }
                         }
                     }
+
+                    is LoadState.Error -> {
+                        item {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 12.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = "Couldn't load more orders",
+                                    color = BGBlack,
+                                    fontSize = 14.sp,
+                                    textAlign = TextAlign.Center
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Button(
+                                    onClick = { orders.retry() },
+                                    colors = ButtonDefaults.buttonColors(containerColor = BGBlack)
+                                ) {
+                                    Text("Retry", color = Color.White)
+                                }
+                            }
+                        }
+                    }
+
+                    else -> Unit
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun ActiveOrdersPreviewContent(
+    orders: List<Order>,
+    navController: NavHostController,
+    onOrderClick: (String?) -> Unit
+) {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        items(orders) { order ->
+            OrderCard(order, navController, onOrderClick)
         }
     }
 }
@@ -459,18 +489,9 @@ fun ActiveOrdersScreenPreview() {
         )
     )
     val navController = rememberNavController()
-    ActiveOrdersContent(
-        state = ActiveOrdersState.Success(
-            orders = mockOrders,
-            total = 2,
-            page = 1,
-            totalPages = 1
-        ),
-        currentPage = 1,
+    ActiveOrdersPreviewContent(
+        orders = mockOrders,
         navController = navController,
-        onRetry = {},
-        onPreviousPage = {},
-        onNextPage = {},
         onOrderClick = {}
     )
 }

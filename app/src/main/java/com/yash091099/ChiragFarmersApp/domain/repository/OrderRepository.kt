@@ -1,12 +1,16 @@
 package com.yash091099.ChiragFarmersApp.domain.repository
 
+import androidx.paging.PagingData
 import com.yash091099.ChiragFarmersApp.domain.model.OrdersData
 import com.yash091099.ChiragFarmersApp.data.remote.dto.PlaceOrderResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.PlaceOrderRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.OrderTrackingDto
+import com.yash091099.ChiragFarmersApp.domain.model.Order
+import kotlinx.coroutines.flow.Flow
 
 interface OrderRepository {
     suspend fun getActiveOrders(page: Int, limit: Int): Result<OrdersData>
+    fun getActiveOrdersPaged(): Flow<PagingData<Order>>
     suspend fun placeOrder(request: PlaceOrderRequest): Result<PlaceOrderResponse>
     suspend fun getOrderTracking(id: String): Result<OrderTrackingDto>
 }

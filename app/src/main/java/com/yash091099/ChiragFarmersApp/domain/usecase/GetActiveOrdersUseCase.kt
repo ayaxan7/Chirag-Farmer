@@ -1,14 +1,16 @@
 package com.yash091099.ChiragFarmersApp.domain.usecase
 
-import com.yash091099.ChiragFarmersApp.domain.model.OrdersData
+import androidx.paging.PagingData
+import com.yash091099.ChiragFarmersApp.domain.model.Order
 import com.yash091099.ChiragFarmersApp.domain.repository.OrderRepository
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetActiveOrdersUseCase @Inject constructor(
     private val orderRepository: OrderRepository
 ) {
-    suspend operator fun invoke(page: Int = 1, limit: Int = 10): Result<OrdersData> {
-        return orderRepository.getActiveOrders(page, limit)
+    operator fun invoke(): Flow<PagingData<Order>> {
+        return orderRepository.getActiveOrdersPaged()
     }
 }
 
