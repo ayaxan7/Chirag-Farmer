@@ -168,8 +168,8 @@ fun ProgressTimeline(currentStatus: String, deliveryDate: String?) {
     Column {
         // Delivery Date (Estimated) - Index 0
         TimelineItem(
-            title = "Delivery Date",
-            subtitle = "Estimated delivery",
+            title = "Order Placed",
+            subtitle = "Placed On",
             icon = Icons.Default.ShoppingCart,
             isCompleted = currentIndex == 0,
             isActive = currentIndex == -1, // No status yet, first one is active
