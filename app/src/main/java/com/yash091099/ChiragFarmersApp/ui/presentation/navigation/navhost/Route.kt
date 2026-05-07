@@ -62,9 +62,6 @@ sealed class Route(val path: String) {
          fun createRoute(subtotal: Double, totalDiscount: Double, totalDeliveryFee: Double, totalAmount: Double) = 
              "payment?subtotal=$subtotal&totalDiscount=$totalDiscount&totalDeliveryFee=$totalDeliveryFee&totalAmount=$totalAmount"
      }
-     object OrderStatus: Route("order_status/{orderId}") {
-         fun createRoute(orderId: String) = "order_status/$orderId"
-     }
     object PaymentSuccess: Route("payment_success")
     object Orders:Route("orders")
 }

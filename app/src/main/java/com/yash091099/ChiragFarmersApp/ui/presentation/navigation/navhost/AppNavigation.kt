@@ -228,13 +228,6 @@ fun AppNavigation(
                 totalAmount = totalAmount
             )
         }
-        composable(
-            Route.OrderStatus.path,
-            arguments = listOf(navArgument("orderId") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val orderId = backStackEntry.arguments?.getString("orderId") ?: ""
-            OrderStatusScreen(navController = navController, orderId = orderId)
-        }
         composable(Route.PaymentSuccess.path){
             PaymentSuccess(navController = navController)
         }

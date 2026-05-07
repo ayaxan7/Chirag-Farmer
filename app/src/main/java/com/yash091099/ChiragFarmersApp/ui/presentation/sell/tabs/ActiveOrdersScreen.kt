@@ -378,7 +378,7 @@ fun OrderCard(order: Order, navController: NavHostController, onOrderClick: (Str
             ChiragButton(
                 text = "Update Order Status",
                 onClick = {
-                    navController.navigate(Route.OrderStatus.createRoute(order.orderObjectId))
+                    onOrderClick(order.orderObjectId)
                 },
                 modifier = Modifier.fillMaxWidth().height(40.dp),
                 shape = RoundedCornerShape(8.dp),

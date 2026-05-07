@@ -116,7 +116,7 @@ fun SellScreen(
         topBar = {
             ChiragTopBar(
                 navController = navController,
-                title = if (selectedOrderId != null) "Order Status" else "Sell",
+                title = "Sell",
                 icon = R.drawable.ic_arrow,
                 buttonText = "Sell Product",
                 buttonIcon = Icons.Default.Add,
