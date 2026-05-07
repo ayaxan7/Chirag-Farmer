@@ -1,38 +1,59 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.sell.screens.orderstatus
 
-import coil.compose.AsyncImage
-import com.yash091099.ChiragFarmersApp.data.remote.dto.OrderTrackingData
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.CheckCircleOutline
+import androidx.compose.material.icons.filled.Inventory
+import androidx.compose.material.icons.filled.Inventory2
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.LocalShipping
+import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.yash091099.ChiragFarmersApp.R
-import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragTopBar
-import com.yash091099.ChiragFarmersApp.ui.theme.*
+import coil.compose.AsyncImage
+import com.yash091099.ChiragFarmersApp.data.remote.dto.OrderTrackingData
+import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
+import com.yash091099.ChiragFarmersApp.ui.theme.BorderColour
+import com.yash091099.ChiragFarmersApp.ui.theme.Teal
+import com.yash091099.ChiragFarmersApp.ui.theme.TextGray
 
 @Composable
 fun OrderStatusScreen(
-    navController: NavHostController,
-    orderId: String? = null
-) {}
+    navController: NavHostController, orderId: String? = null
+) {
+}
 
 @Composable
 fun TabItem(text: String, isSelected: Boolean) {
@@ -71,12 +92,12 @@ fun OrderSummaryCard(data: OrderTrackingData) {
                     modifier = Modifier
                         .size(100.dp)
                         .clip(RoundedCornerShape(8.dp))
-                        .background(Color(0xFFF5F5F5))
                 ) {
                     AsyncImage(
                         model = data.imageUrl,
                         contentDescription = data.productName,
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
                     )
                 }
 
@@ -102,9 +123,9 @@ fun OrderSummaryCard(data: OrderTrackingData) {
                             color = Teal
                         )
                     }
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(text = "Order ID: ${data.orderNumber}", fontSize = 13.sp, color = TextGray)
-                    Text(text = "Quantity : ${data.quantity}", fontSize = 13.sp, color = TextGray)
+//                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(text = "Order ID: ${data.orderNumber}", fontSize = 13.sp, color = TextGray, lineHeight = 13.sp)
+                    Text(text = "Quantity : ${data.quantity}", fontSize = 13.sp, color = TextGray, lineHeight = 13.sp)
                 }
             }
 
@@ -118,8 +139,20 @@ fun OrderSummaryCard(data: OrderTrackingData) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column {
-                    Text(text = "Delivery Address", fontWeight = FontWeight.Bold, fontSize = 15.sp, color = TextGray)
-                    Text(text = data.deliveryAddress.completeAddress, fontSize = 13.sp, color = TextGray)
+                    Text(
+                        text = "Delivery Address",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 15.sp,
+                        color = TextGray
+                    )
+                    Text(
+                        text = data.deliveryAddress.completeAddress,
+                        fontSize = 13.sp,
+                        color = TextGray,
+                        lineHeight = 14.sp,
+                        maxLines = 3,
+                        overflow = TextOverflow.Ellipsis
+                    )
                 }
                 Icon(Icons.Default.KeyboardArrowDown, contentDescription = null, tint = TextGray)
             }
@@ -131,7 +164,7 @@ fun OrderSummaryCard(data: OrderTrackingData) {
 fun ProgressTimeline(currentStatus: String, deliveryDate: String?) {
     val statuses = listOf("Pending", "Packed", "Shipped", "Out for Delivery", "Delivered")
     val currentIndex = statuses.indexOfFirst { it.equals(currentStatus, ignoreCase = true) }
-    
+
     Column {
         // Delivery Date (Estimated) - Index 0
         TimelineItem(
@@ -258,34 +291,46 @@ fun TimelineItem(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column {
-                        Text(
-                            text = title,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp,
-                            color = contentColor
-                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth()
+                        ){
+                            Text(
+                                text = title,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp,
+                                color = contentColor, lineHeight = 16.sp
+                            )
+                            Spacer(modifier = Modifier.weight(1f))
+                            if (isCompleted) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(20.dp)
+                                        .background(Color.Black, RoundedCornerShape(6.dp)),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Icon(
+                                        Icons.Default.Check,
+                                        contentDescription = "Checked",
+                                        tint = BGWhite,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                }
+                            } else {
+                                Box(
+                                    modifier = Modifier
+                                        .size(20.dp)
+                                        .border(1.dp, BorderColour, RoundedCornerShape(6.dp))
+                                )
+                            }
+                        }
+
                         Text(
                             text = subtitle,
                             fontSize = 12.sp,
                             color = if (isFaded) TextGray.copy(alpha = 0.5f) else TextGray
                         )
                     }
-                    if (isCompleted) {
-                        Box(
-                            modifier = Modifier
-                                .size(24.dp)
-                                .background(Color.Black, CircleShape),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(Icons.Default.Check, contentDescription = null, tint = Color.White, modifier = Modifier.size(16.dp))
-                        }
-                    } else {
-                        Box(
-                            modifier = Modifier
-                                .size(24.dp)
-                                .border(1.dp, BorderColour, CircleShape)
-                        )
-                    }
+
                 }
                 Spacer(modifier = Modifier.height(12.dp))
                 content()
@@ -302,10 +347,14 @@ fun CustomDateField(value: String) {
             .height(48.dp)
             .background(Color(0xFFF9F9F9), RoundedCornerShape(8.dp))
             .border(1.dp, BorderColour.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
-            .padding(horizontal = 12.dp),
-        contentAlignment = Alignment.CenterStart
+            .padding(horizontal = 12.dp), contentAlignment = Alignment.CenterStart
     ) {
-        Text(text = value, color = if (value.contains("m/d")) TextGray else Color.Black, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+        Text(
+            text = value,
+            color = if (value.contains("m/d")) TextGray else Color.Black,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold
+        )
     }
 }
 
@@ -317,8 +366,7 @@ fun CustomTextField(placeholder: String) {
             .height(48.dp)
             .background(Color(0xFFF9F9F9), RoundedCornerShape(8.dp))
             .border(1.dp, BorderColour.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
-            .padding(horizontal = 12.dp),
-        contentAlignment = Alignment.CenterStart
+            .padding(horizontal = 12.dp), contentAlignment = Alignment.CenterStart
     ) {
         Text(text = placeholder, color = TextGray, fontSize = 14.sp, fontWeight = FontWeight.Bold)
     }

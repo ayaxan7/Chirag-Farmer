@@ -29,17 +29,13 @@ class ActiveOrdersViewModel @Inject constructor(
     private val getOrderTrackingUseCase: GetOrderTrackingUseCase
 ) : ViewModel() {
 
-    private val activeOrdersFlow: Flow<PagingData<Order>>
+    private val activeOrdersFlow: Flow<PagingData<Order>> = getActiveOrdersUseCase().cachedIn(viewModelScope)
 
     private val _orderTrackingState = MutableStateFlow<OrderTrackingState>(OrderTrackingState.Idle)
     val orderTrackingState: StateFlow<OrderTrackingState> = _orderTrackingState.asStateFlow()
 
     val activeOrders: Flow<PagingData<Order>>
         get() = activeOrdersFlow
-
-    init {
-        activeOrdersFlow = getActiveOrdersUseCase().cachedIn(viewModelScope)
-    }
 
     fun selectOrder(orderId: String?) {
         if (orderId != null) {

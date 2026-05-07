@@ -178,7 +178,7 @@ fun ActiveOrdersContent(
         else -> {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(16.dp),
+                contentPadding = PaddingValues(top=16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(
