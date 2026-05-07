@@ -47,8 +47,8 @@ fun QuickActionCard(title: String, icon: Int, modifier: Modifier = Modifier,onCl
                 text = title,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
-                lineHeight = 18.sp,
-                color = Color.Black
+                lineHeight = 14.sp,
+                color = Color.Black,
             )
         }
     }

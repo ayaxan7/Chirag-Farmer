@@ -29,6 +29,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.yash091099.ChiragFarmersApp.BuildConfig
 import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.ChiragButton
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragTopBar
@@ -142,7 +143,7 @@ fun ProfileScreen(
 
                     item {
                         Text(
-                            text = "Version 2.90",
+                            text = "Version ${BuildConfig.VERSION_NAME}",
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(bottom = 32.dp),
