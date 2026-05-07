@@ -108,8 +108,12 @@ fun ActiveOrdersScreen(
             }
             is OrderTrackingState.Success -> {
                 OrderDetailsView(
+                    orderId = selectedOrderId,
                     data = state.data,
-                    navController = navController
+                    navController = navController,
+                    onStatusUpdate = { status ->
+                        viewModel.updateOrderStatus(selectedOrderId, status)
+                    }
                 )
             }
             is OrderTrackingState.Idle -> Unit
@@ -374,7 +378,7 @@ fun OrderCard(order: Order, navController: NavHostController, onOrderClick: (Str
             ChiragButton(
                 text = "Update Order Status",
                 onClick = {
-                    onOrderClick(order.orderId)
+                    navController.navigate(Route.OrderStatus.createRoute(order.orderObjectId))
                 },
                 modifier = Modifier.fillMaxWidth().height(40.dp),
                 shape = RoundedCornerShape(8.dp),
@@ -386,8 +390,10 @@ fun OrderCard(order: Order, navController: NavHostController, onOrderClick: (Str
 
 @Composable
 fun OrderDetailsView(
+    orderId: String,
     data: com.yash091099.ChiragFarmersApp.data.remote.dto.OrderTrackingData,
-    navController: NavHostController
+    navController: NavHostController,
+    onStatusUpdate: (String) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -405,8 +411,9 @@ fun OrderDetailsView(
             modifier = Modifier.padding(bottom = 16.dp)
         )
         ProgressTimeline(
-            currentStatus = data.orderStatus,
-            deliveryDate = data.deliveryDate
+            orderId = orderId,
+            data = data,
+            onStatusUpdate = onStatusUpdate
         )
         Spacer(modifier = Modifier.height(24.dp))
     }

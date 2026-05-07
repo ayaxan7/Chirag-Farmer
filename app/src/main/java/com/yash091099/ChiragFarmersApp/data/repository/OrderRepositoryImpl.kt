@@ -13,6 +13,8 @@ import com.yash091099.ChiragFarmersApp.domain.repository.OrderRepository
 import com.yash091099.ChiragFarmersApp.data.remote.dto.PlaceOrderResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.PlaceOrderRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.OrderTrackingDto
+import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateOrderStatusRequest
+import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateOrderStatusResponse
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -64,6 +66,19 @@ class OrderRepositoryImpl @Inject constructor(
         return try {
             val token = chiragDataStore.getAuthToken().first()
             val response = api.getOrderTracking("Bearer $token", id)
+            Result.success(response)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun updateOrderStatus(
+        id: String,
+        request: UpdateOrderStatusRequest
+    ): Result<UpdateOrderStatusResponse> {
+        return try {
+            val token = chiragDataStore.getAuthToken().first()
+            val response = api.updateOrderStatus("Bearer $token", id, request)
             Result.success(response)
         } catch (e: Exception) {
             Result.failure(e)

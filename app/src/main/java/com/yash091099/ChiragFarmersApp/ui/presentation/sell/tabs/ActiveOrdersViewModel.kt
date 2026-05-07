@@ -9,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.yash091099.ChiragFarmersApp.domain.model.Order
+import com.yash091099.ChiragFarmersApp.domain.usecase.UpdateOrderStatusUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,7 +27,8 @@ sealed class OrderTrackingState {
 @HiltViewModel
 class ActiveOrdersViewModel @Inject constructor(
     getActiveOrdersUseCase: GetActiveOrdersUseCase,
-    private val getOrderTrackingUseCase: GetOrderTrackingUseCase
+    private val getOrderTrackingUseCase: GetOrderTrackingUseCase,
+    private val updateOrderStatusUseCase: UpdateOrderStatusUseCase
 ) : ViewModel() {
 
     private val activeOrdersFlow: Flow<PagingData<Order>> = getActiveOrdersUseCase().cachedIn(viewModelScope)
@@ -58,6 +60,18 @@ class ActiveOrdersViewModel @Inject constructor(
                     )
                 }
             )
+        }
+    }
+
+    fun updateOrderStatus(id: String, status: String) {
+        viewModelScope.launch {
+            updateOrderStatusUseCase(id, status).onSuccess { response ->
+                if (response.success) {
+                    fetchOrderTracking(id)
+                }
+            }.onFailure {
+                // Error handling could be added here
+            }
         }
     }
 }

@@ -10,6 +10,9 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Query
 import retrofit2.http.Path
+import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateOrderStatusRequest
+import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateOrderStatusResponse
+import retrofit2.http.PATCH
 
 interface OrderApiService {
     @GET("api/farmers/orders/active-orders")
@@ -29,4 +32,11 @@ interface OrderApiService {
         @Header("Authorization") token: String,
         @Path("id") id: String
     ): OrderTrackingDto
+
+    @PATCH("api/farmers/orders/{id}/status")
+    suspend fun updateOrderStatus(
+        @Header("Authorization") token: String,
+        @Path("id") id: String,
+        @Body request: UpdateOrderStatusRequest
+    ): UpdateOrderStatusResponse
 }
