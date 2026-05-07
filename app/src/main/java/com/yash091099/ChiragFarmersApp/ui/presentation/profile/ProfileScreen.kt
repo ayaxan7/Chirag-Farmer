@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -32,6 +33,8 @@ import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.ChiragButton
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragTopBar
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost.Route
+import com.yash091099.ChiragFarmersApp.ui.presentation.profile.components.MenuItem
+import com.yash091099.ChiragFarmersApp.ui.presentation.profile.components.QuickActionCard
 import com.yash091099.ChiragFarmersApp.ui.theme.*
 import kotlinx.coroutines.launch
 
@@ -99,7 +102,9 @@ fun ProfileScreen(
                     }
 
                     item {
-                        QuickActionsRow()
+                        QuickActionsRow(
+                            navController=navController
+                        )
                     }
 
                     item {
@@ -108,7 +113,9 @@ fun ProfileScreen(
                     }
 
                     item {
-                        MenuListSection()
+                        MenuListSection(
+                            navController=navController
+                        )
                     }
 
                     item {
@@ -256,98 +263,46 @@ fun ProfileHeader(
 }
 
 @Composable
-fun QuickActionsRow() {
+fun QuickActionsRow(
+    navController: NavHostController
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
+        horizontalArrangement = Arrangement.Start
     ) {
         QuickActionCard(
             title = "Orders\nplaced",
             icon = R.drawable.ic_ordersplaced,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.width(110.dp),
+            onClick={
+                navController.navigate(Route.Orders.path)
+            }
+        )
+        Spacer(
+            modifier = Modifier.size(16.dp)
         )
         QuickActionCard(
             title = "Help &\nSupport",
             icon = R.drawable.ic_help_n_support,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.width(110.dp)
         )
     }
 }
 
 @Composable
-fun QuickActionCard(title: String, icon: Int, modifier: Modifier = Modifier) {
-    Card(
-        modifier = modifier.height(100.dp),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = BGWhite),
-        border = BorderStroke(1.dp, BorderColour)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(12.dp),
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            Icon(
-                painter = painterResource(id = icon),
-                contentDescription = title,
-                modifier = Modifier.size(24.dp),
-                tint = Color.Black
-            )
-            Text(
-                text = title,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Medium,
-                lineHeight = 18.sp,
-                color = Color.Black
-            )
-        }
-    }
-}
-
-@Composable
-fun MenuListSection() {
+fun MenuListSection(
+    navController: NavHostController
+) {
     Column {
-        MenuItem(icon = R.drawable.profile_icon, title = "My profile")
+//        MenuItem(icon = R.drawable.profile_icon, title = "My profile")
         MenuItem(icon = R.drawable.ic_wallet, title = "Wallet")
-        MenuItem(icon = R.drawable.ic_view_seller, title = "Bank Details")
+//        MenuItem(icon = R.drawable.ic_view_seller, title = "Bank Details")
         MenuItem(icon = R.drawable.location, title = "Manage Addresses")
         MenuItem(icon = R.drawable.qna, title = "Terms and conditions")
         MenuItem(icon = R.drawable.ic_cart, title = "Privacy Policy")
         MenuItem(icon = R.drawable.ic_share, title = "Language")
         MenuItem(icon = R.drawable.ic_rating_star, title = "Rate app")
-    }
-}
-
-@Composable
-fun MenuItem(icon: Int, title: String, onClick: () -> Unit = {}) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick() }
-            .padding(horizontal = 16.dp, vertical = 16.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            painter = painterResource(id = icon),
-            contentDescription = title,
-            modifier = Modifier.size(24.dp),
-            tint = Color.Black
-        )
-        Spacer(modifier = Modifier.size(16.dp))
-        Text(
-            text = title,
-            modifier = Modifier.weight(1f),
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Medium,
-            color = Color.Black
-        )
-        Icon(
-            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-            contentDescription = null,
-            tint = TextGray
-        )
     }
 }
