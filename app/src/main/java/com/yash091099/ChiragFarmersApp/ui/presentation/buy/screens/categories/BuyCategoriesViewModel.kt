@@ -7,6 +7,7 @@ import androidx.paging.cachedIn
 import com.yash091099.ChiragFarmersApp.domain.model.Product
 import com.yash091099.ChiragFarmersApp.domain.usecase.GetAllProductsByCategoryUseCase
 import com.yash091099.ChiragFarmersApp.domain.usecase.GetSmartFarmingProductsUseCase
+import com.yash091099.ChiragFarmersApp.ui.presentation.sell.data.Categories
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -25,21 +26,6 @@ class BuyCategoriesViewModel @Inject constructor(
     private val _categoryName = MutableStateFlow("")
     private val _selectedSubcategory = MutableStateFlow<String?>(null)
 
-    /**
-     * Maps display category names to API category parameters
-     */
-    private fun mapCategoryNameToApiParameter(categoryName: String): String? {
-        return when {
-            categoryName.equals("Seeds", ignoreCase = true) -> "seeds"
-            categoryName.equals("Sprayers", ignoreCase = true) -> "sprayers"
-            categoryName.equals("Agriculture Drone", ignoreCase = true) -> "drones"
-            categoryName.equals("Tractors", ignoreCase = true) -> "tractors"
-            categoryName.equals("Smart Farming", ignoreCase = true) -> "smart farming"
-            categoryName.equals("Popular Products", ignoreCase = true) -> "popular products"
-            else -> null
-        }
-    }
-
     @OptIn(ExperimentalCoroutinesApi::class)
     val products: Flow<PagingData<Product>> = combine(_categoryName, _selectedSubcategory) { category, subcategory ->
         category to subcategory
@@ -54,7 +40,11 @@ class BuyCategoriesViewModel @Inject constructor(
             }
             categoryName.isNotEmpty() && !categoryName.equals("All Produces", ignoreCase = true) -> {
                 // Use the smart farming endpoint for other categories
-                val apiCategory = mapCategoryNameToApiParameter(categoryName)
+                val apiCategory = when {
+                    categoryName.equals("Smart Farming", ignoreCase = true) -> "smart farming"
+                    categoryName.equals("Popular Products", ignoreCase = true) -> "popular products"
+                    else -> Categories.getBuyApiCategory(categoryName)
+                }
                 if (apiCategory != null) {
                     getSmartFarmingProductsUseCase(
                         category = apiCategory,
@@ -72,18 +62,11 @@ class BuyCategoriesViewModel @Inject constructor(
 
     fun setCategoryName(categoryName: String) {
         _categoryName.value = categoryName
+        _selectedSubcategory.value = null
     }
 
-    fun onCategoryChipSelected(chipName: String) {
-        val normalizedChip = chipName
-            .replace("\n", " ")
-            .trim()
-
-        _selectedSubcategory.value = if (normalizedChip.equals("All Produces", ignoreCase = true)) {
-            null
-        } else {
-            normalizedChip.replace("&", "and").lowercase()
-        }
+    fun onCategoryChipSelected(apiValue: String?) {
+        _selectedSubcategory.value = apiValue
     }
 }
 

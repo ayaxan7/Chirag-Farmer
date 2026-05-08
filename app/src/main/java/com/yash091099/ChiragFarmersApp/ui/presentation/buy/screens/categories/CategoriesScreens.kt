@@ -60,7 +60,7 @@ fun CategoriesScreen(
 
     var selectedCategoryId by rememberSaveable { mutableDoubleStateOf(0.0) }
 
-    val categories = Categories.sellCategories
+    val categories = Categories.getBuySubcategories(categoryName)
 
     val allCategories = listOf(
         BuySellCategory("All\nProduces", R.drawable.sell_category_all, 0.0)
@@ -68,19 +68,10 @@ fun CategoriesScreen(
 
     val products = viewModel.products.collectAsLazyPagingItems()
 
-    // Check if categoryName is a dynamic category (not in predefined list)
-    val isDynamicCategory = categoryName.isNotEmpty() && allCategories.none {
-        it.name.replace("\n", " ").equals(categoryName, ignoreCase = true)
-    }
-
     LaunchedEffect(categoryName) {
+        selectedCategoryId = 0.0
         viewModel.setCategoryName(categoryName)
-    }
-
-    LaunchedEffect(Unit) {
-        if (!isDynamicCategory) {
-            viewModel.onCategoryChipSelected("All Produces")
-        }
+        viewModel.onCategoryChipSelected(null)
     }
 
     val categoryDisplayText =
@@ -135,12 +126,9 @@ fun CategoriesScreen(
                             onClick = {
                                 selectedCategoryId =
                                     if (selectedCategoryId == category.id) 0.0 else category.id
-                                val selectedCategoryName =
-                                    allCategories.find { it.id == selectedCategoryId }?.name?.replace(
-                                            "\n",
-                                            " "
-                                        ) ?: "All Produces"
-                                viewModel.onCategoryChipSelected(selectedCategoryName)
+                                viewModel.onCategoryChipSelected(
+                                    allCategories.find { it.id == selectedCategoryId }?.apiValue
+                                )
                             })
                     }
                 }
@@ -154,7 +142,7 @@ fun CategoriesScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = if (isDynamicCategory) categoryName else categoryDisplayText,
+                        text = categoryDisplayText,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.W600
                     )
@@ -186,6 +174,9 @@ fun CategoriesScreen(
                     item(span = { GridItemSpan(maxLineSpan) }) {
                         Text(text = refreshState.error.message ?: "Failed to load products")
                     }
+                    item(span = { GridItemSpan(maxLineSpan) }) {
+                        Text(text = "No products found")
+                    }
                 }
 
                 is LoadState.NotLoading -> {
@@ -193,39 +184,39 @@ fun CategoriesScreen(
                         item(span = { GridItemSpan(maxLineSpan) }) {
                             Text(text = "No products found")
                         }
+                    } else {
+                        items(products.itemCount) { index ->
+                            val product = products[index] ?: return@items
+                            CommonProductCard(
+                                product = CommonProductCardData(
+                                    productName = product.productName,
+                                    brandName = product.sellerName,
+                                    currentPrice = product.effectivePrice.toString(),
+                                    originalPrice = product.originalPrice.takeIf { it > 0 }?.toString(),
+                                    rating = "4.8",
+                                    imageUrl = product.imageUrl
+                                ), isSellScreen = false, onClick = {
+                                    navController.navigate(Route.ProductDetails.createRoute(product.productId))
+                                })
+                        }
+
+                        when (val appendState = products.loadState.append) {
+                            is LoadState.Loading -> {
+                                item(span = { GridItemSpan(maxLineSpan) }) {
+                                    Text(text = "Loading more...")
+                                }
+                            }
+
+                            is LoadState.Error -> {
+                                item(span = { GridItemSpan(maxLineSpan) }) {
+                                    Text(text = appendState.error.message ?: "Failed to load more products")
+                                }
+                            }
+
+                            else -> Unit
+                        }
                     }
                 }
-            }
-
-            items(products.itemCount) { index ->
-                val product = products[index] ?: return@items
-                CommonProductCard(
-                    product = CommonProductCardData(
-                        productName = product.productName,
-                        brandName = product.sellerName,
-                        currentPrice = product.effectivePrice.toString(),
-                        originalPrice = product.originalPrice.takeIf { it > 0 }?.toString(),
-                        rating = "4.8",
-                        imageUrl = product.imageUrl
-                    ), isSellScreen = false, onClick = {
-                        navController.navigate(Route.ProductDetails.createRoute(product.productId))
-                    })
-            }
-
-            when (val appendState = products.loadState.append) {
-                is LoadState.Loading -> {
-                    item(span = { GridItemSpan(maxLineSpan) }) {
-                        Text(text = "Loading more...")
-                    }
-                }
-
-                is LoadState.Error -> {
-                    item(span = { GridItemSpan(maxLineSpan) }) {
-                        Text(text = appendState.error.message ?: "Failed to load more products")
-                    }
-                }
-
-                else -> Unit
             }
 
             item(span = { GridItemSpan(maxLineSpan) }) {

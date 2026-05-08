@@ -51,18 +51,7 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
         R.drawable.buy_banner,
     )
 
-    val categories = remember { Categories.BuyCategories }
-
-    // Map categories to their banner images
-    val categoryBannerMap = remember {
-        mapOf(
-            "Seeds" to R.drawable.seeds_banner,
-            "Sprayers" to R.drawable.agri_sprayers_banner,
-            "Agriculture Drone" to R.drawable.agri_drones,
-            "Tractors" to R.drawable.tractors_banner,
-            "Direct From Farmers" to R.drawable.direct_from_farmers_banner
-        )
-    }
+    val categories = remember { Categories.buyCategories }
 
 
     Scaffold(
@@ -162,7 +151,7 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
                                             .replace("\n", " ")
                                             .trim()
 
-                                        val bannerResId = categoryBannerMap[routeCategoryName] ?: R.drawable.buy_banner
+                                        val bannerResId = category.bannerImage ?: Categories.getBuyBannerImage(routeCategoryName)
 
                                         navController.navigate(
                                             Route.BuyCategory.createRoute(routeCategoryName, bannerResId)
@@ -202,7 +191,7 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
                                 category = "Direct From Farmers",
                                 btnText = "View All",
                                 onClick = {
-                                    val bannerResId = categoryBannerMap["Direct From Farmers"] ?: R.drawable.buy_banner
+                                    val bannerResId = Categories.getBuyBannerImage("Direct From Farmers")
                                     navController.navigate(Route.BuyCategory.createRoute("Direct From Farmers", bannerResId))
                                 }
                             )
@@ -230,7 +219,7 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
                                 category = "Seeds",
                                 btnText = "View All",
                                 onClick = {
-                                    val bannerResId = categoryBannerMap["Seeds"] ?: R.drawable.buy_banner
+                                    val bannerResId = Categories.getBuyBannerImage("Seeds")
                                     navController.navigate(Route.BuyCategory.createRoute("Seeds", bannerResId))
                                 }
                             )
