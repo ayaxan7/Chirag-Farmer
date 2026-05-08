@@ -163,7 +163,7 @@ fun CategoriesScreen(
                 }
             }
 
-            when (val refreshState = products.loadState.refresh) {
+            when (products.loadState.refresh) {
                 is LoadState.Loading -> {
                     item(span = { GridItemSpan(maxLineSpan) }) {
                         Text(text = "Loading products...")
@@ -171,9 +171,6 @@ fun CategoriesScreen(
                 }
 
                 is LoadState.Error -> {
-                    item(span = { GridItemSpan(maxLineSpan) }) {
-                        Text(text = refreshState.error.message ?: "Failed to load products")
-                    }
                     item(span = { GridItemSpan(maxLineSpan) }) {
                         Text(text = "No products found")
                     }
