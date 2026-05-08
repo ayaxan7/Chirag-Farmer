@@ -39,10 +39,10 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.sell.screens.sellproduces
 import com.yash091099.ChiragFarmersApp.ui.presentation.cart.payment.PaymentScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.cart.payment.PaymentSuccess
 import com.yash091099.ChiragFarmersApp.ui.presentation.cart.payment.PaymentViewModel
-import com.yash091099.ChiragFarmersApp.ui.presentation.sell.screens.orderstatus.OrderStatusScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.splash.SplashScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.profile.ProfileScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.profile.ProfileViewModel
+import com.yash091099.ChiragFarmersApp.ui.presentation.orders.MyOrdersScreen
 
 @Composable
 fun AppNavigation(
@@ -234,6 +234,9 @@ fun AppNavigation(
         composable(Route.Profile.path) {
             val viewModel: ProfileViewModel = hiltViewModel()
             ProfileScreen(navController = navController, viewModel = viewModel)
+        }
+        composable(Route.MyOrders.path) {
+            MyOrdersScreen(navController = navController)
         }
     }
 }

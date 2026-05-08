@@ -1,15 +1,11 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.profile
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -278,7 +274,7 @@ fun QuickActionsRow(
             icon = R.drawable.ic_ordersplaced,
             modifier = Modifier.width(110.dp),
             onClick={
-                navController.navigate(Route.Orders.path)
+                navController.navigate(Route.MyOrders.path)
             }
         )
         Spacer(

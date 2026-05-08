@@ -63,5 +63,5 @@ sealed class Route(val path: String) {
              "payment?subtotal=$subtotal&totalDiscount=$totalDiscount&totalDeliveryFee=$totalDeliveryFee&totalAmount=$totalAmount"
      }
     object PaymentSuccess: Route("payment_success")
-    object Orders:Route("orders")
+    object MyOrders:Route("orders")
 }
