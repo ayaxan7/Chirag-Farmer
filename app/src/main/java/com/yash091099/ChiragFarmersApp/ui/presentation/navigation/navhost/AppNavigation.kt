@@ -43,7 +43,7 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.splash.SplashScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.profile.ProfileScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.profile.ProfileViewModel
 import com.yash091099.ChiragFarmersApp.ui.presentation.orders.MyOrdersScreen
-import com.yash091099.ChiragFarmersApp.ui.presentation.orders.OrderDetailsScreen
+import com.yash091099.ChiragFarmersApp.ui.presentation.orders.MyOrderDetailsScreen
 
 @Composable
 fun AppNavigation(
@@ -239,8 +239,12 @@ fun AppNavigation(
         composable(Route.MyOrders.path) {
             MyOrdersScreen(navController = navController)
         }
-        composable(Route.OrderDetails.path){
-            OrderDetailsScreen(navController = navController)
+        composable(
+            Route.OrderDetails.path,
+            arguments = listOf(navArgument("orderId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val orderId = Uri.decode(backStackEntry.arguments?.getString("orderId") ?: "")
+            MyOrderDetailsScreen(navController = navController, orderId = orderId)
         }
     }
 }

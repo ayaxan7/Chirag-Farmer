@@ -2,6 +2,7 @@ package com.yash091099.ChiragFarmersApp.ui.presentation.orders
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -10,31 +11,54 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.yash091099.ChiragFarmersApp.R
+import com.yash091099.ChiragFarmersApp.data.remote.dto.OrderDeliveryAddress
+import com.yash091099.ChiragFarmersApp.data.remote.dto.OrderDetailsData
+import com.yash091099.ChiragFarmersApp.data.remote.dto.StatusTimeline
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragTopBar
 import com.yash091099.ChiragFarmersApp.ui.theme.*
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.foundation.Canvas
+import androidx.compose.ui.platform.LocalClipboardManager
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.TimeZone
 
 @Composable
-fun OrderDetailsScreen(navController: NavHostController) {
+fun MyOrderDetailsScreen(
+    navController: NavHostController,
+    orderId: String,
+    viewModel: OrderDetailsViewModel = hiltViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(orderId) {
+        if (orderId.isNotBlank()) {
+            viewModel.loadOrderDetails(orderId)
+        }
+    }
+
     Scaffold(
         topBar = {
             ChiragTopBar(
@@ -76,69 +100,80 @@ fun OrderDetailsScreen(navController: NavHostController) {
             }
         }
     ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp, vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            // --- Product Items ---
-            OrderProductCard(
-                imageUrl = "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?q=80&w=200",
-                orderId = "#ORD-1245",
-                productName = "NEPTUNE BATTERY",
-                sellerName = "Geolife Agritech India Pvt Ltd",
-                price = "₹49.00",
-                quantity = "1 Kg"
-            )
-            OrderProductCard(
-                imageUrl = "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?q=80&w=200",
-                orderId = "#ORD-1245",
-                productName = "NEPTUNE BATTERY",
-                sellerName = "Geolife Agritech India Pvt Ltd",
-                price = "₹49.00",
-                quantity = "1 Kg"
-            )
-
-            // --- Delivery Address ---
-            DeliveryAddressSection()
-
-            // --- Delivered Date ---
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Icon(
-                    imageVector = Icons.Default.DateRange,
-                    contentDescription = null,
-                    tint = Color(0xFFF1614B),
-                    modifier = Modifier.size(20.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "Delivered Date: 7 June 2025",
-                    color = Color(0xFFF1614B),
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
+        when (val state = uiState) {
+            is OrderDetailsUiState.Loading -> {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(color = BGBlack)
+                }
             }
 
-            // --- Order Status ---
-            OrderStatusSection()
+            is OrderDetailsUiState.Error -> {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(text = state.message, color = Color.Red, textAlign = TextAlign.Center)
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Button(
+                        onClick = { if (orderId.isNotBlank()) viewModel.loadOrderDetails(orderId) },
+                        colors = ButtonDefaults.buttonColors(containerColor = BGBlack)
+                    ) {
+                        Text("Retry", color = BGWhite)
+                    }
+                }
+            }
 
-            // --- Price Breakdown ---
-            PriceBreakdownSection()
-
-            Spacer(modifier = Modifier.height(8.dp))
+            is OrderDetailsUiState.Success -> {
+                OrderDetailsContent(
+                    data = state.data,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                )
+            }
         }
     }
 }
 
 @Composable
+private fun OrderDetailsContent(data: OrderDetailsData, modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        data.items.forEach { item ->
+            OrderProductCard(
+                imageUrl = item.imageUrl,
+                orderId = item.orderNumber.orEmpty(),
+                productName = item.productName.orEmpty(),
+                sellerName = item.sellerName.orEmpty(),
+                price = formatCurrency(item.pricePaid),
+                quantity = item.quantity.orEmpty()
+            )
+        }
+
+        DeliveryAddressSection(data.deliveryAddress)
+        DeliveredDateSection(data.statusTimeline?.delivered)
+        OrderStatusSection(data.statusTimeline, data.orderStatus)
+        PriceBreakdownSection(data)
+        Spacer(modifier = Modifier.height(8.dp))
+    }
+}
+
+@Composable
 fun OrderProductCard(
-    imageUrl: String,
+    imageUrl: String?,
     orderId: String,
     productName: String,
     sellerName: String,
@@ -170,7 +205,7 @@ fun OrderProductCard(
             Spacer(modifier = Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = orderId,
+                    text = "#${orderId.ifBlank { "--" }}",
                     fontSize = 12.sp,
                     color = TextGray
                 )
@@ -220,7 +255,7 @@ fun OrderProductCard(
 }
 
 @Composable
-fun DeliveryAddressSection() {
+fun DeliveryAddressSection(address: OrderDeliveryAddress?) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = "Delivery Address",
@@ -241,41 +276,64 @@ fun DeliveryAddressSection() {
             Spacer(modifier = Modifier.width(8.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "Home",
+                    text = address?.name?.ifBlank { "--" } ?: "--",
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
                     color = BGBlack
                 )
                 Text(
-                    text = "123 MG Road, Indiranagar, Bengaluru, Karnataka",
+                    text = address?.completeAddress?.ifBlank { "--" } ?: "--",
                     fontSize = 13.sp,
                     color = TextGray,
                     lineHeight = 13.sp
                 )
                 Text(
-                    text = "Pin : 560038",
+                    text = "Pin : ${address?.pincode?.ifBlank { "--" } ?: "--"}",
                     fontSize = 13.sp,
                     lineHeight = 13.sp,
                     color = TextGray
                 )
             }
-//            Spacer(modifier = Modifier.width(8.dp))
-//            Button(
-//                onClick = {},
-//                shape = RoundedCornerShape(20.dp),
-//                colors = ButtonDefaults.buttonColors(containerColor = BGBlack),
-//                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp),
-//                modifier = Modifier.height(32.dp)
-//            ) {
-//                Text("Change", color = BGWhite, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
-//            }
         }
     }
 }
 
 @Composable
-fun OrderStatusSection() {
-    val steps = listOf("Order\nPlace", "In\nProgress", "Shipped", "Out for\nDelivery", "Delivered")
+fun DeliveredDateSection(deliveredAt: String?) {
+    val deliveredText = parseAndFormatDate(deliveredAt)
+    if (deliveredText == null) return
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Icon(
+            imageVector = Icons.Default.DateRange,
+            contentDescription = null,
+            tint = Color(0xFFF1614B),
+            modifier = Modifier.size(20.dp)
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = "Delivered Date: $deliveredText",
+            color = Color(0xFFF1614B),
+            fontSize = 14.sp,
+            fontWeight = FontWeight.SemiBold
+        )
+    }
+}
+
+@Composable
+fun OrderStatusSection(statusTimeline: StatusTimeline?, currentStatus: String?) {
+    val steps = listOf(
+        "Order\nPlaced" to (statusTimeline?.placed != null),
+        "Packed" to (statusTimeline?.packed != null),
+        "Shipped" to (statusTimeline?.shipped != null),
+        "Out for\nDelivery" to (statusTimeline?.outForDelivery != null),
+        "Delivered" to (statusTimeline?.delivered != null)
+    )
+    val activeIndex = getActiveStatusIndex(currentStatus, steps)
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -294,7 +352,11 @@ fun OrderStatusSection() {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.Top
         ) {
-            steps.forEachIndexed { index, label ->
+            steps.forEachIndexed { index, step ->
+                val label = step.first
+                val isCompleted = step.second
+                val isActive = !isCompleted && activeIndex == index
+                val filled = isCompleted || isActive
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.weight(1f)
@@ -302,7 +364,7 @@ fun OrderStatusSection() {
                     Box(
                         modifier = Modifier
                             .size(40.dp)
-                            .background(BGBlack, CircleShape),
+                            .background(if (filled) BGBlack else LightGray, CircleShape),
                         contentAlignment = Alignment.Center
                     ) {
                         val icons = listOf(
@@ -315,12 +377,14 @@ fun OrderStatusSection() {
                         Icon(
                             painter = painterResource(id = icons[index]),
                             contentDescription = label,
-                            tint = BGWhite,
+                            tint = if (filled) BGWhite else TextGray,
                             modifier = Modifier.size(20.dp)
                         )
                     }
                     if (index < steps.size - 1) {
-                        // Dashed connector line drawn via Canvas
+                        val nextCompleted = steps[index + 1].second
+                        val connectorColor = if (isCompleted && nextCompleted) BGBlack else Color(0xFFB0B0B0)
+
                         Canvas(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -328,7 +392,7 @@ fun OrderStatusSection() {
                                 .offset(x = 20.dp)
                         ) {
                             drawLine(
-                                color = Color(0xFFB0B0B0),
+                                color = connectorColor,
                                 start = Offset(0f, size.height / 2),
                                 end = Offset(size.width, size.height / 2),
                                 strokeWidth = 2f,
@@ -340,9 +404,9 @@ fun OrderStatusSection() {
                     Text(
                         text = label,
                         fontSize = 10.sp,
-                        color = BGBlack,
+                        color = if (filled) BGBlack else TextGray,
                         fontWeight = FontWeight.Medium,
-                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                        textAlign = TextAlign.Center,
                         lineHeight = 13.sp
                     )
                 }
@@ -352,7 +416,9 @@ fun OrderStatusSection() {
 }
 
 @Composable
-fun PriceBreakdownSection() {
+fun PriceBreakdownSection(data: OrderDetailsData) {
+    val clipboardManager = LocalClipboardManager.current
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -360,36 +426,45 @@ fun PriceBreakdownSection() {
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        PriceRow("Sub-Total", "₹3,135.00")
+        PriceRow("Sub-Total", formatCurrency(data.subtotal))
         HorizontalDivider(color = BorderColour.copy(alpha = 0.5f), thickness = 0.5.dp)
-        PriceRow("Delivery Fee", "₹100.00")
+        PriceRow("Delivery Fee", formatCurrency(data.deliveryFee))
         HorizontalDivider(color = BorderColour.copy(alpha = 0.5f), thickness = 0.5.dp)
-        PriceRow("Discount", "₹875.00")
+        PriceRow("Discount", formatCurrency(data.discount))
         HorizontalDivider(color = BorderColour.copy(alpha = 0.5f), thickness = 0.5.dp)
-        PriceRow("Payment Method", "UPI")
+        PriceRow("Payment Method", data.paymentMethod?.ifBlank { "--" } ?: "--")
         HorizontalDivider(color = BorderColour.copy(alpha = 0.5f), thickness = 0.5.dp)
-        PriceRow("Order Date", "May 24  2025, 02:15 PM")
-        HorizontalDivider(color = BorderColour.copy(alpha = 0.5f), thickness = 0.5.dp)
+        PriceRow("Order Date", parseAndFormatDate(data.orderDate) ?: "--")
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("Transaction ID", fontSize = 14.sp, color = TextGray)
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    "TRK123468268",
-                    fontSize = 14.sp,
-                    color = BGBlack,
-                    fontWeight = FontWeight.Medium
-                )
-                Spacer(modifier = Modifier.width(6.dp))
-                Icon(
-                    imageVector = Icons.Default.ContentCopy,
-                    contentDescription = "Copy",
-                    modifier = Modifier.size(16.dp),
-                    tint = TextGray
-                )
+            if(!data.transactionId.isNullOrBlank()) {
+                HorizontalDivider(color = BorderColour.copy(alpha = 0.5f), thickness = 0.5.dp)
+
+                Text("Transaction ID", fontSize = 14.sp, color = TextGray)
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    val transactionId = data.transactionId.ifBlank { "--" }
+                    Text(
+                        transactionId,
+                        fontSize = 14.sp,
+                        color = BGBlack,
+                        fontWeight = FontWeight.Medium
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Icon(
+                        imageVector = Icons.Default.ContentCopy,
+                        contentDescription = "Copy",
+                        tint = TextGray,
+                        modifier = Modifier
+                            .size(16.dp)
+                            .clickable(enabled = transactionId != "--") {
+                                clipboardManager.setText(AnnotatedString(transactionId))
+                            }
+                    )
+                }
             }
         }
     }
@@ -405,3 +480,43 @@ fun PriceRow(label: String, value: String) {
         Text(value, fontSize = 14.sp, color = BGBlack, fontWeight = FontWeight.Medium)
     }
 }
+
+private fun formatCurrency(value: Double?): String {
+    return value?.let { "₹${String.format(Locale.US, "%.2f", it)}" } ?: "--"
+}
+
+private fun parseAndFormatDate(dateString: String?): String? {
+    if (dateString.isNullOrBlank()) return null
+
+    val inputFormats = listOf(
+        SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()),
+        SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault()),
+        SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
+    )
+
+    inputFormats.drop(1).forEach { it.timeZone = TimeZone.getTimeZone("UTC") }
+    val outputFormat = SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.getDefault())
+
+    inputFormats.forEach { format ->
+        runCatching { format.parse(dateString) }.getOrNull()?.let { parsed ->
+            return outputFormat.format(parsed)
+        }
+    }
+
+    return dateString
+}
+
+private fun getActiveStatusIndex(currentStatus: String?, steps: List<Pair<String, Boolean>>): Int {
+    val normalizedCurrent = currentStatus?.trim()?.lowercase(Locale.getDefault()).orEmpty()
+    val mappedIndex = when (normalizedCurrent) {
+        "order placed" -> 0
+        "packed", "in progress" -> 1
+        "shipped" -> 2
+        "out for delivery" -> 3
+        "delivered" -> 4
+        else -> -1
+    }
+
+    return if (mappedIndex >= 0) mappedIndex else steps.indexOfFirst { !it.second }
+}
+

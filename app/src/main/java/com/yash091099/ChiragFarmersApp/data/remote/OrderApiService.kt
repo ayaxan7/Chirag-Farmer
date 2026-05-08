@@ -13,6 +13,7 @@ import retrofit2.http.Query
 import retrofit2.http.Path
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateOrderStatusRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateOrderStatusResponse
+import com.yash091099.ChiragFarmersApp.data.remote.dto.OrderDetailsResponse
 import retrofit2.http.PATCH
 
 interface OrderApiService {
@@ -47,4 +48,10 @@ interface OrderApiService {
         @Query("page") page: Int,
         @Query("limit") limit: Int
     ): UserPlacedOrdersResponse
+
+    @GET("api/farmers/orders/details/{id}")
+    suspend fun getOrderDetails(
+        @Header("Authorization") token: String,
+        @Path("id") id: String
+    ): OrderDetailsResponse
 }

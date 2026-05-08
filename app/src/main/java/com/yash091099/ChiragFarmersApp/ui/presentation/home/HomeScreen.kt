@@ -64,7 +64,9 @@ fun HomeScreen(
     val productCategories = listOf(
         Pair("Agriculture\nDrones", R.drawable.agri_drone),
         Pair("Seeds", R.drawable.agri_seeds),
-        Pair("Sprayer", R.drawable.agri_sprayer)
+        Pair("Sprayer", R.drawable.agri_sprayer),
+        Pair("Tractors",R.drawable.agri_tractor),
+        Pair("Harvesting\nMachines",R.drawable.agri_harvestor)
     )
     val bookingStatus by viewModel.bookingStatus.collectAsStateWithLifecycle()
 
@@ -145,6 +147,8 @@ fun HomeScreen(
                                 category.first.contains("Agriculture", ignoreCase = true) -> "Agriculture Drone"
                                 category.first.equals("Seeds", ignoreCase = true) -> "Seeds"
                                 category.first.equals("Sprayer", ignoreCase = true) -> "Sprayers"
+                                category.first.equals("Tractors", ignoreCase = true) -> "Tractors"
+                                category.first.equals("Harvesting Machines", ignoreCase = true) -> "Harvesting\nMachines"
                                 else -> ""
                             }
                             if (categoryName.isNotEmpty()) {

@@ -155,7 +155,7 @@ fun OrderList(state: MyOrdersUiState, onRetry: () -> Unit,navController: NavHost
 fun OrderCard(order: UserPlacedOrder,navController: NavHostController) {
     Column(modifier = Modifier.fillMaxWidth()
         .clickable{
-            navController.navigate(Route.OrderDetails.path)
+            navController.navigate(Route.OrderDetails.createRoute(order.orderObjectId))
         }) {
         Row(
             modifier = Modifier
