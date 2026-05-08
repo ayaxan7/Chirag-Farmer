@@ -112,12 +112,12 @@ fun OrderList(status: String) {
     // Mock data based on status
     val orders = when (status) {
         "Complete" -> listOf(
-            OrderItem("1", "NEPTUNE BATTERY", "Geolife Agritech India Pvt Ltd", "Rs.1999.00", "Delivery by 7 June 2025", "https://images.unsplash.com/photo-1590400541360-b20340809382?q=80&w=200&auto=format&fit=crop"),
-            OrderItem("2", "TOMATO - FARM FRESH", "Siddharth kisan", "Rs.49.00", "Delivery by 7 June 2025", "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?q=80&w=200&auto=format&fit=crop"),
-            OrderItem("3", "ROUND POTATO", "Siddharth kisan", "Rs.29.00", "Delivery by 7 June 2025", "https://images.unsplash.com/photo-1518977676601-b53f02bad675?q=80&w=200&auto=format&fit=crop")
+            OrderItem("1", "NEPTUNE BATTERY", "Geolife Agritech India Pvt Ltd", "₹1999.00", "Delivery by 7 June 2025", "https://images.unsplash.com/photo-1590400541360-b20340809382?q=80&w=200&auto=format&fit=crop"),
+            OrderItem("2", "TOMATO - FARM FRESH", "Siddharth kisan", "₹49.00", "Delivery by 7 June 2025", "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?q=80&w=200&auto=format&fit=crop"),
+            OrderItem("3", "ROUND POTATO", "Siddharth kisan", "₹29.00", "Delivery by 7 June 2025", "https://images.unsplash.com/photo-1518977676601-b53f02bad675?q=80&w=200&auto=format&fit=crop")
         )
         "Active" -> listOf(
-             OrderItem("4", "POWER SPRAYER", "Agro Tools", "Rs.4500.00", "Arriving by 12 June 2025", "https://images.unsplash.com/photo-1622383563227-04401ab4e5ea?q=80&w=200&auto=format&fit=crop")
+             OrderItem("4", "POWER SPRAYER", "Agro Tools", "₹4500.00", "Arriving by 12 June 2025", "https://images.unsplash.com/photo-1622383563227-04401ab4e5ea?q=80&w=200&auto=format&fit=crop")
         )
         else -> emptyList()
     }
@@ -154,7 +154,7 @@ fun OrderCard(order: OrderItem) {
                     .size(90.dp)
                     .clip(RoundedCornerShape(8.dp))
                     .border(1.dp, BorderColour, RoundedCornerShape(8.dp)),
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.FillBounds
             )
 
             Spacer(modifier = Modifier.width(12.dp))
@@ -170,7 +170,9 @@ fun OrderCard(order: OrderItem) {
                     text = order.seller,
                     fontSize = 13.sp,
                     color = TextGray,
-                    modifier = Modifier.padding(vertical = 2.dp)
+                    lineHeight = 13.sp,
+                    maxLines = 2,
+                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                 )
                 Text(
                     text = order.price,
@@ -178,11 +180,11 @@ fun OrderCard(order: OrderItem) {
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
                 )
-                Text(
-                    text = order.deliveryDate,
-                    fontSize = 12.sp,
-                    color = TextGray
-                )
+//                Text(
+//                    text = order.deliveryDate,
+//                    fontSize = 12.sp,
+//                    color = TextGray
+//                )
             }
 
             Button(
