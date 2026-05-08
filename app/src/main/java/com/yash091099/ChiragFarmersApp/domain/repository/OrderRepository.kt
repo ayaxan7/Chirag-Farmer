@@ -7,6 +7,7 @@ import com.yash091099.ChiragFarmersApp.data.remote.dto.PlaceOrderRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.OrderTrackingDto
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateOrderStatusRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateOrderStatusResponse
+import com.yash091099.ChiragFarmersApp.data.remote.dto.UserPlacedOrdersResponse
 import com.yash091099.ChiragFarmersApp.domain.model.Order
 import kotlinx.coroutines.flow.Flow
 
@@ -16,5 +17,6 @@ interface OrderRepository {
     suspend fun placeOrder(request: PlaceOrderRequest): Result<PlaceOrderResponse>
     suspend fun getOrderTracking(id: String): Result<OrderTrackingDto>
     suspend fun updateOrderStatus(id: String, request: UpdateOrderStatusRequest): Result<UpdateOrderStatusResponse>
+    suspend fun getUserPlacedOrders(type: String, page: Int, limit: Int): Result<UserPlacedOrdersResponse>
 }
 

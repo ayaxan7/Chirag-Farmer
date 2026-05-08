@@ -16,6 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -25,22 +26,26 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragT
 import com.yash091099.ChiragFarmersApp.ui.theme.*
 import kotlinx.coroutines.launch
 
-data class OrderItem(
-    val id: String,
-    val title: String,
-    val seller: String,
-    val price: String,
-    val deliveryDate: String,
-    val imageUrl: String
-)
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.yash091099.ChiragFarmersApp.data.remote.dto.UserPlacedOrder
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun MyOrdersScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    viewModel: MyOrdersViewModel = hiltViewModel()
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val currentType by viewModel.currentType.collectAsStateWithLifecycle()
+    
     val pagerState = rememberPagerState(pageCount = { 3 })
     val scope = rememberCoroutineScope()
     val tabs = listOf("Active", "Complete", "Cancelled")
+
+    // Sync pager state with viewmodel
+    LaunchedEffect(pagerState.currentPage) {
+        viewModel.onTabSelected(pagerState.currentPage)
+    }
 
     Scaffold(
         topBar = {
@@ -97,49 +102,55 @@ fun MyOrdersScreen(
                 modifier = Modifier.fillMaxSize(),
                 verticalAlignment = Alignment.Top
             ) { page ->
-                when (page) {
-                    0 -> OrderList(status = "Active")
-                    1 -> OrderList(status = "Complete")
-                    2 -> OrderList(status = "Cancelled")
+                OrderList(state = uiState, onRetry = { viewModel.fetchOrders(currentType) })
+            }
+        }
+    }
+}
+
+@Composable
+fun OrderList(state: MyOrdersUiState, onRetry: () -> Unit) {
+    when (state) {
+        is MyOrdersUiState.Loading -> {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator(color = BGBlack)
+            }
+        }
+        is MyOrdersUiState.Error -> {
+            Column(
+                modifier = Modifier.fillMaxSize().padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(text = state.message, color = Color.Red, textAlign = TextAlign.Center)
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(onClick = onRetry, colors = ButtonDefaults.buttonColors(containerColor = BGBlack)) {
+                    Text("Retry", color = Color.White)
                 }
             }
         }
-    }
-}
-
-@Composable
-fun OrderList(status: String) {
-    // Mock data based on status
-    val orders = when (status) {
-        "Complete" -> listOf(
-            OrderItem("1", "NEPTUNE BATTERY", "Geolife Agritech India Pvt Ltd", "₹1999.00", "Delivery by 7 June 2025", "https://images.unsplash.com/photo-1590400541360-b20340809382?q=80&w=200&auto=format&fit=crop"),
-            OrderItem("2", "TOMATO - FARM FRESH", "Siddharth kisan", "₹49.00", "Delivery by 7 June 2025", "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?q=80&w=200&auto=format&fit=crop"),
-            OrderItem("3", "ROUND POTATO", "Siddharth kisan", "₹29.00", "Delivery by 7 June 2025", "https://images.unsplash.com/photo-1518977676601-b53f02bad675?q=80&w=200&auto=format&fit=crop")
-        )
-        "Active" -> listOf(
-             OrderItem("4", "POWER SPRAYER", "Agro Tools", "₹4500.00", "Arriving by 12 June 2025", "https://images.unsplash.com/photo-1622383563227-04401ab4e5ea?q=80&w=200&auto=format&fit=crop")
-        )
-        else -> emptyList()
-    }
-
-    if (orders.isEmpty()) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text(text = "No $status Orders", color = TextGray, fontSize = 16.sp)
-        }
-    } else {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(16.dp)
-        ) {
-            items(orders) { order ->
-                OrderCard(order)
+        is MyOrdersUiState.Success -> {
+            if (state.orders.isEmpty()) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text(text = "No Orders found", color = TextGray, fontSize = 16.sp)
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(16.dp)
+                ) {
+                    items(state.orders) { order ->
+                        OrderCard(order)
+                    }
+                }
             }
         }
+        else -> Unit
     }
 }
 
 @Composable
-fun OrderCard(order: OrderItem) {
+fun OrderCard(order: UserPlacedOrder) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier
@@ -149,7 +160,7 @@ fun OrderCard(order: OrderItem) {
         ) {
             AsyncImage(
                 model = order.imageUrl,
-                contentDescription = order.title,
+                contentDescription = order.productName,
                 modifier = Modifier
                     .size(90.dp)
                     .clip(RoundedCornerShape(8.dp))
@@ -161,13 +172,13 @@ fun OrderCard(order: OrderItem) {
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = order.title,
+                    text = order.productName,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
                 )
                 Text(
-                    text = order.seller,
+                    text = order.sellerName,
                     fontSize = 13.sp,
                     color = TextGray,
                     lineHeight = 13.sp,
@@ -175,18 +186,12 @@ fun OrderCard(order: OrderItem) {
                     overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                 )
                 Text(
-                    text = order.price,
+                    text = "₹${order.productPrice}",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
                 )
-//                Text(
-//                    text = order.deliveryDate,
-//                    fontSize = 12.sp,
-//                    color = TextGray
-//                )
             }
-
             Button(
                 onClick = { /* TODO */ },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1A1C1E)),

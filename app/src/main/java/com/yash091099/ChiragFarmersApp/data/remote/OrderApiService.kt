@@ -4,6 +4,7 @@ import com.yash091099.ChiragFarmersApp.data.remote.dto.ActiveOrdersResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.PlaceOrderRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.PlaceOrderResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.OrderTrackingDto
+import com.yash091099.ChiragFarmersApp.data.remote.dto.UserPlacedOrdersResponse
 import retrofit2.http.POST
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -39,4 +40,11 @@ interface OrderApiService {
         @Path("id") id: String,
         @Body request: UpdateOrderStatusRequest
     ): UpdateOrderStatusResponse
+    @GET("api/farmers/orders/my-placed-orders")
+    suspend fun getUserPlacedOrders(
+        @Header("Authorization") token: String,
+        @Query("type") type: String,
+        @Query("page") page: Int,
+        @Query("limit") limit: Int
+    ): UserPlacedOrdersResponse
 }
