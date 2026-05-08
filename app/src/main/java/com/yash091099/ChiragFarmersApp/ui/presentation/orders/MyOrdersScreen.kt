@@ -1,6 +1,7 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.orders
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -29,6 +30,7 @@ import kotlinx.coroutines.launch
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UserPlacedOrder
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost.Route
 
 @Composable
 fun MyOrdersScreen(
@@ -102,14 +104,14 @@ fun MyOrdersScreen(
                 modifier = Modifier.fillMaxSize(),
                 verticalAlignment = Alignment.Top
             ) { page ->
-                OrderList(state = uiState, onRetry = { viewModel.fetchOrders(currentType) })
+                OrderList(state = uiState, onRetry = { viewModel.fetchOrders(currentType) }, navController = navController)
             }
         }
     }
 }
 
 @Composable
-fun OrderList(state: MyOrdersUiState, onRetry: () -> Unit) {
+fun OrderList(state: MyOrdersUiState, onRetry: () -> Unit,navController: NavHostController) {
     when (state) {
         is MyOrdersUiState.Loading -> {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -140,7 +142,7 @@ fun OrderList(state: MyOrdersUiState, onRetry: () -> Unit) {
                     contentPadding = PaddingValues(16.dp)
                 ) {
                     items(state.orders) { order ->
-                        OrderCard(order)
+                        OrderCard(order,navController)
                     }
                 }
             }
@@ -150,8 +152,11 @@ fun OrderList(state: MyOrdersUiState, onRetry: () -> Unit) {
 }
 
 @Composable
-fun OrderCard(order: UserPlacedOrder) {
-    Column(modifier = Modifier.fillMaxWidth()) {
+fun OrderCard(order: UserPlacedOrder,navController: NavHostController) {
+    Column(modifier = Modifier.fillMaxWidth()
+        .clickable{
+            navController.navigate(Route.OrderDetails.path)
+        }) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()

@@ -43,6 +43,7 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.splash.SplashScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.profile.ProfileScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.profile.ProfileViewModel
 import com.yash091099.ChiragFarmersApp.ui.presentation.orders.MyOrdersScreen
+import com.yash091099.ChiragFarmersApp.ui.presentation.orders.OrderDetailsScreen
 
 @Composable
 fun AppNavigation(
@@ -237,6 +238,9 @@ fun AppNavigation(
         }
         composable(Route.MyOrders.path) {
             MyOrdersScreen(navController = navController)
+        }
+        composable(Route.OrderDetails.path){
+            OrderDetailsScreen(navController = navController)
         }
     }
 }
