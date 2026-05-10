@@ -44,6 +44,7 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.profile.ProfileScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.profile.ProfileViewModel
 import com.yash091099.ChiragFarmersApp.ui.presentation.orders.MyOrdersScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.orders.MyOrderDetailsScreen
+import com.yash091099.ChiragFarmersApp.ui.presentation.buy.screens.seller.SellerProfileScreen
 
 @Composable
 fun AppNavigation(
@@ -245,6 +246,24 @@ fun AppNavigation(
         ) { backStackEntry ->
             val orderId = Uri.decode(backStackEntry.arguments?.getString("orderId") ?: "")
             MyOrderDetailsScreen(navController = navController, orderId = orderId)
+        }
+        composable(
+            Route.SellerProfile.path,
+            arguments = listOf(
+                navArgument("sellerId") { type = NavType.StringType },
+                navArgument("sellerName") { type = NavType.StringType; nullable = true; defaultValue = null },
+                navArgument("sellerImage") { type = NavType.StringType; nullable = true; defaultValue = null }
+            )
+        ) { backStackEntry ->
+            val sellerId = backStackEntry.arguments?.getString("sellerId") ?: ""
+            val sellerName = backStackEntry.arguments?.getString("sellerName") ?: "Seller"
+            val sellerImage = backStackEntry.arguments?.getString("sellerImage")
+            SellerProfileScreen(
+                navController = navController,
+                sellerId = sellerId,
+                sellerName = sellerName,
+                sellerImage = sellerImage
+            )
         }
     }
 }

@@ -67,4 +67,14 @@ sealed class Route(val path: String) {
     object OrderDetails : Route("order_details/{orderId}") {
         fun createRoute(orderId: String): String = "order_details/${Uri.encode(orderId)}"
     }
+    object SellerProfile : Route("seller_profile/{sellerId}?sellerName={sellerName}&sellerImage={sellerImage}") {
+        fun createRoute(sellerId: String, sellerName: String? = null, sellerImage: String? = null): String {
+            val base = "seller_profile/${Uri.encode(sellerId)}"
+            val params = buildList {
+                sellerName?.let { add("sellerName=${Uri.encode(it)}") }
+                sellerImage?.let { add("sellerImage=${Uri.encode(it)}") }
+            }
+            return if (params.isEmpty()) base else "$base?${params.joinToString("&")}"
+        }
+    }
 }

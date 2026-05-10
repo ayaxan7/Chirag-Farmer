@@ -451,7 +451,15 @@ fun ProductDetailsScreen(
                                 }
                             }
                             Button(
-                                onClick = { /* View seller */ },
+                                onClick = {
+                                    navController.navigate(
+                                        Route.SellerProfile.createRoute(
+                                            sellerId = product.seller.userId,
+                                            sellerName = product.seller.name,
+                                            sellerImage = product.seller.profilePhoto
+                                        )
+                                    )
+                                },
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = BGBlack, contentColor = BGWhite
                                 ),
