@@ -28,7 +28,7 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun ImageCarousel(
-    images: List<Int>, modifier: Modifier = Modifier, autoScrollDuration: Long = 3000L
+    images: List<Int>, modifier: Modifier = Modifier, autoScrollDuration: Long = 3000L,isIndicatorVisible: Boolean=true
 ) {
     val pagerState = rememberPagerState(
         initialPage = 0, pageCount = { images.size })
@@ -63,6 +63,7 @@ fun ImageCarousel(
         }
     }
     Spacer(modifier = Modifier.height(8.dp))
+    if(isIndicatorVisible){
     Row(
         modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center
     ) {
@@ -81,5 +82,6 @@ fun ImageCarousel(
             Spacer(modifier = Modifier.width(8.dp))
         }
     }
+        }
     Spacer(modifier = Modifier.height(8.dp))
 }

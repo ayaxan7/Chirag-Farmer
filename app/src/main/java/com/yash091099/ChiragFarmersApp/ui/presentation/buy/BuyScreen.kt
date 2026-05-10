@@ -126,7 +126,7 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
 
                     item(span = { GridItemSpan(maxLineSpan) }) {
                         ImageCarousel(
-                            images = carouselImages, modifier = Modifier.fillMaxWidth()
+                            images = carouselImages, modifier = Modifier.fillMaxWidth(), isIndicatorVisible = false
                         )
                     }
 

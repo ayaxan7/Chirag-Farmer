@@ -470,70 +470,80 @@ fun ProductDetailsScreen(
 
                         Spacer(modifier = Modifier.height(20.dp))
 
-                        // Similar Products
-                        Text(
-                            text = "Similar Products",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.Black
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
-                        LazyHorizontalGrid(
-                            rows = GridCells.Fixed(1),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(240.dp),
-                            horizontalArrangement = Arrangement.spacedBy(12.dp),
-                            verticalArrangement = Arrangement.spacedBy(12.dp),
-                            contentPadding = PaddingValues(horizontal = 4.dp)
-                        ) {
-                            items(6) {
-                                CommonProductCard(
-                                    product = CommonProductCardData(
-                                        imageRes = R.drawable.sprayer,
-                                        imageUrl = "",
-                                        productName = "NEPTUNE BATTERY OPERATED",
-                                        brandName = "Geolite Agritech India Pvt Ltd",
-                                        currentPrice = "1599",
-                                        originalPrice = "1899",
-                                        rating = "4.8"
-                                    ), modifier = Modifier.width(180.dp)
-                                )
+                        if (product.similarProducts.isNotEmpty()) {
+                            Text(
+                                text = "Similar Products",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.Black
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+                            LazyHorizontalGrid(
+                                rows = GridCells.Fixed(1),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(240.dp),
+                                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                                verticalArrangement = Arrangement.spacedBy(12.dp),
+                                contentPadding = PaddingValues(horizontal = 4.dp)
+                            ) {
+                                items(product.similarProducts.size) { index ->
+                                    val item = product.similarProducts[index]
+                                    CommonProductCard(
+                                        product = CommonProductCardData(
+                                            imageUrl = item.imageUrl,
+                                            productName = item.name,
+                                            brandName = item.sellerName,
+                                            currentPrice = item.discountedPrice.toInt().toString(),
+                                            originalPrice = item.originalPrice.toInt().toString(),
+                                            rating = "4.5"
+                                        ),
+                                        modifier = Modifier.width(180.dp),
+                                        onClick = {
+                                            navController.navigate(Route.ProductDetails.createRoute(item.productId))
+                                        }
+                                    )
+                                }
                             }
                         }
 
                         Spacer(modifier = Modifier.height(20.dp))
 
-                        // More Products for you
-                        Text(
-                            text = "More Products for you",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.Black
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
+                        if (product.moreProducts.isNotEmpty()) {
+                            Text(
+                                text = "More Products for you",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.Black
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
 
-                        LazyHorizontalGrid(
-                            rows = GridCells.Fixed(1),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(240.dp),
-                            horizontalArrangement = Arrangement.spacedBy(12.dp),
-                            verticalArrangement = Arrangement.spacedBy(12.dp),
-                            contentPadding = PaddingValues(horizontal = 4.dp)
-                        ) {
-                            items(6) {
-                                CommonProductCard(
-                                    product = CommonProductCardData(
-                                        imageRes = R.drawable.sprayer,
-                                        imageUrl = "",
-                                        productName = "NEPTUNE BATTERY OPERATED",
-                                        brandName = "Geolite Agritech India Pvt Ltd",
-                                        currentPrice = "1599",
-                                        originalPrice = "1899",
-                                        rating = "4.8"
-                                    ), modifier = Modifier.width(180.dp)
-                                )
+                            LazyHorizontalGrid(
+                                rows = GridCells.Fixed(1),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(240.dp),
+                                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                                verticalArrangement = Arrangement.spacedBy(12.dp),
+                                contentPadding = PaddingValues(horizontal = 4.dp)
+                            ) {
+                                items(product.moreProducts.size) { index ->
+                                    val item = product.moreProducts[index]
+                                    CommonProductCard(
+                                        product = CommonProductCardData(
+                                            imageUrl = item.imageUrl,
+                                            productName = item.name,
+                                            brandName = item.sellerName,
+                                            currentPrice = item.discountedPrice.toInt().toString(),
+                                            originalPrice = item.originalPrice.toInt().toString(),
+                                            rating = "4.5"
+                                        ),
+                                        modifier = Modifier.width(180.dp),
+                                        onClick = {
+                                            navController.navigate(Route.ProductDetails.createRoute(item.productId))
+                                        }
+                                    )
+                                }
                             }
                         }
 

@@ -47,7 +47,26 @@ data class ProductDetailedData(
     @SerializedName("subcategory")
     val subcategory: String? = null,
     @SerializedName("isInCart")
-    val isInCart: Boolean = false
+    val isInCart: Boolean = false,
+    @SerializedName("similarProducts")
+    val similarProducts: List<RecommendedProduct> = emptyList(),
+    @SerializedName("moreProducts")
+    val moreProducts: List<RecommendedProduct> = emptyList()
+)
+
+data class RecommendedProduct(
+    @SerializedName("productId")
+    val productId: String,
+    @SerializedName("name")
+    val name: String,
+    @SerializedName("imageUrl")
+    val imageUrl: String?,
+    @SerializedName("sellerName")
+    val sellerName: String,
+    @SerializedName("originalPrice")
+    val originalPrice: Double,
+    @SerializedName("discountedPrice")
+    val discountedPrice: Double
 )
 
 data class SellerInfo(
