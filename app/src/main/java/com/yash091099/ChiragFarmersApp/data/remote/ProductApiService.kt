@@ -9,6 +9,7 @@ import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailedResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailsResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductResponseDto
 import com.yash091099.ChiragFarmersApp.data.remote.dto.SearchProductResponse
+import com.yash091099.ChiragFarmersApp.data.remote.dto.SellerDetailsResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ToggleSoldOutRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ToggleSoldOutResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateProductRequest
@@ -89,4 +90,12 @@ ProductApiService {
         @Header("Authorization") token: String,
         @Query("query") query: String
     ): SearchProductResponse
+
+    @GET("api/farmers/seller/{sellerId}")
+    suspend fun getSellerDetails(
+        @Header("Authorization") token: String,
+        @Path("sellerId") sellerId: String,
+        @Query("page") page: Int = 1,
+        @Query("limit") limit: Int = 10
+    ): SellerDetailsResponse
 }

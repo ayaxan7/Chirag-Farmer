@@ -6,6 +6,7 @@ import com.yash091099.ChiragFarmersApp.data.remote.dto.MixedProductsData
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailsData
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailedData
 import com.yash091099.ChiragFarmersApp.data.remote.dto.SearchProductItem
+import com.yash091099.ChiragFarmersApp.data.remote.dto.SellerDetailsData
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateProductRequest
 import com.yash091099.ChiragFarmersApp.domain.model.Product
 import kotlinx.coroutines.flow.Flow
@@ -23,4 +24,5 @@ interface ProductRepository {
     suspend fun toggleSoldOut(productId: String): Result<Boolean>
     suspend fun deleteProduct(productId: String): Result<Unit>
     suspend fun searchProducts(query: String): Result<List<SearchProductItem>>
+    suspend fun getSellerDetails(sellerId: String, page: Int = 1, limit: Int = 10): Result<SellerDetailsData>
 }

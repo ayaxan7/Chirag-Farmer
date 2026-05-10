@@ -33,7 +33,7 @@ data class ProductDetailedData(
     @SerializedName("discountPercent")
     val discountPercent: Double,
     @SerializedName("seller")
-    val seller: SellerInfo,
+    val seller: SellerProfileInfo,
     @SerializedName("availabilityStatus")
     val availabilityStatus: String,
     @SerializedName("unit")
@@ -69,7 +69,7 @@ data class RecommendedProduct(
     val discountedPrice: Double
 )
 
-data class SellerInfo(
+data class SellerProfileInfo(
     @SerializedName("userId")
     val userId: String,
     @SerializedName("name")
