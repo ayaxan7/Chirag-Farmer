@@ -20,7 +20,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -42,7 +42,7 @@ import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
 @Composable
 fun SellCategoriesScreen(navController: NavHostController) {
     val snackBarHostState = remember { SnackbarHostState() }
-    var selectedCategory by rememberSaveable { mutableDoubleStateOf(0.0) }
+    var selectedCategory by rememberSaveable { mutableIntStateOf(0) }
     val categories = remember {
         Categories.sellCategories
     }
@@ -69,7 +69,7 @@ fun SellCategoriesScreen(navController: NavHostController) {
                             )
                         )
                     }
-                }, enabled = (selectedCategory != 0.0)
+                }, enabled = (selectedCategory != 0)
             )
         }
     }, snackbarHost = { SnackbarHost(snackBarHostState) }) { innerPadding ->
@@ -99,7 +99,7 @@ fun SellCategoriesScreen(navController: NavHostController) {
                     CategoryItem(
                         category = category, selected = selectedCategory == category.id, onClick = {
                             selectedCategory = if (selectedCategory == category.id) {
-                                0.0
+                                0
                             } else {
                                 category.id
                             }

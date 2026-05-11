@@ -92,8 +92,7 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
             is BuyUiState.Success -> {
                 // Helper function to check if a product is valid
                 fun isValidProduct(product: MixedProductItem): Boolean {
-                    return product.finalPrice > 0 && 
-                           product.originalPrice > 0
+                    return product.finalPrice > 0
                 }
 
                 // Filter products to show only valid ones

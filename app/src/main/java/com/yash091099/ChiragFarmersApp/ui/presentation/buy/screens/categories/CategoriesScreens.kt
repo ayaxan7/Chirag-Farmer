@@ -24,7 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -58,18 +58,18 @@ fun CategoriesScreen(
     viewModel: BuyCategoriesViewModel = hiltViewModel()
 ) {
 
-    var selectedCategoryId by rememberSaveable { mutableDoubleStateOf(0.0) }
+    var selectedCategoryId by rememberSaveable { mutableIntStateOf(0) }
 
     val categories = Categories.getBuySubcategories(categoryName)
 
     val allCategories = listOf(
-        BuySellCategory("All\nProduces", R.drawable.sell_category_all, 0.0)
+        BuySellCategory("All\nProduces", R.drawable.sell_category_all, 0)
     ) + categories
 
     val products = viewModel.products.collectAsLazyPagingItems()
 
     LaunchedEffect(categoryName) {
-        selectedCategoryId = 0.0
+        selectedCategoryId = 0
         viewModel.setCategoryName(categoryName)
         viewModel.onCategoryChipSelected(null)
     }
@@ -125,7 +125,7 @@ fun CategoriesScreen(
                             selected = selectedCategoryId == category.id,
                             onClick = {
                                 selectedCategoryId =
-                                    if (selectedCategoryId == category.id) 0.0 else category.id
+                                    if (selectedCategoryId == category.id) 0 else category.id
                                 viewModel.onCategoryChipSelected(
                                     allCategories.find { it.id == selectedCategoryId }?.apiValue
                                 )
