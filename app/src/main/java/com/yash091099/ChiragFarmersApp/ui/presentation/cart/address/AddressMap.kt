@@ -103,9 +103,7 @@ fun AddressMapScreen(
         viewModel.navigationEvent.collectLatest { event ->
             when (event) {
                 AddressMapNavigationEvent.NavigateBackToCart -> {
-                    navController.navigate(Route.Cart.path) {
-                        popUpTo(Route.Cart.path) { this.inclusive = true }
-                    }
+                    navController.popBackStack(Route.Cart.path, false)
                 }
             }
         }

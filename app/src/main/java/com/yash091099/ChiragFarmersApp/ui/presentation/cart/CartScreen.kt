@@ -28,17 +28,21 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.NavHostController
 import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.presentation.cart.components.CartItemCard
@@ -65,11 +69,20 @@ fun CartScreen(
     val cartState by viewModel.cartState.collectAsState()
     val isOperationInProgress by viewModel.isOperationInProgress.collectAsState()
 
-    LaunchedEffect(isBuyNow) {
-        if (isBuyNow && productId != null) {
-            viewModel.initBuyNow(productId, quantity)
-        } else {
-            viewModel.initLoadCart()
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner, isBuyNow, productId, quantity) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                if (isBuyNow && productId != null) {
+                    viewModel.initBuyNow(productId, quantity)
+                } else {
+                    viewModel.initLoadCart()
+                }
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
         }
     }
 
@@ -448,10 +461,15 @@ fun CartScreen(
                             ChiragButton(
                                 text = "Proceed to Checkout",
                                 onClick = {
+                                    if (address == null) {
+                                        navController.navigate(Route.AddressList.path)
+                                        return@ChiragButton
+                                    }
+
                                     // Cache cart items and address for payment screen
                                     viewModel.cacheCartDataForPayment(
                                         cartItems = cartItems,
-                                        address = address?.addressString ?: ""
+                                        address = address.addressString
                                     )
 
                                     // Navigate to payment screen
