@@ -35,82 +35,455 @@ object Categories {
             apiValue = "seeds",
             bannerImage = R.drawable.seeds_banner,
             subCategories = listOf(
-                BuySellCategory("Hybrid Seeds", R.drawable.sell_category_cereals, 11.1, apiValue = "hybrid seeds"),
-                BuySellCategory("Vegetable Seeds", R.drawable.sell_category_vegetables, 11.2, apiValue = "vegetable seeds"),
-                BuySellCategory("Fruit Seeds", R.drawable.sell_category_fruits, 11.3, apiValue = "fruit seeds"),
-                BuySellCategory("Flower Seeds", R.drawable.sell_category_flowers, 11.4, apiValue = "flower seeds"),
-                BuySellCategory("Oilseed Seeds", R.drawable.sell_category_oilseeds, 11.5, apiValue = "oilseed seeds"),
-                BuySellCategory("Pulse Seeds", R.drawable.sell_category_pulses, 11.6, apiValue = "pulse seeds"),
-                BuySellCategory("Organic Seeds", R.drawable.sell_category_organicproduces, 11.7, apiValue = "organic seeds"),
-                BuySellCategory("Fodder Seeds", R.drawable.sell_category_other, 11.8, apiValue = "fodder seeds")
+                BuySellCategory(
+                    "Paddy Seeds",
+                    R.drawable.paddy_seeds,
+                    11.1,
+                    apiValue = "paddy seeds"
+                ),
+                BuySellCategory(
+                    "Fruits Seeds",
+                    R.drawable.fruits_seeds,
+                    11.2,
+                    apiValue = "fruits seeds"
+                ),
+                BuySellCategory(
+                    "Vegetables Seeds",
+                    R.drawable.veg_seeds,
+                    11.3,
+                    apiValue = "vegetable seeds"
+                ),
+                BuySellCategory(
+                    "Leafy Seeds",
+                    R.drawable.leafy_seeds,
+                    11.4,
+                    apiValue = "leafy seeds"
+                ),
+                BuySellCategory("Herb Seeds", R.drawable.herb_seeds, 11.5, apiValue = "herb seeds"),
             )
-        ),
-        BuySellCategory(
+        ), BuySellCategory(
             name = "Sprayers",
             image = R.drawable.buy_category_sprayers,
             id = 1.2,
             apiValue = "sprayers",
             bannerImage = R.drawable.agri_sprayers_banner,
             subCategories = listOf(
-                BuySellCategory("Manual Sprayers", R.drawable.sell_category_other, 12.1, apiValue = "manual sprayers"),
-                BuySellCategory("Battery Sprayers", R.drawable.sell_category_other, 12.2, apiValue = "battery sprayers"),
-                BuySellCategory("Knapsack Sprayers", R.drawable.sell_category_other, 12.3, apiValue = "knapsack sprayers"),
-                BuySellCategory("Power Sprayers", R.drawable.sell_category_other, 12.4, apiValue = "power sprayers"),
-                BuySellCategory("Boom Sprayers", R.drawable.sell_category_other, 12.5, apiValue = "boom sprayers"),
-                BuySellCategory("Fogging Machines", R.drawable.sell_category_other, 12.6, apiValue = "fogging machines"),
-                BuySellCategory("Herbicide Sprayers", R.drawable.sell_category_other, 12.7, apiValue = "herbicide sprayers"),
-                BuySellCategory("Nozzle Accessories", R.drawable.sell_category_other, 12.8, apiValue = "nozzle accessories")
+                BuySellCategory(
+                    "Manual Hand Sprayers",
+                    R.drawable.sell_category_other,
+                    12.1,
+                    apiValue = "manual sprayers"
+                ),
+                BuySellCategory(
+                    "Battery Sprayers",
+                    R.drawable.sell_category_other,
+                    12.2,
+                    apiValue = "battery sprayers"
+                ),
+                BuySellCategory(
+                    "Knapsack Sprayers",
+                    R.drawable.sell_category_other,
+                    12.3,
+                    apiValue = "knapsack sprayers"
+                ),
+                BuySellCategory(
+                    "Power Sprayers",
+                    R.drawable.sell_category_other,
+                    12.4,
+                    apiValue = "power sprayers"
+                ),
+                BuySellCategory(
+                    "HTP Sprayers",
+                    R.drawable.sell_category_other,
+                    12.5,
+                    apiValue = "htp sprayers"
+                ),
             )
-        ),
-        BuySellCategory(
+        ), BuySellCategory(
             name = "Agriculture\nDrone",
             image = R.drawable.buy_category_agri_drone,
             id = 1.3,
             apiValue = "drones",
             bannerImage = R.drawable.agri_drones,
             subCategories = listOf(
-                BuySellCategory("Spray Drones", R.drawable.sell_category_other, 13.1, apiValue = "spray drones"),
-                BuySellCategory("Mapping Drones", R.drawable.sell_category_other, 13.2, apiValue = "mapping drones"),
-                BuySellCategory("Surveillance Drones", R.drawable.sell_category_other, 13.3, apiValue = "surveillance drones"),
-                BuySellCategory("Drone Batteries", R.drawable.sell_category_other, 13.4, apiValue = "drone batteries"),
-                BuySellCategory("Drone Propellers", R.drawable.sell_category_other, 13.5, apiValue = "drone propellers"),
-                BuySellCategory("Drone Cameras", R.drawable.sell_category_other, 13.6, apiValue = "drone cameras"),
-                BuySellCategory("Drone Accessories", R.drawable.sell_category_other, 13.7, apiValue = "drone accessories"),
-                BuySellCategory("Drone Service Kits", R.drawable.sell_category_other, 13.8, apiValue = "drone service kits")
+                BuySellCategory(
+                    "Spraying Drones",
+                    R.drawable.sell_category_other,
+                    13.1,
+                    apiValue = "spray drones"
+                ),
+                BuySellCategory(
+                    "Surveillance/\nMonitoring Drones",
+                    R.drawable.sell_category_other,
+                    13.3,
+                    apiValue = "surveillance drones"
+                ),
+                BuySellCategory(
+                    "Mulitspectral & Mapping",
+                    R.drawable.sell_category_other,
+                    13.4,
+                    apiValue = "drone batteries"
+                ),
+                BuySellCategory(
+                    "Drone Propellers",
+                    R.drawable.sell_category_other,
+                    13.5,
+                    apiValue = "drone propellers"
+                ),
+                BuySellCategory(
+                    "Drone Cameras",
+                    R.drawable.sell_category_other,
+                    13.6,
+                    apiValue = "drone cameras"
+                ),
+                BuySellCategory(
+                    "Drone Accessories",
+                    R.drawable.sell_category_other,
+                    13.7,
+                    apiValue = "drone accessories"
+                ),
+                BuySellCategory(
+                    "Drone Service Kits",
+                    R.drawable.sell_category_other,
+                    13.8,
+                    apiValue = "drone service kits"
+                )
             )
-        ),
-        BuySellCategory(
+        ), BuySellCategory(
             name = "Tractors",
             image = R.drawable.buy_category_tractor,
             id = 1.4,
             apiValue = "tractors",
             bannerImage = R.drawable.tractors_banner,
             subCategories = listOf(
-                BuySellCategory("Mini Tractors", R.drawable.sell_category_other, 14.1, apiValue = "mini tractors"),
-                BuySellCategory("Utility Tractors", R.drawable.sell_category_other, 14.2, apiValue = "utility tractors"),
-                BuySellCategory("Heavy Duty Tractors", R.drawable.sell_category_other, 14.3, apiValue = "heavy duty tractors"),
-                BuySellCategory("Tractor Implements", R.drawable.sell_category_other, 14.4, apiValue = "tractor implements"),
-                BuySellCategory("Tractor Tyres", R.drawable.sell_category_other, 14.5, apiValue = "tractor tyres"),
-                BuySellCategory("Tractor Accessories", R.drawable.sell_category_other, 14.6, apiValue = "tractor accessories"),
-                BuySellCategory("Tractor Oils", R.drawable.sell_category_other, 14.7, apiValue = "tractor oils"),
-                BuySellCategory("Tractor Batteries", R.drawable.sell_category_other, 14.8, apiValue = "tractor batteries")
+                BuySellCategory(
+                    "4WD Tractors",
+                    R.drawable.sell_category_other,
+                    14.1,
+                    apiValue = "4WD tractors"
+                ),
+                BuySellCategory(
+                    "Row Crop Tractors",
+                    R.drawable.sell_category_other,
+                    14.2,
+                    apiValue = "row crop tractors"
+                ),
+                BuySellCategory(
+                    "Mini Tractors",
+                    R.drawable.sell_category_other,
+                    14.3,
+                    apiValue = "mini tractors"
+                ),
+                BuySellCategory(
+                    "Rotavator Attachments",
+                    R.drawable.sell_category_other,
+                    14.4,
+                    apiValue = "rotavator attachments"
+                ),
+                BuySellCategory(
+                    "Utility Tractor",
+                    R.drawable.sell_category_other,
+                    14.5,
+                    apiValue = "utility tractor"
+                ),
             )
-        ),
-        BuySellCategory(
+        ), BuySellCategory(
             name = "Direct From\nFarmers",
             image = R.drawable.buy_category_direct_from_farmers,
             id = 1.5,
             apiValue = "direct-from-farmers",
             bannerImage = R.drawable.direct_from_farmers_banner,
             subCategories = listOf(
-                BuySellCategory("Cereals", R.drawable.sell_category_cereals, 15.1, apiValue = "cereals"),
-                BuySellCategory("Pulses", R.drawable.sell_category_pulses, 15.2, apiValue = "pulses"),
-                BuySellCategory("Vegetables", R.drawable.sell_category_vegetables, 15.3, apiValue = "vegetables"),
-                BuySellCategory("Fruits", R.drawable.sell_category_fruits, 15.4, apiValue = "fruits"),
-                BuySellCategory("Oilseeds", R.drawable.sell_category_oilseeds, 15.5, apiValue = "oilseeds"),
-                BuySellCategory("Spices", R.drawable.sell_category_spices, 15.6, apiValue = "spices"),
-                BuySellCategory("Organic Produce", R.drawable.sell_category_organicproduces, 15.7, apiValue = "organic produce"),
-                BuySellCategory("Livestock Products", R.drawable.sell_category_livestock, 15.8, apiValue = "livestock products")
+                BuySellCategory(
+                    "Cereals",
+                    R.drawable.sell_category_cereals,
+                    15.1,
+                    apiValue = "cereals"
+                ),
+                BuySellCategory(
+                    "Pulses",
+                    R.drawable.sell_category_pulses,
+                    15.2,
+                    apiValue = "pulses"
+                ),
+                BuySellCategory(
+                    "Vegetables",
+                    R.drawable.sell_category_vegetables,
+                    15.3,
+                    apiValue = "vegetables"
+                ),
+                BuySellCategory(
+                    "Fruits",
+                    R.drawable.sell_category_fruits,
+                    15.4,
+                    apiValue = "fruits"
+                ),
+                BuySellCategory(
+                    "Oilseeds",
+                    R.drawable.sell_category_oilseeds,
+                    15.5,
+                    apiValue = "oilseeds"
+                ),
+                BuySellCategory(
+                    "Spices",
+                    R.drawable.sell_category_spices,
+                    15.6,
+                    apiValue = "spices"
+                ),
+                BuySellCategory(
+                    "Organic Produce",
+                    R.drawable.sell_category_organicproduces,
+                    15.7,
+                    apiValue = "organic produce"
+                ),
+                BuySellCategory(
+                    "Livestock Products",
+                    R.drawable.sell_category_livestock,
+                    15.8,
+                    apiValue = "livestock products"
+                )
+            )
+        ), BuySellCategory(
+            name = "Pesticides",
+            image = R.drawable.buy_category_direct_from_farmers,
+            id = 1.5,
+            apiValue = "pesticides",
+            bannerImage = R.drawable.direct_from_farmers_banner,
+            subCategories = listOf(
+                BuySellCategory(
+                    "Insecticides",
+                    R.drawable.sell_category_cereals,
+                    15.1,
+                    apiValue = "insecticides"
+                ),
+                BuySellCategory(
+                    "Fungicides",
+                    R.drawable.sell_category_pulses,
+                    15.2,
+                    apiValue = "fungicides"
+                ),
+                BuySellCategory(
+                    "Herbicides\n(Weedicides)",
+                    R.drawable.sell_category_vegetables,
+                    15.3,
+                    apiValue = "herbicides"
+                ),
+                BuySellCategory(
+                    "Bio-Pesticides",
+                    R.drawable.sell_category_fruits,
+                    15.4,
+                    apiValue = "bio-pesticides"
+                ),
+            )
+        ), BuySellCategory(
+            name = "Harvesting Machines",
+            image = R.drawable.harvesting_machines,
+            id = 1.5,
+            apiValue = "harvesting machines",
+            bannerImage = R.drawable.direct_from_farmers_banner,
+            subCategories = listOf(
+                BuySellCategory(
+                    "Combine Harvester",
+                    R.drawable.sell_category_cereals,
+                    15.1,
+                    apiValue = "combine harvester"
+                ),
+                BuySellCategory(
+                    "Reaper",
+                    R.drawable.sell_category_pulses,
+                    15.2,
+                    apiValue = "reaper"
+                ),
+                BuySellCategory(
+                    "Paddy\nHarvester",
+                    R.drawable.sell_category_vegetables,
+                    15.3,
+                    apiValue = "paddy harvester"
+                ),
+                BuySellCategory(
+                    "Sugarcane Harvesters",
+                    R.drawable.sell_category_fruits,
+                    15.4,
+                    apiValue = "sugarcane harvester"
+                ),
+                BuySellCategory(
+                    "Groundnut Harvesters",
+                    R.drawable.sell_category_fruits,
+                    15.4,
+                    apiValue = "groundnut harvester"
+                )
+            )
+        ), BuySellCategory(
+            name = "Soil Testers",
+            image = R.drawable.harvesting_machines,
+            id = 1.5,
+            apiValue = "soil testers",
+            bannerImage = R.drawable.direct_from_farmers_banner,
+            subCategories = listOf(
+                BuySellCategory(
+                    "Soil PH Meter",
+                    R.drawable.sell_category_cereals,
+                    15.1,
+                    apiValue = "soil ph meter"
+                ),
+                BuySellCategory(
+                    "Soil Moisture Meter",
+                    R.drawable.sell_category_pulses,
+                    15.2,
+                    apiValue = "soil moisture meter"
+                ),
+                BuySellCategory(
+                    "NPK Soil Testing Kit",
+                    R.drawable.sell_category_vegetables,
+                    15.3,
+                    apiValue = "npk soil testing kit"
+                ),
+                BuySellCategory(
+                    "Digital Soil Testing Device",
+                    R.drawable.sell_category_fruits,
+                    15.4,
+                    apiValue = "digital soil testing device"
+                )
+            )
+        ), BuySellCategory(
+            name = "Power Weeders",
+            image = R.drawable.harvesting_machines,
+            id = 1.5,
+            apiValue = "power weeders",
+            bannerImage = R.drawable.direct_from_farmers_banner,
+            subCategories = listOf(
+                BuySellCategory(
+                    "Mini Power Weeders",
+                    R.drawable.sell_category_cereals,
+                    15.1,
+                    apiValue = "mini power weeders"
+                ),
+                BuySellCategory(
+                    "Petrol Power Weeders",
+                    R.drawable.sell_category_pulses,
+                    15.2,
+                    apiValue = "petrol power weeders"
+                ),
+                BuySellCategory(
+                    "Diesel Power Weeders",
+                    R.drawable.sell_category_vegetables,
+                    15.3,
+                    apiValue = "diesel power weeders"
+                ),
+                BuySellCategory(
+                    "Self-Propelled Weeders",
+                    R.drawable.sell_category_fruits,
+                    15.4,
+                    apiValue = "self-propelled weeders"
+                )
+            )
+        ), BuySellCategory(
+            name = "Thresher Winnowers",
+            image = R.drawable.harvesting_machines,
+            id = 1.5,
+            apiValue = "thresher winnower",
+            bannerImage = R.drawable.direct_from_farmers_banner,
+            subCategories = listOf(
+                BuySellCategory(
+                    "Wheat Thresher",
+                    R.drawable.sell_category_cereals,
+                    15.1,
+                    apiValue = "wheat thresher"
+                ),
+                BuySellCategory(
+                    "Multi-Crop\nThresher",
+                    R.drawable.sell_category_pulses,
+                    15.2,
+                    apiValue = "multi-crop thresher"
+                ),
+                BuySellCategory(
+                    "Paddy\nThresher",
+                    R.drawable.sell_category_vegetables,
+                    15.3,
+                    apiValue = "paddy harvester"
+                ),
+                BuySellCategory(
+                    "Motorized Winnower",
+                    R.drawable.sell_category_fruits,
+                    15.4,
+                    apiValue = "motorized winnower"
+                )
+            )
+        ), BuySellCategory(
+            name = "Irrigation Tools",
+            image = R.drawable.harvesting_machines,
+            id = 1.5,
+            apiValue = "irrigation tools",
+            bannerImage = R.drawable.direct_from_farmers_banner,
+            subCategories = listOf(
+                BuySellCategory(
+                    "PVC Pipes\n& fittings",
+                    R.drawable.sell_category_cereals,
+                    15.1,
+                    apiValue = "pvc pipes and fittings"
+                ),
+                BuySellCategory(
+                    "Submersible\nPumps",
+                    R.drawable.sell_category_pulses,
+                    15.2,
+                    apiValue = "submersible pumps"
+                ),
+                BuySellCategory(
+                    "Rain Guns",
+                    R.drawable.sell_category_vegetables,
+                    15.3,
+                    apiValue = "rain guns"
+                ),
+                BuySellCategory(
+                    "Hose Pipes",
+                    R.drawable.sell_category_fruits,
+                    15.4,
+                    apiValue = "hose pipes"
+                ),
+                BuySellCategory(
+                    "Diesel/Electric Water Pumps",
+                    R.drawable.sell_category_fruits,
+                    15.4,
+                    apiValue = "diesel electric water pumps"
+                ),
+                BuySellCategory(
+                    "Timers &\nControllers",
+                    R.drawable.sell_category_fruits,
+                    15.4,
+                    apiValue = "timers and controllers"
+                )
+            )
+        ), BuySellCategory(
+            name = "Manual Farm Machinery",
+            image = R.drawable.harvesting_machines,
+            id = 1.5,
+            apiValue = "manual farm machinery",
+            bannerImage = R.drawable.direct_from_farmers_banner,
+            subCategories = listOf(
+                BuySellCategory(
+                    "Axe",
+                    R.drawable.sell_category_cereals,
+                    15.1,
+                    apiValue = "axe"
+                ),
+                BuySellCategory(
+                    "Hoe",
+                    R.drawable.sell_category_pulses,
+                    15.2,
+                    apiValue = "hoe"
+                ),
+                BuySellCategory(
+                    "Sickle",
+                    R.drawable.sell_category_vegetables,
+                    15.3,
+                    apiValue = "sickle"
+                ),
+                BuySellCategory(
+                    "Hedge Shears",
+                    R.drawable.sell_category_fruits,
+                    15.4,
+                    apiValue = "hedge shears"
+                )
             )
         )
     )
@@ -119,7 +492,12 @@ object Categories {
         BuySellCategory("All Products", R.drawable.sell_category_other, 10.1),
         BuySellCategory("Seeds", R.drawable.buy_category_seeds, 10.2, apiValue = "seeds"),
         BuySellCategory("Sprayers", R.drawable.buy_category_sprayers, 10.3, apiValue = "sprayers"),
-        BuySellCategory("Agricultural Drones", R.drawable.buy_category_agri_drone, 10.4, apiValue = "drones"),
+        BuySellCategory(
+            "Agricultural Drones",
+            R.drawable.buy_category_agri_drone,
+            10.4,
+            apiValue = "drones"
+        ),
         BuySellCategory("Tractors", R.drawable.buy_category_tractor, 10.5, apiValue = "tractors")
     )
 
