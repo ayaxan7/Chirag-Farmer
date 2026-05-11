@@ -66,7 +66,7 @@ fun HomeScreen(
         Pair("Seeds", R.drawable.agri_seeds),
         Pair("Sprayer", R.drawable.agri_sprayer),
         Pair("Tractors",R.drawable.agri_tractor),
-        Pair("Harvesting\nMachines",R.drawable.agri_harvestor)
+        Pair("Harvesting Machines",R.drawable.agri_harvester)
     )
     val bookingStatus by viewModel.bookingStatus.collectAsStateWithLifecycle()
 
@@ -148,7 +148,7 @@ fun HomeScreen(
                                 category.first.equals("Seeds", ignoreCase = true) -> "Seeds"
                                 category.first.equals("Sprayer", ignoreCase = true) -> "Sprayers"
                                 category.first.equals("Tractors", ignoreCase = true) -> "Tractors"
-                                category.first.equals("Harvesting Machines", ignoreCase = true) -> "Harvesting\nMachines"
+                                category.first.equals("Harvesting Machines", ignoreCase = true) -> "Harvesting Machines"
                                 else -> ""
                             }
                             if (categoryName.isNotEmpty()) {

@@ -147,19 +147,19 @@ fun CategoriesScreen(
                         fontWeight = FontWeight.W600
                     )
 
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.FilterList,
-                            contentDescription = "Filter",
-                            modifier = Modifier.width(18.dp)
-                        )
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text(
-                            text = "Filter", fontSize = 13.sp
-                        )
-                    }
+//                    Row(
+//                        verticalAlignment = Alignment.CenterVertically
+//                    ) {
+//                        Icon(
+//                            imageVector = Icons.Default.FilterList,
+//                            contentDescription = "Filter",
+//                            modifier = Modifier.width(18.dp)
+//                        )
+//                        Spacer(modifier = Modifier.width(6.dp))
+//                        Text(
+//                            text = "Filter", fontSize = 13.sp
+//                        )
+//                    }
                 }
             }
 
