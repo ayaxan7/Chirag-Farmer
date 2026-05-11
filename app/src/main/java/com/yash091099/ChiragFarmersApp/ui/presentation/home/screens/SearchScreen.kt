@@ -40,7 +40,7 @@ import com.yash091099.ChiragFarmersApp.ui.theme.Teal
 
 data class RecentSearch(
     val id: String,
-    val imageRes: String,
+    val imageUrl: String? = null,
     val searchText: String
 )
 
@@ -57,7 +57,7 @@ fun SearchScreen(
 
     // Map the search results to the RecentSearch data class for compatibility with RecentSearchItem UI
     val recentSearches = searchResults.map { 
-        RecentSearch(id = it.productId, imageRes = it.imageUrl, searchText = it.name)
+        RecentSearch(id = it.productId, imageUrl = it.imageUrl, searchText = it.name)
     }
 
     // Autofocus the search field when screen opens
@@ -128,14 +128,11 @@ fun SearchScreen(
                 // Results List using the same visual component
                 recentSearches.forEach { search ->
                     RecentSearchItem(
-                        imageUrl = search.imageRes, // Assuming RecentSearchItem supports imageUrl now
+                        imageUrl = search.imageUrl,
                         searchText = search.searchText,
                         onItemClick = {
                             // Navigate to product details
                             navController.navigate(Route.ProductDetails.createRoute(search.id))
-                        },
-                        onRemoveClick = {
-                            // Optional: logic to remove from recent list if implemented
                         }
                     )
                 }

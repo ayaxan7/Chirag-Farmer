@@ -9,11 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,6 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
+import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.theme.BorderColour
 
 @Composable
@@ -32,11 +29,9 @@ fun RecentSearchItem(
     imageRes: Int? = null,
     imageUrl: String? = null,
     searchText: String,
-    onItemClick: () -> Unit,
-    onRemoveClick: () -> Unit,
-    modifier: Modifier = Modifier
+    onItemClick: () -> Unit
 ) {
-    Column(modifier = modifier.fillMaxWidth()) {
+    Column(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -51,10 +46,10 @@ fun RecentSearchItem(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Image(
-                    painter = if (imageUrl != null) {
+                    painter = if (!imageUrl.isNullOrBlank()) {
                         rememberAsyncImagePainter(model = imageUrl)
                     } else {
-                        painterResource(id = imageRes ?: 0)
+                        painterResource(id = imageRes ?: R.drawable.sell_category_other)
                     },
                     contentDescription = searchText,
                     modifier = Modifier
@@ -69,18 +64,6 @@ fun RecentSearchItem(
                 )
             }
 
-            // Remove button
-//            IconButton(
-//                onClick = onRemoveClick,
-//                modifier = Modifier.size(24.dp)
-//            ) {
-//                Icon(
-//                    imageVector = Icons.Default.Close,
-//                    contentDescription = "Remove",
-//                    tint = Color(0xFF666666),
-//                    modifier = Modifier.size(18.dp)
-//                )
-//            }
         }
         HorizontalDivider(
             thickness = 1.dp,
