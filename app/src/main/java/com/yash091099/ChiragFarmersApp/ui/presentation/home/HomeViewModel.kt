@@ -1,5 +1,6 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.home
 
+import android.content.Context
 import android.util.Log
 import com.google.firebase.messaging.FirebaseMessaging
 import androidx.lifecycle.ViewModel
@@ -12,7 +13,9 @@ import com.yash091099.ChiragFarmersApp.domain.model.Location
 import com.yash091099.ChiragFarmersApp.domain.repository.ProductRepository
 import com.yash091099.ChiragFarmersApp.domain.usecase.GetLocationSuggestionsUseCase
 import com.yash091099.ChiragFarmersApp.domain.usecase.UpdateDefaultLocationUseCase
+import com.yash091099.ChiragFarmersApp.utils.DeviceIdProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -42,6 +45,7 @@ sealed class HomeMixedProductsUiState {
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val authRepository: AuthRepository,
     private val getLocationSuggestionsUseCase: GetLocationSuggestionsUseCase,
     private val createBookingUseCase: CreateBookingUseCase,
@@ -140,6 +144,10 @@ class HomeViewModel @Inject constructor(
     fun updateFcmDeviceTokenOnScreenOpen() {
         viewModelScope.launch {
             try {
+                // Get device ID
+                val deviceId = DeviceIdProvider.getDeviceId(context)
+                Log.d("HomeViewModel", "Device ID obtained: $deviceId")
+
                 // Verify Firebase is initialized before attempting to get token
                 val firebaseToken = try {
                     FirebaseMessaging.getInstance().token.await()
@@ -158,9 +166,10 @@ class HomeViewModel @Inject constructor(
 
                 val endpoint = "${BuildConfig.BASE_URL}api/farmers/device-token"
                 Log.d("HomeViewModel", "FCM token fetched from Firebase: $firebaseToken")
+                Log.d("HomeViewModel", "Device ID: $deviceId")
                 Log.d("HomeViewModel", "Sending FCM token to: $endpoint")
 
-                authRepository.updateDeviceToken(firebaseToken).fold(
+                authRepository.updateDeviceToken(firebaseToken, deviceId).fold(
                     onSuccess = { response ->
                         if (response.success) {
                             Log.d("HomeViewModel", "FCM token synced successfully with backend")

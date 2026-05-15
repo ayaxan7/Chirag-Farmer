@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class UpdateDeviceTokenRequest(
     val token: String,
+    val deviceId: String,
     val deviceType: String
 )
 
@@ -11,6 +12,7 @@ data class DeviceTokenData(
     @SerializedName("_id") val id: String,
     val userId: String,
     val token: String,
+    val deviceId: String,
     val deviceType: String,
     val userModel: String,
     val lastActive: String? = null,
@@ -22,3 +24,14 @@ data class UpdateDeviceTokenResponse(
     val deviceToken: DeviceTokenData? = null,
     val message: String? = null
 )
+
+data class DeleteDeviceTokenRequest(
+    val deviceId: String
+)
+
+data class DeleteDeviceTokenResponse(
+    val success: Boolean,
+    val message: String? = null,
+    val deletedCount: Int? = null
+)
+

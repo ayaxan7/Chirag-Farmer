@@ -13,6 +13,8 @@ import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateDefaultLocationRequ
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateDefaultLocationResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateDeviceTokenRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateDeviceTokenResponse
+import com.yash091099.ChiragFarmersApp.data.remote.dto.DeleteDeviceTokenRequest
+import com.yash091099.ChiragFarmersApp.data.remote.dto.DeleteDeviceTokenResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.FarmerAddressesResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.DefaultLocationResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.AddDeliveryLocationRequest
@@ -23,6 +25,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.DELETE
 
 interface AuthApiService {
 
@@ -85,6 +88,12 @@ interface AuthApiService {
         @Header("Authorization") authorization: String,
         @Body request: UpdateDeviceTokenRequest
     ): UpdateDeviceTokenResponse
+
+    @POST("api/farmers/delete-device-token")
+    suspend fun deleteDeviceToken(
+        @Header("Authorization") authorization: String,
+        @Body request: DeleteDeviceTokenRequest
+    ): DeleteDeviceTokenResponse
 
     @GET("api/farmers/delivery-locations")
     suspend fun getFarmerAddresses(

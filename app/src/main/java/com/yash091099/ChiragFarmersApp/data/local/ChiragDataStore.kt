@@ -22,6 +22,7 @@ class ChiragDataStore(private val context: Context) {
         private val PROFILE_COMPLETE_KEY = booleanPreferencesKey("profile_complete")
         private val DEFAULT_LOCATION_KEY = stringPreferencesKey("default_location")
         private val LOCATION_UPDATED_ON_LAUNCH_KEY = booleanPreferencesKey("location_updated_on_launch")
+        private val DEVICE_ID_KEY = stringPreferencesKey("device_id")
     }
 
     suspend fun saveAuthToken(token: String) {
@@ -110,6 +111,18 @@ class ChiragDataStore(private val context: Context) {
     fun getLocationUpdatedOnLaunch(): Flow<Boolean> {
         return context.dataStore.data.map { preferences ->
             preferences[LOCATION_UPDATED_ON_LAUNCH_KEY] ?: false
+        }
+    }
+
+    suspend fun saveDeviceId(deviceId: String) {
+        context.dataStore.edit { preferences ->
+            preferences[DEVICE_ID_KEY] = deviceId
+        }
+    }
+
+    fun getDeviceId(): Flow<String?> {
+        return context.dataStore.data.map { preferences ->
+            preferences[DEVICE_ID_KEY]
         }
     }
 }

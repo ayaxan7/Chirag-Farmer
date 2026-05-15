@@ -1,5 +1,6 @@
 package com.yash091099.ChiragFarmersApp.data.repository
 
+import android.util.Log
 import com.google.gson.Gson
 import com.yash091099.ChiragFarmersApp.data.local.ChiragDataStore
 import com.yash091099.ChiragFarmersApp.data.model.auth.AddBusinessInfoRequest
@@ -16,6 +17,8 @@ import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateDefaultLocationRequ
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateDefaultLocationResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateDeviceTokenRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateDeviceTokenResponse
+import com.yash091099.ChiragFarmersApp.data.remote.dto.DeleteDeviceTokenRequest
+import com.yash091099.ChiragFarmersApp.data.remote.dto.DeleteDeviceTokenResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.FarmerAddressDto
 import com.yash091099.ChiragFarmersApp.data.remote.dto.DefaultLocationData
 import com.yash091099.ChiragFarmersApp.data.remote.dto.AddDeliveryLocationRequest
@@ -176,6 +179,24 @@ class AuthRepository @Inject constructor(
     }
 
     suspend fun logout() {
+        try {
+            // Try to delete the FCM token from the server before clearing local auth data
+            val deviceId = chiragDataStore.getDeviceId().first()
+            if (!deviceId.isNullOrEmpty()) {
+                deleteDeviceToken(deviceId).fold(
+                    onSuccess = {
+                        Log.d("AuthRepository", "FCM token deleted from server successfully")
+                    },
+                    onFailure = { exception ->
+                        Log.w("AuthRepository", "Failed to delete FCM token: ${exception.message}")
+                    }
+                )
+            }
+        } catch (e: Exception) {
+            Log.e("AuthRepository", "Error during FCM token deletion: ${e.message}")
+        }
+
+        // Clear local auth data
         chiragDataStore.clearAuthData()
         chiragDataStore.saveLocationUpdatedOnLaunch(false)
     }
@@ -202,7 +223,7 @@ class AuthRepository @Inject constructor(
         }
     }
 
-    suspend fun updateDeviceToken(deviceToken: String): Result<UpdateDeviceTokenResponse> {
+    suspend fun updateDeviceToken(deviceToken: String, deviceId: String): Result<UpdateDeviceTokenResponse> {
         return try {
             val token = chiragDataStore.getAuthToken().first()
             if (token.isNullOrEmpty()) {
@@ -211,9 +232,26 @@ class AuthRepository @Inject constructor(
 
             val request = UpdateDeviceTokenRequest(
                 token = deviceToken,
+                deviceId = deviceId,
                 deviceType = "android"
             )
             val response = apiService.updateDeviceToken("Bearer $token", request)
+            Result.success(response)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun deleteDeviceToken(deviceId: String): Result<DeleteDeviceTokenResponse> {
+        return try {
+            val token = chiragDataStore.getAuthToken().first()
+            if (token.isNullOrEmpty()) {
+                return Result.failure(Exception("No authentication token found"))
+            }
+
+            val request = DeleteDeviceTokenRequest(deviceId = deviceId)
+            val response = apiService.deleteDeviceToken("Bearer $token", request)
+            Log.d("AuthRepository", "Device token deleted $response")
             Result.success(response)
         } catch (e: Exception) {
             Result.failure(e)
