@@ -14,6 +14,8 @@ import com.yash091099.ChiragFarmersApp.data.model.auth.VerifyOTPRequest
 import com.yash091099.ChiragFarmersApp.data.remote.AuthApiService
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateDefaultLocationRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateDefaultLocationResponse
+import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateDeviceTokenRequest
+import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateDeviceTokenResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.FarmerAddressDto
 import com.yash091099.ChiragFarmersApp.data.remote.dto.DefaultLocationData
 import com.yash091099.ChiragFarmersApp.data.remote.dto.AddDeliveryLocationRequest
@@ -194,6 +196,24 @@ class AuthRepository @Inject constructor(
                 chiragDataStore.saveLocationUpdatedOnLaunch(true)
             }
 
+            Result.success(response)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun updateDeviceToken(deviceToken: String): Result<UpdateDeviceTokenResponse> {
+        return try {
+            val token = chiragDataStore.getAuthToken().first()
+            if (token.isNullOrEmpty()) {
+                return Result.failure(Exception("No authentication token found"))
+            }
+
+            val request = UpdateDeviceTokenRequest(
+                token = deviceToken,
+                deviceType = "android"
+            )
+            val response = apiService.updateDeviceToken("Bearer $token", request)
             Result.success(response)
         } catch (e: Exception) {
             Result.failure(e)

@@ -7,6 +7,7 @@ plugins {
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
     id("kotlin-parcelize")
+    alias(libs.plugins.google.gms.google.services)
 }
 val localPropertiesFile = rootProject.file("local.properties")
 val localProperties = Properties().apply {

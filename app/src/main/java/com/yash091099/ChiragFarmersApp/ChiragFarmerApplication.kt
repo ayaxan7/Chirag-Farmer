@@ -1,6 +1,7 @@
 package com.yash091099.ChiragFarmersApp
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.ProcessLifecycleOwner
@@ -24,6 +25,10 @@ class ChiragFarmerApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        // Firebase initialization is handled automatically by the google-services plugin
+        // and the FirebaseInitProvider content provider
+        Log.d("ChiragFarmerApplication", "App initialization started")
 
         // Initialize OSMDroid
         Configuration.getInstance().userAgentValue = BuildConfig.APPLICATION_ID

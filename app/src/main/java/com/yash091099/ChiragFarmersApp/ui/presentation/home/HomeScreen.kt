@@ -75,6 +75,11 @@ fun HomeScreen(
         viewModel.updateDefaultLocationOnScreenOpen()
     }
 
+    // Sync FCM token every time HomeScreen is displayed
+    LaunchedEffect(Unit) {
+        viewModel.updateFcmDeviceTokenOnScreenOpen()
+    }
+
     LaunchedEffect(bookingStatus) {
         when (bookingStatus) {
             is BookingStatus.Success -> {

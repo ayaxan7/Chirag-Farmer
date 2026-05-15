@@ -11,6 +11,8 @@ import com.yash091099.ChiragFarmersApp.data.model.auth.VerifyOTPData
 import com.yash091099.ChiragFarmersApp.data.model.auth.VerifyOTPRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateDefaultLocationRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateDefaultLocationResponse
+import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateDeviceTokenRequest
+import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateDeviceTokenResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.FarmerAddressesResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.DefaultLocationResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.AddDeliveryLocationRequest
@@ -77,6 +79,12 @@ interface AuthApiService {
         @Header("Authorization") authorization: String,
         @Body request: UpdateDefaultLocationRequest
     ): UpdateDefaultLocationResponse
+
+    @POST("api/farmers/device-token")
+    suspend fun updateDeviceToken(
+        @Header("Authorization") authorization: String,
+        @Body request: UpdateDeviceTokenRequest
+    ): UpdateDeviceTokenResponse
 
     @GET("api/farmers/delivery-locations")
     suspend fun getFarmerAddresses(

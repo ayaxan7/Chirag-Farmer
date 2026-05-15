@@ -1,8 +1,10 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.home
 
 import android.util.Log
+import com.google.firebase.messaging.FirebaseMessaging
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.yash091099.ChiragFarmersApp.BuildConfig
 import com.yash091099.ChiragFarmersApp.data.location.LocationManager
 import com.yash091099.ChiragFarmersApp.data.remote.dto.MixedProductItem
 import com.yash091099.ChiragFarmersApp.data.repository.AuthRepository
@@ -15,6 +17,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import com.yash091099.ChiragFarmersApp.domain.model.BookingRequest
 import com.yash091099.ChiragFarmersApp.domain.usecase.CreateBookingUseCase
@@ -132,6 +135,50 @@ class HomeViewModel @Inject constructor(
 
     fun retryHomeMixedProducts() {
         loadHomeMixedProducts()
+    }
+
+    fun updateFcmDeviceTokenOnScreenOpen() {
+        viewModelScope.launch {
+            try {
+                // Verify Firebase is initialized before attempting to get token
+                val firebaseToken = try {
+                    FirebaseMessaging.getInstance().token.await()
+                } catch (e: IllegalStateException) {
+                    Log.e("HomeViewModel", "Firebase not initialized: ${e.message}")
+                    return@launch
+                } catch (e: Exception) {
+                    Log.e("HomeViewModel", "Failed to get Firebase token: ${e.message}", e)
+                    return@launch
+                }
+
+                if (firebaseToken.isBlank()) {
+                    Log.w("HomeViewModel", "FCM token fetched from Firebase was empty")
+                    return@launch
+                }
+
+                val endpoint = "${BuildConfig.BASE_URL}api/farmers/device-token"
+                Log.d("HomeViewModel", "FCM token fetched from Firebase: $firebaseToken")
+                Log.d("HomeViewModel", "Sending FCM token to: $endpoint")
+
+                authRepository.updateDeviceToken(firebaseToken).fold(
+                    onSuccess = { response ->
+                        if (response.success) {
+                            Log.d("HomeViewModel", "FCM token synced successfully with backend")
+                        } else {
+                            Log.w(
+                                "HomeViewModel",
+                                "Backend returned a non-success response while syncing FCM token: ${response.message ?: "Unknown error"}"
+                            )
+                        }
+                    },
+                    onFailure = { exception ->
+                        Log.e("HomeViewModel", "Error syncing FCM token: ${exception.message}", exception)
+                    }
+                )
+            } catch (e: Exception) {
+                Log.e("HomeViewModel", "Failed to fetch or sync FCM token: ${e.message}", e)
+            }
+        }
     }
 
     // ...existing code...
