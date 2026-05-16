@@ -17,6 +17,8 @@ import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateOrderStatusRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateOrderStatusResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UserPlacedOrdersResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.OrderDetailsResponse
+import com.yash091099.ChiragFarmersApp.data.remote.dto.CancelOrderRequest
+import com.yash091099.ChiragFarmersApp.data.remote.dto.CancelOrderResponse
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -101,6 +103,16 @@ class OrderRepositoryImpl @Inject constructor(
         return try {
             val token = chiragDataStore.getAuthToken().first()
             val response = api.getOrderDetails("Bearer $token", id)
+            Result.success(response)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun cancelOrder(request: CancelOrderRequest): Result<CancelOrderResponse> {
+        return try {
+            val token = chiragDataStore.getAuthToken().first()
+            val response = api.cancelOrder("Bearer $token", request)
             Result.success(response)
         } catch (e: Exception) {
             Result.failure(e)

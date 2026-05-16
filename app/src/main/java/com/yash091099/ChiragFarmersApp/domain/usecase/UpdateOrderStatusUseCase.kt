@@ -8,7 +8,7 @@ import javax.inject.Inject
 class UpdateOrderStatusUseCase @Inject constructor(
     private val repository: OrderRepository
 ) {
-    suspend operator fun invoke(id: String, status: String): Result<UpdateOrderStatusResponse> {
-        return repository.updateOrderStatus(id, UpdateOrderStatusRequest(status))
+    suspend operator fun invoke(id: String, productId: String, status: String): Result<UpdateOrderStatusResponse> {
+        return repository.updateOrderStatus(id, UpdateOrderStatusRequest(productId, status))
     }
 }

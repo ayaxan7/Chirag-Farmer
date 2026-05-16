@@ -16,7 +16,9 @@ data class UserPlacedOrder(
     val imageUrl: String?,
     val productName: String,
     val sellerName: String,
-    val productPrice: Double
+    val productPrice: Double,
+    val productId: String? = null,
+    val itemStatus: String? = null
 )
 
 data class OrderPagination(

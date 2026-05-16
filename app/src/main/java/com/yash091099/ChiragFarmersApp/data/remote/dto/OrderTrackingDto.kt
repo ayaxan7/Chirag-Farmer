@@ -25,7 +25,8 @@ data class OrderTrackingData(
     val deliveryFee: Double?,
     val discount: Double?,
     val paymentMethod: String?,
-    val orderDate: String?
+    val orderDate: String?,
+    val productId: String? = null
 )
 
 data class DeliveryAddress(

@@ -100,7 +100,9 @@ fun OrderStatusScreen(
                             orderId = orderId ?: "",
                             data = data,
                             onStatusUpdate = { status ->
-                                orderId?.let { viewModel.updateOrderStatus(it, status) }
+                                orderId?.let {
+                                    viewModel.updateOrderStatus(it, data.productId.orEmpty(), status)
+                                }
                             }
                         )
                     }

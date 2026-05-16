@@ -9,6 +9,8 @@ import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateOrderStatusRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateOrderStatusResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UserPlacedOrdersResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.OrderDetailsResponse
+import com.yash091099.ChiragFarmersApp.data.remote.dto.CancelOrderRequest
+import com.yash091099.ChiragFarmersApp.data.remote.dto.CancelOrderResponse
 import com.yash091099.ChiragFarmersApp.domain.model.Order
 import kotlinx.coroutines.flow.Flow
 
@@ -20,5 +22,6 @@ interface OrderRepository {
     suspend fun updateOrderStatus(id: String, request: UpdateOrderStatusRequest): Result<UpdateOrderStatusResponse>
     suspend fun getUserPlacedOrders(type: String, page: Int, limit: Int): Result<UserPlacedOrdersResponse>
     suspend fun getOrderDetails(id: String): Result<OrderDetailsResponse>
+    suspend fun cancelOrder(request: CancelOrderRequest): Result<CancelOrderResponse>
 }
 

@@ -14,6 +14,8 @@ import retrofit2.http.Path
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateOrderStatusRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateOrderStatusResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.OrderDetailsResponse
+import com.yash091099.ChiragFarmersApp.data.remote.dto.CancelOrderRequest
+import com.yash091099.ChiragFarmersApp.data.remote.dto.CancelOrderResponse
 import retrofit2.http.PATCH
 
 interface OrderApiService {
@@ -54,4 +56,10 @@ interface OrderApiService {
         @Header("Authorization") token: String,
         @Path("id") id: String
     ): OrderDetailsResponse
+
+    @POST("api/farmer/orders/cancel")
+    suspend fun cancelOrder(
+        @Header("Authorization") token: String,
+        @Body request: CancelOrderRequest
+    ): CancelOrderResponse
 }

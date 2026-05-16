@@ -32,9 +32,9 @@ class OrderStatusViewModel @Inject constructor(
         }
     }
 
-    fun updateOrderStatus(id: String, status: String) {
+    fun updateOrderStatus(id: String, productId: String, status: String) {
         viewModelScope.launch {
-            updateOrderStatusUseCase(id, status).onSuccess { response ->
+            updateOrderStatusUseCase(id, productId, status).onSuccess { response ->
                 // Always re-fetch the full tracking details on success to ensure all fields are populated correctly
                 if (response.success) {
                     getOrderTracking(id)

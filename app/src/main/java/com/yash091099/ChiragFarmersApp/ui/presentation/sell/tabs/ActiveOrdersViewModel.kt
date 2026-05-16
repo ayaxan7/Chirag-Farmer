@@ -63,9 +63,9 @@ class ActiveOrdersViewModel @Inject constructor(
         }
     }
 
-    fun updateOrderStatus(id: String, status: String) {
+    fun updateOrderStatus(id: String, productId: String, status: String) {
         viewModelScope.launch {
-            updateOrderStatusUseCase(id, status).onSuccess { response ->
+            updateOrderStatusUseCase(id, productId, status).onSuccess { response ->
                 if (response.success) {
                     fetchOrderTracking(id)
                 }

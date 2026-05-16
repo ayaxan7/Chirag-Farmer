@@ -15,6 +15,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -52,10 +55,25 @@ fun MyOrderDetailsScreen(
     viewModel: OrderDetailsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val cancelOrderState by viewModel.cancelOrderState.collectAsStateWithLifecycle()
+    var showCancelDialog by remember { mutableStateOf(false) }
+    var selectedProductId by remember { mutableStateOf("") }
+    var cancelReason by remember { mutableStateOf("") }
 
     LaunchedEffect(orderId) {
         if (orderId.isNotBlank()) {
             viewModel.loadOrderDetails(orderId)
+        }
+    }
+
+    LaunchedEffect(cancelOrderState) {
+        if (cancelOrderState is CancelOrderState.Success) {
+            showCancelDialog = false
+            // Reload order details after successful cancellation
+            if (orderId.isNotBlank()) {
+                viewModel.loadOrderDetails(orderId)
+            }
+            viewModel.resetCancelState()
         }
     }
 
@@ -137,15 +155,36 @@ fun MyOrderDetailsScreen(
                     data = state.data,
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(paddingValues)
+                        .padding(paddingValues),
+                    orderId = orderId,
+                    onCancelItem = { productId ->
+                        selectedProductId = productId
+                        cancelReason = ""
+                        showCancelDialog = true
+                    }
                 )
             }
         }
     }
+
+    if (showCancelDialog) {
+        CancelOrderDialog(
+            onDismiss = { showCancelDialog = false },
+            onConfirm = { reason ->
+                viewModel.cancelOrderItem(orderId, selectedProductId, reason)
+            },
+            isLoading = cancelOrderState is CancelOrderState.Loading
+        )
+    }
 }
 
 @Composable
-private fun OrderDetailsContent(data: OrderDetailsData, modifier: Modifier = Modifier) {
+private fun OrderDetailsContent(
+    data: OrderDetailsData,
+    modifier: Modifier = Modifier,
+    orderId: String = "",
+    onCancelItem: (String) -> Unit = {}
+) {
     Column(
         modifier = modifier
             .verticalScroll(rememberScrollState())
@@ -159,7 +198,11 @@ private fun OrderDetailsContent(data: OrderDetailsData, modifier: Modifier = Mod
                 productName = item.productName.orEmpty(),
                 sellerName = item.sellerName.orEmpty(),
                 price = formatCurrency(item.pricePaid),
-                quantity = item.quantity.orEmpty()
+                quantity = item.quantity.orEmpty(),
+                itemStatus = item.itemStatus,
+                cancellationDetails = item.cancellationDetails,
+                productId = item.productId.orEmpty(),
+                onCancelClick = { onCancelItem(item.productId.orEmpty()) }
             )
         }
 
@@ -178,7 +221,11 @@ fun OrderProductCard(
     productName: String,
     sellerName: String,
     price: String,
-    quantity: String
+    quantity: String,
+    itemStatus: String? = null,
+    cancellationDetails: com.yash091099.ChiragFarmersApp.data.remote.dto.CancellationDetailsDto? = null,
+    productId: String = "",
+    onCancelClick: () -> Unit = {}
 ) {
     Card(
         modifier = Modifier
@@ -188,65 +235,120 @@ fun OrderProductCard(
         colors = CardDefaults.cardColors(containerColor = BGWhite),
         elevation = CardDefaults.cardElevation(0.dp)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            AsyncImage(
-                model = imageUrl,
-                contentDescription = productName,
+        Column(modifier = Modifier.fillMaxWidth()) {
+            Row(
                 modifier = Modifier
-                    .size(80.dp)
-                    .clip(RoundedCornerShape(8.dp)),
-                contentScale = ContentScale.Crop
-            )
-            Spacer(modifier = Modifier.width(12.dp))
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = "#${orderId.ifBlank { "--" }}",
-                    fontSize = 12.sp,
-                    color = TextGray
+                    .fillMaxWidth()
+                    .padding(12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                AsyncImage(
+                    model = imageUrl,
+                    contentDescription = productName,
+                    modifier = Modifier
+                        .size(80.dp)
+                        .clip(RoundedCornerShape(8.dp)),
+                    contentScale = ContentScale.Crop
                 )
-                Text(
-                    text = productName,
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = BGBlack,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = sellerName,
-                    fontSize = 12.sp,
-                    color = TextGray,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Spacer(modifier = Modifier.height(6.dp))
+                Spacer(modifier = Modifier.width(12.dp))
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = "#${orderId.ifBlank { "--" }}",
+                        fontSize = 12.sp,
+                        color = TextGray
+                    )
+                    Text(
+                        text = productName,
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = BGBlack,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Text(
+                        text = sellerName,
+                        fontSize = 12.sp,
+                        color = TextGray,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = price,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = BGBlack
+                        )
+                        Box(
+                            modifier = Modifier
+                                .background(Color(0xFFF2F2F2), RoundedCornerShape(6.dp))
+                                .padding(horizontal = 10.dp, vertical = 4.dp)
+                        ) {
+                            Text(
+                                text = quantity,
+                                fontSize = 12.sp,
+                                color = TextGray,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
+                    }
+                }
+            }
+
+            // Show item status if available
+            if (!itemStatus.isNullOrBlank()) {
+                HorizontalDivider(color = BorderColour.copy(alpha = 0.3f), thickness = 0.5.dp)
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = price,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = BGBlack
-                    )
-                    Box(
-                        modifier = Modifier
-                            .background(Color(0xFFF2F2F2), RoundedCornerShape(6.dp))
-                            .padding(horizontal = 10.dp, vertical = 4.dp)
-                    ) {
+                    Column {
+                        Text("Item Status", fontSize = 12.sp, color = TextGray)
                         Text(
-                            text = quantity,
-                            fontSize = 12.sp,
-                            color = TextGray,
-                            fontWeight = FontWeight.Medium
+                            text = itemStatus,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = BGBlack
                         )
+                    }
+
+                    // Show cancel button if item is not already cancelled
+                    if (itemStatus.lowercase() != "cancelled") {
+                        Button(
+                            onClick = onCancelClick,
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF6B6B)),
+                            shape = RoundedCornerShape(6.dp),
+                            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
+                            modifier = Modifier.height(32.dp)
+                        ) {
+                            Text("Cancel Item", color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
+                        }
+                    }
+                }
+            }
+
+            // Show cancellation details if item was cancelled
+            if (!cancellationDetails?.cancelledAt.isNullOrBlank()) {
+                HorizontalDivider(color = BorderColour.copy(alpha = 0.3f), thickness = 0.5.dp)
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp)
+                ) {
+                    Text("Cancellation Details", fontSize = 12.sp, color = TextGray, fontWeight = FontWeight.SemiBold)
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text("Cancelled At: ${cancellationDetails?.cancelledAt ?: "--"}", fontSize = 11.sp, color = BGBlack)
+                    Text("Previous Status: ${cancellationDetails?.previousStatus ?: "--"}", fontSize = 11.sp, color = BGBlack)
+                    if (!cancellationDetails?.reason.isNullOrBlank()) {
+                        Text("Reason: ${cancellationDetails?.reason}", fontSize = 11.sp, color = BGBlack)
                     }
                 }
             }
@@ -520,3 +622,74 @@ private fun getActiveStatusIndex(currentStatus: String?, steps: List<Pair<String
     return if (mappedIndex >= 0) mappedIndex else steps.indexOfFirst { !it.second }
 }
 
+@Composable
+fun CancelOrderDialog(
+    onDismiss: () -> Unit,
+    onConfirm: (String) -> Unit,
+    isLoading: Boolean = false
+) {
+    var reason by remember { mutableStateOf("") }
+
+    AlertDialog(
+        onDismissRequest = { if (!isLoading) onDismiss() },
+        title = {
+            Text(
+                text = "Cancel Item",
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp
+            )
+        },
+        text = {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    text = "Please provide a reason for cancellation:",
+                    fontSize = 14.sp,
+                    color = TextGray,
+                    modifier = Modifier.padding(bottom = 12.dp)
+                )
+                TextField(
+                    value = reason,
+                    onValueChange = { reason = it },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(100.dp),
+                    label = { Text("Reason") },
+                    shape = RoundedCornerShape(8.dp),
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color(0xFFF5F5F5),
+                        unfocusedContainerColor = Color(0xFFF5F5F5),
+                        focusedIndicatorColor = BGBlack,
+                        unfocusedIndicatorColor = BorderColour
+                    ),
+                    maxLines = 4
+                )
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = { onConfirm(reason) },
+                enabled = reason.isNotBlank() && !isLoading,
+                colors = ButtonDefaults.buttonColors(containerColor = BGBlack)
+            ) {
+                if (isLoading) {
+                    CircularProgressIndicator(
+                        color = Color.White,
+                        modifier = Modifier.size(16.dp),
+                        strokeWidth = 2.dp
+                    )
+                } else {
+                    Text("Confirm", color = Color.White)
+                }
+            }
+        },
+        dismissButton = {
+            OutlinedButton(
+                onClick = onDismiss,
+                enabled = !isLoading,
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = BGBlack)
+            ) {
+                Text("Cancel")
+            }
+        }
+    )
+}

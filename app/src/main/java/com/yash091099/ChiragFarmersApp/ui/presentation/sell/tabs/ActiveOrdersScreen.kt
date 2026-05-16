@@ -112,7 +112,7 @@ fun ActiveOrdersScreen(
                     data = state.data,
                     navController = navController,
                     onStatusUpdate = { status ->
-                        viewModel.updateOrderStatus(selectedOrderId, status)
+                        viewModel.updateOrderStatus(selectedOrderId, state.data.productId.orEmpty(), status)
                     }
                 )
             }

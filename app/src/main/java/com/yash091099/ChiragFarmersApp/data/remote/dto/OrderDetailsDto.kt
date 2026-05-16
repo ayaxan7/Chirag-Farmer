@@ -1,5 +1,7 @@
 package com.yash091099.ChiragFarmersApp.data.remote.dto
 
+import com.google.gson.annotations.SerializedName
+
 data class OrderDetailsResponse(
     val success: Boolean,
     val message: String,
@@ -41,5 +43,8 @@ data class OrderDetailItem(
     val sellerName: String?,
     val orderNumber: String?,
     val pricePaid: Double?,
-    val quantity: String?
+    val quantity: String?,
+    val productId: String? = null,
+    val itemStatus: String? = null,
+    val cancellationDetails: CancellationDetailsDto? = null
 )
