@@ -104,263 +104,312 @@ fun HomeScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(horizontal = 16.dp)
+//                .padding(horizontal = 16.dp)
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Only show profile incomplete image if profile is not complete
-            if (!isProfileComplete) {
+            Column(
+                modifier = Modifier.padding(horizontal = 16.dp)
+            ) {
+                // Only show profile incomplete image if profile is not complete
+                if (!isProfileComplete) {
+                    Image(
+                        painter = painterResource(R.drawable.profile_incomplete_image),
+                        contentDescription = "Profile Incomplete Image",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                navController.navigate(Route.Register.path)
+                            },
+                        contentScale = ContentScale.FillWidth
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+                BookServiceCard(
+                    navController = navController
+                )
+                // Smart Farmer Carousel
+                ImageCarousel(
+                    images = carouselImages,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                // Buy Products Section
+                CategoryHeader(
+                    category = "Buy Products For Your Farm",
+                    btnText = "View All",
+                    onClick = {
+                        navController.navigate(Route.Buy.path)
+                    }
+                )
+                LazyRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    items(productCategories) { category ->
+                        ProductCategoryCard(
+                            title = category.first,
+                            imageRes = category.second,
+                            onClick = {
+                                val categoryName = when {
+                                    category.first.contains(
+                                        "Agriculture",
+                                        ignoreCase = true
+                                    ) -> "Agriculture Drone"
+
+                                    category.first.equals("Seeds", ignoreCase = true) -> "Seeds"
+                                    category.first.equals(
+                                        "Sprayer",
+                                        ignoreCase = true
+                                    ) -> "Sprayers"
+
+                                    category.first.equals(
+                                        "Tractors",
+                                        ignoreCase = true
+                                    ) -> "Tractors"
+
+                                    category.first.equals(
+                                        "Harvesting Machines",
+                                        ignoreCase = true
+                                    ) -> "Harvesting Machines"
+
+                                    else -> ""
+                                }
+                                if (categoryName.isNotEmpty()) {
+                                    navController.navigate(
+                                        Route.BuyCategory.createRoute(
+                                            categoryName,
+                                            R.drawable.buy_banner
+                                        )
+                                    )
+                                }
+                            }
+                        )
+                    }
+                }
+
+                // Display products based on UI state
+                when (homeMixedProductsUiState) {
+                    is HomeMixedProductsUiState.Loading -> {
+                        Spacer(modifier = Modifier.height(32.dp))
+                        CircularProgressIndicator(
+                            modifier = Modifier.align(Alignment.CenterHorizontally),
+                            color = Color.Black
+                        )
+                        Spacer(modifier = Modifier.height(32.dp))
+                    }
+
+                    is HomeMixedProductsUiState.Success -> {
+                        val successState =
+                            homeMixedProductsUiState as HomeMixedProductsUiState.Success
+
+                        // Smart Farming Products — show max 2 items, 1 row of 2
+                        if (successState.smartFarmingProducts.isNotEmpty()) {
+                            CategoryHeader(
+                                category = "Smart Farming",
+                                btnText = "View All",
+                                onClick = {
+                                    navController.navigate(
+                                        Route.BuyCategory.createRoute(
+                                            "Smart Farming",
+                                            R.drawable.buy_banner
+                                        )
+                                    )
+                                }
+                            )
+                            val smartFarmingItems = successState.smartFarmingProducts.take(2)
+                            smartFarmingItems.chunked(2).forEach { rowItems ->
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                                ) {
+                                    rowItems.forEach { product ->
+                                        CommonProductCard(
+                                            modifier = Modifier
+                                                .weight(1f)
+                                                .padding(bottom = 12.dp),
+                                            product = CommonProductCardData(
+                                                imageRes = 0,
+                                                imageUrl = product.imageUrl ?: "",
+                                                productName = product.productName,
+                                                brandName = product.sellerName,
+                                                currentPrice = product.finalPrice.toString(),
+                                                originalPrice = product.originalPrice.toString(),
+                                                rating = "4.5"
+                                            ),
+                                            onClick = {
+                                                navController.navigate(
+                                                    Route.ProductDetails.createRoute(
+                                                        product.id
+                                                    )
+                                                )
+                                            }
+                                        )
+                                    }
+                                    // Fill empty slot if odd number
+                                    if (rowItems.size == 1) {
+                                        Spacer(modifier = Modifier.weight(1f))
+                                    }
+                                }
+                            }
+                        }
+
+                        // Seeds Products — show max 2 items, 1 row of 2
+                        if (successState.seedProducts.isNotEmpty()) {
+                            CategoryHeader(
+                                category = "Seeds",
+                                btnText = "View All",
+                                onClick = {
+                                    navController.navigate(
+                                        Route.BuyCategory.createRoute(
+                                            "Seeds",
+                                            R.drawable.buy_banner
+                                        )
+                                    )
+                                }
+                            )
+                            val seedItems = successState.seedProducts.take(2)
+                            seedItems.chunked(2).forEach { rowItems ->
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                                ) {
+                                    rowItems.forEach { product ->
+                                        CommonProductCard(
+                                            modifier = Modifier
+                                                .weight(1f)
+                                                .padding(bottom = 12.dp),
+                                            product = CommonProductCardData(
+                                                imageRes = 0,
+                                                imageUrl = product.imageUrl ?: "",
+                                                productName = product.productName,
+                                                brandName = product.sellerName,
+                                                currentPrice = product.finalPrice.toString(),
+                                                originalPrice = product.originalPrice.toString(),
+                                                rating = "4.5"
+                                            ),
+                                            onClick = {
+                                                navController.navigate(
+                                                    Route.ProductDetails.createRoute(
+                                                        product.id
+                                                    )
+                                                )
+                                            }
+                                        )
+                                    }
+                                    // Fill empty slot if odd number
+                                    if (rowItems.size == 1) {
+                                        Spacer(modifier = Modifier.weight(1f))
+                                    }
+                                }
+                            }
+                        }
+
+                        // Popular Products — show max 4 items, 2 rows of 2
+                        if (successState.popularProducts.isNotEmpty()) {
+                            CategoryHeader(
+                                category = "Popular Products",
+                                btnText = "View All",
+                                onClick = {
+                                    navController.navigate(
+                                        Route.BuyCategory.createRoute(
+                                            "Popular Products",
+                                            R.drawable.buy_banner
+                                        )
+                                    )
+                                }
+                            )
+                            val popularItems = successState.popularProducts.take(4)
+                            popularItems.chunked(2).forEach { rowItems ->
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                                ) {
+                                    rowItems.forEach { product ->
+                                        CommonProductCard(
+                                            modifier = Modifier
+                                                .weight(1f)
+                                                .padding(bottom = 12.dp),
+                                            product = CommonProductCardData(
+                                                imageRes = 0,
+                                                imageUrl = product.imageUrl ?: "",
+                                                productName = product.productName,
+                                                brandName = product.sellerName,
+                                                currentPrice = product.finalPrice.toString(),
+                                                originalPrice = product.originalPrice.toString(),
+                                                rating = "4.5"
+                                            ),
+                                            onClick = {
+                                                navController.navigate(
+                                                    Route.ProductDetails.createRoute(
+                                                        product.id
+                                                    )
+                                                )
+                                            }
+                                        )
+                                    }
+                                    // Fill empty slot if odd number
+                                    if (rowItems.size == 1) {
+                                        Spacer(modifier = Modifier.weight(1f))
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    is HomeMixedProductsUiState.Error -> {
+                        Spacer(modifier = Modifier.height(32.dp))
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = (homeMixedProductsUiState as HomeMixedProductsUiState.Error).message,
+                                color = Color.Red,
+                                fontSize = 14.sp
+                            )
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Button(onClick = { viewModel.retryHomeMixedProducts() }) {
+                                Text("Retry")
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(32.dp))
+                    }
+                }
+
+                CategoryHeader(
+                    category = "Our USPs"
+                )
                 Image(
-                    painter = painterResource(R.drawable.profile_incomplete_image),
-                    contentDescription = "Profile Incomplete Image",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            navController.navigate(Route.Register.path)
-                        },
+                    painter = painterResource(R.drawable.our_usps),
+                    contentDescription = "USPs",
+                    modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.FillWidth
                 )
                 Spacer(modifier = Modifier.height(16.dp))
             }
-            BookServiceCard(
-                navController = navController
-            )
-            // Smart Farmer Carousel
-            ImageCarousel(
-                images = carouselImages,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            // Buy Products Section
-            CategoryHeader(
-                category = "Buy Products For Your Farm",
-                btnText = "View All",
-                onClick = {
-                    navController.navigate(Route.Buy.path)
-                }
-            )
-            LazyRow(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(productCategories) { category ->
-                    ProductCategoryCard(
-                        title = category.first,
-                        imageRes = category.second,
-                        onClick = {
-                            val categoryName = when {
-                                category.first.contains("Agriculture", ignoreCase = true) -> "Agriculture Drone"
-                                category.first.equals("Seeds", ignoreCase = true) -> "Seeds"
-                                category.first.equals("Sprayer", ignoreCase = true) -> "Sprayers"
-                                category.first.equals("Tractors", ignoreCase = true) -> "Tractors"
-                                category.first.equals("Harvesting Machines", ignoreCase = true) -> "Harvesting Machines"
-                                else -> ""
-                            }
-                            if (categoryName.isNotEmpty()) {
-                                navController.navigate(
-                                    Route.BuyCategory.createRoute(categoryName, R.drawable.buy_banner)
-                                )
-                            }
-                        }
-                    )
-                }
-            }
-
-            // Display products based on UI state
-            when (homeMixedProductsUiState) {
-                is HomeMixedProductsUiState.Loading -> {
-                    Spacer(modifier = Modifier.height(32.dp))
-                    CircularProgressIndicator(
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
-                        color = Color.Black
-                    )
-                    Spacer(modifier = Modifier.height(32.dp))
-                }
-
-                is HomeMixedProductsUiState.Success -> {
-                    val successState = homeMixedProductsUiState as HomeMixedProductsUiState.Success
-
-                    // Smart Farming Products — show max 2 items, 1 row of 2
-                    if (successState.smartFarmingProducts.isNotEmpty()) {
-                        CategoryHeader(
-                            category = "Smart Farming",
-                            btnText = "View All",
-                            onClick = {
-                                navController.navigate(Route.BuyCategory.createRoute("Smart Farming", R.drawable.buy_banner))
-                            }
-                        )
-                        val smartFarmingItems = successState.smartFarmingProducts.take(2)
-                        smartFarmingItems.chunked(2).forEach { rowItems ->
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(12.dp)
-                            ) {
-                                rowItems.forEach { product ->
-                                    CommonProductCard(
-                                        modifier = Modifier
-                                            .weight(1f)
-                                            .padding(bottom = 12.dp),
-                                        product = CommonProductCardData(
-                                            imageRes = 0,
-                                            imageUrl = product.imageUrl ?: "",
-                                            productName = product.productName,
-                                            brandName = product.sellerName,
-                                            currentPrice = product.finalPrice.toString(),
-                                            originalPrice = product.originalPrice.toString(),
-                                            rating = "4.5"
-                                        ),
-                                        onClick = {
-                                            navController.navigate(Route.ProductDetails.createRoute(product.id))
-                                        }
-                                    )
-                                }
-                                // Fill empty slot if odd number
-                                if (rowItems.size == 1) {
-                                    Spacer(modifier = Modifier.weight(1f))
-                                }
-                            }
-                        }
-                    }
-
-                    // Seeds Products — show max 2 items, 1 row of 2
-                    if (successState.seedProducts.isNotEmpty()) {
-                        CategoryHeader(
-                            category = "Seeds",
-                            btnText = "View All",
-                            onClick = {
-                                navController.navigate(Route.BuyCategory.createRoute("Seeds", R.drawable.buy_banner))
-                            }
-                        )
-                        val seedItems = successState.seedProducts.take(2)
-                        seedItems.chunked(2).forEach { rowItems ->
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(12.dp)
-                            ) {
-                                rowItems.forEach { product ->
-                                    CommonProductCard(
-                                        modifier = Modifier
-                                            .weight(1f)
-                                            .padding(bottom = 12.dp),
-                                        product = CommonProductCardData(
-                                            imageRes = 0,
-                                            imageUrl = product.imageUrl ?: "",
-                                            productName = product.productName,
-                                            brandName = product.sellerName,
-                                            currentPrice = product.finalPrice.toString(),
-                                            originalPrice = product.originalPrice.toString(),
-                                            rating = "4.5"
-                                        ),
-                                        onClick = {
-                                            navController.navigate(Route.ProductDetails.createRoute(product.id))
-                                        }
-                                    )
-                                }
-                                // Fill empty slot if odd number
-                                if (rowItems.size == 1) {
-                                    Spacer(modifier = Modifier.weight(1f))
-                                }
-                            }
-                        }
-                    }
-
-                    // Popular Products — show max 4 items, 2 rows of 2
-                    if (successState.popularProducts.isNotEmpty()) {
-                        CategoryHeader(
-                            category = "Popular Products",
-                            btnText = "View All",
-                            onClick = {
-                                navController.navigate(Route.BuyCategory.createRoute("Popular Products", R.drawable.buy_banner))
-                            }
-                        )
-                        val popularItems = successState.popularProducts.take(4)
-                        popularItems.chunked(2).forEach { rowItems ->
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(12.dp)
-                            ) {
-                                rowItems.forEach { product ->
-                                    CommonProductCard(
-                                        modifier = Modifier
-                                            .weight(1f)
-                                            .padding(bottom = 12.dp),
-                                        product = CommonProductCardData(
-                                            imageRes = 0,
-                                            imageUrl = product.imageUrl ?: "",
-                                            productName = product.productName,
-                                            brandName = product.sellerName,
-                                            currentPrice = product.finalPrice.toString(),
-                                            originalPrice = product.originalPrice.toString(),
-                                            rating = "4.5"
-                                        ),
-                                        onClick = {
-                                            navController.navigate(Route.ProductDetails.createRoute(product.id))
-                                        }
-                                    )
-                                }
-                                // Fill empty slot if odd number
-                                if (rowItems.size == 1) {
-                                    Spacer(modifier = Modifier.weight(1f))
-                                }
-                            }
-                        }
-                    }
-                }
-
-                is HomeMixedProductsUiState.Error -> {
-                    Spacer(modifier = Modifier.height(32.dp))
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = (homeMixedProductsUiState as HomeMixedProductsUiState.Error).message,
-                            color = Color.Red,
-                            fontSize = 14.sp
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Button(onClick = { viewModel.retryHomeMixedProducts() }) {
-                            Text("Retry")
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(32.dp))
-                }
-            }
-
-            CategoryHeader(
-                category = "Our USPs"
-            )
             Image(
-                painter = painterResource(R.drawable.our_usps),
-                contentDescription = "USPs",
+                painter = painterResource(R.drawable.home_footer),
+                contentDescription = "Footer",
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.FillWidth
             )
-            Text(
-                text = "You are successfully logged in as a farmer.",
-                fontSize = 16.sp
-            )
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            Button(
-                onClick = {
-                    scope.launch {
-                        // Logout using ViewModel
-                        viewModel.logout()
-                        // Navigate back to log in screen
-                        navController.navigate(Route.Auth.path) {
-                            popUpTo(0) { inclusive = true }
-                        }
-                    }
-                }
+            Column(
+                modifier = Modifier.padding(horizontal = 16.dp)
             ) {
-                Text(text = "Logout")
+                CategoryHeader(
+                    category = "Our clients"
+                )
+                Image(
+                    painter = painterResource(R.drawable.clients_list),
+                    contentDescription = "Clients List",
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.FillWidth
+                )
+                Spacer(modifier = Modifier.height(16.dp))
             }
-
-            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }
