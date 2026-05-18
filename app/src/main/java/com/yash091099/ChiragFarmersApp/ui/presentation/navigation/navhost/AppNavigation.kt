@@ -44,6 +44,7 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.profile.ProfileScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.profile.ProfileViewModel
 import com.yash091099.ChiragFarmersApp.ui.presentation.orders.MyOrdersScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.orders.MyOrderDetailsScreen
+import com.yash091099.ChiragFarmersApp.ui.presentation.orders.DropReviewScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.buy.screens.seller.SellerProfileScreen
 
 @Composable
@@ -264,6 +265,13 @@ fun AppNavigation(
                 sellerName = sellerName,
                 sellerImage = sellerImage
             )
+        }
+        composable(
+            Route.DropReview.path,
+            arguments = listOf(navArgument("orderId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val orderId = Uri.decode(backStackEntry.arguments?.getString("orderId") ?: "")
+            DropReviewScreen(navController = navController, orderId = orderId)
         }
     }
 }

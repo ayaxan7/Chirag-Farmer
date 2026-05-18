@@ -77,4 +77,7 @@ sealed class Route(val path: String) {
             return if (params.isEmpty()) base else "$base?${params.joinToString("&")}"
         }
     }
+    object DropReview : Route("drop_review/{orderId}") {
+        fun createRoute(orderId: String): String = "drop_review/${Uri.encode(orderId)}"
+    }
 }

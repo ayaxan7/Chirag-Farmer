@@ -198,7 +198,7 @@ fun OrderCard(order: UserPlacedOrder,navController: NavHostController) {
                 )
             }
             Button(
-                onClick = { /* TODO */ },
+                onClick = { navController.navigate(Route.DropReview.createRoute(order.orderObjectId)) },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1A1C1E)),
                 shape = RoundedCornerShape(20.dp),
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
