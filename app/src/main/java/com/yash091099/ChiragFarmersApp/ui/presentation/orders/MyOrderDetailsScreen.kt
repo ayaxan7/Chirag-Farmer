@@ -44,6 +44,7 @@ import com.yash091099.ChiragFarmersApp.ui.theme.*
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.foundation.Canvas
 import androidx.compose.ui.platform.LocalClipboardManager
+import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost.Route
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
@@ -106,7 +107,7 @@ fun MyOrderDetailsScreen(
                     Text("Reorder", fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
                 }
                 Button(
-                    onClick = {},
+                    onClick = {navController.navigate(Route.DropReview.createRoute(orderId)) },
                     modifier = Modifier
                         .weight(1f)
                         .height(48.dp),
