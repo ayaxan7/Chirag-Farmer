@@ -57,6 +57,7 @@ import java.util.TimeZone
 fun MyOrderDetailsScreen(
     navController: NavHostController,
     orderId: String,
+    productId: String? = null,
     viewModel: OrderDetailsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -92,6 +93,7 @@ fun MyOrderDetailsScreen(
         },
         containerColor = BGWhite,
         bottomBar = {
+            val primaryItem = (uiState as? OrderDetailsUiState.Success)?.data?.items?.firstOrNull()
             val actionMode = resolveBottomActionMode(
                 (uiState as? OrderDetailsUiState.Success)?.data?.orderStatus
             )
@@ -118,7 +120,18 @@ fun MyOrderDetailsScreen(
 
                     if (actionMode == BottomActionMode.BOTH) {
                         Button(
-                            onClick = { navController.navigate(Route.DropReview.createRoute(orderId)) },
+                            onClick = {
+                                navController.navigate(
+                                    Route.DropReview.createRoute(
+                                        orderId = orderId,
+                                        productId = productId ?: primaryItem?.productId.orEmpty(),
+                                        imageUrl = primaryItem?.imageUrl,
+                                        productName = primaryItem?.productName,
+                                        sellerName = primaryItem?.sellerName,
+                                        pricePaid = primaryItem?.pricePaid?.toString()
+                                    )
+                                )
+                            },
                             modifier = Modifier
                                 .weight(1f)
                                 .height(48.dp),

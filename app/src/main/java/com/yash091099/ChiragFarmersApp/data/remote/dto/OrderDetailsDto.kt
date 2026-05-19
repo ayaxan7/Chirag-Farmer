@@ -44,6 +44,7 @@ data class OrderDetailItem(
     val orderNumber: String?,
     val pricePaid: Double?,
     val quantity: String?,
+    @SerializedName(value = "productId", alternate = ["product", "productObjectId", "product_id", "itemProductId"])
     val productId: String? = null,
     val itemStatus: String? = null,
     val cancellationDetails: CancellationDetailsDto? = null

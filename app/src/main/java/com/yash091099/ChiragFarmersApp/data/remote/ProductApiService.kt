@@ -5,6 +5,8 @@ import com.yash091099.ChiragFarmersApp.data.remote.dto.AddProductResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.DeleteProductRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.DeleteProductResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.MixedProductsResponse
+import com.yash091099.ChiragFarmersApp.data.remote.dto.RateProductRequest
+import com.yash091099.ChiragFarmersApp.data.remote.dto.RateProductResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailedResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailsResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductResponseDto
@@ -98,4 +100,10 @@ ProductApiService {
         @Query("page") page: Int = 1,
         @Query("limit") limit: Int = 10
     ): SellerDetailsResponse
+
+    @POST("api/farmers/rate-product")
+    suspend fun rateProduct(
+        @Header("Authorization") token: String,
+        @Body request: RateProductRequest
+    ): RateProductResponse
 }

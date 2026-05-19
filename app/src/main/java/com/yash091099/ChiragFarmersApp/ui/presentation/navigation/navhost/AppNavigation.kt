@@ -243,10 +243,14 @@ fun AppNavigation(
         }
         composable(
             Route.OrderDetails.path,
-            arguments = listOf(navArgument("orderId") { type = NavType.StringType })
+            arguments = listOf(
+                navArgument("orderId") { type = NavType.StringType },
+                navArgument("productId") { type = NavType.StringType; nullable = true; defaultValue = null }
+            )
         ) { backStackEntry ->
             val orderId = Uri.decode(backStackEntry.arguments?.getString("orderId") ?: "")
-            MyOrderDetailsScreen(navController = navController, orderId = orderId)
+            val productId = backStackEntry.arguments?.getString("productId")?.let { Uri.decode(it) }
+            MyOrderDetailsScreen(navController, orderId, productId)
         }
         composable(
             Route.SellerProfile.path,
@@ -268,10 +272,30 @@ fun AppNavigation(
         }
         composable(
             Route.DropReview.path,
-            arguments = listOf(navArgument("orderId") { type = NavType.StringType })
+            arguments = listOf(
+                navArgument("orderId") { type = NavType.StringType },
+                navArgument("productId") { type = NavType.StringType },
+                navArgument("imageUrl") { type = NavType.StringType; nullable = true; defaultValue = null },
+                navArgument("productName") { type = NavType.StringType; nullable = true; defaultValue = null },
+                navArgument("sellerName") { type = NavType.StringType; nullable = true; defaultValue = null },
+                navArgument("pricePaid") { type = NavType.StringType; nullable = true; defaultValue = null }
+            )
         ) { backStackEntry ->
             val orderId = Uri.decode(backStackEntry.arguments?.getString("orderId") ?: "")
-            DropReviewScreen(navController = navController, orderId = orderId)
+            val productId = Uri.decode(backStackEntry.arguments?.getString("productId") ?: "")
+            val imageUrl = backStackEntry.arguments?.getString("imageUrl")?.let(Uri::decode)
+            val productName = backStackEntry.arguments?.getString("productName")?.let(Uri::decode)
+            val sellerName = backStackEntry.arguments?.getString("sellerName")?.let(Uri::decode)
+            val pricePaid = backStackEntry.arguments?.getString("pricePaid")?.let(Uri::decode)
+            DropReviewScreen(
+                navController = navController,
+                orderId = orderId,
+                productId = productId,
+                imageUrl = imageUrl,
+                productName = productName,
+                sellerName = sellerName,
+                pricePaid = pricePaid
+            )
         }
     }
 }

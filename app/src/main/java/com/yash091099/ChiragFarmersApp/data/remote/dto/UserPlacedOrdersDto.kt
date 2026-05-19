@@ -1,5 +1,7 @@
 package com.yash091099.ChiragFarmersApp.data.remote.dto
 
+import com.google.gson.annotations.SerializedName
+
 data class UserPlacedOrdersResponse(
     val success: Boolean,
     val message: String,
@@ -17,6 +19,7 @@ data class UserPlacedOrder(
     val productName: String,
     val sellerName: String,
     val productPrice: Double,
+    @SerializedName(value = "productId", alternate = ["product", "productObjectId", "product_id", "itemProductId"])
     val productId: String? = null,
     val itemStatus: String? = null
 )

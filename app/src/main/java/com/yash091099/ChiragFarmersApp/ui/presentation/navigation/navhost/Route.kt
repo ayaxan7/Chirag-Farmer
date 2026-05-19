@@ -64,9 +64,15 @@ sealed class Route(val path: String) {
      }
     object PaymentSuccess: Route("payment_success")
     object MyOrders:Route("orders")
-    object OrderDetails : Route("order_details/{orderId}") {
-        fun createRoute(orderId: String): String = "order_details/${Uri.encode(orderId)}"
-    }
+     object OrderDetails : Route("order_details/{orderId}?productId={productId}") {
+         fun createRoute(orderId: String, productId: String? = null): String {
+             return if (productId != null) {
+                 "order_details/${Uri.encode(orderId)}?productId=${Uri.encode(productId)}"
+             } else {
+                 "order_details/${Uri.encode(orderId)}"
+             }
+         }
+     }
     object SellerProfile : Route("seller_profile/{sellerId}?sellerName={sellerName}&sellerImage={sellerImage}") {
         fun createRoute(sellerId: String, sellerName: String? = null, sellerImage: String? = null): String {
             val base = "seller_profile/${Uri.encode(sellerId)}"
@@ -77,7 +83,24 @@ sealed class Route(val path: String) {
             return if (params.isEmpty()) base else "$base?${params.joinToString("&")}"
         }
     }
-    object DropReview : Route("drop_review/{orderId}") {
-        fun createRoute(orderId: String): String = "drop_review/${Uri.encode(orderId)}"
+    object DropReview : Route("drop_review/{orderId}?productId={productId}&imageUrl={imageUrl}&productName={productName}&sellerName={sellerName}&pricePaid={pricePaid}") {
+        fun createRoute(
+            orderId: String,
+            productId: String,
+            imageUrl: String? = null,
+            productName: String? = null,
+            sellerName: String? = null,
+            pricePaid: String? = null
+        ): String {
+            val base = "drop_review/${Uri.encode(orderId)}"
+            val params = buildList {
+                add("productId=${Uri.encode(productId)}")
+                imageUrl?.let { add("imageUrl=${Uri.encode(it)}") }
+                productName?.let { add("productName=${Uri.encode(it)}") }
+                sellerName?.let { add("sellerName=${Uri.encode(it)}") }
+                pricePaid?.let { add("pricePaid=${Uri.encode(it)}") }
+            }
+            return if (params.isEmpty()) base else "$base?${params.joinToString("&")}"
+        }
     }
 }

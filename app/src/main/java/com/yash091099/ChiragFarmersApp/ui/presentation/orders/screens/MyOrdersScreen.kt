@@ -207,7 +207,7 @@ fun OrderCard(
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                navController.navigate(Route.OrderDetails.createRoute(order.orderObjectId))
+                navController.navigate(Route.OrderDetails.createRoute(order.orderObjectId, order.productId))
             },
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
@@ -254,7 +254,18 @@ fun OrderCard(
 
             if (showReviewButton) {
                 Button(
-                    onClick = { navController.navigate(Route.DropReview.createRoute(order.orderObjectId)) },
+                    onClick = {
+                        navController.navigate(
+                            Route.DropReview.createRoute(
+                                orderId = order.orderObjectId,
+                                productId = order.productId.orEmpty(),
+                                imageUrl = order.imageUrl,
+                                productName = order.productName,
+                                sellerName = order.sellerName,
+                                pricePaid = order.productPrice.toString()
+                            )
+                        )
+                    },
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1A1C1E)),
                     shape = RoundedCornerShape(20.dp),
                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
@@ -272,13 +283,5 @@ fun OrderCard(
 
         HorizontalDivider(color = LightGray.copy(alpha = 0.5f), thickness = 1.dp)
     }
-}
-
-private fun isCompletedOrder(itemStatus: String?): Boolean {
-    val status = itemStatus?.trim().orEmpty()
-    Log.d("OrderList", "itemStatus: $itemStatus")
-    return status.equals("Delivered", ignoreCase = true) ||
-        status.equals("Completed", ignoreCase = true) ||
-        status.equals("Complete", ignoreCase = true)
 }
 

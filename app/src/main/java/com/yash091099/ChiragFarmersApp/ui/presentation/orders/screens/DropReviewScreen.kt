@@ -1,7 +1,6 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.orders.screens
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -26,12 +25,14 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -46,25 +47,46 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import com.yash091099.ChiragFarmersApp.R
+import com.yash091099.ChiragFarmersApp.ui.presentation.orders.DropReviewState
+import com.yash091099.ChiragFarmersApp.ui.presentation.orders.DropReviewViewModel
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragTopBar
 import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
 import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
 import com.yash091099.ChiragFarmersApp.ui.theme.LightGray
 import com.yash091099.ChiragFarmersApp.ui.theme.TextGray
+import java.util.Locale
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DropReviewScreen(
-    navController: NavHostController, orderId: String
+    navController: NavHostController,
+    orderId: String,
+    productId: String,
+    imageUrl: String? = null,
+    productName: String? = null,
+    sellerName: String? = null,
+    pricePaid: String? = null,
+    viewModel: DropReviewViewModel = hiltViewModel()
 ) {
     var rating by remember { mutableIntStateOf(0) }
+    var reviewText by remember { mutableStateOf("") }
+    val submitState by viewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(submitState) {
+        if (submitState is DropReviewState.Success) {
+            viewModel.resetState()
+            navController.popBackStack()
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -85,26 +107,25 @@ fun DropReviewScreen(
                     .weight(1f), contentPadding = PaddingValues(16.dp)
             ) {
                 item {
-                    // Item 1
                     ReviewItemCard(
-                        imageRes = R.drawable.ic_launcher_background, // Replace with actual placeholder if needed
-                        title = "NEPTUNE BATTERY",
-                        seller = "Geolife Agritech India Pvt Ltd",
-                        price = "Rs.1999.00",
-                        deliveryDate = "Delivery by 7 June 2025"
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // Item 2
-                    ReviewItemCard(
-                        imageRes = R.drawable.ic_launcher_background, // Replace with actual placeholder if needed
-                        title = "TOMATO - FARM FRESH",
-                        seller = "Siddharth kisan",
-                        price = "Rs.49.00",
-                        deliveryDate = "Delivery by 7 June 2025"
+                        imageUrl = imageUrl,
+                        title = productName ?: "Product",
+                        seller = sellerName ?: "Seller",
+                        price = formatPrice(pricePaid)
                     )
 
                     Spacer(modifier = Modifier.height(24.dp))
+
+                    Text(
+                        text = "Order ID: $orderId",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = TextGray,
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
 
                 item {
@@ -146,7 +167,6 @@ fun DropReviewScreen(
                         modifier = Modifier.padding(bottom = 12.dp)
                     )
 
-                    var reviewText by remember { mutableStateOf("") }
                     val maxChar = 400
 
                     Box(modifier = Modifier
@@ -179,6 +199,16 @@ fun DropReviewScreen(
                             focusedIndicatorColor = Color.Transparent,
                             unfocusedIndicatorColor = Color.Transparent
                         ), modifier = Modifier.fillMaxSize()
+                        )
+                    }
+
+                    if (submitState is DropReviewState.Error) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = (submitState as DropReviewState.Error).message,
+                            color = Color.Red,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Medium
                         )
                     }
 
@@ -220,7 +250,12 @@ fun DropReviewScreen(
 
                 Button(
                     onClick = {
-                        navController.popBackStack()
+                        viewModel.submitReview(
+                            orderId = orderId,
+                            productId = productId,
+                            rating = rating,
+                            review = reviewText
+                        )
                     },
                     modifier = Modifier
                         .weight(1f)
@@ -229,14 +264,22 @@ fun DropReviewScreen(
                     colors = ButtonDefaults.buttonColors(
                         containerColor = BGBlack
                     ),
-                    enabled = rating > 0
+                    enabled = rating > 0 && submitState !is DropReviewState.Loading
                 ) {
-                    Text(
-                        "Yes, Submit",
-                        color = Color.White,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Medium
-                    )
+                    if (submitState is DropReviewState.Loading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(18.dp),
+                            color = Color.White,
+                            strokeWidth = 2.dp
+                        )
+                    } else {
+                        Text(
+                            "Yes, Submit",
+                            color = Color.White,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
                 }
             }
         }
@@ -245,7 +288,10 @@ fun DropReviewScreen(
 
 @Composable
 fun ReviewItemCard(
-    imageRes: Int, title: String, seller: String, price: String, deliveryDate: String
+    imageUrl: String?,
+    title: String,
+    seller: String,
+    price: String
 ) {
     Row(
         modifier = Modifier
@@ -254,56 +300,65 @@ fun ReviewItemCard(
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(
-            painter = painterResource(id = imageRes),
-            contentDescription = title,
+
+
+        Box(
             modifier = Modifier
                 .size(70.dp)
                 .clip(RoundedCornerShape(8.dp))
-                .border(1.dp, LightGray.copy(alpha = 0.5f), RoundedCornerShape(8.dp)),
-            contentScale = ContentScale.Crop
-        )
+                .border(
+                    1.dp, LightGray.copy(alpha = 0.5f), RoundedCornerShape(8.dp)
+                )
+        ) {
+            AsyncImage(
+                model = imageUrl,
+                contentDescription = title,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
+        }
 
         Spacer(modifier = Modifier.width(12.dp))
 
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = title, fontSize = 14.sp, fontWeight = FontWeight.Bold, color = Color.Black
-            )
-            Text(
-                text = seller,
-                fontSize = 12.sp,
-                color = TextGray,
-                modifier = Modifier.padding(top = 2.dp)
-            )
-            Text(
-                text = price,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black,
-                modifier = Modifier.padding(top = 4.dp)
-            )
-            Text(
-                text = deliveryDate,
-                fontSize = 10.sp,
-                color = TextGray,
-                modifier = Modifier.padding(top = 2.dp)
-            )
-        }
-
-        Button(
-            onClick = { /* Re-Order logic */ },
-            colors = ButtonDefaults.buttonColors(containerColor = BGBlack),
-            shape = RoundedCornerShape(20.dp),
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-            modifier = Modifier.height(36.dp)
+        Column(
+            modifier = Modifier.height(70.dp), verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                text = "Re-Order",
-                color = Color.White,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Medium
-            )
+
+            Column {
+                Text(
+                    text = title,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
+
+                Text(
+                    text = seller, fontSize = 12.sp, color = TextGray
+                )
+            }
+
+            Column {
+                Text(
+                    text = price,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
+
+            }
         }
     }
 }
+
+private fun formatPrice(pricePaid: String?): String {
+    if (pricePaid.isNullOrBlank()) return "--"
+    val value = pricePaid.toDoubleOrNull()
+    return if (value != null) "Rs.${
+        String.format(
+            Locale.getDefault(),
+            "%.2f",
+            value
+        )
+    }" else pricePaid
+}
+
