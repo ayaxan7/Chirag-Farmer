@@ -43,15 +43,13 @@ fun ReviewCard(
     onLikeClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 12.dp)
-    ) {
+    Column {
+        // Top section
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.Top
         ) {
+
             // User Image
             Image(
                 painter = painterResource(id = userImage),
@@ -65,7 +63,8 @@ fun ReviewCard(
             Spacer(modifier = Modifier.width(12.dp))
 
             Column(modifier = Modifier.weight(1f)) {
-                // User name and time
+
+                // Username + time
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
@@ -77,26 +76,31 @@ fun ReviewCard(
                         color = Color.Black,
                         modifier = Modifier.weight(1f)
                     )
+
                     Text(
                         text = timeAgo,
-                        fontSize = 11.sp,
-                        color = Color(0xFF999999)
+                        fontSize = 11.sp
                     )
                 }
 
-                Spacer(modifier = Modifier.height(4.dp))
-
-                // Star rating
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                // Rating
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     repeat(5) { index ->
                         Icon(
                             imageVector = Icons.Default.Star,
-                            contentDescription = null,
-                            tint = if (index < rating.toInt()) Color(0xFFFFC107) else Color(0xFFE0E0E0),
+                            contentDescription = "Rating",
+                            tint = if (index < rating.toInt())
+                                Color(0xFFFFC107)
+                            else
+                                Color(0xFFE0E0E0),
                             modifier = Modifier.size(14.dp)
                         )
                     }
+
                     Spacer(modifier = Modifier.width(4.dp))
+
                     Text(
                         text = rating.toString(),
                         fontSize = 12.sp,
@@ -104,60 +108,57 @@ fun ReviewCard(
                         color = Color.Black
                     )
                 }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Review text
-                Text(
-                    text = reviewText,
-                    fontSize = 13.sp,
-                    color = Color(0xFF666666),
-                    lineHeight = 18.sp
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Like button
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconButton(
-                        onClick = onLikeClick,
-                        modifier = Modifier.size(24.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.ThumbUp,
-                            contentDescription = "Like",
-                            tint = Color(0xFF666666),
-                            modifier = Modifier.size(16.dp)
-                        )
-                    }
-                    Text(
-                        text = likeCount.toString(),
-                        fontSize = 12.sp,
-                        color = Color(0xFF666666)
-                    )
-                    IconButton(
-                        onClick = onLikeClick,
-                        modifier = Modifier.size(24.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.ThumbDown,
-                            contentDescription = "Unlike",
-                            tint = Color(0xFF666666),
-                            modifier = Modifier.size(16.dp)
-                        )
-                    }
-                    Text(
-                        text = unLikeCount.toString(),
-                        fontSize = 12.sp,
-                        color = Color(0xFF666666)
-                    )
-                }
             }
         }
 
-        Spacer(modifier = Modifier.height(12.dp))
-        HorizontalDivider(color = BorderColour, thickness = 1.dp)
+        Spacer(modifier = Modifier.height(10.dp))
+
+        // Review text aligned from image start
+        Text(
+            text = reviewText,
+            fontSize = 13.sp,
+            color = Color(0xFF666666),
+            lineHeight = 18.sp
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Like/Dislike row aligned from image start
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(
+                onClick = onLikeClick,
+                modifier = Modifier.size(24.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.ThumbUp,
+                    contentDescription = "Like",
+                    tint = Color(0xFF666666),
+                    modifier = Modifier.size(16.dp)
+                )
+            }
+            Text(
+                text = likeCount.toString(),
+                fontSize = 12.sp,
+                color = Color(0xFF666666)
+            )
+            IconButton(
+                onClick = onUnLikeClick,
+                modifier = Modifier.size(24.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.ThumbDown,
+                    contentDescription = "Unlike",
+                    tint = Color(0xFF666666),
+                    modifier = Modifier.size(16.dp)
+                )
+            }
+            Text(
+                text = unLikeCount.toString(),
+                fontSize = 12.sp,
+                color = Color(0xFF666666)
+            )
+        }
     }
 }
