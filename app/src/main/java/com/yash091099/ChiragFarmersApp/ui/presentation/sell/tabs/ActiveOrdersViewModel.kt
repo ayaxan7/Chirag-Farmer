@@ -10,6 +10,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.yash091099.ChiragFarmersApp.domain.model.Order
 import com.yash091099.ChiragFarmersApp.domain.usecase.UpdateOrderStatusUseCase
+import com.yash091099.ChiragFarmersApp.data.remote.dto.CancelOrderRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,17 +25,28 @@ sealed class OrderTrackingState {
     data class Error(val message: String) : OrderTrackingState()
 }
 
+sealed class CancelOrderState {
+    data object Idle : CancelOrderState()
+    data object Loading : CancelOrderState()
+    data class Success(val message: String) : CancelOrderState()
+    data class Error(val message: String) : CancelOrderState()
+}
+
 @HiltViewModel
 class ActiveOrdersViewModel @Inject constructor(
     getActiveOrdersUseCase: GetActiveOrdersUseCase,
     private val getOrderTrackingUseCase: GetOrderTrackingUseCase,
-    private val updateOrderStatusUseCase: UpdateOrderStatusUseCase
+    private val updateOrderStatusUseCase: UpdateOrderStatusUseCase,
+    private val repository: com.yash091099.ChiragFarmersApp.domain.repository.OrderRepository
 ) : ViewModel() {
 
     private val activeOrdersFlow: Flow<PagingData<Order>> = getActiveOrdersUseCase().cachedIn(viewModelScope)
 
     private val _orderTrackingState = MutableStateFlow<OrderTrackingState>(OrderTrackingState.Idle)
     val orderTrackingState: StateFlow<OrderTrackingState> = _orderTrackingState.asStateFlow()
+
+    private val _cancelOrderState = MutableStateFlow<CancelOrderState>(CancelOrderState.Idle)
+    val cancelOrderState: StateFlow<CancelOrderState> = _cancelOrderState.asStateFlow()
 
     val activeOrders: Flow<PagingData<Order>>
         get() = activeOrdersFlow
@@ -73,6 +85,36 @@ class ActiveOrdersViewModel @Inject constructor(
                 // Error handling could be added here
             }
         }
+    }
+
+    fun cancelOrder(orderId: String, productId: String, reason: String) {
+        viewModelScope.launch {
+            _cancelOrderState.value = CancelOrderState.Loading
+            repository.sellerCancelOrder(
+                CancelOrderRequest(
+                    orderId = orderId,
+                    productId = productId,
+                    reason = reason
+                )
+            ).fold(
+                onSuccess = { response ->
+                    if (response.success) {
+                        _cancelOrderState.value = CancelOrderState.Success(response.message)
+                    } else {
+                        _cancelOrderState.value = CancelOrderState.Error(response.message)
+                    }
+                },
+                onFailure = { error ->
+                    _cancelOrderState.value = CancelOrderState.Error(
+                        error.message ?: "Failed to cancel order"
+                    )
+                }
+            )
+        }
+    }
+
+    fun resetCancelState() {
+        _cancelOrderState.value = CancelOrderState.Idle
     }
 }
 

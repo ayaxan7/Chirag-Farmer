@@ -1,6 +1,5 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.sell.tabs
 
-// ...existing imports...
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -22,6 +21,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -35,6 +35,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -58,6 +61,7 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.sell.screens.orderstatus.
 import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
 import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
 import com.yash091099.ChiragFarmersApp.ui.theme.BorderColour
+import com.yash091099.ChiragFarmersApp.ui.theme.ErrorRed
 import com.yash091099.ChiragFarmersApp.ui.theme.LightGray
 import com.yash091099.ChiragFarmersApp.ui.theme.TextGray
 
@@ -121,7 +125,11 @@ fun ActiveOrdersScreen(
                         viewModel.updateOrderStatus(
                             selectedOrderId, state.data.productId.orEmpty(), status
                         )
-                    })
+                    },
+                    onNavigateBack = {
+                        onOrderClick(null)
+                    }
+                )
             }
 
             is OrderTrackingState.Idle -> Unit
@@ -403,8 +411,20 @@ fun OrderDetailsView(
     orderId: String,
     data: com.yash091099.ChiragFarmersApp.data.remote.dto.OrderTrackingData,
     navController: NavHostController,
-    onStatusUpdate: (String) -> Unit
+    onStatusUpdate: (String) -> Unit,
+    onNavigateBack: () -> Unit = {},
+    viewModel: ActiveOrdersViewModel = hiltViewModel()
 ) {
+    var showCancelDialog by remember { mutableStateOf(false) }
+    val cancelOrderState by viewModel.cancelOrderState.collectAsState()
+
+    // Handle success and navigate back
+    LaunchedEffect(cancelOrderState) {
+        if (cancelOrderState is CancelOrderState.Success) {
+            onNavigateBack()
+            viewModel.resetCancelState()
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -446,9 +466,7 @@ fun OrderDetailsView(
                 .background(BGWhite)
         ) {
             OutlinedButton(
-                onClick = {
-                    // TODO Cancel Order
-                },
+                onClick = { showCancelDialog = true },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(42.dp),
@@ -460,8 +478,13 @@ fun OrderDetailsView(
                 colors = ButtonDefaults.outlinedButtonColors(
                     containerColor = BGWhite,
                     contentColor = BGBlack
-                )
+                ),
+                enabled = cancelOrderState !is CancelOrderState.Loading
             ) {
+                if (cancelOrderState is CancelOrderState.Loading) {
+                    CircularProgressIndicator(modifier = Modifier.size(16.dp), color = BGBlack)
+                    Spacer(modifier = Modifier.width(8.dp))
+                }
                 Icon(
                     imageVector = Icons.Default.Close,
                     contentDescription = "Cancel Order",
@@ -477,6 +500,79 @@ fun OrderDetailsView(
             }
         }
     }
+
+    // Cancel Dialog
+    if (showCancelDialog) {
+        CancelOrderDialog(
+            onDismiss = { showCancelDialog = false },
+            onConfirm = {
+                viewModel.cancelOrder(orderId, data.productId.orEmpty(), "")
+                showCancelDialog = false
+            },
+            isLoading = cancelOrderState is CancelOrderState.Loading,
+            errorMessage = if (cancelOrderState is CancelOrderState.Error) {
+                (cancelOrderState as CancelOrderState.Error).message
+            } else null
+        )
+    }
+}
+
+@Composable
+fun CancelOrderDialog(
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit,
+    isLoading: Boolean = false,
+    errorMessage: String? = null
+) {
+    AlertDialog(
+        onDismissRequest = { if (!isLoading) onDismiss() },
+        title = {
+            Text(
+                text = "Cancel Order",
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp
+            )
+        },
+        text = {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    text = "Are you sure you want to cancel this order?",
+                    fontSize = 14.sp,
+                    color = Color.Black
+                )
+                if (!errorMessage.isNullOrBlank()) {
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text(
+                        text = errorMessage,
+                        fontSize = 12.sp,
+                        color = Color.Red
+                    )
+                }
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = onConfirm,
+                enabled = !isLoading,
+                colors = ButtonDefaults.buttonColors(containerColor = ErrorRed)
+            ) {
+                if (isLoading) {
+                    CircularProgressIndicator(modifier = Modifier.size(16.dp), color = BGWhite)
+                    Spacer(modifier = Modifier.width(8.dp))
+                }
+                Text("Cancel Order", color = BGWhite)
+            }
+        },
+        dismissButton = {
+            Button(
+                onClick = onDismiss,
+                enabled = !isLoading,
+                colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray)
+            ) {
+                Text("Keep Order", color = BGBlack)
+            }
+        }
+    )
 }
 
 @Composable

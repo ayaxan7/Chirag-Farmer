@@ -62,4 +62,10 @@ interface OrderApiService {
         @Header("Authorization") token: String,
         @Body request: CancelOrderRequest
     ): CancelOrderResponse
+
+    @POST("api/farmers/orders/seller/cancel")
+    suspend fun sellerCancelOrder(
+        @Header("Authorization") token: String,
+        @Body request: CancelOrderRequest
+    ): CancelOrderResponse
 }
