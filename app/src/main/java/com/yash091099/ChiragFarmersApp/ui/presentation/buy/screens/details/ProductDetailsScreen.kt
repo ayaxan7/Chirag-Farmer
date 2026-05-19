@@ -166,7 +166,7 @@ fun ProductDetailsScreen(
                         text = "Error Loading Product",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.Black
+                        color = BGBlack
                     )
                     Text(
                         text = state.message,
@@ -197,14 +197,14 @@ fun ProductDetailsScreen(
                             text = "Details",
                             fontSize = 20.sp,
                             fontWeight = FontWeight.SemiBold,
-                            color = Color.Black
+                            color = BGBlack
                         )
                     }, navigationIcon = {
                         IconButton(onClick = { navController.popBackStack() }) {
                             Icon(
                                 painterResource(R.drawable.ic_arrow),
                                 contentDescription = "Back",
-                                tint = Color.Black
+                                tint = BGBlack
                             )
                         }
                     }, actions = {
@@ -212,7 +212,7 @@ fun ProductDetailsScreen(
                             Icon(
                                 painterResource(R.drawable.ic_share),
                                 contentDescription = "Share",
-                                tint = Color.Black
+                                tint = BGBlack
                             )
                         }
 
@@ -224,7 +224,7 @@ fun ProductDetailsScreen(
                             Icon(
                                 painterResource(R.drawable.ic_cart_outlined),
                                 contentDescription = "Cart",
-                                tint = Color.Black
+                                tint = BGBlack
                             )
                         }
                     }, colors = TopAppBarDefaults.topAppBarColors(
@@ -291,7 +291,7 @@ fun ProductDetailsScreen(
                                         .clip(RoundedCornerShape(8.dp))
                                         .border(
                                             width = if (index == selectedImageIndex) 2.dp else 0.5.dp,
-                                            color = if (index == selectedImageIndex) Color.Black else Color(
+                                            color = if (index == selectedImageIndex) BGBlack else Color(
                                                 0xFFE0E0E0
                                             ),
                                             shape = RoundedCornerShape(8.dp)
@@ -312,7 +312,7 @@ fun ProductDetailsScreen(
                                 text = product.productName,
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = Color.Black,
+                                color = BGBlack,
                                 modifier = Modifier.weight(1f)
                             )
                             Icon(
@@ -321,13 +321,17 @@ fun ProductDetailsScreen(
                                 tint = Color(0xFFFFC107),
                                 modifier = Modifier.size(18.dp)
                             )
-                            Text(
-                                text = "4.5",
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.Medium,
-                                color = Color.Black,
-                                modifier = Modifier.padding(start = 4.dp)
-                            )
+                            when(reviewsUiState){
+                                is ProductReviewsUiState.Success -> {
+                                    Text(
+                                        text = String.format(Locale.getDefault(), "%.1f", (reviewsUiState as ProductReviewsUiState.Success).reviews.averageRating),
+                                        fontSize = 14.sp,
+                                        fontWeight = FontWeight.Medium,
+                                        color = BGBlack
+                                    )
+                                }
+                                else -> {}
+                            }
                         }
 
                         Spacer(modifier = Modifier.height(4.dp))
@@ -348,7 +352,7 @@ fun ProductDetailsScreen(
                                     text = "₹${product.discountedPrice}",
                                     fontSize = 24.sp,
                                     fontWeight = FontWeight.Bold,
-                                    color = Color.Black
+                                    color = BGBlack
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                             }
@@ -380,7 +384,7 @@ fun ProductDetailsScreen(
                                 text = "Product Description",
                                 fontSize = 15.sp,
                                 fontWeight = FontWeight.SemiBold,
-                                color = Color.Black
+                                color = BGBlack
                             )
                             Spacer(modifier = Modifier.height(6.dp))
                             Text(
@@ -421,7 +425,7 @@ fun ProductDetailsScreen(
                             text = "Sold by",
                             fontSize = 15.sp,
                             fontWeight = FontWeight.SemiBold,
-                            color = Color.Black
+                            color = BGBlack
                         )
                         Spacer(modifier = Modifier.height(8.dp))
 
@@ -455,7 +459,7 @@ fun ProductDetailsScreen(
                                         text = product.seller.name,
                                         fontSize = 14.sp,
                                         fontWeight = FontWeight.SemiBold,
-                                        color = Color.Black
+                                        color = BGBlack
                                     )
                                     Spacer(modifier = Modifier.width(4.dp))
                                     Icon(
@@ -468,12 +472,12 @@ fun ProductDetailsScreen(
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     Icon(
                                         imageVector = Icons.Default.Star,
-                                        contentDescription = null,
+                                        contentDescription = "Rating",
                                         tint = Color(0xFFFFC107),
                                         modifier = Modifier.size(14.dp)
                                     )
                                     Text(
-                                        text = "4.8",
+                                        text = String.format(Locale.getDefault(), "%.1f", product.seller.sellerRating ?: 0.0),
                                         fontSize = 12.sp,
                                         color = Color(0xFF666666),
                                         modifier = Modifier.padding(start = 2.dp)
@@ -512,7 +516,7 @@ fun ProductDetailsScreen(
                                 text = "Similar Products",
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = Color.Black
+                                color = BGBlack
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                             LazyHorizontalGrid(
@@ -550,7 +554,7 @@ fun ProductDetailsScreen(
                                 text = "More Products for you",
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = Color.Black
+                                color = BGBlack
                             )
                             Spacer(modifier = Modifier.height(12.dp))
 
@@ -610,7 +614,7 @@ private fun ProductReviewsSection(
         text = "Reviews & Ratings :",
         fontSize = 16.sp,
         fontWeight = FontWeight.Bold,
-        color = Color.Black
+        color = BGBlack
     )
     Spacer(modifier = Modifier.height(8.dp))
 
@@ -718,15 +722,6 @@ private fun ProductReviewsSection(
                     RatingProgressBar("Very Bad", getBreakdownProgress(breakdown, 1, totalRatings), getBreakdownCount(breakdown, 1), Color(0xFFF44336))
                 }
             }
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            Text(
-                text = "Recent Reviews",
-                fontSize = 15.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = Color.Black
-            )
             Spacer(modifier = Modifier.height(12.dp))
 
             if (reviews.recentReviews.isEmpty()) {
@@ -830,7 +825,7 @@ private fun ProductDetailsBottomBar(
             colors = ButtonDefaults.buttonColors(
                 containerColor = BGWhite, contentColor = BGBlack
             ),
-            border = BorderStroke(1.dp, Color.Black)
+            border = BorderStroke(1.dp, BGBlack)
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_buy_now),

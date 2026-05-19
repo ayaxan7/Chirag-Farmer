@@ -75,6 +75,8 @@ data class SellerProfileInfo(
     @SerializedName("name")
     val name: String,
     @SerializedName("profilePhoto")
-    val profilePhoto: String? = null
+    val profilePhoto: String? = null,
+    @SerializedName("sellerRating")
+    val sellerRating: Double? = null
 )
 

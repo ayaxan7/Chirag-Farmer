@@ -26,8 +26,7 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface
-ProductApiService {
+interface ProductApiService {
     @GET("api/farmers/products")
     suspend fun getFarmerProducts(
         @Header("Authorization") token: String,
