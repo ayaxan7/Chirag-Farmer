@@ -1,5 +1,6 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.orders.screens
 
+import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -134,7 +135,8 @@ fun MyOrdersScreen(
                 OrderList(
                     state = uiState,
                     onRetry = { viewModel.fetchOrders(currentType) },
-                    navController = navController
+                    navController = navController,
+                    currentType = currentType
                 )
             }
         }
@@ -142,7 +144,13 @@ fun MyOrdersScreen(
 }
 
 @Composable
-fun OrderList(state: MyOrdersUiState, onRetry: () -> Unit, navController: NavHostController) {
+fun OrderList(
+    state: MyOrdersUiState,
+    onRetry: () -> Unit,
+    navController: NavHostController,
+    currentType: String
+) {
+    Log.d("OrderList", "currentType: $currentType")
     when (state) {
         is MyOrdersUiState.Loading -> {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -175,7 +183,11 @@ fun OrderList(state: MyOrdersUiState, onRetry: () -> Unit, navController: NavHos
                     contentPadding = PaddingValues(16.dp)
                 ) {
                     items(state.orders) { order ->
-                        OrderCard(order, navController)
+                        OrderCard(
+                            order = order,
+                            navController = navController,
+                            showReviewButton = currentType.equals("complete", ignoreCase = true)
+                        )
                     }
                 }
             }
@@ -186,7 +198,11 @@ fun OrderList(state: MyOrdersUiState, onRetry: () -> Unit, navController: NavHos
 }
 
 @Composable
-fun OrderCard(order: UserPlacedOrder, navController: NavHostController) {
+fun OrderCard(
+    order: UserPlacedOrder,
+    navController: NavHostController,
+    showReviewButton: Boolean
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -236,7 +252,7 @@ fun OrderCard(order: UserPlacedOrder, navController: NavHostController) {
                 )
             }
 
-            if (isCompletedOrder(order.itemStatus)) {
+            if (showReviewButton) {
                 Button(
                     onClick = { navController.navigate(Route.DropReview.createRoute(order.orderObjectId)) },
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1A1C1E)),
@@ -260,6 +276,7 @@ fun OrderCard(order: UserPlacedOrder, navController: NavHostController) {
 
 private fun isCompletedOrder(itemStatus: String?): Boolean {
     val status = itemStatus?.trim().orEmpty()
+    Log.d("OrderList", "itemStatus: $itemStatus")
     return status.equals("Delivered", ignoreCase = true) ||
         status.equals("Completed", ignoreCase = true) ||
         status.equals("Complete", ignoreCase = true)

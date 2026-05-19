@@ -92,33 +92,47 @@ fun MyOrderDetailsScreen(
         },
         containerColor = BGWhite,
         bottomBar = {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(BGWhite)
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                OutlinedButton(
-                    onClick = {},
+            val actionMode = resolveBottomActionMode(
+                (uiState as? OrderDetailsUiState.Success)?.data?.orderStatus
+            )
+
+            if (actionMode != BottomActionMode.NONE) {
+                Row(
                     modifier = Modifier
-                        .weight(1f)
-                        .height(48.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    border = ButtonDefaults.outlinedButtonBorder.copy(width = 1.dp),
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = BGBlack)
+                        .fillMaxWidth()
+                        .background(BGWhite)
+                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    Text("Reorder", fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
-                }
-                Button(
-                    onClick = {navController.navigate(Route.DropReview.createRoute(orderId)) },
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(48.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = BGBlack)
-                ) {
-                    Text("Drop Review", color = BGWhite, fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
+                    OutlinedButton(
+                        onClick = {},
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(48.dp),
+                        shape = RoundedCornerShape(8.dp),
+                        border = ButtonDefaults.outlinedButtonBorder.copy(width = 1.dp),
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = BGBlack)
+                    ) {
+                        Text("Reorder", fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
+                    }
+
+                    if (actionMode == BottomActionMode.BOTH) {
+                        Button(
+                            onClick = { navController.navigate(Route.DropReview.createRoute(orderId)) },
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(48.dp),
+                            shape = RoundedCornerShape(8.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = BGBlack)
+                        ) {
+                            Text(
+                                "Drop Review",
+                                color = BGWhite,
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 15.sp
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -183,6 +197,21 @@ fun MyOrderDetailsScreen(
     }
 }
 
+private enum class BottomActionMode {
+    NONE,
+    REORDER_ONLY,
+    BOTH
+}
+
+private fun resolveBottomActionMode(orderStatus: String?): BottomActionMode {
+    val normalized = orderStatus?.trim()?.lowercase(Locale.getDefault()).orEmpty()
+    return when {
+        normalized.contains("delivered") || normalized.contains("complete") -> BottomActionMode.BOTH
+        normalized.contains("cancel") -> BottomActionMode.REORDER_ONLY
+        else -> BottomActionMode.NONE
+    }
+}
+
 @Composable
 private fun OrderDetailsContent(
     data: OrderDetailsData,
@@ -207,11 +236,10 @@ private fun OrderDetailsContent(
                 itemStatus = item.itemStatus,
                 cancellationDetails = item.cancellationDetails,
                 productId = item.productId.orEmpty(),
-                onCancelClick = { onCancelItem(item.productId.orEmpty()) }
+                onCancelClick = { onCancelItem(item.productId.orEmpty()) },
+                deliveryAddress=data.deliveryAddress
             )
         }
-
-        DeliveryAddressSection(data.deliveryAddress)
         DeliveredDateSection(data.statusTimeline?.delivered)
         OrderStatusSection(data.statusTimeline, data.orderStatus)
         PriceBreakdownSection(data)
@@ -230,7 +258,8 @@ fun OrderProductCard(
     itemStatus: String? = null,
     cancellationDetails: CancellationDetailsDto? = null,
     productId: String = "",
-    onCancelClick: () -> Unit = {}
+    onCancelClick: () -> Unit = {},
+    deliveryAddress: OrderDeliveryAddress? = null
 ) {
     Card(
         modifier = Modifier
@@ -305,60 +334,66 @@ fun OrderProductCard(
                 }
             }
 
-            // Show item status if available
-            if (!itemStatus.isNullOrBlank()) {
-                HorizontalDivider(color = BorderColour.copy(alpha = 0.3f), thickness = 0.5.dp)
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(12.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column {
-                        Text("Item Status", fontSize = 12.sp, color = TextGray)
-                        Text(
-                            text = itemStatus,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = BGBlack
-                        )
-                    }
-
-                    // Show cancel button if item is not already cancelled
-                    if (itemStatus.lowercase() != "cancelled") {
-                        Button(
-                            onClick = onCancelClick,
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF6B6B)),
-                            shape = RoundedCornerShape(6.dp),
-                            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
-                            modifier = Modifier.height(32.dp)
-                        ) {
-                            Text("Cancel Item", color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
-                        }
-                    }
-                }
-            }
-
-            // Show cancellation details if item was cancelled
-            if (!cancellationDetails?.cancelledAt.isNullOrBlank()) {
-                HorizontalDivider(color = BorderColour.copy(alpha = 0.3f), thickness = 0.5.dp)
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(12.dp)
-                ) {
-                    Text("Cancellation Details", fontSize = 12.sp, color = TextGray, fontWeight = FontWeight.SemiBold)
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text("Cancelled At: ${cancellationDetails?.cancelledAt ?: "--"}", fontSize = 11.sp, color = BGBlack)
-                    Text("Previous Status: ${cancellationDetails?.previousStatus ?: "--"}", fontSize = 11.sp, color = BGBlack)
-                    if (!cancellationDetails?.reason.isNullOrBlank()) {
-                        Text("Reason: ${cancellationDetails?.reason}", fontSize = 11.sp, color = BGBlack)
-                    }
-                }
-            }
+//            // Show item status if available
+//            if (!itemStatus.isNullOrBlank()) {
+//                HorizontalDivider(color = BorderColour.copy(alpha = 0.3f), thickness = 0.5.dp)
+//                Row(
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .padding(12.dp),
+//                    horizontalArrangement = Arrangement.SpaceBetween,
+//                    verticalAlignment = Alignment.CenterVertically
+//                ) {
+//                    Column {
+//                        Text("Item Status", fontSize = 12.sp, color = TextGray)
+//                        Text(
+//                            text = itemStatus,
+//                            fontSize = 14.sp,
+//                            fontWeight = FontWeight.Bold,
+//                            color = BGBlack
+//                        )
+//                    }
+//
+//                    // Show cancel button if item is not already cancelled
+//                    if (itemStatus.lowercase() != "cancelled") {
+//                        Button(
+//                            onClick = onCancelClick,
+//                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF6B6B)),
+//                            shape = RoundedCornerShape(6.dp),
+//                            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
+//                            modifier = Modifier.height(32.dp)
+//                        ) {
+//                            Text("Cancel Item", color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
+//                        }
+//                    }
+//                }
+//            }
         }
     }
+    // Show cancellation details if item was cancelled
+    if (!cancellationDetails?.cancelledAt.isNullOrBlank()) {
+        val cancelledText = parseAndFormatDate(cancellationDetails.cancelledAt) ?: return
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.cancelled),
+                contentDescription = "Cancelled",
+                modifier = Modifier.size(20.dp),
+                tint = Color(0xFFF95353)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "Cancelled On: $cancelledText",
+                color = Color(0xFFF95353),
+                fontSize = 14.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+        }
+    }
+    DeliveryAddressSection(deliveryAddress)
 }
 
 @Composable
