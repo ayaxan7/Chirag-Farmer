@@ -8,9 +8,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -42,13 +44,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -69,6 +71,7 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.common.data.CommonProduct
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost.Route
 import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
 import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
+import com.yash091099.ChiragFarmersApp.ui.theme.LightGray
 import com.yash091099.ChiragFarmersApp.ui.theme.TextGray
 import kotlinx.coroutines.launch
 
@@ -98,6 +101,7 @@ fun ProductDetailsScreen(
                 }
             }
         }
+
         is CartActionState.Error -> {
             LaunchedEffect(state) {
                 coroutineScope.launch {
@@ -106,6 +110,7 @@ fun ProductDetailsScreen(
                 }
             }
         }
+
         else -> {}
     }
 
@@ -161,8 +166,8 @@ fun ProductDetailsScreen(
                 containerColor = BGWhite,
                 snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
                 topBar = {
-                TopAppBar(
-                    title = {
+                    TopAppBar(
+                        title = {
                         Text(
                             text = "Details",
                             fontSize = 20.sp,
@@ -186,9 +191,11 @@ fun ProductDetailsScreen(
                             )
                         }
 
-                        IconButton(onClick = { navController.navigate(
-                            Route.Cart.path
-                        ) }) {
+                        IconButton(onClick = {
+                            navController.navigate(
+                                Route.Cart.path
+                            )
+                        }) {
                             Icon(
                                 painterResource(R.drawable.ic_cart_outlined),
                                 contentDescription = "Cart",
@@ -198,23 +205,21 @@ fun ProductDetailsScreen(
                     }, colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = BGWhite
                     )
-                )
-            }, bottomBar = {
-                ProductDetailsBottomBar(
-                    cartState = cartState,
-                    isInCart = isInCart,
-                    onAddToCart = { viewModel.addToCart() },
-                    onBuyNow = {
-                        navController.navigate(
-                            Route.Cart.createRoute(
-                                isBuyNow = true,
-                                productId = product.productId,
-                                quantity = 1
+                    )
+                },
+                bottomBar = {
+                    ProductDetailsBottomBar(
+                        cartState = cartState,
+                        isInCart = isInCart,
+                        onAddToCart = { viewModel.addToCart() },
+                        onBuyNow = {
+                            navController.navigate(
+                                Route.Cart.createRoute(
+                                    isBuyNow = true, productId = product.productId, quantity = 1
+                                )
                             )
-                        )
-                    }
-                )
-            }) { paddingValues ->
+                        })
+                }) { paddingValues ->
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -236,7 +241,7 @@ fun ProductDetailsScreen(
                                 modifier = Modifier.fillMaxSize(),
                                 contentScale = ContentScale.Fit
                             )
-                        }else{
+                        } else {
                             Image(
                                 painter = painterResource(R.drawable.sell_category_other),
                                 contentDescription = "Product",
@@ -304,9 +309,7 @@ fun ProductDetailsScreen(
 
                         // Seller name as brand
                         Text(
-                            text = product.seller.name,
-                            fontSize = 13.sp,
-                            color = Color(0xFF666666)
+                            text = product.seller.name, fontSize = 13.sp, color = Color(0xFF666666)
                         )
 
                         Spacer(modifier = Modifier.height(12.dp))
@@ -315,7 +318,7 @@ fun ProductDetailsScreen(
                         Row(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            if(product.discountedPrice!=product.originalPrice) {
+                            if (product.discountedPrice != product.originalPrice) {
                                 Text(
                                     text = "₹${product.discountedPrice}",
                                     fontSize = 24.sp,
@@ -327,11 +330,13 @@ fun ProductDetailsScreen(
                             Text(
                                 text = "₹${product.originalPrice}",
                                 fontSize = 14.sp,
-                                fontWeight = if(product.discountedPrice!=product.originalPrice) FontWeight.Normal else FontWeight.Bold,
-                                color = if(product.discountedPrice!=product.originalPrice) Color(0xFF999999) else BGBlack,
-                                textDecoration = if(product.discountedPrice!=product.originalPrice) TextDecoration.LineThrough else null
+                                fontWeight = if (product.discountedPrice != product.originalPrice) FontWeight.Normal else FontWeight.Bold,
+                                color = if (product.discountedPrice != product.originalPrice) Color(
+                                    0xFF999999
+                                ) else BGBlack,
+                                textDecoration = if (product.discountedPrice != product.originalPrice) TextDecoration.LineThrough else null
                             )
-                            if(product.discountedPrice!=product.originalPrice) {
+                            if (product.discountedPrice != product.originalPrice) {
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
                                     text = "${product.discountPercent.toInt()}% OFF",
@@ -345,7 +350,7 @@ fun ProductDetailsScreen(
                         Spacer(modifier = Modifier.height(16.dp))
 
                         // Product Description
-                        if(!product.productDescription.isNullOrEmpty()) {
+                        if (!product.productDescription.isNullOrEmpty()) {
                             Text(
                                 text = "Product Description",
                                 fontSize = 15.sp,
@@ -476,9 +481,8 @@ fun ProductDetailsScreen(
                             }
                         }
 
-                        Spacer(modifier = Modifier.height(20.dp))
-
                         if (product.similarProducts.isNotEmpty()) {
+                            Spacer(modifier = Modifier.height(20.dp))
                             Text(
                                 text = "Similar Products",
                                 fontSize = 16.sp,
@@ -505,19 +509,18 @@ fun ProductDetailsScreen(
                                             currentPrice = item.discountedPrice.toInt().toString(),
                                             originalPrice = item.originalPrice.toInt().toString(),
                                             rating = "4.5"
-                                        ),
-                                        modifier = Modifier.width(180.dp),
-                                        onClick = {
-                                            navController.navigate(Route.ProductDetails.createRoute(item.productId))
-                                        }
-                                    )
+                                        ), modifier = Modifier.width(180.dp), onClick = {
+                                            navController.navigate(
+                                                Route.ProductDetails.createRoute(
+                                                    item.productId
+                                                )
+                                            )
+                                        })
                                 }
                             }
                         }
-
-                        Spacer(modifier = Modifier.height(20.dp))
-
                         if (product.moreProducts.isNotEmpty()) {
+                            Spacer(modifier = Modifier.height(20.dp))
                             Text(
                                 text = "More Products for you",
                                 fontSize = 16.sp,
@@ -545,18 +548,19 @@ fun ProductDetailsScreen(
                                             currentPrice = item.discountedPrice.toInt().toString(),
                                             originalPrice = item.originalPrice.toInt().toString(),
                                             rating = "4.5"
-                                        ),
-                                        modifier = Modifier.width(180.dp),
-                                        onClick = {
-                                            navController.navigate(Route.ProductDetails.createRoute(item.productId))
-                                        }
-                                    )
+                                        ), modifier = Modifier.width(180.dp), onClick = {
+                                            navController.navigate(
+                                                Route.ProductDetails.createRoute(
+                                                    item.productId
+                                                )
+                                            )
+                                        })
                                 }
                             }
+                            Spacer(modifier = Modifier.height(20.dp))
+                        } else {
+                            Spacer(modifier = Modifier.height(10.dp))
                         }
-
-                        Spacer(modifier = Modifier.height(20.dp))
-
                         // Reviews & Ratings
                         Text(
                             text = "Reviews & Ratings :",
@@ -564,38 +568,72 @@ fun ProductDetailsScreen(
                             fontWeight = FontWeight.Bold,
                             color = Color.Black
                         )
-                        Spacer(modifier = Modifier.height(16.dp))
+                        Spacer(modifier = Modifier.height(8.dp))
 
-                        Row(modifier = Modifier.fillMaxWidth()) {
-                            // Rating box
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(IntrinsicSize.Min)
+                        ) {
                             Card(
-                                colors = CardDefaults.cardColors(containerColor = Color(0xFF4CAF50)),
-                                shape = RoundedCornerShape(8.dp),
-                                modifier = Modifier.width(100.dp)
+                                shape = RoundedCornerShape(12.dp),
+                                border = BorderStroke(1.dp, LightGray),
+                                colors = CardDefaults.cardColors(containerColor = BGWhite),
+                                modifier = Modifier
+                                    .width(120.dp)
+                                    .fillMaxHeight()
                             ) {
                                 Column(
-                                    modifier = Modifier.padding(16.dp),
-                                    horizontalAlignment = Alignment.CenterHorizontally
+                                    modifier = Modifier.fillMaxHeight()
                                 ) {
-                                    Text(
-                                        text = "4.5",
-                                        fontSize = 32.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        color = Color.White
-                                    )
-                                    Icon(
-                                        imageVector = Icons.Default.Star,
-                                        contentDescription = null,
-                                        tint = Color.White,
-                                        modifier = Modifier.size(20.dp)
-                                    )
-                                    Spacer(modifier = Modifier.height(8.dp))
-                                    Text("6 Ratings", fontSize = 11.sp, color = Color.White)
-                                    Text("2 Reviews", fontSize = 11.sp, color = Color.White)
+                                    // Top Green Section
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .weight(1f)
+                                            .background(Color(0xFF339D6A)),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Text(
+                                                text = "4.5",
+                                                fontSize = 30.sp,
+                                                fontWeight = FontWeight.Bold,
+                                                color = BGWhite
+                                            )
+
+                                            Spacer(modifier = Modifier.width(4.dp))
+
+                                            Icon(
+                                                imageVector = Icons.Default.Star,
+                                                contentDescription = null,
+                                                tint = BGWhite,
+                                                modifier = Modifier.size(28.dp)
+                                            )
+                                        }
+                                    }
+
+                                    // Bottom White Section
+                                    Column(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .weight(1f),
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        verticalArrangement = Arrangement.Center
+                                    ) {
+                                        Text(
+                                            text = "21 Ratings", fontSize = 12.sp, color = TextGray, lineHeight = 12.sp
+                                        )
+                                        Text(
+                                            text = "11 Reviews", fontSize = 12.sp, color = TextGray, lineHeight = 13.sp
+                                        )
+                                    }
                                 }
                             }
 
-                            Spacer(modifier = Modifier.width(20.dp))
+                            Spacer(modifier = Modifier.width(10.dp))
 
                             // Rating breakdown
                             Column(modifier = Modifier.weight(1f)) {
@@ -635,8 +673,7 @@ fun ProductDetailsScreen(
                             likeCount = 12,
                             onLikeClick = { },
                             unLikeCount = 4,
-                            onUnLikeClick = {}
-                        )
+                            onUnLikeClick = {})
 
                         Spacer(modifier = Modifier.height(20.dp))
                     }
@@ -648,10 +685,7 @@ fun ProductDetailsScreen(
 
 @Composable
 private fun ProductDetailsBottomBar(
-    cartState: CartActionState,
-    isInCart: Boolean,
-    onAddToCart: () -> Unit,
-    onBuyNow: () -> Unit
+    cartState: CartActionState, isInCart: Boolean, onAddToCart: () -> Unit, onBuyNow: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -668,16 +702,14 @@ private fun ProductDetailsBottomBar(
             shape = RoundedCornerShape(8.dp),
             enabled = cartState !is CartActionState.Loading && !isInCart,
             colors = ButtonDefaults.outlinedButtonColors(
-                containerColor = if (isInCart) Color.Gray else BGBlack,
+                containerColor = if (isInCart) TextGray else BGBlack,
                 contentColor = BGWhite,
-                disabledContainerColor = Color.Gray
+                disabledContainerColor = TextGray
             )
         ) {
             if (cartState is CartActionState.Loading) {
                 CircularProgressIndicator(
-                    modifier = Modifier.size(20.dp),
-                    color = BGWhite,
-                    strokeWidth = 2.dp
+                    modifier = Modifier.size(20.dp), color = BGWhite, strokeWidth = 2.dp
                 )
             } else {
                 Icon(
@@ -694,7 +726,7 @@ private fun ProductDetailsBottomBar(
                 if (isInCart) "In Cart" else "Add to Cart",
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
-                color = if (isInCart) Color.White else BGWhite
+                color = if (isInCart) BGWhite else BGWhite
             )
         }
 
@@ -705,8 +737,7 @@ private fun ProductDetailsBottomBar(
                 .height(50.dp),
             shape = RoundedCornerShape(8.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = BGWhite,
-                contentColor = BGBlack
+                containerColor = BGWhite, contentColor = BGBlack
             ),
             border = BorderStroke(1.dp, Color.Black)
         ) {
