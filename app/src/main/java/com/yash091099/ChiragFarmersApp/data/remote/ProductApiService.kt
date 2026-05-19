@@ -5,6 +5,7 @@ import com.yash091099.ChiragFarmersApp.data.remote.dto.AddProductResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.DeleteProductRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.DeleteProductResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.MixedProductsResponse
+import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductReviewsResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.RateProductRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.RateProductResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailedResponse
@@ -66,6 +67,12 @@ ProductApiService {
     suspend fun getProductDetailsDetailed(
         @Header("Authorization") token: String, @Path("productId") productId: String
     ): ProductDetailedResponse
+
+    @GET("api/farmers/products/{productId}/reviews")
+    suspend fun getProductReviews(
+        @Header("Authorization") token: String,
+        @Path("productId") productId: String
+    ): ProductReviewsResponse
 
     @POST("api/farmers/add-product")
     suspend fun addProduct(

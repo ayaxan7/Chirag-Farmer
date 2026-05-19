@@ -4,8 +4,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailedData
+import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductReviewsData
 import com.yash091099.ChiragFarmersApp.domain.repository.ProductRepository
 import com.yash091099.ChiragFarmersApp.domain.usecase.AddToCartUseCase
+import com.yash091099.ChiragFarmersApp.domain.usecase.GetProductReviewsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,6 +19,7 @@ import javax.inject.Inject
 class ProductDetailsViewModel @Inject constructor(
     private val productRepository: ProductRepository,
     private val addToCartUseCase: AddToCartUseCase,
+    private val getProductReviewsUseCase: GetProductReviewsUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -29,6 +32,9 @@ class ProductDetailsViewModel @Inject constructor(
     private val _isInCart = MutableStateFlow(false)
     val isInCart: StateFlow<Boolean> = _isInCart.asStateFlow()
 
+    private val _reviewsState = MutableStateFlow<ProductReviewsUiState>(ProductReviewsUiState.Loading)
+    val reviewsState: StateFlow<ProductReviewsUiState> = _reviewsState.asStateFlow()
+
     private val productId: String = checkNotNull(savedStateHandle["productId"])
 
 //    init {
@@ -38,11 +44,13 @@ class ProductDetailsViewModel @Inject constructor(
     fun loadProductDetails() {
         viewModelScope.launch {
             _uiState.value = ProductDetailsUiState.Loading
+            _reviewsState.value = ProductReviewsUiState.Loading
 
             productRepository.getProductDetailsDetailed(productId).fold(
                 onSuccess = { productDetails ->
                     _isInCart.value = productDetails.isInCart
                     _uiState.value = ProductDetailsUiState.Success(productDetails)
+                    loadProductReviews()
                 },
                 onFailure = { exception ->
                     _uiState.value = ProductDetailsUiState.Error(
@@ -51,6 +59,19 @@ class ProductDetailsViewModel @Inject constructor(
                 }
             )
         }
+    }
+
+    private suspend fun loadProductReviews() {
+        getProductReviewsUseCase(productId).fold(
+            onSuccess = { reviews ->
+                _reviewsState.value = ProductReviewsUiState.Success(reviews)
+            },
+            onFailure = { exception ->
+                _reviewsState.value = ProductReviewsUiState.Error(
+                    exception.message ?: "Failed to load product reviews"
+                )
+            }
+        )
     }
 
     fun addToCart() {
@@ -78,6 +99,12 @@ class ProductDetailsViewModel @Inject constructor(
     fun resetCartState() {
         _cartState.value = CartActionState.Idle
     }
+}
+
+sealed class ProductReviewsUiState {
+    object Loading : ProductReviewsUiState()
+    data class Success(val reviews: ProductReviewsData) : ProductReviewsUiState()
+    data class Error(val message: String) : ProductReviewsUiState()
 }
 
 sealed class ProductDetailsUiState {

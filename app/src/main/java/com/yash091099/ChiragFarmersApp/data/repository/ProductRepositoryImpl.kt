@@ -11,6 +11,7 @@ import com.yash091099.ChiragFarmersApp.data.remote.ProductApiService
 import com.yash091099.ChiragFarmersApp.data.remote.dto.AddProductRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.DeleteProductRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.MixedProductsData
+import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductReviewsData
 import com.yash091099.ChiragFarmersApp.data.remote.dto.RateProductRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.RateProductResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailedData
@@ -152,6 +153,24 @@ class ProductRepositoryImpl @Inject constructor(
             }
 
             val response = apiService.getProductDetailsDetailed("Bearer $token", productId)
+            if (response.success && response.data != null) {
+                Result.success(response.data)
+            } else {
+                Result.failure(Exception(response.message))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getProductReviews(productId: String): Result<ProductReviewsData> {
+        return try {
+            val token = chiragDataStore.getAuthToken().first()
+            if (token.isNullOrEmpty()) {
+                return Result.failure(Exception("Authentication token not found"))
+            }
+
+            val response = apiService.getProductReviews("Bearer $token", productId)
             if (response.success && response.data != null) {
                 Result.success(response.data)
             } else {

@@ -75,6 +75,7 @@ import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
 import com.yash091099.ChiragFarmersApp.ui.theme.LightGray
 import com.yash091099.ChiragFarmersApp.ui.theme.TextGray
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -87,6 +88,7 @@ fun ProductDetailsScreen(
     val uiState by viewModel.uiState.collectAsState()
     val cartState by viewModel.cartState.collectAsState()
     val isInCart by viewModel.isInCart.collectAsState()
+    val reviewsUiState by viewModel.reviewsState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
@@ -562,128 +564,180 @@ fun ProductDetailsScreen(
                         } else {
                             Spacer(modifier = Modifier.height(10.dp))
                         }
-                        // Reviews & Ratings
-                        Text(
-                            text = "Reviews & Ratings :",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.Black
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(IntrinsicSize.Min)
-                        ) {
-                            Card(
-                                shape = RoundedCornerShape(12.dp),
-                                border = BorderStroke(1.dp, LightGray),
-                                colors = CardDefaults.cardColors(containerColor = BGWhite),
-                                modifier = Modifier
-                                    .width(120.dp)
-                                    .fillMaxHeight()
-                            ) {
-                                Column(
-                                    modifier = Modifier.fillMaxHeight()
-                                ) {
-                                    // Top Green Section
-                                    Box(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .weight(1f)
-                                            .background(Color(0xFF339D6A)),
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Row(
-                                            verticalAlignment = Alignment.CenterVertically
-                                        ) {
-                                            Text(
-                                                text = "4.5",
-                                                fontSize = 30.sp,
-                                                fontWeight = FontWeight.Bold,
-                                                color = BGWhite
-                                            )
-
-                                            Spacer(modifier = Modifier.width(4.dp))
-
-                                            Icon(
-                                                imageVector = Icons.Default.Star,
-                                                contentDescription = null,
-                                                tint = BGWhite,
-                                                modifier = Modifier.size(28.dp)
-                                            )
-                                        }
-                                    }
-
-                                    // Bottom White Section
-                                    Column(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .weight(1f),
-                                        horizontalAlignment = Alignment.CenterHorizontally,
-                                        verticalArrangement = Arrangement.Center
-                                    ) {
-                                        Text(
-                                            text = "21 Ratings", fontSize = 12.sp, color = TextGray, lineHeight = 12.sp
-                                        )
-                                        Text(
-                                            text = "11 Reviews", fontSize = 12.sp, color = TextGray, lineHeight = 13.sp
-                                        )
-                                    }
-                                }
-                            }
-
-                            Spacer(modifier = Modifier.width(10.dp))
-
-                            // Rating breakdown
-                            Column(modifier = Modifier.weight(1f)) {
-                                RatingProgressBar("Very Good", 1f, 6, Color(0xFF4CAF50))
-                                Spacer(modifier = Modifier.height(6.dp))
-                                RatingProgressBar("Good", 0f, 0, Color(0xFF8BC34A))
-                                Spacer(modifier = Modifier.height(6.dp))
-                                RatingProgressBar("Ok-ok", 0f, 0, Color(0xFFFFC107))
-                                Spacer(modifier = Modifier.height(6.dp))
-                                RatingProgressBar("Bad", 0f, 0, Color(0xFFFF9800))
-                                Spacer(modifier = Modifier.height(6.dp))
-                                RatingProgressBar("Very Bad", 0f, 0, Color(0xFFF44336))
-                            }
-                        }
-
-                        Spacer(modifier = Modifier.height(20.dp))
-
-                        // Review cards
-                        ReviewCard(
-                            userName = "Aravind",
-                            userImage = R.drawable.profile_icon,
-                            rating = 4.5f,
-                            reviewText = "This product has been a game changer for my farming needs. It is efficient, easy to use, and incredibly reliable. Highly recommended",
-                            timeAgo = "1 Day ago",
-                            likeCount = 12,
-                            onUnLikeClick = {},
-                            onLikeClick = { },
-                            unLikeCount = 2
-                        )
-                        Spacer(modifier = Modifier.height(10.dp))
-                        HorizontalDivider(thickness =1.dp)
-                        Spacer(modifier = Modifier.height(10.dp))
-                        ReviewCard(
-                            userName = "Sandhya",
-                            userImage = R.drawable.profile_icon,
-                            rating = 4.5f,
-                            reviewText = "This product has been a game changer for my farming needs. It is efficient, easy to use, and incredibly reliable. Highly recommended",
-                            timeAgo = "1 Day ago",
-                            likeCount = 12,
-                            onLikeClick = { },
-                            unLikeCount = 4,
-                            onUnLikeClick = {})
-
-                        Spacer(modifier = Modifier.height(20.dp))
+                        ProductReviewsSection(reviewsUiState = reviewsUiState)
                     }
                 }
             }
         }
     }
+}
+
+@Composable
+private fun ProductReviewsSection(reviewsUiState: ProductReviewsUiState) {
+    Text(
+        text = "Reviews & Ratings :",
+        fontSize = 16.sp,
+        fontWeight = FontWeight.Bold,
+        color = Color.Black
+    )
+    Spacer(modifier = Modifier.height(8.dp))
+
+    when (reviewsUiState) {
+        is ProductReviewsUiState.Loading -> {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(180.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = BGBlack)
+            }
+        }
+
+        is ProductReviewsUiState.Error -> {
+            Text(
+                text = reviewsUiState.message,
+                fontSize = 13.sp,
+                color = Color.Red
+            )
+        }
+
+        is ProductReviewsUiState.Success -> {
+            val reviews = reviewsUiState.reviews
+            val totalRatings = reviews.totalRatings.coerceAtLeast(0)
+            val totalReviews = reviews.totalReviews.coerceAtLeast(0)
+            val averageRatingText = String.format(Locale.getDefault(), "%.1f", reviews.averageRating)
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(IntrinsicSize.Min)
+            ) {
+                Card(
+                    shape = RoundedCornerShape(12.dp),
+                    border = BorderStroke(1.dp, LightGray),
+                    colors = CardDefaults.cardColors(containerColor = BGWhite),
+                    modifier = Modifier
+                        .width(120.dp)
+                        .fillMaxHeight()
+                ) {
+                    Column(modifier = Modifier.fillMaxHeight()) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f)
+                                .background(Color(0xFF339D6A)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(
+                                    text = averageRatingText,
+                                    fontSize = 30.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = BGWhite
+                                )
+
+                                Spacer(modifier = Modifier.width(4.dp))
+
+                                Icon(
+                                    imageVector = Icons.Default.Star,
+                                    contentDescription = "Rating",
+                                    tint = BGWhite,
+                                    modifier = Modifier.size(28.dp)
+                                )
+                            }
+                        }
+
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = "$totalRatings Ratings",
+                                fontSize = 12.sp,
+                                color = TextGray,
+                                lineHeight = 12.sp
+                            )
+                            Text(
+                                text = "$totalReviews Reviews",
+                                fontSize = 12.sp,
+                                color = TextGray,
+                                lineHeight = 13.sp
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.width(10.dp))
+
+                Column(modifier = Modifier.weight(1f)) {
+                    val breakdown = reviews.ratingBreakdown
+                    RatingProgressBar("Very Good", getBreakdownProgress(breakdown, 5, totalRatings), getBreakdownCount(breakdown, 5), Color(0xFF4CAF50))
+                    Spacer(modifier = Modifier.height(6.dp))
+                    RatingProgressBar("Good", getBreakdownProgress(breakdown, 4, totalRatings), getBreakdownCount(breakdown, 4), Color(0xFF8BC34A))
+                    Spacer(modifier = Modifier.height(6.dp))
+                    RatingProgressBar("Ok-Ok", getBreakdownProgress(breakdown, 3, totalRatings), getBreakdownCount(breakdown, 3), Color(0xFFFFC107))
+                    Spacer(modifier = Modifier.height(6.dp))
+                    RatingProgressBar("Bad", getBreakdownProgress(breakdown, 2, totalRatings), getBreakdownCount(breakdown, 2), Color(0xFFFF9800))
+                    Spacer(modifier = Modifier.height(6.dp))
+                    RatingProgressBar("Very Bad", getBreakdownProgress(breakdown, 1, totalRatings), getBreakdownCount(breakdown, 1), Color(0xFFF44336))
+                }
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Text(
+                text = "Recent Reviews",
+                fontSize = 15.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = Color.Black
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+
+            if (reviews.recentReviews.isEmpty()) {
+                Text(
+                    text = "No reviews yet for this product.",
+                    fontSize = 13.sp,
+                    color = TextGray
+                )
+            } else {
+                reviews.recentReviews.forEachIndexed { index, review ->
+                    ReviewCard(
+                        userName = review.userName,
+                        userImage = R.drawable.profile_icon,
+                        userImageUrl = review.userProfileImage,
+                        rating = review.rating.toFloat(),
+                        reviewText = review.review.orEmpty(),
+                        timeAgo = review.recordedAt,
+                        likeCount = review.likes,
+                        onUnLikeClick = {},
+                        onLikeClick = {},
+                        unLikeCount = review.dislikes
+                    )
+
+                    if (index < reviews.recentReviews.lastIndex) {
+                        Spacer(modifier = Modifier.height(10.dp))
+                        HorizontalDivider(thickness = 1.dp)
+                        Spacer(modifier = Modifier.height(10.dp))
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+        }
+    }
+}
+
+private fun getBreakdownCount(breakdown: Map<String, Int>, star: Int): Int {
+    return breakdown[star.toString()] ?: 0
+}
+
+private fun getBreakdownProgress(breakdown: Map<String, Int>, star: Int, totalRatings: Int): Float {
+    if (totalRatings <= 0) return 0f
+    return (getBreakdownCount(breakdown, star).toFloat() / totalRatings.toFloat()).coerceIn(0f, 1f)
 }
 
 @Composable

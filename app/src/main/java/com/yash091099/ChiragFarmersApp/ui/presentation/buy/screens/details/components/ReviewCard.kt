@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
@@ -14,7 +13,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.ThumbDown
 import androidx.compose.material.icons.outlined.ThumbUp
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -28,12 +26,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.yash091099.ChiragFarmersApp.ui.theme.BorderColour
+import coil.compose.AsyncImage
 
 @Composable
 fun ReviewCard(
     userName: String,
     userImage: Int,
+    userImageUrl: String? = null,
     rating: Float,
     reviewText: String,
     timeAgo: String,
@@ -41,7 +40,6 @@ fun ReviewCard(
     unLikeCount:Int,
     onUnLikeClick: () -> Unit,
     onLikeClick: () -> Unit,
-    modifier: Modifier = Modifier
 ) {
     Column {
         // Top section
@@ -51,14 +49,25 @@ fun ReviewCard(
         ) {
 
             // User Image
-            Image(
-                painter = painterResource(id = userImage),
-                contentDescription = userName,
-                modifier = Modifier
-                    .size(40.dp)
-                    .clip(CircleShape),
-                contentScale = ContentScale.Crop
-            )
+            if (!userImageUrl.isNullOrBlank()) {
+                AsyncImage(
+                    model = userImageUrl,
+                    contentDescription = userName,
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(CircleShape),
+                    contentScale = ContentScale.Crop
+                )
+            } else {
+                Image(
+                    painter = painterResource(id = userImage),
+                    contentDescription = userName,
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(CircleShape),
+                    contentScale = ContentScale.Crop
+                )
+            }
 
             Spacer(modifier = Modifier.width(12.dp))
 
