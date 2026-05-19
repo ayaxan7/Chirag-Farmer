@@ -27,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
 
 @Composable
 fun ReviewCard(
@@ -40,6 +41,7 @@ fun ReviewCard(
     unLikeCount:Int,
     onUnLikeClick: () -> Unit,
     onLikeClick: () -> Unit,
+    isActionLoading: Boolean = false,
 ) {
     Column {
         // Top section
@@ -56,7 +58,7 @@ fun ReviewCard(
                     modifier = Modifier
                         .size(40.dp)
                         .clip(CircleShape),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.FillBounds
                 )
             } else {
                 Image(
@@ -65,7 +67,7 @@ fun ReviewCard(
                     modifier = Modifier
                         .size(40.dp)
                         .clip(CircleShape),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.FillBounds
                 )
             }
 
@@ -82,7 +84,7 @@ fun ReviewCard(
                         text = userName,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = Color.Black,
+                        color = BGBlack,
                         modifier = Modifier.weight(1f)
                     )
 
@@ -111,10 +113,14 @@ fun ReviewCard(
                     Spacer(modifier = Modifier.width(4.dp))
 
                     Text(
-                        text = rating.toString(),
+                        text = if (rating % 1f == 0f) {
+                            rating.toInt().toString()
+                        } else {
+                            rating.toString()
+                        },
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Medium,
-                        color = Color.Black
+                        color = BGBlack
                     )
                 }
             }
@@ -138,7 +144,8 @@ fun ReviewCard(
         ) {
             IconButton(
                 onClick = onLikeClick,
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(24.dp),
+                enabled = !isActionLoading
             ) {
                 Icon(
                     imageVector = Icons.Outlined.ThumbUp,
@@ -154,7 +161,8 @@ fun ReviewCard(
             )
             IconButton(
                 onClick = onUnLikeClick,
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(24.dp),
+                enabled = !isActionLoading
             ) {
                 Icon(
                     imageVector = Icons.Outlined.ThumbDown,

@@ -6,6 +6,8 @@ import com.yash091099.ChiragFarmersApp.data.remote.dto.MixedProductsData
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailsData
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailedData
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductReviewsData
+import com.yash091099.ChiragFarmersApp.data.remote.dto.ReviewReactionRequest
+import com.yash091099.ChiragFarmersApp.data.remote.dto.ReviewReactionResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.SearchProductItem
 import com.yash091099.ChiragFarmersApp.data.remote.dto.RateProductRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.RateProductResponse
@@ -23,6 +25,7 @@ interface ProductRepository {
     suspend fun getProductDetails(productId: String): Result<ProductDetailsData>
     suspend fun getProductDetailsDetailed(productId: String): Result<ProductDetailedData>
     suspend fun getProductReviews(productId: String): Result<ProductReviewsData>
+    suspend fun reactToReview(request: ReviewReactionRequest): Result<ReviewReactionResponse>
     suspend fun addProduct(request: AddProductRequest): Result<String>
     suspend fun updateProduct(request: UpdateProductRequest): Result<Unit>
     suspend fun toggleSoldOut(productId: String): Result<Boolean>

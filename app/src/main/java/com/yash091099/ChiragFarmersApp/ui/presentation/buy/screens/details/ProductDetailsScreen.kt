@@ -89,6 +89,7 @@ fun ProductDetailsScreen(
     val cartState by viewModel.cartState.collectAsState()
     val isInCart by viewModel.isInCart.collectAsState()
     val reviewsUiState by viewModel.reviewsState.collectAsState()
+    val reviewReactionState by viewModel.reviewReactionState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
@@ -115,6 +116,27 @@ fun ProductDetailsScreen(
         }
 
         else -> {}
+    }
+
+    when (val state = reviewReactionState) {
+        is ReviewReactionUiState.Success -> {
+            LaunchedEffect(state) {
+                coroutineScope.launch {
+                    snackbarHostState.showSnackbar(state.message)
+                    viewModel.resetReviewReactionState()
+                }
+            }
+        }
+
+        is ReviewReactionUiState.Error -> {
+            LaunchedEffect(state) {
+                coroutineScope.launch {
+                    snackbarHostState.showSnackbar(state.message)
+                    viewModel.resetReviewReactionState()
+                }
+            }
+        }
+        else -> Unit
     }
 
     when (val state = uiState) {
@@ -564,7 +586,12 @@ fun ProductDetailsScreen(
                         } else {
                             Spacer(modifier = Modifier.height(10.dp))
                         }
-                        ProductReviewsSection(reviewsUiState = reviewsUiState)
+                        ProductReviewsSection(
+                            reviewsUiState = reviewsUiState,
+                            reviewReactionState = reviewReactionState,
+                            onLikeClick = { reviewId -> viewModel.reactToReview(reviewId, "like") },
+                            onDislikeClick = { reviewId -> viewModel.reactToReview(reviewId, "dislike") }
+                        )
                     }
                 }
             }
@@ -573,7 +600,12 @@ fun ProductDetailsScreen(
 }
 
 @Composable
-private fun ProductReviewsSection(reviewsUiState: ProductReviewsUiState) {
+private fun ProductReviewsSection(
+    reviewsUiState: ProductReviewsUiState,
+    reviewReactionState: ReviewReactionUiState,
+    onLikeClick: (String) -> Unit,
+    onDislikeClick: (String) -> Unit,
+) {
     Text(
         text = "Reviews & Ratings :",
         fontSize = 16.sp,
@@ -705,6 +737,7 @@ private fun ProductReviewsSection(reviewsUiState: ProductReviewsUiState) {
                 )
             } else {
                 reviews.recentReviews.forEachIndexed { index, review ->
+                    val isLoading = (reviewReactionState as? ReviewReactionUiState.Loading)?.reviewId == review.reviewId
                     ReviewCard(
                         userName = review.userName,
                         userImage = R.drawable.profile_icon,
@@ -713,9 +746,10 @@ private fun ProductReviewsSection(reviewsUiState: ProductReviewsUiState) {
                         reviewText = review.review.orEmpty(),
                         timeAgo = review.recordedAt,
                         likeCount = review.likes,
-                        onUnLikeClick = {},
-                        onLikeClick = {},
-                        unLikeCount = review.dislikes
+                        onUnLikeClick = { review.reviewId?.let(onDislikeClick) },
+                        onLikeClick = { review.reviewId?.let(onLikeClick) },
+                        unLikeCount = review.dislikes,
+                        isActionLoading = isLoading || review.reviewId.isNullOrBlank()
                     )
 
                     if (index < reviews.recentReviews.lastIndex) {

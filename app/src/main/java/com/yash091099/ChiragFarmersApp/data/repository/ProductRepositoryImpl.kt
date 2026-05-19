@@ -14,6 +14,8 @@ import com.yash091099.ChiragFarmersApp.data.remote.dto.MixedProductsData
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductReviewsData
 import com.yash091099.ChiragFarmersApp.data.remote.dto.RateProductRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.RateProductResponse
+import com.yash091099.ChiragFarmersApp.data.remote.dto.ReviewReactionRequest
+import com.yash091099.ChiragFarmersApp.data.remote.dto.ReviewReactionResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailedData
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailsData
 import com.yash091099.ChiragFarmersApp.data.remote.dto.SearchProductItem
@@ -173,6 +175,24 @@ class ProductRepositoryImpl @Inject constructor(
             val response = apiService.getProductReviews("Bearer $token", productId)
             if (response.success && response.data != null) {
                 Result.success(response.data)
+            } else {
+                Result.failure(Exception(response.message))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun reactToReview(request: ReviewReactionRequest): Result<ReviewReactionResponse> {
+        return try {
+            val token = chiragDataStore.getAuthToken().first()
+            if (token.isNullOrEmpty()) {
+                return Result.failure(Exception("Authentication token not found"))
+            }
+
+            val response = apiService.reactToReview("Bearer $token", request)
+            if (response.success) {
+                Result.success(response)
             } else {
                 Result.failure(Exception(response.message))
             }

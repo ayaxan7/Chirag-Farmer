@@ -11,6 +11,8 @@ import com.yash091099.ChiragFarmersApp.data.remote.dto.RateProductResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailedResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailsResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductResponseDto
+import com.yash091099.ChiragFarmersApp.data.remote.dto.ReviewReactionRequest
+import com.yash091099.ChiragFarmersApp.data.remote.dto.ReviewReactionResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.SearchProductResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.SellerDetailsResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ToggleSoldOutRequest
@@ -113,4 +115,10 @@ ProductApiService {
         @Header("Authorization") token: String,
         @Body request: RateProductRequest
     ): RateProductResponse
+
+    @POST("api/farmers/rate-product/react")
+    suspend fun reactToReview(
+        @Header("Authorization") token: String,
+        @Body request: ReviewReactionRequest
+    ): ReviewReactionResponse
 }

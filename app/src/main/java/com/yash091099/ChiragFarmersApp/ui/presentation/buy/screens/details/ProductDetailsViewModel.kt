@@ -5,14 +5,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailedData
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductReviewsData
+import com.yash091099.ChiragFarmersApp.data.remote.dto.ReviewReactionRequest
 import com.yash091099.ChiragFarmersApp.domain.repository.ProductRepository
 import com.yash091099.ChiragFarmersApp.domain.usecase.AddToCartUseCase
 import com.yash091099.ChiragFarmersApp.domain.usecase.GetProductReviewsUseCase
+import com.yash091099.ChiragFarmersApp.domain.usecase.ReactToReviewUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,6 +23,7 @@ class ProductDetailsViewModel @Inject constructor(
     private val productRepository: ProductRepository,
     private val addToCartUseCase: AddToCartUseCase,
     private val getProductReviewsUseCase: GetProductReviewsUseCase,
+    private val reactToReviewUseCase: ReactToReviewUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -34,6 +38,9 @@ class ProductDetailsViewModel @Inject constructor(
 
     private val _reviewsState = MutableStateFlow<ProductReviewsUiState>(ProductReviewsUiState.Loading)
     val reviewsState: StateFlow<ProductReviewsUiState> = _reviewsState.asStateFlow()
+
+    private val _reviewReactionState = MutableStateFlow<ReviewReactionUiState>(ReviewReactionUiState.Idle)
+    val reviewReactionState: StateFlow<ReviewReactionUiState> = _reviewReactionState.asStateFlow()
 
     private val productId: String = checkNotNull(savedStateHandle["productId"])
 
@@ -92,6 +99,66 @@ class ProductDetailsViewModel @Inject constructor(
         }
     }
 
+    fun reactToReview(reviewId: String?, action: String) {
+        val trimmedReviewId = reviewId?.trim().orEmpty()
+        if (trimmedReviewId.isBlank()) {
+            _reviewReactionState.value = ReviewReactionUiState.Error("Review id missing")
+            return
+        }
+
+        val normalizedAction = action.trim().lowercase(Locale.getDefault())
+        if (normalizedAction != "like" && normalizedAction != "dislike") {
+            _reviewReactionState.value = ReviewReactionUiState.Error("Invalid review action")
+            return
+        }
+
+        if ((_reviewReactionState.value as? ReviewReactionUiState.Loading)?.reviewId == trimmedReviewId) return
+
+        viewModelScope.launch {
+            _reviewReactionState.value = ReviewReactionUiState.Loading(trimmedReviewId)
+
+            reactToReviewUseCase(
+                ReviewReactionRequest(
+                    ratingId = trimmedReviewId,
+                    action = normalizedAction
+                )
+            ).fold(
+                onSuccess = { response ->
+                    if (response.success) {
+                        updateReviewLocally(trimmedReviewId, normalizedAction)
+                        _reviewReactionState.value = ReviewReactionUiState.Success(response.message)
+                    } else {
+                        _reviewReactionState.value = ReviewReactionUiState.Error(response.message)
+                    }
+                },
+                onFailure = { exception ->
+                    _reviewReactionState.value = ReviewReactionUiState.Error(
+                        exception.message ?: "Unable to update review reaction"
+                    )
+                }
+            )
+        }
+    }
+
+    private fun updateReviewLocally(reviewId: String, action: String) {
+        val currentState = _reviewsState.value as? ProductReviewsUiState.Success ?: return
+        val updatedReviews = currentState.reviews.recentReviews.map { review ->
+            if (review.reviewId == reviewId) {
+                when (action) {
+                    "like" -> review.copy(likes = review.likes + 1)
+                    "dislike" -> review.copy(dislikes = review.dislikes + 1)
+                    else -> review
+                }
+            } else {
+                review
+            }
+        }
+
+        _reviewsState.value = ProductReviewsUiState.Success(
+            currentState.reviews.copy(recentReviews = updatedReviews)
+        )
+    }
+
     fun retry() {
         loadProductDetails()
     }
@@ -99,12 +166,23 @@ class ProductDetailsViewModel @Inject constructor(
     fun resetCartState() {
         _cartState.value = CartActionState.Idle
     }
+
+    fun resetReviewReactionState() {
+        _reviewReactionState.value = ReviewReactionUiState.Idle
+    }
 }
 
 sealed class ProductReviewsUiState {
     object Loading : ProductReviewsUiState()
     data class Success(val reviews: ProductReviewsData) : ProductReviewsUiState()
     data class Error(val message: String) : ProductReviewsUiState()
+}
+
+sealed class ReviewReactionUiState {
+    object Idle : ReviewReactionUiState()
+    data class Loading(val reviewId: String) : ReviewReactionUiState()
+    data class Success(val message: String) : ReviewReactionUiState()
+    data class Error(val message: String) : ReviewReactionUiState()
 }
 
 sealed class ProductDetailsUiState {
