@@ -1,4 +1,4 @@
-package com.yash091099.ChiragFarmersApp.ui.presentation.orders
+package com.yash091099.ChiragFarmersApp.ui.presentation.orders.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -44,7 +44,11 @@ import com.yash091099.ChiragFarmersApp.ui.theme.*
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.foundation.Canvas
 import androidx.compose.ui.platform.LocalClipboardManager
+import com.yash091099.ChiragFarmersApp.data.remote.dto.CancellationDetailsDto
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost.Route
+import com.yash091099.ChiragFarmersApp.ui.presentation.orders.CancelOrderState
+import com.yash091099.ChiragFarmersApp.ui.presentation.orders.OrderDetailsUiState
+import com.yash091099.ChiragFarmersApp.ui.presentation.orders.OrderDetailsViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
@@ -224,7 +228,7 @@ fun OrderProductCard(
     price: String,
     quantity: String,
     itemStatus: String? = null,
-    cancellationDetails: com.yash091099.ChiragFarmersApp.data.remote.dto.CancellationDetailsDto? = null,
+    cancellationDetails: CancellationDetailsDto? = null,
     productId: String = "",
     onCancelClick: () -> Unit = {}
 ) {

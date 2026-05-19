@@ -1,4 +1,4 @@
-package com.yash091099.ChiragFarmersApp.ui.presentation.orders
+package com.yash091099.ChiragFarmersApp.ui.presentation.orders.screens
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -31,6 +32,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UserPlacedOrder
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost.Route
+import com.yash091099.ChiragFarmersApp.ui.presentation.orders.MyOrdersUiState
+import com.yash091099.ChiragFarmersApp.ui.presentation.orders.MyOrdersViewModel
 
 @Composable
 fun MyOrdersScreen(
@@ -111,7 +114,7 @@ fun MyOrdersScreen(
 }
 
 @Composable
-fun OrderList(state: MyOrdersUiState, onRetry: () -> Unit,navController: NavHostController) {
+fun OrderList(state: MyOrdersUiState, onRetry: () -> Unit, navController: NavHostController) {
     when (state) {
         is MyOrdersUiState.Loading -> {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -188,7 +191,7 @@ fun OrderCard(order: UserPlacedOrder,navController: NavHostController) {
                     color = TextGray,
                     lineHeight = 13.sp,
                     maxLines = 2,
-                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     text = "₹${order.productPrice}",

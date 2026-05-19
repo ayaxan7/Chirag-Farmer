@@ -428,7 +428,7 @@ fun OrderDetailsView(
                     text = "Update Progress",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF1A1C1E),
+                    color = BGBlack,
                 )
             }
             item {

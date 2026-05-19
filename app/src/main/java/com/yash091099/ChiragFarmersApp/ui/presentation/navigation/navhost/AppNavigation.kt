@@ -42,9 +42,9 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.cart.payment.PaymentViewM
 import com.yash091099.ChiragFarmersApp.ui.presentation.splash.SplashScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.profile.ProfileScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.profile.ProfileViewModel
-import com.yash091099.ChiragFarmersApp.ui.presentation.orders.MyOrdersScreen
-import com.yash091099.ChiragFarmersApp.ui.presentation.orders.MyOrderDetailsScreen
-import com.yash091099.ChiragFarmersApp.ui.presentation.orders.DropReviewScreen
+import com.yash091099.ChiragFarmersApp.ui.presentation.orders.screens.MyOrdersScreen
+import com.yash091099.ChiragFarmersApp.ui.presentation.orders.screens.MyOrderDetailsScreen
+import com.yash091099.ChiragFarmersApp.ui.presentation.orders.screens.DropReviewScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.buy.screens.seller.SellerProfileScreen
 
 @Composable
