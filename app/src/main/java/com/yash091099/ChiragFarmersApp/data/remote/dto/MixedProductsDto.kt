@@ -26,6 +26,7 @@ data class MixedProductItem(
     val imageUrl: String?,
     val sellerName: String,
     val originalPrice: Double,
-    val finalPrice: Double
+    val finalPrice: Double,
+    val rating:String
 )
 

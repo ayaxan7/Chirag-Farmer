@@ -175,7 +175,7 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
                                     brandName = product.sellerName,
                                     currentPrice = product.finalPrice.toInt().toString(),
                                     originalPrice = product.originalPrice.toInt().toString(),
-                                    rating = "4.5"
+                                    rating = product.rating
                                 ),onClick = {
                                     navController.navigate(Route.ProductDetails.createRoute(product.id))
                                 },
@@ -203,7 +203,7 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
                                     brandName = product.sellerName,
                                     currentPrice = product.finalPrice.toInt().toString(),
                                     originalPrice = product.originalPrice.toInt().toString(),
-                                    rating = "4.5"
+                                    rating = product.rating
                                 ),onClick = {
                                     navController.navigate(Route.ProductDetails.createRoute(product.id))
                                 },
@@ -231,7 +231,7 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
                                     brandName = product.sellerName,
                                     currentPrice = product.finalPrice.toInt().toString(),
                                     originalPrice = product.originalPrice.toInt().toString(),
-                                    rating = "4.5"
+                                    rating = product.rating
                                 ),onClick = {
                                     navController.navigate(Route.ProductDetails.createRoute(product.id))
                                 },
@@ -258,7 +258,7 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
                                     brandName = product.sellerName,
                                     currentPrice = product.finalPrice.toInt().toString(),
                                     originalPrice = product.originalPrice.toInt().toString(),
-                                    rating = "4.5"
+                                    rating = product.rating
                                 ),
                                 onClick = {
                                     navController.navigate(Route.ProductDetails.createRoute(product.id))

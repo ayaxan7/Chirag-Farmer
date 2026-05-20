@@ -190,7 +190,7 @@ fun CategoriesScreen(
                                     brandName = product.sellerName,
                                     currentPrice = product.effectivePrice.toString(),
                                     originalPrice = product.originalPrice.takeIf { it > 0 }?.toString(),
-                                    rating = "4.8",
+                                    rating = product.rating,
                                     imageUrl = product.imageUrl
                                 ), isSellScreen = false, onClick = {
                                     navController.navigate(Route.ProductDetails.createRoute(product.productId))

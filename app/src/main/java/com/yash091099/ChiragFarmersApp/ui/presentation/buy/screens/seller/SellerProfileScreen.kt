@@ -153,7 +153,7 @@ fun SellerProfileScreen(
                                 .padding(16.dp),
                             horizontalArrangement = Arrangement.SpaceAround
                         ) {
-                            StatItem(value = "4.8 ⭐", label = "100 ratings")
+                            StatItem(value = "${sellerData.seller.rating} ⭐", label = "${sellerData.seller.totalRatings} ratings")
                             StatItem(label = "Products", value = sellerData.stats.totalListings.toString())
                             StatItem(label = "Sold Out", value = sellerData.stats.soldOutProducts.toString())
                             StatItem(label = "Share", icon = R.drawable.ic_share)
@@ -189,7 +189,7 @@ fun SellerProfileScreen(
                                             brandName = product.sellerName,
                                             currentPrice = product.effectivePrice.toString(),
                                             originalPrice = product.originalPrice.toString(),
-                                            rating = "4.5"
+                                            rating = product.rating
                                         ),
                                         onClick = {
                                             navController.navigate(Route.ProductDetails.createRoute(product.productId))

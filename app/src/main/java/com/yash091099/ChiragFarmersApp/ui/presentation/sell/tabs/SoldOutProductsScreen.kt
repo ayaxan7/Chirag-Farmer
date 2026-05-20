@@ -62,7 +62,7 @@ fun SoldOutProductsScreen(
                                     brandName = product.sellerName,
                                     currentPrice = product.effectivePrice.toString(),
                                     originalPrice = product.originalPrice.toString(),
-                                    rating = "4.8", // Static for now
+                                    rating = product.rating,
                                     isSoldOut = true
                                 ),
                                 isSellScreen = true,

@@ -537,7 +537,7 @@ fun ProductDetailsScreen(
                                             brandName = item.sellerName,
                                             currentPrice = item.discountedPrice.toInt().toString(),
                                             originalPrice = item.originalPrice.toInt().toString(),
-                                            rating = "4.5"
+                                            rating = item.rating ?: "0.0"
                                         ), modifier = Modifier.width(180.dp), onClick = {
                                             navController.navigate(
                                                 Route.ProductDetails.createRoute(
@@ -576,7 +576,7 @@ fun ProductDetailsScreen(
                                             brandName = item.sellerName,
                                             currentPrice = item.discountedPrice.toInt().toString(),
                                             originalPrice = item.originalPrice.toInt().toString(),
-                                            rating = "4.5"
+                                            rating = item.rating ?: "0.0"
                                         ), modifier = Modifier.width(180.dp), onClick = {
                                             navController.navigate(
                                                 Route.ProductDetails.createRoute(

@@ -67,6 +67,9 @@ data class RecommendedProduct(
     val originalPrice: Double,
     @SerializedName("discountedPrice")
     val discountedPrice: Double
+    ,
+    @SerializedName("rating")
+    val rating: String? = null
 )
 
 data class SellerProfileInfo(

@@ -19,7 +19,9 @@ data class SellerDetailsData(
 data class SellerInfo(
     val userId: String,
     val name: String,
-    val profileImageUrl: String?
+    val profileImageUrl: String?,
+    val rating:String,
+    val totalRatings:String
 )
 
 data class SellerStats(
@@ -51,6 +53,7 @@ fun SellerProductDto.toDomain(): Product {
         sellerName = sellerName,
         effectivePrice = discountedPrice.toInt(),
         availableQuantity = 0,
-        originalPrice = originalPrice.toInt()
+        originalPrice = originalPrice.toInt(),
+        rating = "0.0"
     )
 }

@@ -235,7 +235,7 @@ fun HomeScreen(
                                                 brandName = product.sellerName,
                                                 currentPrice = product.finalPrice.toString(),
                                                 originalPrice = product.originalPrice.toString(),
-                                                rating = "4.5"
+                                                rating = product.rating
                                             ),
                                             onClick = {
                                                 navController.navigate(
@@ -286,7 +286,7 @@ fun HomeScreen(
                                                 brandName = product.sellerName,
                                                 currentPrice = product.finalPrice.toString(),
                                                 originalPrice = product.originalPrice.toString(),
-                                                rating = "4.5"
+                                                rating = product.rating
                                             ),
                                             onClick = {
                                                 navController.navigate(
@@ -337,7 +337,7 @@ fun HomeScreen(
                                                 brandName = product.sellerName,
                                                 currentPrice = product.finalPrice.toString(),
                                                 originalPrice = product.originalPrice.toString(),
-                                                rating = "4.5"
+                                                rating = product.rating
                                             ),
                                             onClick = {
                                                 navController.navigate(
