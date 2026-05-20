@@ -59,16 +59,12 @@ fun SellerProfileScreen(
     viewModel: SellerProfileViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val screenTitle = when (val state = uiState) {
-        is SellerProfileUiState.Success -> state.sellerDetails.seller.name
-        else -> "Seller Profile"
-    }
 
     Scaffold(
         topBar = {
             ChiragTopBar(
                 navController = navController,
-                title = screenTitle,
+                title = "Seller Profile",
                 icon = R.drawable.ic_arrow
             )
         }, containerColor = BGWhite
