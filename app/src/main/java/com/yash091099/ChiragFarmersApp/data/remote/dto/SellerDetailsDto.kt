@@ -20,8 +20,8 @@ data class SellerInfo(
     val userId: String,
     val name: String,
     val profileImageUrl: String?,
-    val rating:String,
-    val totalRatings:String
+    val rating: Double,
+    val totalRatings: Int
 )
 
 data class SellerStats(
@@ -35,7 +35,8 @@ data class SellerProductDto(
     val imageUrl: String?,
     val sellerName: String,
     val originalPrice: Double,
-    val discountedPrice: Double
+    val discountedPrice: Double,
+    val rating: Double
 )
 
 data class SellerPagination(
@@ -54,6 +55,6 @@ fun SellerProductDto.toDomain(): Product {
         effectivePrice = discountedPrice.toInt(),
         availableQuantity = 0,
         originalPrice = originalPrice.toInt(),
-        rating = "0.0"
+        rating = rating.toString()
     )
 }

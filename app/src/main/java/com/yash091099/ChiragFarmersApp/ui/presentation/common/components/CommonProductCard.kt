@@ -21,7 +21,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Cancel
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -97,7 +96,9 @@ fun CommonProductCard(
                         })
                 } else {
                     Image(
-                        painter = painterResource(id = product.imageRes ?: R.drawable.sell_category_other),
+                        painter = painterResource(
+                            id = product.imageRes ?: R.drawable.sell_category_other
+                        ),
                         contentDescription = product.productName,
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop
@@ -180,24 +181,25 @@ fun CommonProductCard(
                             )
                         }
                     }
-
-                    // Rating
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(2.dp)
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_rating_star),
-                            contentDescription = "Rating",
-                            tint = Color(0xffF7E62D),
-                            modifier = Modifier.size(12.dp)
-                        )
-                        Text(
-                            text = product.rating,
-                            fontSize = 10.sp,
-                            fontWeight = W400,
-                            color = Color.Black
-                        )
+                    if ((product.rating.toFloatOrNull() ?: 0f) > 0f) {
+                        // Rating
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(2.dp)
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_rating_star),
+                                contentDescription = "Rating",
+                                tint = Color(0xffF7E62D),
+                                modifier = Modifier.size(12.dp)
+                            )
+                            Text(
+                                text = product.rating,
+                                fontSize = 10.sp,
+                                fontWeight = W400,
+                                color = Color.Black
+                            )
+                        }
                     }
                 }
 

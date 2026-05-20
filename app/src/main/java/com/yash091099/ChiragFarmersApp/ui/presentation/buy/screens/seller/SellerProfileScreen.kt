@@ -16,15 +16,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Message
 import androidx.compose.material.icons.filled.Verified
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -47,30 +43,33 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost.Route
 import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
 import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
 import com.yash091099.ChiragFarmersApp.ui.theme.TextGray
-
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.yash091099.ChiragFarmersApp.data.remote.dto.toDomain
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SellerProfileScreen(
     navController: NavHostController,
-    sellerId: String,
-    sellerName: String,
     sellerImage: String? = null,
     viewModel: SellerProfileViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val screenTitle = when (val state = uiState) {
+        is SellerProfileUiState.Success -> state.sellerDetails.seller.name
+        else -> "Seller Profile"
+    }
 
     Scaffold(
         topBar = {
             ChiragTopBar(
-                navController = navController, title = "Seller Profile", icon = R.drawable.ic_arrow
+                navController = navController,
+                title = screenTitle,
+                icon = R.drawable.ic_arrow
             )
         }, containerColor = BGWhite
     ) { paddingValues ->
@@ -153,7 +152,10 @@ fun SellerProfileScreen(
                                 .padding(16.dp),
                             horizontalArrangement = Arrangement.SpaceAround
                         ) {
-                            StatItem(value = "${sellerData.seller.rating} ⭐", label = "${sellerData.seller.totalRatings} ratings")
+                            StatItem(
+                                value = "${String.format(Locale.getDefault(), "%.1f", sellerData.seller.rating)} ⭐",
+                                label = "${sellerData.seller.totalRatings} ratings"
+                            )
                             StatItem(label = "Products", value = sellerData.stats.totalListings.toString())
                             StatItem(label = "Sold Out", value = sellerData.stats.soldOutProducts.toString())
                             StatItem(label = "Share", icon = R.drawable.ic_share)

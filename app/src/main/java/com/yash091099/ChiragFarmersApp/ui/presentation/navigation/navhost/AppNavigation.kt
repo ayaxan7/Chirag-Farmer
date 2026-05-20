@@ -265,8 +265,6 @@ fun AppNavigation(
             val sellerImage = backStackEntry.arguments?.getString("sellerImage")
             SellerProfileScreen(
                 navController = navController,
-                sellerId = sellerId,
-                sellerName = sellerName,
                 sellerImage = sellerImage
             )
         }
