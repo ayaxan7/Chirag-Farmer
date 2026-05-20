@@ -35,7 +35,8 @@ data class ProductDto(
     val discountedPrice: Double? = null,
     @SerializedName("quantity", alternate = ["availableQuantity"])
     val availableQuantity: Int,
-    val rating:String
+    @SerializedName("rating")
+    val rating: Double? = null
 )
 
 fun ProductDto.toDomain(): Product {
@@ -50,6 +51,6 @@ fun ProductDto.toDomain(): Product {
         effectivePrice = effectivePrice.toInt(),
         availableQuantity = availableQuantity,
         originalPrice = regularPrice?.toInt() ?: 0,
-        rating = rating
+        rating = rating?.toString() ?: "0.0"
     )
 }
