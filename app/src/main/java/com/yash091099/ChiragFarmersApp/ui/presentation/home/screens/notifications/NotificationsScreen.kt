@@ -39,6 +39,7 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.home.screens.notification
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragTopBar
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost.Route
 import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
+import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
 
 data class NotificationFilterOption(
     val label: String,
@@ -69,7 +70,7 @@ fun NotificationsScreen(
 
     Scaffold(
         modifier = modifier,
-        containerColor = Color.Transparent,
+        containerColor = BGWhite,
         topBar = {
             ChiragTopBar(
                 navController = navController,
