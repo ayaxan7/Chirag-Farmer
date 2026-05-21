@@ -12,12 +12,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,108 +30,65 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.presentation.home.screens.notifications.components.NotificationFilterChip
 import com.yash091099.ChiragFarmersApp.ui.presentation.home.screens.notifications.components.NotificationItem
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragTopBar
+import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost.Route
+import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
 
-data class NotificationData(
-    val avatarRes: Int,
-    val title: String,
-    val message: String,
-    val timeAgo: String,
-    val actionButtonText: String,
-    val category: String // "all", "buy", "sell", "service"
+data class NotificationFilterOption(
+    val label: String,
+    val apiValue: String
 )
 
 @Composable
 fun NotificationsScreen(
-    navController: NavHostController, modifier: Modifier = Modifier
+    navController: NavHostController,
+    modifier: Modifier = Modifier,
+    viewModel: NotificationsViewModel = hiltViewModel()
 ) {
-    var selectedFilter by remember { mutableStateOf("All") }
-
-    // Sample notifications data
-    val allNotifications = remember {
+    val filters = remember {
         listOf(
-            // Today
-            NotificationData(
-                avatarRes = R.drawable.sprayer,
-                title = "Sprayer (20L) is out for delivery.",
-                message = "Track your order for updates.",
-                timeAgo = "1m ago",
-                actionButtonText = "Shop Now",
-                category = "buy"
-            ), NotificationData(
-                avatarRes = R.drawable.sprayer,
-                title = "Flash Sale on Vegetable Seeds!",
-                message = "Up to 40% off for the next 6 hours.",
-                timeAgo = "1m ago",
-                actionButtonText = "Shop Now",
-                category = "buy"
-            ), NotificationData(
-                avatarRes = R.drawable.sprayer,
-                title = "You received a new Order on your Wheat listing",
-                message = "",
-                timeAgo = "1m ago",
-                actionButtonText = "View Order",
-                category = "sell"
-            ),
-            // Yesterday
-            NotificationData(
-                avatarRes = R.drawable.sprayer,
-                title = "Transaction Successful! ₹3,500 credited for your sale of Green Chillies.",
-                message = "",
-                timeAgo = "1m ago",
-                actionButtonText = "View Details",
-                category = "sell"
-            ), NotificationData(
-                avatarRes = R.drawable.sprayer,
-                title = "Reminder: Drone spraying service booked for Saturday, 3 PM.",
-                message = "",
-                timeAgo = "1m ago",
-                actionButtonText = "View Details",
-                category = "service"
-            ), NotificationData(
-                avatarRes = R.drawable.sprayer,
-                title = "Service Feedback Request: Rate your recent service for Water Pump.",
-                message = "",
-                timeAgo = "1m ago",
-                actionButtonText = "Drop Rating",
-                category = "service"
-            )
+            NotificationFilterOption(label = "All", apiValue = ""),
+            NotificationFilterOption(label = "Buy", apiValue = "buy"),
+            NotificationFilterOption(label = "Sell", apiValue = "sell"),
+            NotificationFilterOption(label = "Service", apiValue = "service")
         )
     }
 
-    // Filter notifications based on selected category
-    val filteredNotifications = if (selectedFilter.equals("All",ignoreCase = true)) {
-        allNotifications
-    } else {
-        allNotifications.filter { it.category == selectedFilter.lowercase() }
+    var selectedFilter by rememberSaveable { mutableStateOf("") }
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(selectedFilter) {
+        viewModel.loadNotifications(type = selectedFilter.takeIf { it.isNotBlank() })
     }
 
-    // Group by today and yesterday
-    val todayNotifications = filteredNotifications.take(3)
-    val yesterdayNotifications = filteredNotifications.drop(3)
-
     Scaffold(
-        modifier = modifier, containerColor = Color.Transparent, topBar = {
+        modifier = modifier,
+        containerColor = Color.Transparent,
+        topBar = {
             ChiragTopBar(
-                navController = navController, icon = R.drawable.ic_arrow, title = "Notifications"
+                navController = navController,
+                icon = R.drawable.ic_arrow,
+                title = "Notifications"
             )
-        }) { paddingValues ->
+        }
+    ) { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            // Background illustration at bottom
             Image(
                 painter = painterResource(id = R.drawable.notifications_screen_bg),
                 contentDescription = "Background illustration",
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .fillMaxSize(),
+                    .fillMaxSize()
             )
 
             Column(
@@ -137,82 +98,89 @@ fun NotificationsScreen(
             ) {
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Filter chips
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    NotificationFilterChip(
-                        label = "All",
-                        isSelected = selectedFilter == "All",
-                        onClick = { selectedFilter = "All" })
-                    NotificationFilterChip(
-                        label = "Buy",
-                        isSelected = selectedFilter == "Buy",
-                        onClick = { selectedFilter = "Buy" })
-                    NotificationFilterChip(
-                        label = "sell",
-                        isSelected = selectedFilter == "sell",
-                        onClick = { selectedFilter = "sell" })
-                    NotificationFilterChip(
-                        label = "service",
-                        isSelected = selectedFilter == "service",
-                        onClick = { selectedFilter = "service" })
-                }
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                // Today section
-                if (todayNotifications.isNotEmpty()) {
-                    Text(
-                        text = "Today",
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color.Black,
-                        modifier = Modifier.padding(horizontal = 16.dp)
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    todayNotifications.forEach { notification ->
-                        NotificationItem(
-                            avatarRes = notification.avatarRes,
-                            title = notification.title,
-                            message = notification.message,
-                            timeAgo = notification.timeAgo,
-                            actionButtonText = notification.actionButtonText,
-                            onActionClick = { /* Handle action */ },
-                            modifier = Modifier.padding(horizontal = 16.dp)
+                    filters.forEach { filter ->
+                        NotificationFilterChip(
+                            label = filter.label,
+                            isSelected = selectedFilter == filter.apiValue,
+                            onClick = { selectedFilter = filter.apiValue }
                         )
                     }
                 }
 
-                // Yesterday section
-                if (yesterdayNotifications.isNotEmpty()) {
-                    Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
-                    Text(
-                        text = "Yesterday",
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color.Black,
-                        modifier = Modifier.padding(horizontal = 16.dp)
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    yesterdayNotifications.forEach { notification ->
-                        NotificationItem(
-                            avatarRes = notification.avatarRes,
-                            title = notification.title,
-                            message = notification.message,
-                            timeAgo = notification.timeAgo,
-                            actionButtonText = notification.actionButtonText,
-                            onActionClick = { /* Handle action */ },
-                            modifier = Modifier.padding(horizontal = 16.dp)
+                when (val state = uiState) {
+                    is NotificationsUiState.Loading -> {
+                        Spacer(modifier = Modifier.height(160.dp))
+                        CircularProgressIndicator(
+                            modifier = Modifier.align(Alignment.CenterHorizontally),
+                            color = BGBlack
                         )
+                        Spacer(modifier = Modifier.height(160.dp))
+                    }
+
+                    is NotificationsUiState.Error -> {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = state.message,
+                                color = Color.Red,
+                                fontSize = 14.sp
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+                            Button(onClick = { viewModel.retry() }) {
+                                Text(text = "Retry")
+                            }
+                        }
+                    }
+
+                    is NotificationsUiState.Success -> {
+                        val groupedNotifications = remember(state.notifications) {
+                            groupNotificationsByRecency(state.notifications)
+                        }
+
+                        if (state.notifications.isEmpty()) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp, vertical = 32.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = "No notifications found",
+                                    color = Color.Black,
+                                    fontSize = 14.sp
+                                )
+                            }
+                        } else {
+                            NotificationSection(
+                                title = "Today",
+                                notifications = groupedNotifications["Today"].orEmpty(),
+                                navController = navController
+                            )
+
+                            NotificationSection(
+                                title = "Yesterday",
+                                notifications = groupedNotifications["Yesterday"].orEmpty(),
+                                navController = navController
+                            )
+
+                            NotificationSection(
+                                title = "Earlier",
+                                notifications = groupedNotifications["Earlier"].orEmpty(),
+                                navController = navController
+                            )
+                        }
                     }
                 }
 
@@ -220,4 +188,69 @@ fun NotificationsScreen(
             }
         }
     }
+}
+
+@Composable
+private fun NotificationSection(
+    title: String,
+    notifications: List<NotificationUiModel>,
+    navController: NavHostController
+) {
+    if (notifications.isEmpty()) return
+
+    Text(
+        text = title,
+        fontSize = 15.sp,
+        fontWeight = FontWeight.SemiBold,
+        color = Color.Black,
+        modifier = Modifier.padding(horizontal = 16.dp)
+    )
+
+    Spacer(modifier = Modifier.height(8.dp))
+
+    notifications.forEach { notification ->
+        NotificationItem(
+            imageUrl = notification.imageUrl,
+            avatarRes = R.drawable.sprayer,
+            title = notification.title,
+            message = notification.body,
+            timeAgo = notification.receivedAt,
+            actionButtonText = notification.actionButtonText,
+            onActionClick = {
+                when {
+                    !notification.orderId.isNullOrBlank() -> {
+                        navController.navigate(Route.OrderDetails.createRoute(notification.orderId))
+                    }
+
+                    !notification.bookingId.isNullOrBlank() -> {
+                        navController.navigate(Route.Bookings.path)
+                    }
+                }
+            },
+            modifier = Modifier.padding(horizontal = 16.dp)
+        )
+    }
+}
+
+private fun groupNotificationsByRecency(
+    notifications: List<NotificationUiModel>
+): Map<String, List<NotificationUiModel>> {
+    val today = mutableListOf<NotificationUiModel>()
+    val yesterday = mutableListOf<NotificationUiModel>()
+    val earlier = mutableListOf<NotificationUiModel>()
+
+    notifications.forEach { notification ->
+        val receivedAt = notification.receivedAt.lowercase()
+        when {
+            receivedAt.contains("yesterday") -> yesterday.add(notification)
+            receivedAt.contains("ago") || receivedAt.contains("today") -> today.add(notification)
+            else -> earlier.add(notification)
+        }
+    }
+
+    return linkedMapOf(
+        "Today" to today,
+        "Yesterday" to yesterday,
+        "Earlier" to earlier
+    )
 }

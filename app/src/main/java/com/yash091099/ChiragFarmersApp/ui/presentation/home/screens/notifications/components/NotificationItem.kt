@@ -25,13 +25,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
 import com.yash091099.ChiragFarmersApp.ui.theme.BorderColour
 import com.yash091099.ChiragFarmersApp.ui.theme.TextGray
 
 @Composable
 fun NotificationItem(
-    avatarRes: Int,
+    avatarRes: Int = R.drawable.sprayer,
+    imageUrl: String? = null,
     title: String,
     message: String,
     timeAgo: String,
@@ -48,15 +51,25 @@ fun NotificationItem(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.Top
         ) {
-            // Avatar
-            Image(
-                painter = painterResource(id = avatarRes),
-                contentDescription = "Notification avatar",
-                modifier = Modifier
-                    .size(48.dp)
-                    .clip(CircleShape),
-                contentScale = ContentScale.Crop
-            )
+            if (imageUrl.isNullOrBlank()) {
+                Image(
+                    painter = painterResource(id = avatarRes),
+                    contentDescription = "Notification avatar",
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(CircleShape),
+                    contentScale = ContentScale.Crop
+                )
+            } else {
+                AsyncImage(
+                    model = imageUrl,
+                    contentDescription = "Notification avatar",
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(CircleShape),
+                    contentScale = ContentScale.Crop
+                )
+            }
 
             Spacer(modifier = Modifier.width(12.dp))
 
@@ -75,16 +88,18 @@ fun NotificationItem(
 
                 Spacer(modifier = Modifier.height(4.dp))
 
-                // Message
-                Text(
-                    text = message,
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Normal,
-                    color = TextGray,
-                    lineHeight = 18.sp
-                )
+                if (message.isNotBlank()) {
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = message,
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Normal,
+                        color = TextGray,
+                        lineHeight = 18.sp
+                    )
 
-                Spacer(modifier = Modifier.height(4.dp))
+                    Spacer(modifier = Modifier.height(4.dp))
+                }
 
                 // Time ago
                 Text(
