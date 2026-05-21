@@ -171,7 +171,16 @@ fun AppNavigation(
             )
         }
         composable(Route.Sell.path) {
-            SellScreen(navController = navController)
+            SellScreen(navController = navController, initialOrderId = null)
+        }
+        composable(
+            Route.SellerOrderDetails.path,
+            arguments = listOf(
+                navArgument("orderId") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val orderId = Uri.decode(backStackEntry.arguments?.getString("orderId") ?: "")
+            SellScreen(navController = navController, initialOrderId = orderId)
         }
         composable(Route.SellProduct.path, arguments = listOf(navArgument("productId") {
             type = NavType.StringType

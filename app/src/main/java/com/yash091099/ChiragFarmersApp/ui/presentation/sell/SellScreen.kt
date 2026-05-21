@@ -43,7 +43,9 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun SellScreen(
-    navController: NavHostController, viewModel: SellViewModel = hiltViewModel()
+    navController: NavHostController,
+    initialOrderId: String? = null,
+    viewModel: SellViewModel = hiltViewModel()
 ) {
 
     val snackBarHostState = remember { SnackbarHostState() }
@@ -58,6 +60,16 @@ fun SellScreen(
     val soldOutProducts = viewModel.soldOutProducts.collectAsLazyPagingItems()
 
     val selectedOrderId by viewModel.selectedOrderId.collectAsStateWithLifecycle()
+
+    // Initialize with provided order ID and navigate to Active Orders tab
+    LaunchedEffect(initialOrderId) {
+        if (initialOrderId != null) {
+            viewModel.selectOrder(initialOrderId)
+            scope.launch {
+                pagerState.animateScrollToPage(2) // Active Orders tab
+            }
+        }
+    }
 
     BackHandler(enabled = selectedOrderId != null) {
         viewModel.selectOrder(null)

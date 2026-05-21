@@ -83,24 +83,27 @@ sealed class Route(val path: String) {
             return if (params.isEmpty()) base else "$base?${params.joinToString("&")}"
         }
     }
-    object DropReview : Route("drop_review/{orderId}?productId={productId}&imageUrl={imageUrl}&productName={productName}&sellerName={sellerName}&pricePaid={pricePaid}") {
-        fun createRoute(
-            orderId: String,
-            productId: String,
-            imageUrl: String? = null,
-            productName: String? = null,
-            sellerName: String? = null,
-            pricePaid: String? = null
-        ): String {
-            val base = "drop_review/${Uri.encode(orderId)}"
-            val params = buildList {
-                add("productId=${Uri.encode(productId)}")
-                imageUrl?.let { add("imageUrl=${Uri.encode(it)}") }
-                productName?.let { add("productName=${Uri.encode(it)}") }
-                sellerName?.let { add("sellerName=${Uri.encode(it)}") }
-                pricePaid?.let { add("pricePaid=${Uri.encode(it)}") }
-            }
-            return if (params.isEmpty()) base else "$base?${params.joinToString("&")}"
-        }
-    }
+     object DropReview : Route("drop_review/{orderId}?productId={productId}&imageUrl={imageUrl}&productName={productName}&sellerName={sellerName}&pricePaid={pricePaid}") {
+         fun createRoute(
+             orderId: String,
+             productId: String,
+             imageUrl: String? = null,
+             productName: String? = null,
+             sellerName: String? = null,
+             pricePaid: String? = null
+         ): String {
+             val base = "drop_review/${Uri.encode(orderId)}"
+             val params = buildList {
+                 add("productId=${Uri.encode(productId)}")
+                 imageUrl?.let { add("imageUrl=${Uri.encode(it)}") }
+                 productName?.let { add("productName=${Uri.encode(it)}") }
+                 sellerName?.let { add("sellerName=${Uri.encode(it)}") }
+                 pricePaid?.let { add("pricePaid=${Uri.encode(it)}") }
+             }
+             return if (params.isEmpty()) base else "$base?${params.joinToString("&")}"
+         }
+     }
+     object SellerOrderDetails : Route("seller_order_details/{orderId}") {
+         fun createRoute(orderId: String): String = "seller_order_details/${Uri.encode(orderId)}"
+     }
 }

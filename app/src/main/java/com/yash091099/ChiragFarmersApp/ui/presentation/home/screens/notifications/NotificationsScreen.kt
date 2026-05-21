@@ -219,12 +219,18 @@ private fun NotificationSection(
             actionButtonText = notification.actionButtonText,
             onActionClick = {
                 when {
-                    !notification.orderId.isNullOrBlank() -> {
-                        navController.navigate(Route.OrderDetails.createRoute(notification.orderId))
-                    }
-
                     !notification.bookingId.isNullOrBlank() -> {
                         navController.navigate(Route.Bookings.path)
+                    }
+
+                    !notification.orderId.isNullOrBlank() -> {
+                        // Route based on notification tag
+                        if (notification.tag == "sell") {
+                            navController.navigate(Route.SellerOrderDetails.createRoute(notification.orderId))
+                        } else {
+                            // Default to buyer's order (buy tag or any other tag)
+                            navController.navigate(Route.OrderDetails.createRoute(notification.orderId))
+                        }
                     }
                 }
             },
