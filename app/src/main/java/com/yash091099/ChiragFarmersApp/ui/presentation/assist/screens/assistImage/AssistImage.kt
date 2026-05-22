@@ -283,7 +283,7 @@ fun DividerWithOr(
     ) {
 
         DashedDivider(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(0.5f)
         )
 
         Text(
@@ -294,7 +294,7 @@ fun DividerWithOr(
         )
 
         DashedDivider(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(0.5f)
         )
     }
 }
