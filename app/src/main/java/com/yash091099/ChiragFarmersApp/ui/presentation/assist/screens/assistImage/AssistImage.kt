@@ -50,6 +50,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.yash091099.ChiragFarmersApp.R
+import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.ChiragButton
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragTopBar
 import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
 import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
@@ -120,6 +121,20 @@ fun AssistImage(navController: NavHostController) {
                 title = "Assist Image",
                 icon = R.drawable.ic_arrow
             )
+        },
+        bottomBar = {
+            if(selectedImageUri.value!=null){
+                ChiragButton(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    onClick = { },
+                    text = "Next",
+                    containerColor = BGBlack,
+                    contentColor = BGWhite,
+                    enabled = true
+                )
+            }
         }
     ) { innerPadding ->
         Column(
