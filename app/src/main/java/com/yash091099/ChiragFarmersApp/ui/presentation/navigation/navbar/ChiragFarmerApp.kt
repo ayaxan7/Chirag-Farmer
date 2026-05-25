@@ -28,7 +28,7 @@ fun ChiragFarmerApp(navController: NavHostController, modifier: Modifier = Modif
 
     // Define routes that should show the bottom navigation bar
     val routesWithBottomBar = listOf(
-        Route.Home.path, Route.Assist.path, Route.Bookings.path, Route.Buy.path, Route.Sell.path,Route.SellerOrderDetails.path, Route.AssistResult.path
+        Route.Home.path, Route.Assist.path, Route.Bookings.path, Route.Buy.path, Route.Sell.path,Route.SellerOrderDetails.path
     )
 
     // Splash, Auth, and other unauthenticated screens should NOT show bottom bar

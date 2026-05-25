@@ -1,20 +1,16 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.assist.screens.assistResult
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -34,19 +30,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragTopBar
 import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
 import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
+import com.yash091099.ChiragFarmersApp.ui.theme.ChiragFarmerTheme
 
 @Composable
 fun AssistResult(
@@ -56,6 +54,23 @@ fun AssistResult(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val imageUri = viewModel.getImageUri()
 
+    AssistResultScreen(
+        uiState = uiState,
+        imageUri = imageUri,
+        onRetry = { viewModel.retry() },
+        onAnalyzeAnother = { navController.popBackStack() },
+        navController = navController
+    )
+}
+
+@Composable
+fun AssistResultScreen(
+    uiState: AssistResultUiState,
+    imageUri: String,
+    onRetry: () -> Unit,
+    onAnalyzeAnother: () -> Unit,
+    navController: NavHostController
+) {
     Scaffold(
         containerColor = BGWhite,
         topBar = {
@@ -64,6 +79,15 @@ fun AssistResult(
                 title = "Assist",
                 icon = R.drawable.ic_arrow
             )
+        },
+        bottomBar = {
+            OutlinedButton(
+                onClick = onAnalyzeAnother,
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 12.dp),
+                shape = RoundedCornerShape(10.dp)
+            ) {
+                Text(text = "Analyze Another Image", color = BGBlack)
+            }
         }
     ) { innerPadding ->
         Column(
@@ -73,25 +97,7 @@ fun AssistResult(
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            if (imageUri.isNotBlank()) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(240.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .border(1.dp, Color(0xff3BB69A), RoundedCornerShape(12.dp))
-                ) {
-                    AsyncImage(
-                        model = imageUri,
-                        contentDescription = "Selected crop image",
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
-                    )
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-
-            when (val state = uiState) {
+            when (uiState) {
                 AssistResultUiState.Loading -> {
                     Card(
                         modifier = Modifier.fillMaxWidth(),
@@ -102,7 +108,8 @@ fun AssistResult(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(24.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
                         ) {
                             CircularProgressIndicator(color = BGBlack)
                             Spacer(modifier = Modifier.height(16.dp))
@@ -129,7 +136,7 @@ fun AssistResult(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
-                                text = state.message,
+                                text = uiState.message,
                                 color = Color(0xFFD32F2F),
                                 fontSize = 15.sp,
                                 textAlign = TextAlign.Center,
@@ -137,7 +144,7 @@ fun AssistResult(
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                             Button(
-                                onClick = { viewModel.retry() },
+                                onClick = onRetry,
                                 colors = ButtonDefaults.buttonColors(containerColor = BGBlack)
                             ) {
                                 Text(text = "Retry", color = BGWhite)
@@ -148,8 +155,8 @@ fun AssistResult(
 
                 is AssistResultUiState.Success -> {
                     AssistResultContent(
-                        data = state.data,
-                        onAnalyzeAnother = { navController.popBackStack() }
+                        data = uiState.data,
+                        imageUri = imageUri
                     )
                 }
             }
@@ -160,7 +167,7 @@ fun AssistResult(
 @Composable
 private fun AssistResultContent(
     data: CropAnalysisUiModel,
-    onAnalyzeAnother: () -> Unit
+    imageUri: String = ""
 ) {
     Text(
         text = "Disease Identified: ${data.diseaseName}",
@@ -168,32 +175,31 @@ private fun AssistResultContent(
         fontWeight = FontWeight.SemiBold,
         color = BGBlack
     )
-
-    data.confidence?.let {
-        Spacer(modifier = Modifier.height(6.dp))
-        Text(
-            text = "Confidence: $it%",
-            fontSize = 13.sp,
-            fontWeight = FontWeight.Medium,
-            color = Color(0xff3BB69A)
-        )
-    }
-
-    Spacer(modifier = Modifier.height(12.dp))
-
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFF8F8F8))
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = data.about,
-                fontSize = 14.sp,
-                lineHeight = 20.sp,
-                color = BGBlack
+    if (imageUri.isNotBlank()) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(240.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .border(1.dp, Color(0xff3BB69A), RoundedCornerShape(12.dp))
+        ) {
+            AsyncImage(
+                model = imageUri,
+                contentDescription = "Selected crop image",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
             )
         }
+        Spacer(modifier = Modifier.height(16.dp))
+    }
+    Column {
+        Text(
+            text = data.about,
+            fontSize = 14.sp,
+            lineHeight = 14.sp,
+            color = BGBlack,
+            fontWeight = FontWeight.Bold
+        )
     }
 
     Spacer(modifier = Modifier.height(16.dp))
@@ -205,10 +211,9 @@ private fun AssistResultContent(
         color = BGBlack
     )
 
-    Spacer(modifier = Modifier.height(16.dp))
-
-    SectionTitle(text = "Symptoms Identified")
     Spacer(modifier = Modifier.height(8.dp))
+    SectionTitle(text = "Symptoms Identified")
+    Spacer(modifier = Modifier.height(4.dp))
     if (data.symptoms.isEmpty()) {
         EmptySectionText(text = "No symptoms were returned by the analysis.")
     } else {
@@ -217,10 +222,10 @@ private fun AssistResultContent(
         }
     }
 
-    Spacer(modifier = Modifier.height(16.dp))
+    Spacer(modifier = Modifier.height(8.dp))
 
     SectionTitle(text = "Avoid")
-    Spacer(modifier = Modifier.height(8.dp))
+    Spacer(modifier = Modifier.height(4.dp))
     if (data.avoid.isEmpty()) {
         EmptySectionText(text = "No avoidance tips were returned by the analysis.")
     } else {
@@ -229,23 +234,12 @@ private fun AssistResultContent(
         }
     }
 
-    Spacer(modifier = Modifier.height(16.dp))
+    Spacer(modifier = Modifier.height(8.dp))
 
     SectionTitle(text = "Insecticides (Spray once every 7-10 days)")
-    Spacer(modifier = Modifier.height(12.dp))
+    Spacer(modifier = Modifier.height(4.dp))
     InsecticideTable(data.insecticides)
-
     Spacer(modifier = Modifier.height(20.dp))
-
-    OutlinedButton(
-        onClick = onAnalyzeAnother,
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(10.dp)
-    ) {
-        Text(text = "Analyze Another Image", color = BGBlack)
-    }
-
-    Spacer(modifier = Modifier.height(24.dp))
 }
 
 @Composable
@@ -261,11 +255,11 @@ private fun SectionTitle(text: String) {
 @Composable
 fun BulletPointText(text: String) {
     Row(
-        modifier = Modifier.padding(bottom = 4.dp, start = 8.dp),
+        modifier = Modifier.padding(bottom = 2.dp, start = 8.dp),
         verticalAlignment = Alignment.Top
     ) {
-        Text(text = "• ", fontSize = 14.sp, color = Color.Gray)
-        Text(text = text, fontSize = 14.sp, color = Color.Gray)
+        Text(text = "• ", fontSize = 14.sp, color = BGBlack, lineHeight = 14.sp)
+        Text(text = text, fontSize = 14.sp, color = BGBlack, lineHeight = 14.sp)
     }
 }
 
@@ -291,7 +285,7 @@ fun InsecticideTable(items: List<CropInsecticideUiModel>) {
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color(0xFFF5F5F5))
-                .padding(12.dp),
+                .padding(start=12.dp, top = 2.dp, bottom = 2.dp, end = 12.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
@@ -342,7 +336,7 @@ fun TableRow(name: String, dosage: String, target: String, isLast: Boolean = fal
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp),
+                .padding(start=12.dp, top = 2.dp, bottom = 2.dp, end = 12.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(name, fontSize = 12.sp, modifier = Modifier.weight(1f))
@@ -352,5 +346,102 @@ fun TableRow(name: String, dosage: String, target: String, isLast: Boolean = fal
         if (!isLast) {
             HorizontalDivider(color = Color(0xFFE0E0E0))
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AssistResultContentPreview() {
+    ChiragFarmerTheme {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(BGWhite)
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
+            AssistResultContent(
+                data = CropAnalysisUiModel(
+                    cropName = "Tomato",
+                    diseaseName = "Early Blight",
+                    confidence = 92,
+                    about = "Early blight is a common fungal disease that affects tomato plants, caused by the fungus Alternaria solani. It typically appears as dark spots with concentric rings on older leaves.",
+                    symptoms = listOf(
+                        "Small dark spots on older leaves",
+                        "Spots enlarge into concentric rings (target effect)",
+                        "Yellowing of leaves around spots",
+                        "Stem lesions and fruit rot in severe cases"
+                    ),
+                    avoid = listOf(
+                        "Overhead irrigation (keep leaves dry)",
+                        "Crowded planting (ensure good airflow)",
+                        "Planting in the same soil every year",
+                        "Ignoring early symptoms"
+                    ),
+                    insecticides = listOf(
+                        CropInsecticideUiModel("Chlorothalonil", "2.5g/L", "Fungal spores"),
+                        CropInsecticideUiModel("Copper Fungicide", "5ml/L", "Fungal growth"),
+                        CropInsecticideUiModel("Mancozeb", "2g/L", "Early blight control")
+                    )
+                )
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AssistResultSuccessPreview() {
+    val navController = rememberNavController()
+    ChiragFarmerTheme {
+        AssistResultScreen(
+            uiState = AssistResultUiState.Success(
+                CropAnalysisUiModel(
+                    cropName = "Tomato",
+                    diseaseName = "Early Blight",
+                    confidence = 92,
+                    about = "Early blight is a common fungal disease that affects tomato plants, caused by the fungus Alternaria solani.",
+                    symptoms = listOf("Small dark spots", "Yellowing leaves"),
+                    avoid = listOf("Overhead irrigation", "Crowded planting"),
+                    insecticides = listOf(
+                        CropInsecticideUiModel("Chlorothalonil", "2.5g/L", "Fungal spores")
+                    )
+                )
+            ),
+            imageUri = "",
+            onRetry = {},
+            onAnalyzeAnother = {},
+            navController = navController
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AssistResultLoadingPreview() {
+    val navController = rememberNavController()
+    ChiragFarmerTheme {
+        AssistResultScreen(
+            uiState = AssistResultUiState.Loading,
+            imageUri = "",
+            onRetry = {},
+            onAnalyzeAnother = {},
+            navController = navController
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AssistResultErrorPreview() {
+    val navController = rememberNavController()
+    ChiragFarmerTheme {
+        AssistResultScreen(
+            uiState = AssistResultUiState.Error("Failed to analyze crop image."),
+            imageUri = "",
+            onRetry = {},
+            onAnalyzeAnother = {},
+            navController = navController
+        )
     }
 }
