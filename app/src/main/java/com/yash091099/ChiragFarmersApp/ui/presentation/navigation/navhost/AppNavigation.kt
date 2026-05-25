@@ -21,6 +21,7 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.home.HomeScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.home.HomeViewModel
 import com.yash091099.ChiragFarmersApp.ui.presentation.assist.AssistScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.assist.screens.assistImage.AssistImage
+import com.yash091099.ChiragFarmersApp.ui.presentation.assist.screens.assistResult.AssistResult
 import com.yash091099.ChiragFarmersApp.ui.presentation.bookings.BookingsScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.buy.BuyScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.buy.screens.categories.CategoriesScreen
@@ -169,6 +170,18 @@ fun AppNavigation(
             AssistImage(
                 navController = navController
             )
+        }
+        composable(
+            Route.AssistResult.path,
+            arguments = listOf(
+                navArgument("imageUri") {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
+                }
+            )
+        ) {
+            AssistResult(navController = navController)
         }
         composable(Route.Sell.path) {
             SellScreen(navController = navController, initialOrderId = null)

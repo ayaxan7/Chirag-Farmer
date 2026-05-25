@@ -25,7 +25,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -52,6 +52,7 @@ import coil.compose.AsyncImage
 import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.ChiragButton
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragTopBar
+import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost.Route
 import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
 import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
 import com.yash091099.ChiragFarmersApp.ui.theme.ChiragFarmerTheme
@@ -128,7 +129,11 @@ fun AssistImage(navController: NavHostController) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp),
-                    onClick = { },
+                    onClick = {
+                        selectedImageUri.value?.let { imageUri ->
+                            navController.navigate(Route.AssistResult.createRoute(imageUri.toString()))
+                        }
+                    },
                     text = "Next",
                     containerColor = BGBlack,
                     contentColor = BGWhite,
@@ -161,49 +166,36 @@ fun AssistImage(navController: NavHostController) {
             Spacer(modifier = Modifier.padding(8.dp))
 
             // Main image box - shows image if selected, otherwise shows upload placeholder
-            if (selectedImageUri.value != null) {
-                // Display selected image with border
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(300.dp)
-                        .dashedBorder(
-                            width = 1.dp,
-                            color = Color(0xff3BB69A),
-                            cornerRadius = 8.dp
-                        )
-                ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(300.dp)
+                    .dashedBorder(
+                        width = 1.dp,
+                        color = Color(0xff3BB69A),
+                        cornerRadius = 8.dp
+                    )
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) {
+                        pickImageLauncher.launch("image/*")
+                    }
+            ) {
+                if (selectedImageUri.value != null) {
                     AsyncImage(
                         model = selectedImageUri.value,
                         contentDescription = "Selected Plant Image",
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(3.dp),
-                        contentScale = ContentScale.FillBounds
+                        contentScale = ContentScale.Crop
                     )
-                }
-            } else {
-                // Show upload placeholder box - clickable to open gallery
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .dashedBorder(
-                            width = 1.dp,
-                            color = Color(0xff3BB69A),
-                            cornerRadius = 8.dp
-                        )
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null
-                        ) {
-                            // Open image picker when clicked
-                            pickImageLauncher.launch("image/*")
-                        }
-                ) {
+                } else {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(210.dp)
+                            .height(300.dp)
                             .padding(16.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
@@ -245,7 +237,7 @@ fun AssistImage(navController: NavHostController) {
                                     requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA)
                                 }
                             },
-                            colors = ButtonColors(
+                            colors = ButtonDefaults.buttonColors(
                                 containerColor = BGBlack,
                                 contentColor = BGWhite,
                                 disabledContainerColor = BGBlack,

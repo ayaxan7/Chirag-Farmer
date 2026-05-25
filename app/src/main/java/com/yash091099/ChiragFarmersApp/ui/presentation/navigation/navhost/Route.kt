@@ -31,6 +31,9 @@ sealed class Route(val path: String) {
     object Notifications:Route("notifications")
     object SellCategories:Route("sell_categories")
     object AssistImage:Route("assist_image")
+    object AssistResult:Route("assist_result?imageUri={imageUri}") {
+        fun createRoute(imageUri: String): String = "assist_result?imageUri=${Uri.encode(imageUri)}"
+    }
     object SellProduct:Route("sell_product?productId={productId}&selectedCategory={selectedCategory}") {
         fun createRoute(productId: String? = null, selectedCategory: String? = null): String {
             val queryParams = buildList {
