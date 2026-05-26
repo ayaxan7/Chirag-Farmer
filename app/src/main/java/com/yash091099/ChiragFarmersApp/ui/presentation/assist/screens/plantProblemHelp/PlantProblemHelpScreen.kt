@@ -30,7 +30,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -40,7 +39,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,8 +54,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragTopBar
+import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
 import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
 import com.yash091099.ChiragFarmersApp.ui.theme.BorderGray
+import com.yash091099.ChiragFarmersApp.ui.theme.ChatBoxColor
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -71,7 +71,6 @@ data class ChatMessage(
     val content: String,
     val sender: Sender,
     val timestamp: String = getCurrentTime(),
-    val isOptionsCard: Boolean = false,
     val options: List<String> = emptyList()
 )
 
@@ -126,14 +125,9 @@ fun PlantProblemHelpScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(messages, key = { it.id }) { message ->
-                    if (message.isOptionsCard) {
-                        BotOptionsCard(
-                            message = message, onOptionClick = { option ->
-                                viewModel.sendMessage(option)
-                            })
-                    } else {
-                        MessageBubble(message = message)
-                    }
+
+                    MessageBubble(message = message)
+
                 }
             }
 
@@ -167,8 +161,8 @@ fun PlantProblemHelpScreen(
 fun MessageBubble(message: ChatMessage) {
     val alignment = if (message.sender == Sender.USER) Alignment.End else Alignment.Start
     // Standard premium light-green bubble background
-    val bubbleColor = Color(0xFFF0FDF4)
-    val textColor = Color(0xFF1E293B)
+    val bubbleColor = ChatBoxColor
+    val textColor = BGBlack
     val bubbleShape = RoundedCornerShape(12.dp)
 
     Column(
@@ -195,67 +189,6 @@ fun MessageBubble(message: ChatMessage) {
                     color = Color.Gray,
                     fontSize = 10.sp,
                     modifier = Modifier.align(Alignment.End)
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun BotOptionsCard(
-    message: ChatMessage, onOptionClick: (String) -> Unit
-) {
-    val bubbleColor = Color(0xFFF0FDF4)
-    val textColor = Color(0xFF1E293B)
-    val bubbleShape = RoundedCornerShape(12.dp)
-
-    Column(
-        modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start
-    ) {
-        Box(
-            modifier = Modifier
-                .widthIn(max = 280.dp)
-                .clip(bubbleShape)
-                .background(bubbleColor)
-                .padding(vertical = 10.dp)
-        ) {
-            Column {
-                // Header
-                Text(
-                    text = message.content,
-                    color = textColor,
-                    fontSize = 14.sp,
-                    lineHeight = 18.sp,
-                    fontWeight = FontWeight.Medium,
-                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 4.dp)
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Options List
-                message.options.forEach { option ->
-                    HorizontalDivider(
-                        color = Color(0xFFE2E8F0), thickness = 0.5.dp
-                    )
-                    Box(modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { onOptionClick(option) }
-                        .padding(vertical = 12.dp), contentAlignment = Alignment.Center) {
-                        Text(
-                            text = option, color = Color(0xFF3BB69A), // Teal color from app theme
-                            fontSize = 14.sp, fontWeight = FontWeight.Medium
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = message.timestamp,
-                    color = Color.Gray,
-                    fontSize = 10.sp,
-                    modifier = Modifier
-                        .align(Alignment.End)
-                        .padding(end = 14.dp)
                 )
             }
         }
@@ -342,7 +275,8 @@ fun ChatInputBar(
                     capitalization = KeyboardCapitalization.Sentences, imeAction = ImeAction.Send
                 ),
                 keyboardActions = KeyboardActions(
-                    onSend = { onSendClick() }))
+                    onSend = { onSendClick() })
+            )
         }
 
         Spacer(modifier = Modifier.width(10.dp))

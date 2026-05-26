@@ -192,6 +192,7 @@ class PlantProblemHelpViewModel @Inject constructor(
             val outputFormat = SimpleDateFormat("h:mm a", Locale.getDefault())
             outputFormat.format(date ?: Date()).lowercase()
         } catch (e: Exception) {
+            e.printStackTrace()
             getCurrentTime()
         }
     }
