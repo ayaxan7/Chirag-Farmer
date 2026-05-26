@@ -2,6 +2,7 @@ package com.yash091099.ChiragFarmersApp.di
 
 import com.yash091099.ChiragFarmersApp.data.remote.AuthApiService
 import com.yash091099.ChiragFarmersApp.data.remote.CropAnalysisApiService
+import com.yash091099.ChiragFarmersApp.data.remote.ChatApiService
 import com.yash091099.ChiragFarmersApp.data.remote.CartApiService
 import com.yash091099.ChiragFarmersApp.data.remote.NotificationApiService
 import com.yash091099.ChiragFarmersApp.data.remote.OrderApiService
@@ -40,6 +41,12 @@ object ApiModule {
     @Suppress("unused")
     fun provideCropAnalysisApiService(retrofit: Retrofit): CropAnalysisApiService {
         return retrofit.create(CropAnalysisApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideChatApiService(retrofit: Retrofit): ChatApiService {
+        return retrofit.create(ChatApiService::class.java)
     }
 
     @Provides
