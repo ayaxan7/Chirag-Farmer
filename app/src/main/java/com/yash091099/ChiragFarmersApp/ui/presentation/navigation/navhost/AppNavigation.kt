@@ -10,6 +10,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.yash091099.ChiragFarmersApp.R
+import com.yash091099.ChiragFarmersApp.ui.presentation.assist.AssistScreen
+import com.yash091099.ChiragFarmersApp.ui.presentation.assist.screens.assistImage.AssistImage
+import com.yash091099.ChiragFarmersApp.ui.presentation.assist.screens.plantProblemHelp.PlantProblemHelpScreen
+import com.yash091099.ChiragFarmersApp.ui.presentation.assist.screens.assistResult.AssistResult
 import com.yash091099.ChiragFarmersApp.ui.presentation.auth.common.screens.AuthScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.auth.common.screens.AuthViewModel
 import com.yash091099.ChiragFarmersApp.ui.presentation.auth.common.screens.OTPVerificationScreen
@@ -17,36 +21,33 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.auth.common.screens.OTPVi
 import com.yash091099.ChiragFarmersApp.ui.presentation.auth.register.RegisterScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.auth.register.RegisterSuccessScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.auth.register.RegisterViewModel
-import com.yash091099.ChiragFarmersApp.ui.presentation.home.HomeScreen
-import com.yash091099.ChiragFarmersApp.ui.presentation.home.HomeViewModel
-import com.yash091099.ChiragFarmersApp.ui.presentation.assist.AssistScreen
-import com.yash091099.ChiragFarmersApp.ui.presentation.assist.screens.assistImage.AssistImage
-import com.yash091099.ChiragFarmersApp.ui.presentation.assist.screens.assistResult.AssistResult
 import com.yash091099.ChiragFarmersApp.ui.presentation.bookings.BookingsScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.buy.BuyScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.buy.screens.categories.CategoriesScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.buy.screens.details.ProductDetailsScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.buy.screens.details.ProductDetailsViewModel
+import com.yash091099.ChiragFarmersApp.ui.presentation.buy.screens.seller.SellerProfileScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.cart.CartScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.cart.CartViewModel
+import com.yash091099.ChiragFarmersApp.ui.presentation.cart.address.AddressListViewModel
 import com.yash091099.ChiragFarmersApp.ui.presentation.cart.address.AddressMapScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.cart.address.AddressScreen
-import com.yash091099.ChiragFarmersApp.ui.presentation.cart.address.AddressListViewModel
-import com.yash091099.ChiragFarmersApp.ui.presentation.home.screens.SearchScreen
-import com.yash091099.ChiragFarmersApp.ui.presentation.home.screens.notifications.NotificationsScreen
-import com.yash091099.ChiragFarmersApp.ui.presentation.sell.SellScreen
-import com.yash091099.ChiragFarmersApp.ui.presentation.sell.screens.sellcategories.SellCategoriesScreen
-import com.yash091099.ChiragFarmersApp.ui.presentation.sell.screens.sellproduces.SellProducesScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.cart.payment.PaymentScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.cart.payment.PaymentSuccess
 import com.yash091099.ChiragFarmersApp.ui.presentation.cart.payment.PaymentViewModel
-import com.yash091099.ChiragFarmersApp.ui.presentation.splash.SplashScreen
+import com.yash091099.ChiragFarmersApp.ui.presentation.home.HomeScreen
+import com.yash091099.ChiragFarmersApp.ui.presentation.home.HomeViewModel
+import com.yash091099.ChiragFarmersApp.ui.presentation.home.screens.SearchScreen
+import com.yash091099.ChiragFarmersApp.ui.presentation.home.screens.notifications.NotificationsScreen
+import com.yash091099.ChiragFarmersApp.ui.presentation.orders.screens.DropReviewScreen
+import com.yash091099.ChiragFarmersApp.ui.presentation.orders.screens.MyOrderDetailsScreen
+import com.yash091099.ChiragFarmersApp.ui.presentation.orders.screens.MyOrdersScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.profile.ProfileScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.profile.ProfileViewModel
-import com.yash091099.ChiragFarmersApp.ui.presentation.orders.screens.MyOrdersScreen
-import com.yash091099.ChiragFarmersApp.ui.presentation.orders.screens.MyOrderDetailsScreen
-import com.yash091099.ChiragFarmersApp.ui.presentation.orders.screens.DropReviewScreen
-import com.yash091099.ChiragFarmersApp.ui.presentation.buy.screens.seller.SellerProfileScreen
+import com.yash091099.ChiragFarmersApp.ui.presentation.sell.SellScreen
+import com.yash091099.ChiragFarmersApp.ui.presentation.sell.screens.sellcategories.SellCategoriesScreen
+import com.yash091099.ChiragFarmersApp.ui.presentation.sell.screens.sellproduces.SellProducesScreen
+import com.yash091099.ChiragFarmersApp.ui.presentation.splash.SplashScreen
 
 @Composable
 fun AppNavigation(
@@ -71,7 +72,8 @@ fun AppNavigation(
             arguments = listOf(
                 navArgument("phone") { type = NavType.StringType },
                 navArgument("requestId") { type = NavType.StringType },
-                navArgument("isSignUp") { type = NavType.BoolType })) { backStackEntry ->
+                navArgument("isSignUp") { type = NavType.BoolType })
+        ) { backStackEntry ->
             val phoneNumber = backStackEntry.arguments?.getString("phone") ?: ""
             val requestId = backStackEntry.arguments?.getString("requestId") ?: ""
             val isSignUp = backStackEntry.arguments?.getBoolean("isSignUp") ?: false
@@ -96,27 +98,29 @@ fun AppNavigation(
             val viewModel: HomeViewModel = hiltViewModel()
             HomeScreen(navController = navController, viewModel = viewModel)
         }
-        composable(Route.Cart.path, arguments = listOf(
-            navArgument("isBuyNow") {
-                type = NavType.BoolType
-                defaultValue = false
-            },
-            navArgument("productId") {
-                type = NavType.StringType
-                nullable = true
-                defaultValue = null
-            },
-            navArgument("quantity") {
-                type = NavType.IntType
-                defaultValue = 1
-            }
-        )) {
+        composable(Route.Cart.path, arguments = listOf(navArgument("isBuyNow") {
+            type = NavType.BoolType
+            defaultValue = false
+        }, navArgument("productId") {
+            type = NavType.StringType
+            nullable = true
+            defaultValue = null
+        }, navArgument("quantity") {
+            type = NavType.IntType
+            defaultValue = 1
+        })) {
             val viewModel: CartViewModel = hiltViewModel()
             val isBuyNow = it.arguments?.getBoolean("isBuyNow") ?: false
             val productId = it.arguments?.getString("productId")
             val quantity = it.arguments?.getInt("quantity") ?: 1
 
-            CartScreen(navController = navController, viewModel = viewModel, isBuyNow = isBuyNow, productId = productId, quantity = quantity)
+            CartScreen(
+                navController = navController,
+                viewModel = viewModel,
+                isBuyNow = isBuyNow,
+                productId = productId,
+                quantity = quantity
+            )
         }
         composable(Route.Search.path) {
             SearchScreen(navController = navController)
@@ -124,18 +128,16 @@ fun AppNavigation(
         composable(Route.SellCategories.path) {
             SellCategoriesScreen(navController = navController)
         }
-        composable(Route.AddressList.path){
+        composable(Route.AddressList.path) {
             val viewModel: AddressListViewModel = hiltViewModel()
             AddressScreen(
-                navController = navController,
-                viewModel = viewModel,
-                onAddAddressClick = {
-                navController.navigate(Route.AddressMap.path){
-                    popUpTo(Route.AddressMap.path){
-                        inclusive=true
+                navController = navController, viewModel = viewModel, onAddAddressClick = {
+                    navController.navigate(Route.AddressMap.path) {
+                        popUpTo(Route.AddressMap.path) {
+                            inclusive = true
+                        }
                     }
-                }
-            })
+                })
         }
         composable(Route.Assist.path) {
             AssistScreen(navController = navController)
@@ -156,7 +158,8 @@ fun AppNavigation(
                 navArgument("bannerImageResId") {
                     type = NavType.IntType
                     defaultValue = R.drawable.buy_banner
-                })) { backStackEntry ->
+                })
+        ) { backStackEntry ->
             val categoryName = Uri.decode(backStackEntry.arguments?.getString("categoryName") ?: "")
             val bannerImageResId =
                 backStackEntry.arguments?.getInt("bannerImageResId") ?: R.drawable.buy_banner
@@ -171,27 +174,26 @@ fun AppNavigation(
                 navController = navController
             )
         }
-        composable(
-            Route.AssistResult.path,
-            arguments = listOf(
-                navArgument("imageUri") {
-                    type = NavType.StringType
-                    nullable = true
-                    defaultValue = null
-                }
+        composable(Route.PlantProblemHelp.path) {
+            PlantProblemHelpScreen(
+                navController = navController
             )
-        ) {
+        }
+        composable(
+            Route.AssistResult.path, arguments = listOf(
+            navArgument("imageUri") {
+                type = NavType.StringType
+                nullable = true
+                defaultValue = null
+            })) {
             AssistResult(navController = navController)
         }
         composable(Route.Sell.path) {
             SellScreen(navController = navController, initialOrderId = null)
         }
         composable(
-            Route.SellerOrderDetails.path,
-            arguments = listOf(
-                navArgument("orderId") { type = NavType.StringType }
-            )
-        ) { backStackEntry ->
+            Route.SellerOrderDetails.path, arguments = listOf(
+            navArgument("orderId") { type = NavType.StringType })) { backStackEntry ->
             val orderId = Uri.decode(backStackEntry.arguments?.getString("orderId") ?: "")
             SellScreen(navController = navController, initialOrderId = orderId)
         }
@@ -213,8 +215,8 @@ fun AppNavigation(
                 viewModel = hiltViewModel()
             )
         }
-        composable(Route.AddressMap.path){
-            AddressMapScreen(navController=navController)
+        composable(Route.AddressMap.path) {
+            AddressMapScreen(navController = navController)
         }
         composable(
             Route.ProductDetails.path, arguments = listOf(
@@ -230,17 +232,18 @@ fun AppNavigation(
             )
         }
         composable(
-            Route.Payment.path,
-            arguments = listOf(
-                navArgument("subtotal") { type = NavType.FloatType; defaultValue = 0.0f },
-                navArgument("totalDiscount") { type = NavType.FloatType; defaultValue = 0.0f },
-                navArgument("totalDeliveryFee") { type = NavType.FloatType; defaultValue = 0.0f },
-                navArgument("totalAmount") { type = NavType.FloatType; defaultValue = 0.0f }
-            )
-        ) { backStackEntry ->
+            Route.Payment.path, arguments = listOf(
+            navArgument("subtotal") { type = NavType.FloatType; defaultValue = 0.0f },
+            navArgument("totalDiscount") { type = NavType.FloatType; defaultValue = 0.0f },
+            navArgument("totalDeliveryFee") { type = NavType.FloatType; defaultValue = 0.0f },
+            navArgument("totalAmount") {
+                type = NavType.FloatType; defaultValue = 0.0f
+            })) { backStackEntry ->
             val subtotal = backStackEntry.arguments?.getFloat("subtotal")?.toDouble() ?: 0.0
-            val totalDiscount = backStackEntry.arguments?.getFloat("totalDiscount")?.toDouble() ?: 0.0
-            val totalDeliveryFee = backStackEntry.arguments?.getFloat("totalDeliveryFee")?.toDouble() ?: 0.0
+            val totalDiscount =
+                backStackEntry.arguments?.getFloat("totalDiscount")?.toDouble() ?: 0.0
+            val totalDeliveryFee =
+                backStackEntry.arguments?.getFloat("totalDeliveryFee")?.toDouble() ?: 0.0
             val totalAmount = backStackEntry.arguments?.getFloat("totalAmount")?.toDouble() ?: 0.0
             val viewModel: PaymentViewModel = hiltViewModel()
 
@@ -253,7 +256,7 @@ fun AppNavigation(
                 totalAmount = totalAmount
             )
         }
-        composable(Route.PaymentSuccess.path){
+        composable(Route.PaymentSuccess.path) {
             PaymentSuccess(navController = navController)
         }
         composable(Route.Profile.path) {
@@ -267,9 +270,9 @@ fun AppNavigation(
             Route.OrderDetails.path,
             arguments = listOf(
                 navArgument("orderId") { type = NavType.StringType },
-                navArgument("productId") { type = NavType.StringType; nullable = true; defaultValue = null }
-            )
-        ) { backStackEntry ->
+                navArgument("productId") {
+                    type = NavType.StringType; nullable = true; defaultValue = null
+                })) { backStackEntry ->
             val orderId = Uri.decode(backStackEntry.arguments?.getString("orderId") ?: "")
             val productId = backStackEntry.arguments?.getString("productId")?.let { Uri.decode(it) }
             MyOrderDetailsScreen(navController, orderId, productId)
@@ -278,16 +281,17 @@ fun AppNavigation(
             Route.SellerProfile.path,
             arguments = listOf(
                 navArgument("sellerId") { type = NavType.StringType },
-                navArgument("sellerName") { type = NavType.StringType; nullable = true; defaultValue = null },
-                navArgument("sellerImage") { type = NavType.StringType; nullable = true; defaultValue = null }
-            )
-        ) { backStackEntry ->
-            val sellerId = backStackEntry.arguments?.getString("sellerId") ?: ""
-            val sellerName = backStackEntry.arguments?.getString("sellerName") ?: "Seller"
+                navArgument("sellerName") {
+                    type = NavType.StringType; nullable = true; defaultValue = null
+                },
+                navArgument("sellerImage") {
+                    type = NavType.StringType; nullable = true; defaultValue = null
+                })) { backStackEntry ->
+            backStackEntry.arguments?.getString("sellerId") ?: ""
+            backStackEntry.arguments?.getString("sellerName") ?: "Seller"
             val sellerImage = backStackEntry.arguments?.getString("sellerImage")
             SellerProfileScreen(
-                navController = navController,
-                sellerImage = sellerImage
+                navController = navController, sellerImage = sellerImage
             )
         }
         composable(
@@ -295,12 +299,18 @@ fun AppNavigation(
             arguments = listOf(
                 navArgument("orderId") { type = NavType.StringType },
                 navArgument("productId") { type = NavType.StringType },
-                navArgument("imageUrl") { type = NavType.StringType; nullable = true; defaultValue = null },
-                navArgument("productName") { type = NavType.StringType; nullable = true; defaultValue = null },
-                navArgument("sellerName") { type = NavType.StringType; nullable = true; defaultValue = null },
-                navArgument("pricePaid") { type = NavType.StringType; nullable = true; defaultValue = null }
-            )
-        ) { backStackEntry ->
+                navArgument("imageUrl") {
+                    type = NavType.StringType; nullable = true; defaultValue = null
+                },
+                navArgument("productName") {
+                    type = NavType.StringType; nullable = true; defaultValue = null
+                },
+                navArgument("sellerName") {
+                    type = NavType.StringType; nullable = true; defaultValue = null
+                },
+                navArgument("pricePaid") {
+                    type = NavType.StringType; nullable = true; defaultValue = null
+                })) { backStackEntry ->
             val orderId = Uri.decode(backStackEntry.arguments?.getString("orderId") ?: "")
             val productId = Uri.decode(backStackEntry.arguments?.getString("productId") ?: "")
             val imageUrl = backStackEntry.arguments?.getString("imageUrl")?.let(Uri::decode)

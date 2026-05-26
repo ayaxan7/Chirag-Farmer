@@ -31,6 +31,7 @@ sealed class Route(val path: String) {
     object Notifications:Route("notifications")
     object SellCategories:Route("sell_categories")
     object AssistImage:Route("assist_image")
+    object PlantProblemHelp: Route("plant_problem_help")
     object AssistResult:Route("assist_result?imageUri={imageUri}") {
         fun createRoute(imageUri: String): String = "assist_result?imageUri=${Uri.encode(imageUri)}"
     }

@@ -82,7 +82,7 @@ fun AssistScreen(navController: NavHostController) {
                 iconRes = R.drawable.qna,
                 title = "Ask. Solve. Farm Help Made\nEasy",
                 description = "Ask anything about your crop, land, or agri\ninputs",
-                onClick = { }
+                onClick = { navController.navigate(Route.PlantProblemHelp.path) }
             )
         }
     }
