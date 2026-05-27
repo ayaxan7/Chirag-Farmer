@@ -30,6 +30,12 @@ class ActiveOrdersPagingSource(
                 page = page,
                 limit = params.loadSize
             )
+
+            // Validate API response success flag
+            if (!response.success) {
+                return LoadResult.Error(Exception(response.message))
+            }
+
             val orders = response.data.orders.map { it.toDomain() }
             val totalPages = response.data.pagination.pages
 
