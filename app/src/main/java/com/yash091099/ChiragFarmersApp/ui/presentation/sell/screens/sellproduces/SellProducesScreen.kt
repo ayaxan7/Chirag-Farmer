@@ -29,6 +29,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -58,6 +59,7 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.ChiragB
 import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.ChiragButton
 import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.MultiLineTextField
 import com.yash091099.ChiragFarmersApp.ui.presentation.home.components.bookservicecard.components.LocationInputField
+import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost.Route
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragTopBar
 import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
 import java.util.Locale
@@ -84,6 +86,7 @@ fun SellProducesScreen(
     var pricing by remember { mutableStateOf("") }
     var discountPercent by remember { mutableStateOf("") }
     var deliveryFeePerKm by remember { mutableStateOf("") }
+    var isDeliveryFeeIncludedInTotalPrice by remember { mutableStateOf(false) }
     var productDescription by remember { mutableStateOf("") }
     var productFeatures by remember { mutableStateOf("") }
 
@@ -116,6 +119,7 @@ fun SellProducesScreen(
     LaunchedEffect(productId, selectedCategory) {
         if (productId != null) return@LaunchedEffect
 
+        isDeliveryFeeIncludedInTotalPrice = false
         val decodedSelectedCategory = sanitizeCategoryForSingleLine(
             selectedCategory?.let(Uri::decode)
         )
@@ -148,6 +152,7 @@ fun SellProducesScreen(
                 pricing = product.price.toString()
                 discountPercent = product.discount?.toString() ?: ""
                 deliveryFeePerKm = product.deliveryFee?.toString() ?: ""
+                isDeliveryFeeIncludedInTotalPrice = product.deliveryFee == null
                 productDescription = product.description ?: ""
                 val featuresList = state.product.keyFeatures ?: emptyList()
                 productFeatures = featuresList.joinToString(", ")
@@ -169,7 +174,11 @@ fun SellProducesScreen(
             is AddProductState.Success -> {
                 snackbarHostState.showSnackbar(state.message)
                 viewModel.resetState()
-                navController.popBackStack()
+                if (!navController.popBackStack(Route.Sell.path, false)) {
+                    navController.navigate(Route.Sell.path) {
+                        launchSingleTop = true
+                    }
+                }
             }
 
             is AddProductState.Error -> {
@@ -280,7 +289,7 @@ fun SellProducesScreen(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(8.dp))
+//                Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = "${existingImageUrls.size + selectedImageUris.size} / 3 images",
                     fontSize = 12.sp,
@@ -399,14 +408,47 @@ fun SellProducesScreen(
                     minHeight = 80
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                FieldLabel(text = "Delivery Fee / KM")
-                Spacer(modifier = Modifier.height(6.dp))
-                ChiragBasicTextField(
-                    value = deliveryFeePerKm,
-                    onValueChange = { deliveryFeePerKm = it },
-                    placeholder = "Enter Price",
-                    keyboardType = KeyboardType.Number
-                )
+                FieldLabel(text = "Is delivery fee included in the total price?")
+//                Spacer(modifier = Modifier.height(2.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.clickable { isDeliveryFeeIncludedInTotalPrice = true }
+                    ) {
+                        RadioButton(
+                            selected = isDeliveryFeeIncludedInTotalPrice,
+                            onClick = { isDeliveryFeeIncludedInTotalPrice = true }
+                        )
+                        Text(text = "Included", fontSize = 14.sp, color = Color.Black)
+                    }
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.clickable { isDeliveryFeeIncludedInTotalPrice = false }
+                    ) {
+                        RadioButton(
+                            selected = !isDeliveryFeeIncludedInTotalPrice,
+                            onClick = { isDeliveryFeeIncludedInTotalPrice = false }
+                        )
+                        Text(text = "Not included", fontSize = 14.sp, color = Color.Black)
+                    }
+                }
+
+                if (!isDeliveryFeeIncludedInTotalPrice) {
+                    Spacer(modifier = Modifier.height(6.dp))
+                    FieldLabel(text = "Delivery Fee / KM")
+                    Spacer(modifier = Modifier.height(6.dp))
+                    ChiragBasicTextField(
+                        value = deliveryFeePerKm,
+                        onValueChange = { deliveryFeePerKm = it },
+                        placeholder = "Enter Delivery Fee",
+                        keyboardType = KeyboardType.Number
+                    )
+                }
                 Spacer(modifier = Modifier.height(32.dp))
 
                 // Submit Button
@@ -424,7 +466,7 @@ fun SellProducesScreen(
                             availableStock = availableStock,
                             price = pricing,
                             discount = discountPercent,
-                            deliveryFee = deliveryFeePerKm,
+                            deliveryFee = if (isDeliveryFeeIncludedInTotalPrice) "" else deliveryFeePerKm,
                             description = productDescription,
                             isUpdate = isEditMode,
                             unit = selectedUnit,
@@ -432,9 +474,9 @@ fun SellProducesScreen(
                             keyFeatures = keyFeaturesList
                         )
                     }, enabled = if (isEditMode) {
-                        productCategory.isNotEmpty() && productTitle.isNotEmpty() && pricing.isNotEmpty() && addProductState !is AddProductState.Loading && addProductState !is AddProductState.UploadingProduct && fetchProductState !is FetchProductState.Loading
+                        productCategory.isNotEmpty() && productTitle.isNotEmpty() && pricing.isNotEmpty() && (isDeliveryFeeIncludedInTotalPrice || deliveryFeePerKm.isNotBlank()) && addProductState !is AddProductState.Loading && addProductState !is AddProductState.UploadingProduct && fetchProductState !is FetchProductState.Loading
                     } else {
-                        productCategory.isNotEmpty() && productTitle.isNotEmpty() && availableStock.isNotEmpty() && location.isNotEmpty() && pricing.isNotEmpty() && (selectedImageUris.isNotEmpty() || existingImageUrls.isNotEmpty()) && addProductState !is AddProductState.Loading && addProductState !is AddProductState.UploadingProduct && fetchProductState !is FetchProductState.Loading
+                        productCategory.isNotEmpty() && productTitle.isNotEmpty() && availableStock.isNotEmpty() && location.isNotEmpty() && pricing.isNotEmpty() && (isDeliveryFeeIncludedInTotalPrice || deliveryFeePerKm.isNotBlank()) && (selectedImageUris.isNotEmpty() || existingImageUrls.isNotEmpty()) && addProductState !is AddProductState.Loading && addProductState !is AddProductState.UploadingProduct && fetchProductState !is FetchProductState.Loading
                     }
                 )
                 Spacer(modifier = Modifier.height(24.dp))
