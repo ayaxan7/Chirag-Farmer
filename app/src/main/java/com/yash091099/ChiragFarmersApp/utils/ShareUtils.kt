@@ -1,13 +1,18 @@
 package com.yash091099.ChiragFarmersApp.utils
 
+import com.yash091099.ChiragFarmersApp.BuildConfig
+
 /**
  * Utility to generate share links handled by backend and deep links into the app.
- * Replace `yourdomain.com` with your real backend domain.
  */
 object ShareUtils {
-    fun generateShareLink(type: String, id: String, domain: String = "yourdomain.com"): String {
+    fun generateShareLink(type: String, id: String, isDevelopment: Boolean = true): String {
+        val baseUrl = BuildConfig.BASE_URL+"share"
+//        val protocol = if (isDevelopment) "http" else "https"
+
         val normalizedType = type.trim().lowercase()
-        return "https://$domain/share/$normalizedType/$id"
+
+        return "$baseUrl/$normalizedType/$id"
     }
 }
 
