@@ -1,5 +1,6 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.buy.screens.details
 
+import android.content.Intent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -62,6 +63,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.yash091099.ChiragFarmersApp.R
@@ -74,6 +76,7 @@ import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
 import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
 import com.yash091099.ChiragFarmersApp.ui.theme.LightGray
 import com.yash091099.ChiragFarmersApp.ui.theme.TextGray
+import com.yash091099.ChiragFarmersApp.utils.ShareUtils
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -85,6 +88,7 @@ fun ProductDetailsScreen(
     modifier: Modifier = Modifier
 ) {
     var selectedImageIndex by remember { mutableIntStateOf(0) }
+    val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
     val cartState by viewModel.cartState.collectAsState()
     val isInCart by viewModel.isInCart.collectAsState()
@@ -208,7 +212,14 @@ fun ProductDetailsScreen(
                             )
                         }
                     }, actions = {
-                        IconButton(onClick = { /* Share */ }) {
+                        IconButton(onClick = {
+                            val shareLink = ShareUtils.generateShareLink("product", product.productId)
+                            val sendIntent = Intent(Intent.ACTION_SEND).apply {
+                                type = "text/plain"
+                                putExtra(Intent.EXTRA_TEXT, shareLink)
+                            }
+                            context.startActivity(Intent.createChooser(sendIntent, "Share product"))
+                        }) {
                             Icon(
                                 painterResource(R.drawable.ic_share),
                                 contentDescription = "Share",

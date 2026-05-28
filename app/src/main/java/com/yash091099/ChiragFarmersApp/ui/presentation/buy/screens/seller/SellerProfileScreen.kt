@@ -1,6 +1,8 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.buy.screens.seller
 
+import android.content.Intent
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -47,9 +49,11 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.yash091099.ChiragFarmersApp.data.remote.dto.toDomain
 import java.util.Locale
+import com.yash091099.ChiragFarmersApp.utils.ShareUtils
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,6 +62,7 @@ fun SellerProfileScreen(
     sellerImage: String? = null,
     viewModel: SellerProfileViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
 
     Scaffold(
@@ -154,7 +159,21 @@ fun SellerProfileScreen(
                             )
                             StatItem(label = "Products", value = sellerData.stats.totalListings.toString())
                             StatItem(label = "Sold Out", value = sellerData.stats.soldOutProducts.toString())
-                            StatItem(label = "Share", icon = R.drawable.ic_share)
+                            StatItem(
+                                label = "Share",
+                                icon = R.drawable.ic_share,
+                                onClick = {
+                                    val shareLink = ShareUtils.generateShareLink(
+                                        type = "farmer",
+                                        id = sellerData.seller.userId
+                                    )
+                                    val sendIntent = Intent(Intent.ACTION_SEND).apply {
+                                        type = "text/plain"
+                                        putExtra(Intent.EXTRA_TEXT, shareLink)
+                                    }
+                                    context.startActivity(Intent.createChooser(sendIntent, "Share seller profile"))
+                                }
+                            )
                         }
 
                         // Products Section
@@ -204,8 +223,11 @@ fun SellerProfileScreen(
 }
 
 @Composable
-fun StatItem(label: String, value: String? = null, icon: Int? = null) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+fun StatItem(label: String, value: String? = null, icon: Int? = null, onClick: (() -> Unit)? = null) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = if (onClick != null) Modifier.clickable { onClick() } else Modifier
+    ) {
         if (icon != null) {
             Icon(
                 painter = painterResource(id = icon),
