@@ -6,13 +6,12 @@ import com.yash091099.ChiragFarmersApp.BuildConfig
  * Utility to generate share links handled by backend and deep links into the app.
  */
 object ShareUtils {
-    fun generateShareLink(type: String, id: String, isDevelopment: Boolean = true): String {
-        val baseUrl = BuildConfig.BASE_URL+"share"
+    fun generateShareLink(type: String, id: String): String {
+        val shareUrl = BuildConfig.BASE_URL+"share"
 //        val protocol = if (isDevelopment) "http" else "https"
 
         val normalizedType = type.trim().lowercase()
 
-        return "$baseUrl/$normalizedType/$id"
+        return "$shareUrl/$normalizedType/$id"
     }
 }
-
