@@ -7,7 +7,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.material3.adaptive.navigationsuite.rememberNavigationSuiteScaffoldState
+import android.content.Intent
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.collectLatest
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -21,7 +25,7 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost.Route
 import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
 
 @Composable
-fun ChiragFarmerApp(navController: NavHostController, modifier: Modifier = Modifier) {
+fun ChiragFarmerApp(navController: NavHostController, deepLinkFlow: SharedFlow<Intent>? = null, modifier: Modifier = Modifier) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     val bottomBarState = rememberNavigationSuiteScaffoldState()
@@ -87,6 +91,66 @@ fun ChiragFarmerApp(navController: NavHostController, modifier: Modifier = Modif
             color = BGWhite
         ) {
             AppNavigation(navController = navController, modifier = modifier)
+        }
+    }
+
+    // Collect deep link intents from Activity and navigate accordingly.
+    LaunchedEffect(deepLinkFlow) {
+        deepLinkFlow?.collectLatest { intent ->
+            val uri = intent.data
+            if (uri == null) return@collectLatest
+
+            // Extract type and id robustly from incoming URI
+            val segments = uri.pathSegments
+            val type: String?
+            val id: String?
+
+            if (segments.size >= 2) {
+                // Common patterns: /share/{type}/{id} -> segments[0]="share", [1]=type, [2]=id
+                // Or /{type}/{id} -> segments[segments.size-2]=type, last=id
+                if (segments.size >= 3 && segments[0].equals("share", ignoreCase = true)) {
+                    type = segments.getOrNull(1)
+                    id = segments.getOrNull(2)
+                } else {
+                    type = segments.getOrNull(segments.size - 2)
+                    id = segments.getOrNull(segments.size - 1)
+                }
+            } else {
+                type = null
+                id = null
+            }
+
+            if (type == null || id == null) return@collectLatest
+
+            // Normalize type
+            val normalizedType = type.lowercase()
+
+            // Ensure Home is present under the deep link so pressing back returns to Home
+            try {
+                if (navController.currentDestination?.route != Route.Home.path) {
+                    navController.navigate(Route.Home.path) {
+                        launchSingleTop = true
+                    }
+                }
+
+                when (normalizedType) {
+                    "product" -> {
+                        navController.navigate(Route.ProductDetails.createRoute(id)) {
+                            launchSingleTop = true
+                        }
+                    }
+                    "farmer", "seller" -> {
+                        navController.navigate(Route.SellerProfile.createRoute(id)) {
+                            launchSingleTop = true
+                        }
+                    }
+                    else -> {
+                        // Unknown type: no-op
+                    }
+                }
+            } catch (e: Exception) {
+                // Swallow exceptions to avoid crashes when deep linking; optionally log
+            }
         }
     }
 }

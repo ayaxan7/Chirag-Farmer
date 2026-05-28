@@ -2,6 +2,7 @@ package com.yash091099.ChiragFarmersApp.ui.presentation.mainactivity
 
 import android.Manifest
 import android.os.Build
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -12,6 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.launch
 import com.yash091099.ChiragFarmersApp.data.local.ChiragDataStore
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragFarmerApp
 import com.yash091099.ChiragFarmersApp.ui.theme.ChiragFarmerTheme
@@ -21,6 +24,9 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    // Shared flow to emit incoming intents (deep links) to Compose so NavController can handle them
+    private val deepLinkFlow = MutableSharedFlow<Intent>(replay = 1)
 
     // Request notification permission for Android 13+
     private val notificationPermissionRequest = registerForActivityResult(
@@ -56,13 +62,25 @@ class MainActivity : ComponentActivity() {
             Log.d("MainActivity", "================================")
         }
 
+        // Emit the initial intent (if any) so the Composable NavController can react to deep links
+        intent?.let { lifecycleScope.launch { deepLinkFlow.emit(it) } }
+
         setContent {
             ChiragFarmerTheme(darkTheme = false) {
                 ChiragFarmerApp(
                     navController = rememberNavController(),
+                    deepLinkFlow = deepLinkFlow,
                     modifier = Modifier.fillMaxSize()
                 )
             }
         }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        // update activity intent reference
+        setIntent(intent)
+        // emit new intent to the shared flow so Compose can handle it
+        lifecycleScope.launch { deepLinkFlow.emit(intent) }
     }
 }
