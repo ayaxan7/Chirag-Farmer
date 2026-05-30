@@ -43,6 +43,7 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.orders.screens.DropReview
 import com.yash091099.ChiragFarmersApp.ui.presentation.orders.screens.MyOrderDetailsScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.orders.screens.MyOrdersScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.profile.ProfileScreen
+import com.yash091099.ChiragFarmersApp.ui.presentation.profile.screens.EditProfileScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.profile.ProfileViewModel
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.SellScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.screens.sellcategories.SellCategoriesScreen
@@ -262,6 +263,10 @@ fun AppNavigation(
         composable(Route.Profile.path) {
             val viewModel: ProfileViewModel = hiltViewModel()
             ProfileScreen(navController = navController, viewModel = viewModel)
+        }
+        composable(Route.EditProfile.path) {
+            val viewModel: ProfileViewModel = hiltViewModel()
+            EditProfileScreen(navController = navController, viewModel = viewModel)
         }
         composable(Route.MyOrders.path) {
             MyOrdersScreen(navController = navController)

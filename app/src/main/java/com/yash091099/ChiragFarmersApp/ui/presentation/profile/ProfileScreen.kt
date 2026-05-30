@@ -94,7 +94,7 @@ fun ProfileScreen(
                             name = profile.username ?: "Farmer",
                             phone = profile.phoneNumber ?: "Phone unavailable",
                             profileImageUrl = profile.profileImage,
-                            onEditClick = { /* TODO: edit profile */ }
+                            onEditClick = { navController.navigate(Route.EditProfile.path) }
                         )
                     }
 
@@ -215,21 +215,6 @@ fun ProfileHeader(
                     .border(1.dp, BorderColour, CircleShape),
                 contentScale = ContentScale.Crop
             )
-            Surface(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .size(24.dp),
-                shape = CircleShape,
-                color = Color.White,
-                shadowElevation = 2.dp
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_camera),
-                    contentDescription = "Edit Profile Image",
-                    modifier = Modifier.padding(4.dp),
-                    tint = Color.Black
-                )
-            }
         }
 
         Spacer(modifier = Modifier.size(16.dp))
