@@ -49,6 +49,7 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.ChiragB
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragTopBar
 import com.yash091099.ChiragFarmersApp.ui.presentation.profile.ProfileUiState
 import com.yash091099.ChiragFarmersApp.ui.presentation.profile.ProfileViewModel
+import com.yash091099.ChiragFarmersApp.ui.presentation.profile.UpdateProfileUiState
 import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
 import com.yash091099.ChiragFarmersApp.ui.theme.BorderColour
 import com.yash091099.ChiragFarmersApp.ui.theme.Teal
@@ -60,12 +61,15 @@ fun EditProfileScreen(
     navController: NavHostController, viewModel: ProfileViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val updateProfileUiState by viewModel.updateProfileUiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     // Local states for editing profile fields
     var nameState by remember { mutableStateOf("") }
     var phoneState by remember { mutableStateOf("") }
+    var emailState by remember { mutableStateOf("") }
     var profileImageState by remember { mutableStateOf<Any?>(null) }
+    var selectedProfileImageUri by remember { mutableStateOf<Uri?>(null) }
 
     // Initialize values from successful profile load once loaded
     LaunchedEffect(uiState) {
@@ -73,7 +77,26 @@ fun EditProfileScreen(
             val profile = (uiState as ProfileUiState.Success).profile
             profile.username?.let { nameState = it }
             profile.phoneNumber?.let { phoneState = if (it.startsWith("+91")) it else "+91 $it" }
+            profile.email?.let { emailState=it }
             profile.profileImage?.let { profileImageState = it }
+            selectedProfileImageUri = null
+        }
+    }
+
+    LaunchedEffect(updateProfileUiState) {
+        when (val state = updateProfileUiState) {
+            is UpdateProfileUiState.Success -> {
+                Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
+                viewModel.resetUpdateProfileState()
+                navController.popBackStack()
+            }
+
+            is UpdateProfileUiState.Error -> {
+                Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
+                viewModel.resetUpdateProfileState()
+            }
+
+            else -> Unit
         }
     }
 
@@ -82,6 +105,7 @@ fun EditProfileScreen(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         if (uri != null) {
+            selectedProfileImageUri = uri
             profileImageState = uri
             Toast.makeText(context, "Profile photo updated successfully!", Toast.LENGTH_SHORT)
                 .show()
@@ -98,11 +122,18 @@ fun EditProfileScreen(
     }, bottomBar = {
         // Premium Save button to save the updated states
         ChiragButton(
-            text = "Save Changes",
+            text = if (updateProfileUiState is UpdateProfileUiState.Loading) "Saving..." else "Save Changes",
             onClick = {
-                Toast.makeText(context, "Changes saved successfully!", Toast.LENGTH_SHORT).show()
-                navController.popBackStack()
+                val profile = (uiState as? ProfileUiState.Success)?.profile ?: return@ChiragButton
+                viewModel.updateProfile(
+                    context = context,
+                    originalProfile = profile,
+                    editedName = nameState,
+                    editedEmail = emailState,
+                    selectedImageUri = selectedProfileImageUri
+                )
             },
+            enabled = uiState is ProfileUiState.Success && updateProfileUiState !is UpdateProfileUiState.Loading,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
@@ -148,12 +179,20 @@ fun EditProfileScreen(
                 label = "NAME", value = nameState, onValueChange = { nameState = it })
 
             HorizontalDivider(color = BorderColour, thickness = 1.dp)
-
+//
+//            EditFieldItem(
+//                label = "PHONE NUMBER",
+//                value = phoneState,
+//                onValueChange = { phoneState = it },
+//                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
+//            )
+//
+//            HorizontalDivider(color = BorderColour, thickness = 1.dp)
             EditFieldItem(
-                label = "PHONE NUMBER",
-                value = phoneState,
-                onValueChange = { phoneState = it },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
+                label = "EMAIL",
+                value = emailState,
+                onValueChange = { emailState = it },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
             )
 
             HorizontalDivider(color = BorderColour, thickness = 1.dp)

@@ -6,6 +6,7 @@ import com.yash091099.ChiragFarmersApp.data.model.auth.FarmerProfileResponse
 import com.yash091099.ChiragFarmersApp.data.model.auth.RegisterRequest
 import com.yash091099.ChiragFarmersApp.data.model.auth.SendOTPData
 import com.yash091099.ChiragFarmersApp.data.model.auth.SendOTPRequest
+import com.yash091099.ChiragFarmersApp.data.model.auth.UpdateProfileData
 import com.yash091099.ChiragFarmersApp.data.model.auth.UserDetailsData
 import com.yash091099.ChiragFarmersApp.data.model.auth.VerifyOTPData
 import com.yash091099.ChiragFarmersApp.data.model.auth.VerifyOTPRequest
@@ -25,7 +26,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
-import retrofit2.http.DELETE
+import retrofit2.http.PUT
 
 interface AuthApiService {
 
@@ -64,6 +65,12 @@ interface AuthApiService {
     suspend fun checkProfileStatus(
         @Header("Authorization") authorization: String
     ): AuthResponse<Boolean>
+
+    @PUT("api/msg91/update-profile")
+    suspend fun updateProfile(
+        @Header("Authorization") authorization: String,
+        @Body request: Map<String, String>
+    ): AuthResponse<UpdateProfileData>
 
     @POST("api/farmers/delivery-location")
     suspend fun addDeliveryLocation(

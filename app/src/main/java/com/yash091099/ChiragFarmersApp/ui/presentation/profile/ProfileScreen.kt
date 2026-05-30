@@ -50,7 +50,9 @@ fun ProfileScreen(
             }
         }
     }
-
+    LaunchedEffect(Unit) {
+        viewModel.loadProfile()
+    }
     Scaffold(
         topBar = {
             ChiragTopBar(

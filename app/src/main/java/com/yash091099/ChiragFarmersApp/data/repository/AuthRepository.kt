@@ -9,6 +9,7 @@ import com.yash091099.ChiragFarmersApp.data.model.auth.FarmerProfileResponse
 import com.yash091099.ChiragFarmersApp.data.model.auth.RegisterRequest
 import com.yash091099.ChiragFarmersApp.data.model.auth.SendOTPData
 import com.yash091099.ChiragFarmersApp.data.model.auth.SendOTPRequest
+import com.yash091099.ChiragFarmersApp.data.model.auth.UpdateProfileData
 import com.yash091099.ChiragFarmersApp.data.model.auth.UserDetailsData
 import com.yash091099.ChiragFarmersApp.data.model.auth.VerifyOTPData
 import com.yash091099.ChiragFarmersApp.data.model.auth.VerifyOTPRequest
@@ -172,6 +173,20 @@ class AuthRepository @Inject constructor(
             }
 
             val response = apiService.getFarmerProfile("Bearer $token")
+            Result.success(response)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun updateProfile(changedFields: Map<String, String>): Result<AuthResponse<UpdateProfileData>> {
+        return try {
+            val token = chiragDataStore.getAuthToken().first()
+            if (token.isNullOrEmpty()) {
+                return Result.failure(Exception("No authentication token found"))
+            }
+
+            val response = apiService.updateProfile("Bearer $token", changedFields)
             Result.success(response)
         } catch (e: Exception) {
             Result.failure(e)

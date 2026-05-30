@@ -10,6 +10,7 @@ data class FarmerProfileData(
     val profileImage: String? = null,
     val username: String? = null,
     val phoneNumber: String? = null,
-    val userId: String? = null
+    val userId: String? = null,
+    val email:String?=null
 )
 
