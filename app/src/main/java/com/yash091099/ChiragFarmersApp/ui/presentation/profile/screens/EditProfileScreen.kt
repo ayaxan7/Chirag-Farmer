@@ -77,7 +77,7 @@ fun EditProfileScreen(
             val profile = (uiState as ProfileUiState.Success).profile
             profile.username?.let { nameState = it }
             profile.phoneNumber?.let { phoneState = if (it.startsWith("+91")) it else "+91 $it" }
-            profile.email?.let { emailState=it }
+            profile.email?.let { emailState = it }
             profile.profileImage?.let { profileImageState = it }
             selectedProfileImageUri = null
         }
