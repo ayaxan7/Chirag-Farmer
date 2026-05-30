@@ -2,6 +2,7 @@ package com.yash091099.ChiragFarmersApp.ui.presentation.cart.address
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -293,18 +294,18 @@ fun FarmerAddressItem(
                     text = address.pincode ?: "", fontSize = 13.sp, color = Color.Black
                 )
             }
-            // Show receiver details if available
-            if (!address.receiverName.isNullOrBlank()) {
-                Spacer(modifier = Modifier.height(4.dp))
-                Row {
-                    Text(
-                        text = "Receiver: ", fontSize = 12.sp, color = TextGray
-                    )
-                    Text(
-                        text = address.receiverName, fontSize = 12.sp, color = TextDarkGray
-                    )
-                }
-            }
+//            // Show receiver details if available
+//            if (!address.receiverName.isNullOrBlank()) {
+//                Spacer(modifier = Modifier.height(4.dp))
+//                Row {
+//                    Text(
+//                        text = "Receiver: ", fontSize = 12.sp, color = TextGray
+//                    )
+//                    Text(
+//                        text = address.receiverName, fontSize = 12.sp, color = TextDarkGray
+//                    )
+//                }
+//            }
         }
         RadioButton(
             selected = isSelected, onClick = onSelect, colors = RadioButtonDefaults.colors(
@@ -318,18 +319,19 @@ fun FarmerAddressItem(
 fun AddAddressButton(onClick: () -> Unit) {
     Box(
         modifier = Modifier
+            .padding(horizontal = 16.dp)
             .fillMaxWidth()
-            .height(56.dp)
+            .height(48.dp)
             .background(Color(0xfff0f0f0), RoundedCornerShape(28.dp))
             .dashedBorder(
                 width = 1.dp, color = BGBlack.copy(alpha = 0.5f), cornerRadius = 28.dp
             )
             .clickable { onClick() }, contentAlignment = Alignment.Center
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
             Icon(
                 imageVector = Icons.Default.Add,
-                contentDescription = null,
+                contentDescription = "Add Address",
                 modifier = Modifier.size(20.dp),
                 tint = Color.Black
             )
