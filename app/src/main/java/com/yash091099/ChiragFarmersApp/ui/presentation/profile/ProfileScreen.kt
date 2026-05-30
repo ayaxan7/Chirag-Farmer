@@ -1,12 +1,27 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.profile
 
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -19,6 +34,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -32,13 +48,16 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragT
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost.Route
 import com.yash091099.ChiragFarmersApp.ui.presentation.profile.components.MenuItem
 import com.yash091099.ChiragFarmersApp.ui.presentation.profile.components.QuickActionCard
-import com.yash091099.ChiragFarmersApp.ui.theme.*
+import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
+import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
+import com.yash091099.ChiragFarmersApp.ui.theme.BackgroundGray
+import com.yash091099.ChiragFarmersApp.ui.theme.BorderColour
+import com.yash091099.ChiragFarmersApp.ui.theme.TextGray
 import kotlinx.coroutines.launch
 
 @Composable
 fun ProfileScreen(
-    navController: NavHostController,
-    viewModel: ProfileViewModel = hiltViewModel()
+    navController: NavHostController, viewModel: ProfileViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val scope = rememberCoroutineScope()
@@ -60,8 +79,7 @@ fun ProfileScreen(
                 title = "My Account",
                 icon = R.drawable.ic_arrow,
             )
-        },
-        containerColor = BGWhite
+        }, containerColor = BGWhite
     ) { paddingValues ->
         when (uiState) {
             ProfileUiState.Loading -> ProfileLoadingState(
@@ -95,14 +113,14 @@ fun ProfileScreen(
                         ProfileHeader(
                             name = profile.username ?: "Farmer",
                             phone = profile.phoneNumber ?: "Phone unavailable",
+                            email = profile.email ?: "Email unavailable",
                             profileImageUrl = profile.profileImage,
-                            onEditClick = { navController.navigate(Route.EditProfile.path) }
-                        )
+                            onEditClick = { navController.navigate(Route.EditProfile.path) })
                     }
 
                     item {
                         QuickActionsRow(
-                            navController=navController
+                            navController = navController
                         )
                     }
 
@@ -113,7 +131,7 @@ fun ProfileScreen(
 
                     item {
                         MenuListSection(
-                            navController=navController
+                            navController = navController
                         )
                     }
 
@@ -160,8 +178,7 @@ fun ProfileScreen(
 @Composable
 private fun ProfileLoadingState(modifier: Modifier = Modifier) {
     Box(
-        modifier = modifier,
-        contentAlignment = Alignment.Center
+        modifier = modifier, contentAlignment = Alignment.Center
     ) {
         CircularProgressIndicator(color = Color.Black)
     }
@@ -169,9 +186,7 @@ private fun ProfileLoadingState(modifier: Modifier = Modifier) {
 
 @Composable
 private fun ProfileErrorState(
-    message: String,
-    onRetry: () -> Unit,
-    modifier: Modifier = Modifier
+    message: String, onRetry: () -> Unit, modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier.padding(16.dp),
@@ -179,10 +194,7 @@ private fun ProfileErrorState(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = message,
-            color = Color.Red,
-            fontSize = 16.sp,
-            textAlign = TextAlign.Center
+            text = message, color = Color.Red, fontSize = 16.sp, textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = onRetry) {
@@ -193,10 +205,7 @@ private fun ProfileErrorState(
 
 @Composable
 fun ProfileHeader(
-    name: String,
-    phone: String,
-    profileImageUrl: String?,
-    onEditClick: () -> Unit
+    name: String, phone: String, profileImageUrl: String?, onEditClick: () -> Unit, email: String
 ) {
     Row(
         modifier = Modifier
@@ -221,26 +230,27 @@ fun ProfileHeader(
 
         Spacer(modifier = Modifier.size(16.dp))
 
-        Column(modifier = Modifier.weight(1.0f)) {
+        Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = name,
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black
+                text = name, fontSize = 22.sp, fontWeight = FontWeight.Bold, color = BGBlack
             )
             Text(
-                text = "+91 $phone",
+                text = "+91 $phone", fontSize = 14.sp, color = TextGray
+            )
+            Text(
+                text = email,
                 fontSize = 14.sp,
-                color = TextGray
+                color = TextGray,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
 
         IconButton(onClick = onEditClick) {
             Icon(
-                painter = painterResource(id = R.drawable.ic_edit),
+                painter = painterResource(id = R.drawable.ic_edit_profile),
                 contentDescription = "Edit Profile",
-                modifier = Modifier.size(24.dp),
-                tint = Color.Black
+                modifier = Modifier.size(24.dp)
             )
         }
     }
@@ -260,10 +270,9 @@ fun QuickActionsRow(
             title = "Orders\nplaced",
             icon = R.drawable.ic_ordersplaced,
             modifier = Modifier.width(110.dp),
-            onClick={
+            onClick = {
                 navController.navigate(Route.MyOrders.path)
-            }
-        )
+            })
         Spacer(
             modifier = Modifier.size(16.dp)
         )
@@ -280,13 +289,13 @@ fun MenuListSection(
     navController: NavHostController
 ) {
     Column {
-//        MenuItem(icon = R.drawable.profile_icon, title = "My profile")
         MenuItem(icon = R.drawable.ic_wallet, title = "Wallet")
-//        MenuItem(icon = R.drawable.ic_view_seller, title = "Bank Details")
-        MenuItem(icon = R.drawable.location, title = "Manage Addresses")
-        MenuItem(icon = R.drawable.qna, title = "Terms and conditions")
-        MenuItem(icon = R.drawable.ic_cart, title = "Privacy Policy")
-        MenuItem(icon = R.drawable.ic_share, title = "Language")
-        MenuItem(icon = R.drawable.ic_rating_star, title = "Rate app")
+        MenuItem(
+            icon = R.drawable.location,
+            title = "Manage Addresses",
+            onClick = { navController.navigate(Route.AddressList.path) })
+        MenuItem(icon = R.drawable.ic_terms_n_conditions, title = "Terms and conditions")
+        MenuItem(icon = R.drawable.ic_privacy_policy, title = "Privacy Policy")
+        MenuItem(icon = R.drawable.ic_rating, title = "Rate app")
     }
 }
