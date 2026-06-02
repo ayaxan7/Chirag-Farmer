@@ -417,6 +417,7 @@ fun OrderDetailsView(
 ) {
     var showCancelDialog by remember { mutableStateOf(false) }
     val cancelOrderState by viewModel.cancelOrderState.collectAsState()
+    val canCancelOrder = !orderStatusIsCancelled(data.orderStatus)
 
     // Handle success and navigate back
     LaunchedEffect(cancelOrderState) {
@@ -460,43 +461,45 @@ fun OrderDetailsView(
             }
         }
         // Fixed Bottom Button
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(BGWhite)
-        ) {
-            OutlinedButton(
-                onClick = { showCancelDialog = true },
+        if (canCancelOrder) {
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(42.dp),
-                shape = RoundedCornerShape(8.dp),
-                border = BorderStroke(
-                    width = 1.dp,
-                    color = BGBlack
-                ),
-                colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = BGWhite,
-                    contentColor = BGBlack
-                ),
-                enabled = cancelOrderState !is CancelOrderState.Loading
+                    .background(BGWhite)
             ) {
-                if (cancelOrderState is CancelOrderState.Loading) {
-                    CircularProgressIndicator(modifier = Modifier.size(16.dp), color = BGBlack)
+                OutlinedButton(
+                    onClick = { showCancelDialog = true },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(42.dp),
+                    shape = RoundedCornerShape(8.dp),
+                    border = BorderStroke(
+                        width = 1.dp,
+                        color = BGBlack
+                    ),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = BGWhite,
+                        contentColor = BGBlack
+                    ),
+                    enabled = cancelOrderState !is CancelOrderState.Loading
+                ) {
+                    if (cancelOrderState is CancelOrderState.Loading) {
+                        CircularProgressIndicator(modifier = Modifier.size(16.dp), color = BGBlack)
+                        Spacer(modifier = Modifier.width(8.dp))
+                    }
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Cancel Order",
+                        tint = BGBlack,
+                        modifier = Modifier.size(16.dp)
+                    )
                     Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "Cancel Order",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
                 }
-                Icon(
-                    imageVector = Icons.Default.Close,
-                    contentDescription = "Cancel Order",
-                    tint = BGBlack,
-                    modifier = Modifier.size(16.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "Cancel Order",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
             }
         }
     }
@@ -597,3 +600,8 @@ fun DetailItem(
         )
     }
 }
+
+private fun orderStatusIsCancelled(status: String?): Boolean {
+    return status?.trim()?.equals("cancelled", ignoreCase = true) == true
+}
+
