@@ -236,26 +236,70 @@ fun ProgressTimeline(
         Triple("Delivered", "Confirmation Delivered Date", data.deliveredAt)
     )
 
+    val isCancelled = data.orderStatus?.trim()?.equals("cancelled", ignoreCase = true) == true
+
     Column(modifier = Modifier.padding(bottom = 16.dp)) {
-        statuses.forEachIndexed { index, (status, subtitle, timestamp) ->
+        if (!isCancelled) {
+            // Normal flow: show all timeline items including pending ones
+            statuses.forEachIndexed { index, (status, subtitle, timestamp) ->
+                TimelineItem(
+                    title = status,
+                    subtitle = subtitle,
+                    icon = when (status) {
+                        "Order Placed" -> Icons.Default.ShoppingCart
+                        "Packed" -> Icons.Default.Inventory
+                        "Shipped" -> Icons.Default.Inventory2
+                        "Out for Delivery" -> Icons.Default.LocalShipping
+                        "Delivered" -> Icons.Default.CheckCircleOutline
+                        else -> Icons.Default.ShoppingCart
+                    },
+                    isCompleted = timestamp != null,
+                    isActive = timestamp == null && (index == 0 || statuses[index - 1].third != null),
+                    isFaded = timestamp == null && (index > 0 && statuses[index - 1].third == null),
+                    showLine = index < statuses.size - 1,
+                    onCheckClick = { if (timestamp == null) onStatusUpdate(status) }
+                ) {
+                    CustomDateField(timestamp?.let { formatDate(it) } ?: "Pending")
+                }
+            }
+        } else {
+            // Cancelled: show only completed steps and a final Cancelled box with red border
+            val completed = statuses.filter { it.third != null }
+            completed.forEachIndexed { index, (status, subtitle, timestamp) ->
+                TimelineItem(
+                    title = status,
+                    subtitle = subtitle,
+                    icon = when (status) {
+                        "Order Placed" -> Icons.Default.ShoppingCart
+                        "Packed" -> Icons.Default.Inventory
+                        "Shipped" -> Icons.Default.Inventory2
+                        "Out for Delivery" -> Icons.Default.LocalShipping
+                        "Delivered" -> Icons.Default.CheckCircleOutline
+                        else -> Icons.Default.ShoppingCart
+                    },
+                    isCompleted = true,
+                    isActive = false,
+                    isFaded = false,
+                    showLine = index < completed.size, // last completed should show line to cancelled
+                    onCheckClick = {}
+                ) {
+                    CustomDateField(timestamp?.let { formatDate(it) } ?: "")
+                }
+            }
+
+            // Cancelled box
             TimelineItem(
-                title = status,
-                subtitle = subtitle,
-                icon = when (status) {
-                    "Order Placed" -> Icons.Default.ShoppingCart
-                    "Packed" -> Icons.Default.Inventory
-                    "Shipped" -> Icons.Default.Inventory2
-                    "Out for Delivery" -> Icons.Default.LocalShipping
-                    "Delivered" -> Icons.Default.CheckCircleOutline
-                    else -> Icons.Default.ShoppingCart
-                },
-                isCompleted = timestamp != null,
-                isActive = timestamp == null && (index == 0 || statuses[index - 1].third != null),
-                isFaded = timestamp == null && (index > 0 && statuses[index - 1].third == null),
-                showLine = index < statuses.size - 1,
-                onCheckClick = { if (timestamp == null) onStatusUpdate(status) }
+                title = "Cancelled",
+                subtitle = "Status",
+                icon = Icons.Default.Close,
+                isCompleted = true,
+                isActive = false,
+                isFaded = false,
+                showLine = false,
+                onCheckClick = {},
+                borderOverride = Color(0xFFF44336)
             ) {
-                CustomDateField(timestamp?.let { formatDate(it) } ?: "Pending")
+                CustomDateField(data.cancelledAt?.let { formatDate(it) } ?: "Cancelled")
             }
         }
     }
@@ -290,11 +334,12 @@ fun TimelineItem(
     isFaded: Boolean = false,
     showLine: Boolean = true,
     onCheckClick: () -> Unit = {},
+    borderOverride: Color? = null,
     content: @Composable () -> Unit
 ) {
     val contentColor = if (isFaded) TextGray.copy(alpha = 0.5f) else Color.Black
     val iconBgColor = if (isFaded) Color(0xFFF5F5F5) else Color(0xFFF5F5F5)
-    val borderColor = if (isActive) Teal else if (isCompleted) Color.Black else BorderColour
+    val borderColor = borderOverride ?: if (isActive) Teal else if (isCompleted) Color.Black else BorderColour
 
     Row(modifier = Modifier.fillMaxWidth()) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {

@@ -602,6 +602,6 @@ fun DetailItem(
 }
 
 private fun orderStatusIsCancelled(status: String?): Boolean {
-    return status?.trim()?.equals("cancelled", ignoreCase = true) == true
+    return status?.trim()?.lowercase() in listOf("cancelled", "delivered")
 }
 

@@ -15,6 +15,7 @@ data class OrderTrackingData(
     val shippedAt: String?,
     val outForDeliveryAt: String?,
     val deliveredAt: String?,
+    val cancelledAt: String? = null,
     val imageUrl: String?,
     val productName: String?,
     val orderNumber: String?,
