@@ -1,5 +1,7 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.orders.screens
 
+import android.content.ClipData
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -43,12 +45,16 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragT
 import com.yash091099.ChiragFarmersApp.ui.theme.*
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.foundation.Canvas
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.ClipEntry
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalClipboardManager
 import com.yash091099.ChiragFarmersApp.data.remote.dto.CancellationDetailsDto
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost.Route
 import com.yash091099.ChiragFarmersApp.ui.presentation.orders.CancelOrderState
 import com.yash091099.ChiragFarmersApp.ui.presentation.orders.OrderDetailsUiState
 import com.yash091099.ChiragFarmersApp.ui.presentation.orders.OrderDetailsViewModel
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
@@ -112,7 +118,7 @@ fun MyOrderDetailsScreen(
                             .weight(1f)
                             .height(48.dp),
                         shape = RoundedCornerShape(8.dp),
-                        border = ButtonDefaults.outlinedButtonBorder.copy(width = 1.dp),
+                        border = BorderStroke(1.dp,BGBlack),
                         colors = ButtonDefaults.outlinedButtonColors(contentColor = BGBlack)
                     ) {
                         Text("Reorder", fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
@@ -572,8 +578,8 @@ fun OrderStatusSection(statusTimeline: StatusTimeline?, currentStatus: String?) 
 
 @Composable
 fun PriceBreakdownSection(data: OrderDetailsData) {
-    val clipboardManager = LocalClipboardManager.current
-
+    val clipboard = LocalClipboard.current
+    val scope = rememberCoroutineScope()
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -614,9 +620,16 @@ fun PriceBreakdownSection(data: OrderDetailsData) {
                         contentDescription = "Copy",
                         tint = TextGray,
                         modifier = Modifier
-                            .size(16.dp)
-                            .clickable(enabled = transactionId != "--") {
-                                clipboardManager.setText(AnnotatedString(transactionId))
+                            .size(16.dp).clickable(enabled = transactionId != "--") {
+                                scope.launch {
+                                    clipboard.setClipEntry(
+                                        ClipEntry(
+                                            ClipData.newPlainText(
+                                                "transaction_id",
+                                                transactionId
+                                            )
+                                        )                                    )
+                                }
                             }
                     )
                 }

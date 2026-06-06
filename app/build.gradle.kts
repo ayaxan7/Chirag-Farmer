@@ -19,6 +19,7 @@ val nominatimBaseUrl=localProperties.getProperty("OSM_NOMINATIM_BASE_URL")?:"MIS
 val cloudinaryCloudName=localProperties.getProperty("CLOUD_NAME")?:"MISSING_CLOUD_NAME"
 val cloudinaryUploadPreset=localProperties.getProperty("CLOUDINARY_UPLOAD_PRESET")?:"MISSING_UPLOAD_PRESET"
 val phonePeMerchantId = localProperties.getProperty("PHONEPE_MERCHANT_ID") ?: "MISSING_PHONEPE_MERCHANT_ID"
+val hashidsSalt = localProperties.getProperty("HASHIDS_SALT") ?: "MISSING_HASHIDS_SALT"
 android {
     namespace = "com.yash091099.ChiragFarmersApp"
     compileSdk {
@@ -35,6 +36,7 @@ android {
         buildConfigField("String", "CLOUDINARY_CLOUD_NAME", "\"$cloudinaryCloudName\"")
         buildConfigField("String", "CLOUDINARY_UPLOAD_PRESET", "\"$cloudinaryUploadPreset\"")
         buildConfigField("String", "PHONEPE_MERCHANT_ID", "\"$phonePeMerchantId\"")
+        buildConfigField("String", "HASHIDS_SALT", "\"$hashidsSalt\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -136,4 +138,7 @@ dependencies {
 
     // OpenStreetMap
     implementation(libs.osmdroid)
+    
+    // Hashids for encoding ObjectIds in share links
+    implementation(libs.hashids)
 }

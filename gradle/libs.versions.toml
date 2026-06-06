@@ -37,6 +37,7 @@ material3AdaptiveNavigationSuite = "1.4.0"
 lifecycleProcess = "2.10.0"
 foundation = "1.10.5"
 osmdroid = "6.1.18"
+hashids = "1.0.3"
 
 [libraries]
 androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
@@ -86,6 +87,7 @@ androidx-compose-material3-adaptive-navigation-suite = { group = "androidx.compo
 androidx-lifecycle-process = { group = "androidx.lifecycle", name = "lifecycle-process", version.ref = "lifecycleProcess" }
 androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation" }
 osmdroid = { module = "org.osmdroid:osmdroid-android", version.ref = "osmdroid" }
+hashids = { module = "org.hashids:hashids", version.ref = "hashids" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
