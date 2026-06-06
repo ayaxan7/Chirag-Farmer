@@ -5,6 +5,7 @@ import com.yash091099.ChiragFarmersApp.data.remote.CropAnalysisApiService
 import com.yash091099.ChiragFarmersApp.data.remote.ChatApiService
 import com.yash091099.ChiragFarmersApp.data.remote.CartApiService
 import com.yash091099.ChiragFarmersApp.data.remote.NotificationApiService
+import com.yash091099.ChiragFarmersApp.data.remote.PhonePeApiService
 import com.yash091099.ChiragFarmersApp.data.remote.OrderApiService
 import com.yash091099.ChiragFarmersApp.data.remote.ProductApiService
 import dagger.Module
@@ -60,5 +61,11 @@ object ApiModule {
     @Singleton
     fun provideOrderApiService(retrofit: Retrofit): OrderApiService {
         return retrofit.create(OrderApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun providePhonePeApiService(retrofit: Retrofit): PhonePeApiService {
+        return retrofit.create(PhonePeApiService::class.java)
     }
 }

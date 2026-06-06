@@ -6,17 +6,20 @@ import com.yash091099.ChiragFarmersApp.data.remote.CropAnalysisApiService
 import com.yash091099.ChiragFarmersApp.data.remote.CartApiService
 import com.yash091099.ChiragFarmersApp.data.remote.NotificationApiService
 import com.yash091099.ChiragFarmersApp.data.remote.OrderApiService
+import com.yash091099.ChiragFarmersApp.data.remote.PhonePeApiService
 import com.yash091099.ChiragFarmersApp.data.remote.ProductApiService
 import com.yash091099.ChiragFarmersApp.data.repository.AuthRepository
 import com.yash091099.ChiragFarmersApp.data.repository.CropAnalysisRepositoryImpl
 import com.yash091099.ChiragFarmersApp.data.repository.CartRepositoryImpl
 import com.yash091099.ChiragFarmersApp.data.repository.NotificationRepositoryImpl
 import com.yash091099.ChiragFarmersApp.data.repository.OrderRepositoryImpl
+import com.yash091099.ChiragFarmersApp.data.repository.PhonePeCheckoutRepositoryImpl
 import com.yash091099.ChiragFarmersApp.data.repository.ProductRepositoryImpl
 import com.yash091099.ChiragFarmersApp.domain.repository.CropAnalysisRepository
 import com.yash091099.ChiragFarmersApp.domain.repository.CartRepository
 import com.yash091099.ChiragFarmersApp.domain.repository.OrderRepository
 import com.yash091099.ChiragFarmersApp.domain.repository.NotificationRepository
+import com.yash091099.ChiragFarmersApp.domain.repository.PhonePeCheckoutRepository
 import com.yash091099.ChiragFarmersApp.domain.repository.ProductRepository
 import dagger.Module
 import dagger.Provides
@@ -80,5 +83,15 @@ object RepositoryModule {
         api: OrderApiService, chiragDataStore: ChiragDataStore
     ): OrderRepository {
         return OrderRepositoryImpl(api, chiragDataStore)
+    }
+
+    @Provides
+    @Singleton
+    @Suppress("unused")
+    fun providePhonePeCheckoutRepository(
+        api: PhonePeApiService,
+        chiragDataStore: ChiragDataStore
+    ): PhonePeCheckoutRepository {
+        return PhonePeCheckoutRepositoryImpl(api, chiragDataStore)
     }
 }

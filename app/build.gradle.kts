@@ -18,6 +18,7 @@ val localProperties = Properties().apply {
 val nominatimBaseUrl=localProperties.getProperty("OSM_NOMINATIM_BASE_URL")?:"MISSING_BASE_URL"
 val cloudinaryCloudName=localProperties.getProperty("CLOUD_NAME")?:"MISSING_CLOUD_NAME"
 val cloudinaryUploadPreset=localProperties.getProperty("CLOUDINARY_UPLOAD_PRESET")?:"MISSING_UPLOAD_PRESET"
+val phonePeMerchantId = localProperties.getProperty("PHONEPE_MERCHANT_ID") ?: "MISSING_PHONEPE_MERCHANT_ID"
 android {
     namespace = "com.yash091099.ChiragFarmersApp"
     compileSdk {
@@ -33,12 +34,13 @@ android {
         buildConfigField("String", "OSM_NOMINATIM_BASE_URL", "\"$nominatimBaseUrl\"")
         buildConfigField("String", "CLOUDINARY_CLOUD_NAME", "\"$cloudinaryCloudName\"")
         buildConfigField("String", "CLOUDINARY_UPLOAD_PRESET", "\"$cloudinaryUploadPreset\"")
+        buildConfigField("String", "PHONEPE_MERCHANT_ID", "\"$phonePeMerchantId\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         debug {
-            buildConfigField("String", "BASE_URL", "\"http://10.0.2.2:5001/\"")
+            buildConfigField("String", "BASE_URL", "\"http://192.168.1.9:5001/\"")
         }
 
         release {
@@ -130,6 +132,7 @@ dependencies {
     implementation(libs.review.ktx)
     implementation(libs.androidx.compose.material3.window.size.class1)
     implementation(libs.cloudinary.android)
+    implementation("phonepe.intentsdk.android.release:IntentSDK:5.3.2")
 
     // OpenStreetMap
     implementation(libs.osmdroid)

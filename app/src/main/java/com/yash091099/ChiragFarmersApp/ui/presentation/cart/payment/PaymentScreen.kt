@@ -36,9 +36,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.navigation.NavHostController
 import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.ChiragButton
@@ -59,9 +62,29 @@ fun PaymentScreen(
     totalAmount: Double = 0.0
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
     val installedUpiApps by viewModel.installedUpiApps.collectAsState()
     val paymentState by viewModel.paymentState.collectAsState()
+    val phonePeLaunchRequest by viewModel.phonePeLaunchRequest.collectAsState()
     var selectedPayment by remember { mutableStateOf<String?>(null) }
+
+    val phonePeLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) {
+        viewModel.verifyPhonePePayment()
+    }
+
+    LaunchedEffect(phonePeLaunchRequest) {
+        val request = phonePeLaunchRequest ?: return@LaunchedEffect
+
+        try {
+            startPhonePeCheckout(context, request.token, request.orderId, phonePeLauncher)
+        } catch (e: Exception) {
+            snackbarHostState.showSnackbar(e.message ?: "Unable to launch PhonePe checkout")
+        } finally {
+            viewModel.clearPhonePeLaunchRequest()
+        }
+    }
 
     LaunchedEffect(paymentState) {
         when (val state = paymentState) {
@@ -297,7 +320,7 @@ fun PaymentScreen(
                         onClick = {
                             if (selectedPayment != null) {
                                 viewModel.placeOrder(
-                                    paymentMethod = selectedPayment ?: "Cash on Delivery"
+                                    paymentMethod = selectedPayment ?: "Cash On Delivery"
                                 )
                             }
                         },
@@ -308,6 +331,20 @@ fun PaymentScreen(
             }
         }
     }
+}
+
+private fun startPhonePeCheckout(
+    context: android.content.Context,
+    token: String,
+    orderId: String,
+    phonePeLauncher: androidx.activity.result.ActivityResultLauncher<android.content.Intent>
+) {
+    val phonePeKtClass = Class.forName("com.phonepe.intent.sdk.api.PhonePeKt")
+    val startMethod = phonePeKtClass.methods.firstOrNull { method ->
+        method.name == "startCheckoutPage" && method.parameterTypes.size == 4
+    } ?: error("PhonePe checkout launcher is unavailable")
+
+    startMethod.invoke(null, context, token, orderId, phonePeLauncher)
 }
 
 @Composable
