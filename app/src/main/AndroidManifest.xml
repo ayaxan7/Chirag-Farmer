@@ -49,13 +49,13 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <!-- Deep link: https web link served by your backend. Replace yourdomain.com with your actual domain. -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <!-- Handles URLs like: https://yourdomain.com/share/{type}/{id} -->
-                <data android:scheme="https" android:host="yourdomain.com" android:pathPrefix="/share" />
+                <data android:scheme="https" />
+                <data android:host="backend.chiragvendor.com" />
+                <data android:pathPrefix="/share/" />
             </intent-filter>
 
             <!-- Fallback custom scheme deep link: chirag://app/{type}/{id} -->
