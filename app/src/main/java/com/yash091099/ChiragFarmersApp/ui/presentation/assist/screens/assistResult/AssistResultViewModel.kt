@@ -42,6 +42,7 @@ class AssistResultViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val imageUri: String = savedStateHandle.get<String>("imageUri").orEmpty()
+    private val language: String = savedStateHandle.get<String>("language") ?: "hindi"
 
     private val _uiState = MutableStateFlow<AssistResultUiState>(AssistResultUiState.Loading)
     val uiState: StateFlow<AssistResultUiState> = _uiState.asStateFlow()
@@ -64,7 +65,7 @@ class AssistResultViewModel @Inject constructor(
 
         viewModelScope.launch {
             _uiState.value = AssistResultUiState.Loading
-            cropAnalysisRepository.analyzeCrop(imageUri).fold(
+            cropAnalysisRepository.analyzeCrop(imageUri, language).fold(
                 onSuccess = { data ->
                     _uiState.value = AssistResultUiState.Success(data.toUiModel())
                 },

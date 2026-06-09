@@ -32,8 +32,8 @@ sealed class Route(val path: String) {
     object SellCategories:Route("sell_categories")
     object AssistImage:Route("assist_image")
     object PlantProblemHelp: Route("plant_problem_help")
-    object AssistResult:Route("assist_result?imageUri={imageUri}") {
-        fun createRoute(imageUri: String): String = "assist_result?imageUri=${Uri.encode(imageUri)}"
+    object AssistResult:Route("assist_result?imageUri={imageUri}&language={language}") {
+        fun createRoute(imageUri: String, language: String = "hindi"): String = "assist_result?imageUri=${Uri.encode(imageUri)}&language=$language"
     }
     object SellProduct:Route("sell_product?productId={productId}&selectedCategory={selectedCategory}") {
         fun createRoute(productId: String? = null, selectedCategory: String? = null): String {

@@ -7,6 +7,8 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -24,8 +26,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,6 +41,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
@@ -67,6 +75,8 @@ fun AssistImage(navController: NavHostController) {
     val context = LocalContext.current
     val selectedImageUri = rememberSaveable { mutableStateOf<Uri?>(null) }
     val cameraImageUri = rememberSaveable { mutableStateOf<Uri?>(null) }
+    val selectedLanguage = rememberSaveable { mutableStateOf("hindi") }
+    val showLanguageMenu = remember { mutableStateOf(false) }
     val cameraPermissionGranted = rememberSaveable {
         mutableStateOf(
             ContextCompat.checkSelfPermission(
@@ -131,7 +141,7 @@ fun AssistImage(navController: NavHostController) {
                         .padding(16.dp),
                     onClick = {
                         selectedImageUri.value?.let { imageUri ->
-                            navController.navigate(Route.AssistResult.createRoute(imageUri.toString()))
+                            navController.navigate(Route.AssistResult.createRoute(imageUri.toString(), selectedLanguage.value))
                         }
                     },
                     text = "Next",
@@ -251,6 +261,55 @@ fun AssistImage(navController: NavHostController) {
                             )
                         }
                     }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Language Selector
+            Box(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Row(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(Color(0xFFF1F5F9))
+                        .border(1.dp, Color(0xFFE2E8F0), RoundedCornerShape(10.dp))
+                        .clickable { showLanguageMenu.value = true }
+                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = if (selectedLanguage.value == "english") "English" else "हिन्दी",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = BGBlack
+                    )
+                    Icon(
+                        imageVector = Icons.Default.ArrowDropDown,
+                        contentDescription = null,
+                        tint = BGBlack
+                    )
+                }
+                DropdownMenu(
+                    expanded = showLanguageMenu.value,
+                    onDismissRequest = { showLanguageMenu.value = false }
+                ) {
+                    DropdownMenuItem(
+                        text = { Text("English") },
+                        onClick = {
+                            selectedLanguage.value = "english"
+                            showLanguageMenu.value = false
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text("हिन्दी") },
+                        onClick = {
+                            selectedLanguage.value = "hindi"
+                            showLanguageMenu.value = false
+                        }
+                    )
                 }
             }
         }

@@ -21,7 +21,7 @@ class CropAnalysisRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context
 ) : CropAnalysisRepository {
 
-    override suspend fun analyzeCrop(imageUri: String): Result<CropAnalysisDataDto> {
+    override suspend fun analyzeCrop(imageUri: String, language: String): Result<CropAnalysisDataDto> {
         return try {
             val token = chiragDataStore.getAuthToken().first()
             if (token.isNullOrBlank()) {
@@ -32,7 +32,8 @@ class CropAnalysisRepositoryImpl @Inject constructor(
             val imagePart = createImagePart(uri)
                 ?: return Result.failure(Exception("Unable to read selected image"))
 
-            val response = apiService.analyzeCrop("Bearer $token", imagePart)
+            val languagePart = language.toRequestBody("text/plain".toMediaTypeOrNull())
+            val response = apiService.analyzeCrop("Bearer $token", imagePart, languagePart)
             if (response.success && response.data != null) {
                 Result.success(response.data)
             } else {

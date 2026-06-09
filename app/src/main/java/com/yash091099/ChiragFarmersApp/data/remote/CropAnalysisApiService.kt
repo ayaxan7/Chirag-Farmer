@@ -2,6 +2,7 @@ package com.yash091099.ChiragFarmersApp.data.remote
 
 import com.yash091099.ChiragFarmersApp.data.remote.dto.CropAnalysisResponseDto
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.http.Header
 import retrofit2.http.Multipart
 import retrofit2.http.POST
@@ -14,7 +15,8 @@ interface CropAnalysisApiService {
     @POST("api/farmers/ai/analyze-crop")
     suspend fun analyzeCrop(
         @Header("Authorization") token: String,
-        @Part image: MultipartBody.Part
+        @Part image: MultipartBody.Part,
+        @Part("language") language: RequestBody
     ): CropAnalysisResponseDto
 }
 

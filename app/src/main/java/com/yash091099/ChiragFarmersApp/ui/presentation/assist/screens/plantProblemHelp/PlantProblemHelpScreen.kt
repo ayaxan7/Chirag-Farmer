@@ -85,7 +85,7 @@ fun PlantProblemHelpScreen(
     val listState = rememberLazyListState()
     val focusManager = LocalFocusManager.current
 
-    val messages by viewModel.messages.collectAsState()
+    val messages = viewModel.messages.collectAsState().value
 
     var userInputValue by remember { mutableStateOf("") }
 

@@ -186,6 +186,10 @@ fun AppNavigation(
                 type = NavType.StringType
                 nullable = true
                 defaultValue = null
+            },
+            navArgument("language") {
+                type = NavType.StringType
+                defaultValue = "hindi"
             })) {
             AssistResult(navController = navController)
         }
