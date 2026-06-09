@@ -15,3 +15,7 @@
 local.properties
 /.idea/
 /.kotlin/
+keystore.txt
+upload-keystore.jks
+git_log.txt
+app/release/
