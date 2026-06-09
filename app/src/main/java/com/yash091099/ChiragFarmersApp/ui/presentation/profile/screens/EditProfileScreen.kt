@@ -4,6 +4,7 @@ import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -102,7 +103,7 @@ fun EditProfileScreen(
 
     // Image Picker Launcher
     val imagePickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
+        contract = ActivityResultContracts.PickVisualMedia()
     ) { uri: Uri? ->
         if (uri != null) {
             selectedProfileImageUri = uri
@@ -156,7 +157,7 @@ fun EditProfileScreen(
                 modifier = Modifier
                     .size(120.dp)
                     .clickable {
-                        imagePickerLauncher.launch("image/*")
+                        imagePickerLauncher.launch(PickVisualMediaRequest())
                     }) {
                 AsyncImage(
                     model = profileImageState,

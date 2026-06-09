@@ -3,6 +3,7 @@ package com.yash091099.ChiragFarmersApp.ui.presentation.sell.screens.sellproduce
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -103,7 +104,7 @@ fun SellProducesScreen(
     }
     // Image picker launcher
     val imagePickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
+        contract = ActivityResultContracts.PickVisualMedia()
     ) { uri: Uri? ->
         viewModel.onImageSelected(uri)
     }
@@ -282,7 +283,7 @@ fun SellProducesScreen(
                         if ((existingImageUrls.size + selectedImageUris.size) < 3) {
                             item {
                                 AddImageButton(
-                                    onClick = { imagePickerLauncher.launch("image/*") }
+                                    onClick = { imagePickerLauncher.launch(PickVisualMediaRequest()) }
                                 )
                             }
                         }

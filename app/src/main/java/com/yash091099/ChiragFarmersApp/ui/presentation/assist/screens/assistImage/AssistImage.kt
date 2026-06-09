@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -88,7 +89,7 @@ fun AssistImage(navController: NavHostController) {
 
     // Launcher for picking image from gallery
     val pickImageLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
+        contract = ActivityResultContracts.PickVisualMedia()
     ) { uri: Uri? ->
         if (uri != null) {
             selectedImageUri.value = uri
@@ -189,7 +190,7 @@ fun AssistImage(navController: NavHostController) {
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null
                     ) {
-                        pickImageLauncher.launch("image/*")
+                        pickImageLauncher.launch(PickVisualMediaRequest())
                     }
             ) {
                 if (selectedImageUri.value != null) {

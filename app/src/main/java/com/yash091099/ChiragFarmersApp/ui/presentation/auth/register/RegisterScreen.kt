@@ -3,6 +3,7 @@ package com.yash091099.ChiragFarmersApp.ui.presentation.auth.register
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -84,7 +85,7 @@ fun RegisterScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     val imagePickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
+        contract = ActivityResultContracts.PickVisualMedia()
     ) { uri: Uri? ->
         uri?.let { profileImageUri = it }
     }
@@ -195,7 +196,7 @@ fun RegisterScreen(
                                 .clip(CircleShape)
                                 .background(Color.White)
                                 .border(1.dp, Color.LightGray, CircleShape)
-                                .clickable { imagePickerLauncher.launch("image/*") },
+                                .clickable { imagePickerLauncher.launch(PickVisualMediaRequest()) },
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
