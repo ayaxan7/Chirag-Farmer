@@ -133,7 +133,8 @@ dependencies {
     // For Kotlin users, also add the Kotlin extensions library
     implementation(libs.review.ktx)
     implementation(libs.androidx.compose.material3.window.size.class1)
-    implementation(libs.cloudinary.android)
+//    implementation(libs.cloudinary.android)
+    implementation(libs.cloudinary.android.core)
     implementation("phonepe.intentsdk.android.release:IntentSDK:5.3.2")
 
     // OpenStreetMap

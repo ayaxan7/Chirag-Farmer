@@ -53,7 +53,7 @@ androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.r
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntime" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
-cloudinary-android = { module = "com.cloudinary:cloudinary-android", version.ref = "cloudinaryAndroid" }
+cloudinary-android-core = { module = "com.cloudinary:cloudinary-android-core", version.ref = "cloudinaryAndroid" }
 coil-compose-v260 = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 compose-shimmer = { module = "com.valentinilk.shimmer:compose-shimmer", version.ref = "composeShimmer" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
