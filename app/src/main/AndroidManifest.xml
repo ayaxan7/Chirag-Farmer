@@ -43,6 +43,7 @@
             android:name=".ui.presentation.mainactivity.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
+            android:windowSoftInputMode="adjustNothing"
             android:theme="@style/Theme.ChiragFarmer">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
