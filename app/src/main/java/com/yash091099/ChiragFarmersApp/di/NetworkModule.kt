@@ -5,6 +5,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import io.github.siddharthjaswal.logpose.LogPoseConfig
+import io.github.siddharthjaswal.logpose.LogPoseInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -16,8 +18,9 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-//    private const val BASE_URL = "https://backend.chiragvendor.com/"
+    //    private const val BASE_URL = "https://backend.chiragvendor.com/"
     private const val BASE_URL = BuildConfig.BASE_URL
+
     @Provides
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
@@ -25,7 +28,9 @@ object NetworkModule {
             level = HttpLoggingInterceptor.Level.BODY
         }
 
-        return OkHttpClient.Builder().addInterceptor(logging).connectTimeout(30, TimeUnit.SECONDS)
+        return OkHttpClient.Builder()
+            .addInterceptor(LogPoseInterceptor(LogPoseConfig(enabled = BuildConfig.DEBUG)))
+            .addInterceptor(logging).connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS).writeTimeout(30, TimeUnit.SECONDS).build()
     }
 

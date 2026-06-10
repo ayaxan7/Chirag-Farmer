@@ -46,7 +46,7 @@ android {
         }
 
         release {
-            buildConfigField("String", "BASE_URL", "\"http://142.93.221.145/\"")
+            buildConfigField("String", "BASE_URL", "\"https://backend.chiragvendor.com/\"")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -136,7 +136,11 @@ dependencies {
 //    implementation(libs.cloudinary.android)
     implementation(libs.cloudinary.android.core)
     implementation("phonepe.intentsdk.android.release:IntentSDK:5.3.2")
-
+    // Debug builds: the real interceptor.
+    debugImplementation("com.github.siddharthjaswal.logpose:logpose-android:v0.9.10")
+    // Release builds: a zero-overhead no-op with the SAME api — keeps LogPose out of
+    // production entirely (no logcat output, no kotlinx-serialization, zero transitive deps).
+    releaseImplementation("com.github.siddharthjaswal.logpose:logpose-no-op:v0.9.10")
     // OpenStreetMap
     implementation(libs.osmdroid)
     
