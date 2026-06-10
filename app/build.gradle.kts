@@ -135,12 +135,12 @@ dependencies {
     implementation(libs.androidx.compose.material3.window.size.class1)
 //    implementation(libs.cloudinary.android)
     implementation(libs.cloudinary.android.core)
-    implementation("phonepe.intentsdk.android.release:IntentSDK:5.3.2")
+    implementation(libs.phonePe)
     // Debug builds: the real interceptor.
-    debugImplementation("com.github.siddharthjaswal.logpose:logpose-android:v0.9.10")
+    debugImplementation(libs.logpose.android)
     // Release builds: a zero-overhead no-op with the SAME api — keeps LogPose out of
     // production entirely (no logcat output, no kotlinx-serialization, zero transitive deps).
-    releaseImplementation("com.github.siddharthjaswal.logpose:logpose-no-op:v0.9.10")
+    releaseImplementation(libs.logpose.no.op)
     // OpenStreetMap
     implementation(libs.osmdroid)
     
