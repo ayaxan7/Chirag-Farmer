@@ -29,8 +29,9 @@ object NetworkModule {
         }
 
         return OkHttpClient.Builder()
+            .addInterceptor(logging)
             .addInterceptor(LogPoseInterceptor(LogPoseConfig(enabled = BuildConfig.DEBUG)))
-            .addInterceptor(logging).connectTimeout(30, TimeUnit.SECONDS)
+            .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS).writeTimeout(30, TimeUnit.SECONDS).build()
     }
 

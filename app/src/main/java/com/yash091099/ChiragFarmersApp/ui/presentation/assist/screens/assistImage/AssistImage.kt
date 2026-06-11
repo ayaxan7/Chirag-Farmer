@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -47,6 +48,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -70,6 +73,21 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+
+private data class Language(val displayName: String, val value: String)
+
+private val languages = listOf(
+    Language("English", "english"),
+    Language("हिन्दी", "hindi"),
+    Language("ਪੰਜਾਬੀ", "punjabi"),
+    Language("বাংলা", "bengali"),
+    Language("தமிழ்", "tamil"),
+    Language("తెలుగు", "telugu"),
+    Language("ಕನ್ನಡ", "kannada"),
+    Language("ગુજરાતી", "gujarati"),
+    Language("भोजपुरी", "bhojpuri"),
+    Language("Hinglish", "hinglish"),
+)
 
 @Composable
 fun AssistImage(navController: NavHostController) {
@@ -267,12 +285,26 @@ fun AssistImage(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            Text(
+                text = "Select your preferred language",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color(0xFF64748B)
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
             // Language Selector
+            val dropDownWidth = remember { mutableStateOf(0) }
+
             Box(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .onSizeChanged { dropDownWidth.value = it.width }
             ) {
                 Row(
                     modifier = Modifier
+                        .fillMaxWidth()
                         .clip(RoundedCornerShape(10.dp))
                         .background(Color(0xFFF1F5F9))
                         .border(1.dp, Color(0xFFE2E8F0), RoundedCornerShape(10.dp))
@@ -282,7 +314,7 @@ fun AssistImage(navController: NavHostController) {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = if (selectedLanguage.value == "english") "English" else "हिन्दी",
+                        text = languages.find { it.value == selectedLanguage.value }?.displayName ?: "English",
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium,
                         color = BGBlack
@@ -295,22 +327,32 @@ fun AssistImage(navController: NavHostController) {
                 }
                 DropdownMenu(
                     expanded = showLanguageMenu.value,
-                    onDismissRequest = { showLanguageMenu.value = false }
+                    onDismissRequest = { showLanguageMenu.value = false },
+                    modifier = Modifier
+                        .width(with(LocalDensity.current) { dropDownWidth.value.toDp() })
+                        .heightIn(max = 150.dp)
+                        .background(Color(0xFFF1F5F9), RoundedCornerShape(10.dp)),
+                    shape = RoundedCornerShape(10.dp),
+                    tonalElevation = 0.dp,
+                    shadowElevation = 4.dp
                 ) {
-                    DropdownMenuItem(
-                        text = { Text("English") },
-                        onClick = {
-                            selectedLanguage.value = "english"
-                            showLanguageMenu.value = false
-                        }
-                    )
-                    DropdownMenuItem(
-                        text = { Text("हिन्दी") },
-                        onClick = {
-                            selectedLanguage.value = "hindi"
-                            showLanguageMenu.value = false
-                        }
-                    )
+                    languages.forEach { language ->
+                        DropdownMenuItem(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = {
+                                Text(
+                                    text = language.displayName,
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    color = BGBlack
+                                )
+                            },
+                            onClick = {
+                                selectedLanguage.value = language.value
+                                showLanguageMenu.value = false
+                            }
+                        )
+                    }
                 }
             }
         }
