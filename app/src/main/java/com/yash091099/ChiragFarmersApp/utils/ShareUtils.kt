@@ -66,6 +66,7 @@ object ShareUtils {
      */
     fun generateShareLink(type: String, id: String): String {
         val shareUrl = BuildConfig.BASE_URL + "share"
+//        val shareUrl = "https://backend.chiragvendor.com/" + "share"
         val normalizedType = type.trim().lowercase()
         Log.d("ShareUtils", "objectID: $id")
         val encodedId = encodeId(id)
