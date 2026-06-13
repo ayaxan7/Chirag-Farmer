@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.yash091099.ChiragFarmersApp.data.local.ChiragDataStore
 import com.yash091099.ChiragFarmersApp.data.remote.ChatApiService
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ChatMessageRequestDto
+import com.yash091099.ChiragFarmersApp.utils.getErrorMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -95,7 +96,7 @@ class PlantProblemHelpViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 Log.e("PlantProblemHelpVM", "Failed to initialize chat: ${e.message}", e)
-                _error.value = e.message ?: "Failed to connect to chatbot server"
+                _error.value = getErrorMessage(e)
                 loadFallbackWelcome()
             } finally {
                 _isLoading.value = false

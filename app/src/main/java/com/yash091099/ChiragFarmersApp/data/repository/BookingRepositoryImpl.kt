@@ -4,6 +4,7 @@ import com.yash091099.ChiragFarmersApp.data.local.ChiragDataStore
 import com.yash091099.ChiragFarmersApp.data.remote.BookingApiService
 import com.yash091099.ChiragFarmersApp.data.remote.dto.BookingRequestDto
 import com.yash091099.ChiragFarmersApp.domain.model.BookingRequest
+import com.yash091099.ChiragFarmersApp.utils.getErrorMessage
 import com.yash091099.ChiragFarmersApp.domain.repository.BookingRepository
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
@@ -36,7 +37,7 @@ class BookingRepositoryImpl @Inject constructor(
                 Result.failure(Exception(response.message))
             }
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(Exception(getErrorMessage(e)))
         }
     }
 }

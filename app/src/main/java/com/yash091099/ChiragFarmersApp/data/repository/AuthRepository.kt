@@ -2,7 +2,6 @@ package com.yash091099.ChiragFarmersApp.data.repository
 
 import android.util.Log
 import com.google.gson.Gson
-import retrofit2.HttpException
 import com.yash091099.ChiragFarmersApp.data.local.ChiragDataStore
 import com.yash091099.ChiragFarmersApp.data.model.auth.AddBusinessInfoRequest
 import com.yash091099.ChiragFarmersApp.data.model.auth.AuthResponse
@@ -15,6 +14,7 @@ import com.yash091099.ChiragFarmersApp.data.model.auth.UserDetailsData
 import com.yash091099.ChiragFarmersApp.data.model.auth.VerifyOTPData
 import com.yash091099.ChiragFarmersApp.data.model.auth.VerifyOTPRequest
 import com.yash091099.ChiragFarmersApp.data.remote.AuthApiService
+import com.yash091099.ChiragFarmersApp.utils.getErrorMessage
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateDefaultLocationRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateDefaultLocationResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateDeviceTokenRequest
@@ -35,23 +35,6 @@ class AuthRepository @Inject constructor(
     private val apiService: AuthApiService,
     private val chiragDataStore: ChiragDataStore
 ) {
-
-    private fun getErrorMessage(e: Exception): String {
-        if (e is HttpException) {
-            return try {
-                val errorBody = e.response()?.errorBody()?.string()
-                if (!errorBody.isNullOrBlank()) {
-                    val errorResponse = Gson().fromJson(errorBody, AuthResponse::class.java)
-                    errorResponse.message
-                } else {
-                    e.message ?: "Network error occurred"
-                }
-            } catch (_: Exception) {
-                e.message ?: "Network error occurred"
-            }
-        }
-        return e.message ?: "Network error occurred"
-    }
 
     suspend fun sendLoginOTP(phone: String): Result<AuthResponse<SendOTPData>> {
         return try {
@@ -94,7 +77,7 @@ class AuthRepository @Inject constructor(
 
             Result.success(response)
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(Exception(getErrorMessage(e)))
         }
     }
 
@@ -122,7 +105,7 @@ class AuthRepository @Inject constructor(
 
             Result.success(response)
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(Exception(getErrorMessage(e)))
         }
     }
 
@@ -143,7 +126,7 @@ class AuthRepository @Inject constructor(
             val response = apiService.getUserDetails("Bearer $token")
             Result.success(response)
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(Exception(getErrorMessage(e)))
         }
     }
 
@@ -156,7 +139,7 @@ class AuthRepository @Inject constructor(
             val response = apiService.addBusinessInfo("Bearer $token", request)
             Result.success(response)
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(Exception(getErrorMessage(e)))
         }
     }
 
@@ -175,7 +158,7 @@ class AuthRepository @Inject constructor(
 
             Result.success(response)
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(Exception(getErrorMessage(e)))
         }
     }
 
@@ -193,7 +176,7 @@ class AuthRepository @Inject constructor(
             val response = apiService.getFarmerProfile("Bearer $token")
             Result.success(response)
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(Exception(getErrorMessage(e)))
         }
     }
 
@@ -207,7 +190,7 @@ class AuthRepository @Inject constructor(
             val response = apiService.updateProfile("Bearer $token", changedFields)
             Result.success(response)
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(Exception(getErrorMessage(e)))
         }
     }
 
@@ -252,7 +235,7 @@ class AuthRepository @Inject constructor(
 
             Result.success(response)
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(Exception(getErrorMessage(e)))
         }
     }
 
@@ -271,7 +254,7 @@ class AuthRepository @Inject constructor(
             val response = apiService.updateDeviceToken("Bearer $token", request)
             Result.success(response)
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(Exception(getErrorMessage(e)))
         }
     }
 
@@ -287,7 +270,7 @@ class AuthRepository @Inject constructor(
             Log.d("AuthRepository", "Device token deleted $response")
             Result.success(response)
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(Exception(getErrorMessage(e)))
         }
     }
 
@@ -313,7 +296,7 @@ class AuthRepository @Inject constructor(
                 Result.failure(Exception(response.message))
             }
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(Exception(getErrorMessage(e)))
         }
     }
 
@@ -331,7 +314,7 @@ class AuthRepository @Inject constructor(
                 Result.failure(Exception(response.message))
             }
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(Exception(getErrorMessage(e)))
         }
     }
 
@@ -366,7 +349,7 @@ class AuthRepository @Inject constructor(
 
             Result.success(response)
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(Exception(getErrorMessage(e)))
         }
     }
 
@@ -388,7 +371,7 @@ class AuthRepository @Inject constructor(
 
             Result.success(response)
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(Exception(getErrorMessage(e)))
         }
     }
 }

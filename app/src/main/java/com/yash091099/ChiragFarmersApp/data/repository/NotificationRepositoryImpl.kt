@@ -3,6 +3,7 @@ package com.yash091099.ChiragFarmersApp.data.repository
 import com.yash091099.ChiragFarmersApp.data.local.ChiragDataStore
 import com.yash091099.ChiragFarmersApp.data.remote.NotificationApiService
 import com.yash091099.ChiragFarmersApp.data.remote.dto.NotificationsData
+import com.yash091099.ChiragFarmersApp.utils.getErrorMessage
 import com.yash091099.ChiragFarmersApp.domain.repository.NotificationRepository
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
@@ -36,7 +37,7 @@ class NotificationRepositoryImpl @Inject constructor(
                 Result.failure(Exception(response.message))
             }
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(Exception(getErrorMessage(e)))
         }
     }
 }

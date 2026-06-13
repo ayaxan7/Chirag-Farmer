@@ -4,6 +4,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.yash091099.ChiragFarmersApp.data.remote.OrderApiService
 import com.yash091099.ChiragFarmersApp.data.remote.dto.toDomain
+import com.yash091099.ChiragFarmersApp.utils.getErrorMessage
 import com.yash091099.ChiragFarmersApp.domain.model.Order
 
 class ActiveOrdersPagingSource(
@@ -45,7 +46,7 @@ class ActiveOrdersPagingSource(
                 nextKey = if (page >= totalPages || orders.isEmpty()) null else page + 1
             )
         } catch (e: Exception) {
-            LoadResult.Error(e)
+            LoadResult.Error(Exception(getErrorMessage(e)))
         }
     }
 }

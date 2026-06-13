@@ -6,6 +6,7 @@ import com.yash091099.ChiragFarmersApp.data.remote.dto.PlaceOrderRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.PhonePeCheckoutResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.PhonePePaymentStatusResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.PhonePeVerifyRequest
+import com.yash091099.ChiragFarmersApp.utils.getErrorMessage
 import com.yash091099.ChiragFarmersApp.domain.repository.PhonePeCheckoutRepository
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
@@ -21,7 +22,7 @@ class PhonePeCheckoutRepositoryImpl @Inject constructor(
             val response = api.createCheckout("Bearer $token", request)
             Result.success(response)
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(Exception(getErrorMessage(e)))
         }
     }
 
@@ -31,7 +32,7 @@ class PhonePeCheckoutRepositoryImpl @Inject constructor(
             val response = api.verifyPayment("Bearer $token", request)
             Result.success(response)
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(Exception(getErrorMessage(e)))
         }
     }
 
@@ -41,7 +42,7 @@ class PhonePeCheckoutRepositoryImpl @Inject constructor(
             val response = api.getPaymentStatus("Bearer $token", merchantOrderId)
             Result.success(response)
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(Exception(getErrorMessage(e)))
         }
     }
 }

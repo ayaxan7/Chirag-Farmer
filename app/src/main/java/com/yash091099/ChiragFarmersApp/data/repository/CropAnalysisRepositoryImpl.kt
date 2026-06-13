@@ -6,6 +6,7 @@ import android.webkit.MimeTypeMap
 import com.yash091099.ChiragFarmersApp.data.local.ChiragDataStore
 import com.yash091099.ChiragFarmersApp.data.remote.CropAnalysisApiService
 import com.yash091099.ChiragFarmersApp.data.remote.dto.CropAnalysisDataDto
+import com.yash091099.ChiragFarmersApp.utils.getErrorMessage
 import com.yash091099.ChiragFarmersApp.domain.repository.CropAnalysisRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import androidx.core.net.toUri
@@ -40,7 +41,7 @@ class CropAnalysisRepositoryImpl @Inject constructor(
                 Result.failure(Exception(response.message))
             }
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(Exception(getErrorMessage(e)))
         }
     }
 

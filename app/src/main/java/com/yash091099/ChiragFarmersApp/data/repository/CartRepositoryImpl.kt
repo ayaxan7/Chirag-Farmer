@@ -10,6 +10,7 @@ import com.yash091099.ChiragFarmersApp.data.remote.dto.CartSummary
 import com.yash091099.ChiragFarmersApp.data.remote.dto.RemoveFromCartRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateQuantityData
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateQuantityRequest
+import com.yash091099.ChiragFarmersApp.utils.getErrorMessage
 import com.yash091099.ChiragFarmersApp.domain.repository.CartRepository
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
@@ -37,7 +38,7 @@ class CartRepositoryImpl @Inject constructor(
                 Result.failure(Exception(response.message))
             }
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(Exception(getErrorMessage(e)))
         }
     }
 
@@ -56,7 +57,7 @@ class CartRepositoryImpl @Inject constructor(
                 Result.failure(Exception(response.message))
             }
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(Exception(getErrorMessage(e)))
         }
     }
 
@@ -78,7 +79,7 @@ class CartRepositoryImpl @Inject constructor(
                 Result.failure(Exception(response.message))
             }
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(Exception(getErrorMessage(e)))
         }
     }
 
@@ -100,7 +101,7 @@ class CartRepositoryImpl @Inject constructor(
                 Result.failure(Exception(response.message))
             }
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(Exception(getErrorMessage(e)))
         }
     }
 
@@ -155,7 +156,7 @@ class CartRepositoryImpl @Inject constructor(
                 Result.failure(Exception(response.message))
             }
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(Exception(getErrorMessage(e)))
         }
     }
 }

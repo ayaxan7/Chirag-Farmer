@@ -9,6 +9,7 @@ import com.yash091099.ChiragFarmersApp.data.remote.OrderApiService
 import com.yash091099.ChiragFarmersApp.data.remote.dto.toDomain
 import com.yash091099.ChiragFarmersApp.domain.model.Order
 import com.yash091099.ChiragFarmersApp.domain.model.OrdersData
+import com.yash091099.ChiragFarmersApp.utils.getErrorMessage
 import com.yash091099.ChiragFarmersApp.domain.repository.OrderRepository
 import com.yash091099.ChiragFarmersApp.data.remote.dto.PlaceOrderResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.PlaceOrderRequest
@@ -52,7 +53,7 @@ class OrderRepositoryImpl @Inject constructor(
             val response = api.getActiveOrders("Bearer $token", page, limit)
             Result.success(response.toDomain())
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(Exception(getErrorMessage(e)))
         }
     }
 
@@ -62,7 +63,7 @@ class OrderRepositoryImpl @Inject constructor(
             val response = api.placeOrder("Bearer $token", request)
             Result.success(response)
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(Exception(getErrorMessage(e)))
         }
     }
 
@@ -72,7 +73,7 @@ class OrderRepositoryImpl @Inject constructor(
             val response = api.getOrderTracking("Bearer $token", id)
             Result.success(response)
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(Exception(getErrorMessage(e)))
         }
     }
 
@@ -85,7 +86,7 @@ class OrderRepositoryImpl @Inject constructor(
             val response = api.updateOrderStatus("Bearer $token", id, request)
             Result.success(response)
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(Exception(getErrorMessage(e)))
         }
     }
 
@@ -95,7 +96,7 @@ class OrderRepositoryImpl @Inject constructor(
             val response = api.getUserPlacedOrders("Bearer $token", type, page, limit)
             Result.success(response)
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(Exception(getErrorMessage(e)))
         }
     }
 
@@ -105,7 +106,7 @@ class OrderRepositoryImpl @Inject constructor(
             val response = api.getOrderDetails("Bearer $token", id)
             Result.success(response)
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(Exception(getErrorMessage(e)))
         }
     }
 
@@ -115,7 +116,7 @@ class OrderRepositoryImpl @Inject constructor(
             val response = api.cancelOrder("Bearer $token", request)
             Result.success(response)
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(Exception(getErrorMessage(e)))
         }
     }
 
@@ -125,7 +126,7 @@ class OrderRepositoryImpl @Inject constructor(
             val response = api.sellerCancelOrder("Bearer $token", request)
             Result.success(response)
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(Exception(getErrorMessage(e)))
         }
     }
 }

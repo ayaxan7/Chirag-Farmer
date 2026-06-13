@@ -17,6 +17,7 @@ import com.yash091099.ChiragFarmersApp.data.remote.dto.PlaceOrderResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.PhonePeCheckoutData
 import com.yash091099.ChiragFarmersApp.data.remote.dto.PhonePePaymentStatusResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.PhonePeVerifyRequest
+import com.yash091099.ChiragFarmersApp.utils.getErrorMessage
 import com.yash091099.ChiragFarmersApp.domain.usecase.GetPhonePePaymentStatusUseCase
 import com.yash091099.ChiragFarmersApp.domain.usecase.InitiatePhonePeCheckoutUseCase
 import com.yash091099.ChiragFarmersApp.domain.usecase.PlaceOrderUseCase
@@ -196,7 +197,7 @@ class PaymentViewModel @Inject constructor(
                 )
             } catch (e: Exception) {
                 Log.e("PaymentViewModel", "Exception in placeOrder", e)
-                _paymentState.value = PaymentUiState.Error(e.message ?: "An error occurred")
+                _paymentState.value = PaymentUiState.Error(getErrorMessage(e))
             }
         }
     }
@@ -265,7 +266,7 @@ class PaymentViewModel @Inject constructor(
                 )
             } catch (e: Exception) {
                 Log.e("PaymentViewModel", "Exception in startPhonePeCheckout", e)
-                _paymentState.value = PaymentUiState.Error(e.message ?: "An error occurred")
+                _paymentState.value = PaymentUiState.Error(getErrorMessage(e))
             }
         }
     }
