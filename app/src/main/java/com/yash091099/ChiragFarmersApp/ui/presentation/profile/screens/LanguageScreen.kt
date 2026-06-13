@@ -32,7 +32,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.yash091099.ChiragFarmersApp.ui.presentation.profile.LanguageViewModel
 import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragTopBar
 import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
@@ -65,7 +67,7 @@ private fun setLocale(context: Context, languageTag: String) {
 
 @SuppressLint("LocalContextConfigurationRead")
 @Composable
-fun LanguageScreen(navController: NavHostController) {
+fun LanguageScreen(navController: NavHostController, viewModel: LanguageViewModel = hiltViewModel()) {
     val context = LocalContext.current
 
     val english = stringResource(R.string.lang_english)
@@ -122,6 +124,7 @@ fun LanguageScreen(navController: NavHostController) {
                     onClick = {
                         selectedLanguage = lang.tag
                         setLocale(context, lang.tag)
+                        viewModel.updateLanguage(lang.tag)
                     }
                 )
                 HorizontalDivider(color = BorderColour, thickness = 1.dp)

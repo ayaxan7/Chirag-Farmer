@@ -12,6 +12,8 @@ import com.yash091099.ChiragFarmersApp.data.model.auth.VerifyOTPData
 import com.yash091099.ChiragFarmersApp.data.model.auth.VerifyOTPRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateDefaultLocationRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateDefaultLocationResponse
+import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateLanguageRequest
+import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateLanguageResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateDeviceTokenRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateDeviceTokenResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.DeleteDeviceTokenRequest
@@ -29,6 +31,11 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 
 interface AuthApiService {
+    @POST("api/farmers/language")
+    suspend fun updateLanguage(
+        @Header("Authorization") authorization: String,
+        @Body request: UpdateLanguageRequest
+    ): UpdateLanguageResponse
 
     @POST("api/msg91/send-otp")
     suspend fun sendLoginOTP(

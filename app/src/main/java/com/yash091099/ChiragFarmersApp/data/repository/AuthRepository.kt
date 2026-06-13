@@ -19,6 +19,8 @@ import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateDefaultLocationRequ
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateDefaultLocationResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateDeviceTokenRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateDeviceTokenResponse
+import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateLanguageRequest
+import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateLanguageResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.DeleteDeviceTokenRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.DeleteDeviceTokenResponse
 import com.yash091099.ChiragFarmersApp.data.remote.dto.FarmerAddressDto
@@ -252,6 +254,19 @@ class AuthRepository @Inject constructor(
                 deviceType = "android"
             )
             val response = apiService.updateDeviceToken("Bearer $token", request)
+            Result.success(response)
+        } catch (e: Exception) {
+            Result.failure(Exception(getErrorMessage(e)))
+        }
+    }
+
+    suspend fun updatePreferredLanguage(request: UpdateLanguageRequest): Result<UpdateLanguageResponse> {
+        return try {
+            val token = chiragDataStore.getAuthToken().first()
+            if (token.isNullOrEmpty()) {
+                return Result.failure(Exception("No authentication token found"))
+            }
+            val response = apiService.updateLanguage("Bearer $token", request)
             Result.success(response)
         } catch (e: Exception) {
             Result.failure(Exception(getErrorMessage(e)))
