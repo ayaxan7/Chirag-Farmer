@@ -34,6 +34,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
+import androidx.compose.ui.res.stringResource
+import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.theme.BorderColour
 import com.yash091099.ChiragFarmersApp.ui.theme.TextGray
 
@@ -50,10 +52,10 @@ fun ServiceDropdown(
     val services = listOf(
         "Drone Spraying",
         "Tractor Services",
-        "Harvesting Machines",
+        stringResource(R.string.service_harvesting_machines),
         "Soil Testing",
         "Power Weeder",
-        "Manual Sprayer",
+        stringResource(R.string.service_manual_sprayer),
         "Thresher / Winnower",
         "Biofertilizer",
         "Seedling Supply",
@@ -88,7 +90,7 @@ fun ServiceDropdown(
                 )
                 Icon(
                     imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                    contentDescription = "Dropdown",
+                    contentDescription = stringResource(R.string.service_dropdown_description_label),
                     tint = Color.Black
                 )
             }

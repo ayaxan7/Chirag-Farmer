@@ -43,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -55,6 +56,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import com.yash091099.ChiragFarmersApp.domain.model.Order
+import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.ChiragButton
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.screens.orderstatus.OrderSummaryCard
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.screens.orderstatus.ProgressTimeline
@@ -111,7 +113,7 @@ fun ActiveOrdersScreen(
                         onClick = { onOrderClick(selectedOrderId) },
                         colors = ButtonDefaults.buttonColors(containerColor = BGBlack)
                     ) {
-                        Text("Retry", color = BGWhite)
+                        Text(stringResource(R.string.active_orders_retry), color = BGWhite)
                     }
                 }
             }
@@ -169,7 +171,7 @@ fun ActiveOrdersContent(
                         verticalArrangement = Arrangement.Center
                     ) {
                         Text(
-                            text = "Error Loading Orders",
+                            text = stringResource(R.string.active_orders_error),
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
                             color = BGBlack,
@@ -183,7 +185,7 @@ fun ActiveOrdersContent(
                                 containerColor = BGBlack
                             )
                         ) {
-                            Text("Retry", color = BGWhite)
+                            Text(stringResource(R.string.active_orders_retry), color = BGWhite)
                         }
                     }
                 }
@@ -196,7 +198,7 @@ fun ActiveOrdersContent(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "No active orders yet",
+                            text = stringResource(R.string.active_orders_empty),
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Medium,
                             color = TextGray,
@@ -245,7 +247,7 @@ fun ActiveOrdersContent(
                                         horizontalAlignment = Alignment.CenterHorizontally
                                     ) {
                                         Text(
-                                            text = "Couldn't load more orders",
+                                            text = stringResource(R.string.active_orders_load_more_error),
                                             color = BGBlack,
                                             fontSize = 14.sp,
                                             textAlign = TextAlign.Center
@@ -257,7 +259,7 @@ fun ActiveOrdersContent(
                                                 containerColor = BGBlack
                                             )
                                         ) {
-                                            Text("Retry", color = BGWhite)
+                                            Text(stringResource(R.string.active_orders_retry), color = BGWhite)
                                         }
                                     }
                                 }
@@ -295,7 +297,7 @@ fun OrderCard(order: Order, onOrderClick: (String?) -> Unit) {
                 ) {
                     AsyncImage(
                         model = order.productImage,
-                        contentDescription = "Product name " + order.productName,
+                        contentDescription = stringResource(R.string.active_orders_product_description_format, order.productName),
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop
                     )
@@ -312,7 +314,7 @@ fun OrderCard(order: Order, onOrderClick: (String?) -> Unit) {
                     )
                     Row {
                         Text(
-                            text = "Buyer",
+                            text = stringResource(R.string.active_orders_buyer_label),
                             fontSize = 14.sp,
                             color = TextGray,
                             modifier = Modifier.width(60.dp)
@@ -323,7 +325,7 @@ fun OrderCard(order: Order, onOrderClick: (String?) -> Unit) {
                     }
                     Row {
                         Text(
-                            text = "Contact",
+                            text = stringResource(R.string.active_orders_contact_label),
                             fontSize = 14.sp,
                             color = TextGray,
                             modifier = Modifier.width(60.dp)
@@ -342,10 +344,10 @@ fun OrderCard(order: Order, onOrderClick: (String?) -> Unit) {
             // Grid Details
             Row(modifier = Modifier.fillMaxWidth()) {
                 DetailItem(
-                    label = "ORDER ID", value = order.orderId, modifier = Modifier.weight(1f)
+                    label = stringResource(R.string.active_orders_order_id_label), value = order.orderId, modifier = Modifier.weight(1f)
                 )
                 DetailItem(
-                    label = "QUANTITY", value = order.quantity, modifier = Modifier.weight(1f)
+                    label = stringResource(R.string.active_orders_quantity_label), value = order.quantity, modifier = Modifier.weight(1f)
                 )
             }
 
@@ -353,13 +355,13 @@ fun OrderCard(order: Order, onOrderClick: (String?) -> Unit) {
 
             Row(modifier = Modifier.fillMaxWidth()) {
                 DetailItem(
-                    label = "AMOUNT",
+                    label = stringResource(R.string.active_orders_amount_label),
                     value = "₹${order.amountPaid}",
                     valueColor = Color(0xFF3BB69A),
                     modifier = Modifier.weight(1f)
                 )
                 DetailItem(
-                    label = "LOCATION", value = order.location, modifier = Modifier.weight(1f)
+                    label = stringResource(R.string.active_orders_location_label), value = order.location, modifier = Modifier.weight(1f)
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
@@ -391,7 +393,7 @@ fun OrderCard(order: Order, onOrderClick: (String?) -> Unit) {
 
             Spacer(modifier = Modifier.height(8.dp))
             ChiragButton(
-                text = "Update Order Status",
+                text = stringResource(R.string.active_orders_update_status),
                 onClick = {
                     onOrderClick(order.orderObjectId)
                 },
@@ -446,7 +448,7 @@ fun OrderDetailsView(
             }
             item {
                 Text(
-                    text = "Update Progress",
+                    text = stringResource(R.string.active_orders_update_progress),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = BGBlack,
@@ -489,13 +491,13 @@ fun OrderDetailsView(
                     }
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = "Cancel Order",
+                        contentDescription = stringResource(R.string.active_orders_cancel_order_description),
                         tint = BGBlack,
                         modifier = Modifier.size(16.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Cancel Order",
+                        text = stringResource(R.string.active_orders_cancel_order_text),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -531,7 +533,7 @@ fun CancelOrderDialog(
         onDismissRequest = { if (!isLoading) onDismiss() },
         title = {
             Text(
-                text = "Cancel Order",
+                text = stringResource(R.string.active_orders_cancel_confirm),
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp
             )
@@ -539,7 +541,7 @@ fun CancelOrderDialog(
         text = {
             Column(modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    text = "Are you sure you want to cancel this order?",
+                    text = stringResource(R.string.active_orders_cancel_confirm_message),
                     fontSize = 14.sp,
                     color = Color.Black
                 )
@@ -563,7 +565,7 @@ fun CancelOrderDialog(
                     CircularProgressIndicator(modifier = Modifier.size(16.dp), color = BGWhite)
                     Spacer(modifier = Modifier.width(8.dp))
                 }
-                Text("Cancel Order", color = BGWhite)
+                Text(stringResource(R.string.active_orders_cancel_confirm), color = BGWhite)
             }
         },
         dismissButton = {
@@ -572,7 +574,7 @@ fun CancelOrderDialog(
                 enabled = !isLoading,
                 colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray)
             ) {
-                Text("Keep Order", color = BGBlack)
+                Text(stringResource(R.string.active_orders_keep_order), color = BGBlack)
             }
         }
     )

@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -76,7 +77,7 @@ fun AssistResultScreen(
         topBar = {
             ChiragTopBar(
                 navController = navController,
-                title = "Assist",
+                title = stringResource(R.string.assist_result_title),
                 icon = R.drawable.ic_arrow
             )
         },
@@ -147,7 +148,7 @@ fun AssistResultScreen(
                                 onClick = onRetry,
                                 colors = ButtonDefaults.buttonColors(containerColor = BGBlack)
                             ) {
-                                Text(text = "Retry", color = BGWhite)
+                                Text(text = stringResource(R.string.assist_result_retry), color = BGWhite)
                             }
                         }
                     }
@@ -185,7 +186,7 @@ private fun AssistResultContent(
         ) {
             AsyncImage(
                 model = imageUri,
-                contentDescription = "Selected crop image",
+                contentDescription = stringResource(R.string.assist_result_crop_image_description),
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
@@ -215,7 +216,7 @@ private fun AssistResultContent(
     SectionTitle(text = "Symptoms Identified")
     Spacer(modifier = Modifier.height(4.dp))
     if (data.symptoms.isEmpty()) {
-        EmptySectionText(text = "No symptoms were returned by the analysis.")
+        EmptySectionText(text = stringResource(R.string.assist_result_no_symptoms))
     } else {
         data.symptoms.forEach { symptom ->
             BulletPointText(symptom)
@@ -227,7 +228,7 @@ private fun AssistResultContent(
     SectionTitle(text = "Avoid")
     Spacer(modifier = Modifier.height(4.dp))
     if (data.avoid.isEmpty()) {
-        EmptySectionText(text = "No avoidance tips were returned by the analysis.")
+        EmptySectionText(text = stringResource(R.string.assist_result_no_avoidance))
     } else {
         data.avoid.forEach { item ->
             BulletPointText(item)
@@ -312,7 +313,7 @@ fun InsecticideTable(items: List<CropInsecticideUiModel>) {
 
         if (items.isEmpty()) {
             Text(
-                text = "No insecticides were returned by the analysis.",
+                text = stringResource(R.string.assist_result_no_insecticides),
                 modifier = Modifier.padding(12.dp),
                 fontSize = 13.sp,
                 color = Color.Gray

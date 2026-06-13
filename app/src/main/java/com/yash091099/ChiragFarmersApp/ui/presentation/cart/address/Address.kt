@@ -38,6 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -92,7 +93,7 @@ fun AddressScreen(
             Scaffold(
                 topBar = {
                     ChiragTopBar(
-                        title = "Address", icon = R.drawable.ic_arrow, navController = navController
+                        title = stringResource(R.string.address_title), icon = R.drawable.ic_arrow, navController = navController
                     )
                 }, containerColor = BGWhite
             ) { paddingValues ->
@@ -107,7 +108,7 @@ fun AddressScreen(
                         modifier = Modifier.padding(16.dp)
                     ) {
                         Text(
-                            text = "Error Loading Addresses",
+                            text = stringResource(R.string.address_error_loading),
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
                             color = BGBlack
@@ -121,7 +122,7 @@ fun AddressScreen(
                             onClick = { viewModel.retry() },
                             colors = ButtonDefaults.buttonColors(containerColor = BGBlack)
                         ) {
-                            Text("Retry", color = BGWhite)
+                            Text(stringResource(R.string.address_retry), color = BGWhite)
                         }
                     }
                 }
@@ -132,7 +133,7 @@ fun AddressScreen(
             Scaffold(
                 topBar = {
                     ChiragTopBar(
-                        title = "Address", icon = R.drawable.ic_arrow, navController = navController
+                        title = stringResource(R.string.address_title), icon = R.drawable.ic_arrow, navController = navController
                     )
                 },
                 containerColor = BGWhite,
@@ -143,7 +144,7 @@ fun AddressScreen(
                             .padding(16.dp)
                     ) {
                         ChiragButton(
-                            text = "Continue",
+                            text = stringResource(R.string.address_continue),
                             onClick = onContinueClick,
                             shape = RoundedCornerShape(12.dp)
                         )
@@ -162,21 +163,20 @@ fun AddressScreen(
                         modifier = Modifier.padding(16.dp)
                     ) {
                         Text(
-                            text = "No Addresses Found",
+                            text = stringResource(R.string.address_empty_title),
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
                             color = BGBlack
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = "Add your first address to get started",
+                            text = stringResource(R.string.address_empty_subtitle),
                             fontSize = 14.sp,
                             color = Color.Gray
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         AddAddressButton(onClick = onAddAddressClick)
                         Spacer(modifier = Modifier.height(16.dp))
-
                     }
                 }
             }
@@ -187,11 +187,10 @@ fun AddressScreen(
             if (selectedAddressId == null && addresses.isNotEmpty()) {
                 selectedAddressId = addresses.first().id
             }
-
             Scaffold(
                 topBar = {
                 ChiragTopBar(
-                    title = "Address", icon = R.drawable.ic_arrow, navController = navController
+                    title = stringResource(R.string.address_title), icon = R.drawable.ic_arrow, navController = navController
                 )
             }, bottomBar = {
                 Column(
@@ -199,17 +198,16 @@ fun AddressScreen(
                         .background(BGWhite)
                         .padding(16.dp)
                 ) {
-                    // Only show note if we have addresses
                     if (addresses.isNotEmpty()) {
                         Text(
-                            text = "Selected address will be used for delivery",
+                            text = stringResource(R.string.address_selected_info),
                             fontSize = 12.sp,
                             color = TextGray
                         )
                         Spacer(modifier = Modifier.height(12.dp))
                     }
                     ChiragButton(
-                        text = if (isOperationInProgress) "Updating..." else "Continue",
+                        text = if (isOperationInProgress) stringResource(R.string.address_updating) else stringResource(R.string.address_continue),
                         onClick = {
                             selectedAddressId?.let { id ->
                                 viewModel.setDefaultAddress(id)
@@ -264,7 +262,7 @@ fun FarmerAddressItem(
         verticalAlignment = Alignment.Top) {
         Icon(
             painter = painterResource(R.drawable.location),
-            contentDescription = "Location",
+            contentDescription = stringResource(R.string.address_location_description),
             modifier = Modifier
                 .padding(top = 6.dp)
                 .size(24.dp),
@@ -288,7 +286,7 @@ fun FarmerAddressItem(
             Spacer(modifier = Modifier.height(4.dp))
             Row {
                 Text(
-                    text = "Pin : ", fontSize = 13.sp, color = TextGray
+                    text = stringResource(R.string.address_pin_label), fontSize = 13.sp, color = TextGray
                 )
                 Text(
                     text = address.pincode ?: "", fontSize = 13.sp, color = Color.Black
@@ -331,13 +329,13 @@ fun AddAddressButton(onClick: () -> Unit) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
             Icon(
                 imageVector = Icons.Default.Add,
-                contentDescription = "Add Address",
+                contentDescription = stringResource(R.string.address_add_button),
                 modifier = Modifier.size(20.dp),
                 tint = Color.Black
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "Add Address",
+                text = stringResource(R.string.address_add_button),
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
                 color = Color.Black

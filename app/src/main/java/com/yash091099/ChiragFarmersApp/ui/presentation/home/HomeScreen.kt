@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -35,22 +36,20 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.CategoryHeader
-import com.yash091099.ChiragFarmersApp.ui.presentation.common.data.CommonProductCardData
-import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.ProductCategoryCard
-import com.yash091099.ChiragFarmersApp.ui.presentation.home.components.bookservicecard.BookServiceCard
-import com.yash091099.ChiragFarmersApp.ui.presentation.home.components.ImageCarousel
 import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.CommonProductCard
+import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.ProductCategoryCard
+import com.yash091099.ChiragFarmersApp.ui.presentation.common.data.CommonProductCardData
+import com.yash091099.ChiragFarmersApp.ui.presentation.home.components.ImageCarousel
+import com.yash091099.ChiragFarmersApp.ui.presentation.home.components.bookservicecard.BookServiceCard
 import com.yash091099.ChiragFarmersApp.ui.presentation.home.components.topbar.HomeTopBar
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost.Route
 import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
-import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
-    navController: NavHostController,
-    viewModel: HomeViewModel = hiltViewModel()
+    navController: NavHostController, viewModel: HomeViewModel = hiltViewModel()
 ) {
-    val scope = rememberCoroutineScope()
+    rememberCoroutineScope()
     val isProfileComplete by viewModel.isProfileComplete.collectAsStateWithLifecycle()
     val homeMixedProductsUiState by viewModel.homeMixedProductsUiState.collectAsStateWithLifecycle()
 
@@ -62,11 +61,11 @@ fun HomeScreen(
     )
 
     val productCategories = listOf(
-        Pair("Agriculture\nDrones", R.drawable.agri_drone),
-        Pair("Seeds", R.drawable.agri_seeds),
-        Pair("Sprayer", R.drawable.agri_sprayer),
-        Pair("Tractors",R.drawable.agri_tractor),
-        Pair("Harvesting Machines",R.drawable.agri_harvester)
+        Pair(stringResource(R.string.home_agriculture_drones), R.drawable.agri_drone),
+        Pair(stringResource(R.string.home_seeds), R.drawable.agri_seeds),
+        Pair(stringResource(R.string.home_sprayer), R.drawable.agri_sprayer),
+        Pair(stringResource(R.string.home_tractors), R.drawable.agri_tractor),
+        Pair(stringResource(R.string.home_harvesting_machines), R.drawable.agri_harvester)
     )
     val bookingStatus by viewModel.bookingStatus.collectAsStateWithLifecycle()
 
@@ -83,13 +82,21 @@ fun HomeScreen(
     LaunchedEffect(bookingStatus) {
         when (bookingStatus) {
             is BookingStatus.Success -> {
-                Log.d("HomeScreen", "Booking Success: ${(bookingStatus as BookingStatus.Success).message}")
+                Log.d(
+                    "HomeScreen",
+                    "Booking Success: ${(bookingStatus as BookingStatus.Success).message}"
+                )
                 viewModel.resetBookingStatus()
             }
+
             is BookingStatus.Error -> {
-                Log.e("HomeScreen", "Booking Error: ${(bookingStatus as BookingStatus.Error).message}")
+                Log.e(
+                    "HomeScreen",
+                    "Booking Error: ${(bookingStatus as BookingStatus.Error).message}"
+                )
                 viewModel.resetBookingStatus()
             }
+
             else -> {}
         }
     }
@@ -115,7 +122,7 @@ fun HomeScreen(
                 if (!isProfileComplete) {
                     Image(
                         painter = painterResource(R.drawable.profile_incomplete_image),
-                        contentDescription = "Profile Incomplete Image",
+                        contentDescription = stringResource(R.string.home_profile_incomplete_image_description),
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
@@ -130,61 +137,63 @@ fun HomeScreen(
                 )
                 // Smart Farmer Carousel
                 ImageCarousel(
-                    images = carouselImages,
-                    modifier = Modifier.fillMaxWidth()
+                    images = carouselImages, modifier = Modifier.fillMaxWidth()
                 )
 
                 // Buy Products Section
                 CategoryHeader(
-                    category = "Buy Products For Your Farm",
-                    btnText = "View All",
+                    category = stringResource(R.string.home_buy_products_category),
+                    btnText = stringResource(R.string.home_view_all),
                     onClick = {
                         navController.navigate(Route.Buy.path)
-                    }
-                )
+                    })
+                val agriDroneLabel = stringResource(R.string.home_agriculture_drone_label)
+                val seedsLabel = stringResource(R.string.home_seeds)
+                val sprayerLabel = stringResource(R.string.home_sprayer)
+                val sprayersLabel = stringResource(R.string.home_sprayers_label)
+                val tractorsLabel = stringResource(R.string.home_tractors)
+                val tractorsLabelRes = stringResource(R.string.home_tractors_label)
+                val harvestingMachinesLabel = stringResource(R.string.home_harvesting_machines)
+                val harvestingLabel = stringResource(R.string.home_harvesting_label)
                 LazyRow(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     items(productCategories) { category ->
                         ProductCategoryCard(
-                            title = category.first,
-                            imageRes = category.second,
-                            onClick = {
+                            title = category.first, imageRes = category.second, onClick = {
                                 val categoryName = when {
                                     category.first.contains(
-                                        "Agriculture",
-                                        ignoreCase = true
-                                    ) -> "Agriculture Drone"
-
-                                    category.first.equals("Seeds", ignoreCase = true) -> "Seeds"
-                                    category.first.equals(
-                                        "Sprayer",
-                                        ignoreCase = true
-                                    ) -> "Sprayers"
+                                        agriDroneLabel.substringBefore(" "), ignoreCase = true
+                                    ) -> agriDroneLabel
 
                                     category.first.equals(
-                                        "Tractors",
+                                        seedsLabel,
                                         ignoreCase = true
-                                    ) -> "Tractors"
+                                    ) -> seedsLabel
 
                                     category.first.equals(
-                                        "Harvesting Machines",
-                                        ignoreCase = true
-                                    ) -> "Harvesting Machines"
+                                        sprayerLabel, ignoreCase = true
+                                    ) -> sprayersLabel
+
+                                    category.first.equals(
+                                        tractorsLabel, ignoreCase = true
+                                    ) -> tractorsLabelRes
+
+                                    category.first.equals(
+                                        harvestingMachinesLabel, ignoreCase = true
+                                    ) -> harvestingLabel
 
                                     else -> ""
                                 }
                                 if (categoryName.isNotEmpty()) {
                                     navController.navigate(
                                         Route.BuyCategory.createRoute(
-                                            categoryName,
-                                            R.drawable.buy_banner
+                                            categoryName, R.drawable.buy_banner
                                         )
                                     )
                                 }
-                            }
-                        )
+                            })
                     }
                 }
 
@@ -204,19 +213,18 @@ fun HomeScreen(
                             homeMixedProductsUiState as HomeMixedProductsUiState.Success
 
                         // Smart Farming Products — show max 2 items, 1 row of 2
+                        val smartFarmingLabel = stringResource(R.string.home_smart_farming_label)
                         if (successState.smartFarmingProducts.isNotEmpty()) {
                             CategoryHeader(
-                                category = "Smart Farming",
-                                btnText = "View All",
+                                category = stringResource(R.string.home_smart_farming_category),
+                                btnText = stringResource(R.string.home_view_all),
                                 onClick = {
                                     navController.navigate(
                                         Route.BuyCategory.createRoute(
-                                            "Smart Farming",
-                                            R.drawable.buy_banner
+                                            smartFarmingLabel, R.drawable.buy_banner
                                         )
                                     )
-                                }
-                            )
+                                })
                             val smartFarmingItems = successState.smartFarmingProducts.take(2)
                             smartFarmingItems.chunked(2).forEach { rowItems ->
                                 Row(
@@ -243,8 +251,7 @@ fun HomeScreen(
                                                         product.id
                                                     )
                                                 )
-                                            }
-                                        )
+                                            })
                                     }
                                     // Fill empty slot if odd number
                                     if (rowItems.size == 1) {
@@ -255,19 +262,18 @@ fun HomeScreen(
                         }
 
                         // Seeds Products — show max 2 items, 1 row of 2
+                        val seedsCategoryLabel = stringResource(R.string.home_seeds_category)
                         if (successState.seedProducts.isNotEmpty()) {
                             CategoryHeader(
-                                category = "Seeds",
-                                btnText = "View All",
+                                category = seedsCategoryLabel,
+                                btnText = stringResource(R.string.home_view_all),
                                 onClick = {
                                     navController.navigate(
                                         Route.BuyCategory.createRoute(
-                                            "Seeds",
-                                            R.drawable.buy_banner
+                                            seedsCategoryLabel, R.drawable.buy_banner
                                         )
                                     )
-                                }
-                            )
+                                })
                             val seedItems = successState.seedProducts.take(2)
                             seedItems.chunked(2).forEach { rowItems ->
                                 Row(
@@ -294,8 +300,7 @@ fun HomeScreen(
                                                         product.id
                                                     )
                                                 )
-                                            }
-                                        )
+                                            })
                                     }
                                     // Fill empty slot if odd number
                                     if (rowItems.size == 1) {
@@ -307,18 +312,17 @@ fun HomeScreen(
 
                         // Popular Products — show max 4 items, 2 rows of 2
                         if (successState.popularProducts.isNotEmpty()) {
+                            val popularLabel = stringResource(R.string.home_popular_products_label)
                             CategoryHeader(
-                                category = "Popular Products",
-                                btnText = "View All",
+                                category = stringResource(R.string.home_popular_products_category),
+                                btnText = stringResource(R.string.home_view_all),
                                 onClick = {
                                     navController.navigate(
                                         Route.BuyCategory.createRoute(
-                                            "Popular Products",
-                                            R.drawable.buy_banner
+                                            popularLabel, R.drawable.buy_banner
                                         )
                                     )
-                                }
-                            )
+                                })
                             val popularItems = successState.popularProducts.take(4)
                             popularItems.chunked(2).forEach { rowItems ->
                                 Row(
@@ -345,8 +349,7 @@ fun HomeScreen(
                                                         product.id
                                                     )
                                                 )
-                                            }
-                                        )
+                                            })
                                     }
                                     // Fill empty slot if odd number
                                     if (rowItems.size == 1) {
@@ -366,13 +369,13 @@ fun HomeScreen(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
-                                text = (homeMixedProductsUiState as HomeMixedProductsUiState.Error).message,
-                                color = Color.Red,
-                                fontSize = 14.sp
+                                text = stringResource(R.string.home_network_error),
+//                                text = (homeMixedProductsUiState as HomeMixedProductsUiState.Error).message,
+                                color = Color.Red, fontSize = 14.sp
                             )
                             Spacer(modifier = Modifier.height(16.dp))
                             Button(onClick = { viewModel.retryHomeMixedProducts() }) {
-                                Text("Retry")
+                                Text(stringResource(R.string.home_retry))
                             }
                         }
                         Spacer(modifier = Modifier.height(32.dp))
@@ -380,11 +383,11 @@ fun HomeScreen(
                 }
 
                 CategoryHeader(
-                    category = "Our USPs"
+                    category = stringResource(R.string.home_usps_category)
                 )
                 Image(
                     painter = painterResource(R.drawable.our_usps),
-                    contentDescription = "USPs",
+                    contentDescription = stringResource(R.string.home_usps_description),
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.FillWidth
                 )
@@ -392,7 +395,7 @@ fun HomeScreen(
             }
             Image(
                 painter = painterResource(R.drawable.home_footer),
-                contentDescription = "Footer",
+                contentDescription = stringResource(R.string.home_footer_description),
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.FillWidth
             )
@@ -400,11 +403,11 @@ fun HomeScreen(
                 modifier = Modifier.padding(horizontal = 16.dp)
             ) {
                 CategoryHeader(
-                    category = "Our clients"
+                    category = stringResource(R.string.home_clients_category)
                 )
                 Image(
                     painter = painterResource(R.drawable.clients_list),
-                    contentDescription = "Clients List",
+                    contentDescription = stringResource(R.string.home_clients_description),
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.FillWidth
                 )

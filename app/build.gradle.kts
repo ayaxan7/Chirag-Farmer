@@ -26,6 +26,11 @@ android {
         version = release(36)
     }
 
+    @Suppress("UnstableApiUsage")
+    androidResources {
+        localeFilters += listOf("en", "hi", "pa", "te")
+    }
+
     defaultConfig {
         applicationId = "com.yash091099.ChiragFarmersApp"
         minSdk = 28

@@ -19,6 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -27,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.data.remote.dto.OrderTrackingData
 import com.yash091099.ChiragFarmersApp.ui.theme.*
 import java.text.SimpleDateFormat
@@ -57,11 +59,11 @@ fun OrderStatusScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(onClick = { navController.popBackStack() }) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.order_status_back_description))
             }
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "Order Status",
+                text = stringResource(R.string.order_status_title),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black
@@ -86,8 +88,8 @@ fun OrderStatusScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceAround
                     ) {
-                        TabItem(text = "Order Tracking", isSelected = true)
-                        TabItem(text = "Order Details", isSelected = false)
+                        TabItem(text = stringResource(R.string.order_status_tracking_tab), isSelected = true)
+                        TabItem(text = stringResource(R.string.order_status_details_tab), isSelected = false)
                     }
 
                     Spacer(modifier = Modifier.height(24.dp))
@@ -186,8 +188,8 @@ fun OrderSummaryCard(data: OrderTrackingData) {
                             color = Teal
                         )
                     }
-                    Text(text = "Order ID: ${data.orderNumber ?: ""}", fontSize = 13.sp, color = TextGray, lineHeight = 18.sp)
-                    Text(text = "Quantity : ${data.quantity ?: ""}", fontSize = 13.sp, color = TextGray, lineHeight = 18.sp)
+                    Text(text = stringResource(R.string.order_status_order_id, data.orderNumber ?: ""), fontSize = 13.sp, color = TextGray, lineHeight = 18.sp)
+                    Text(text = stringResource(R.string.order_status_quantity, data.quantity ?: ""), fontSize = 13.sp, color = TextGray, lineHeight = 18.sp)
                 }
             }
 
@@ -202,7 +204,7 @@ fun OrderSummaryCard(data: OrderTrackingData) {
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "Delivery Address",
+                        text = stringResource(R.string.order_status_delivery_address),
                         fontWeight = FontWeight.Bold,
                         fontSize = 15.sp,
                         color = TextGray
@@ -289,8 +291,8 @@ fun ProgressTimeline(
 
             // Cancelled box
             TimelineItem(
-                title = "Cancelled",
-                subtitle = "Status",
+                title = stringResource(R.string.order_status_cancelled_title),
+                subtitle = stringResource(R.string.order_status_cancelled_subtitle),
                 icon = Icons.Default.Close,
                 isCompleted = true,
                 isActive = false,
@@ -406,7 +408,7 @@ fun TimelineItem(
                         ) {
                             Icon(
                                 Icons.Default.Check,
-                                contentDescription = "Checked",
+                                contentDescription = stringResource(R.string.order_status_checked_description),
                                 tint = Color.White,
                                 modifier = Modifier.size(16.dp)
                             )

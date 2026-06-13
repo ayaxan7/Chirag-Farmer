@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import androidx.compose.ui.res.stringResource
 import coil.compose.AsyncImage
 import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.data.remote.dto.OrderDeliveryAddress
@@ -93,7 +94,7 @@ fun MyOrderDetailsScreen(
         topBar = {
             ChiragTopBar(
                 navController = navController,
-                title = "Orders Details",
+                title = stringResource(R.string.orders_details_title),
                 icon = R.drawable.ic_arrow
             )
         },
@@ -121,7 +122,7 @@ fun MyOrderDetailsScreen(
                         border = BorderStroke(1.dp,BGBlack),
                         colors = ButtonDefaults.outlinedButtonColors(contentColor = BGBlack)
                     ) {
-                        Text("Reorder", fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
+                        Text(stringResource(R.string.orders_reorder), fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
                     }
 
                     if (actionMode == BottomActionMode.BOTH) {
@@ -145,7 +146,7 @@ fun MyOrderDetailsScreen(
                             colors = ButtonDefaults.buttonColors(containerColor = BGBlack)
                         ) {
                             Text(
-                                "Drop Review",
+                                stringResource(R.string.orders_drop_review),
                                 color = BGWhite,
                                 fontWeight = FontWeight.SemiBold,
                                 fontSize = 15.sp
@@ -183,7 +184,7 @@ fun MyOrderDetailsScreen(
                         onClick = { if (orderId.isNotBlank()) viewModel.loadOrderDetails(orderId) },
                         colors = ButtonDefaults.buttonColors(containerColor = BGBlack)
                     ) {
-                        Text("Retry", color = BGWhite)
+                        Text(stringResource(R.string.orders_retry), color = BGWhite)
                     }
                 }
             }
@@ -399,13 +400,13 @@ fun OrderProductCard(
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.cancelled),
-                contentDescription = "Cancelled",
+                contentDescription = stringResource(R.string.orders_status_cancelled_title),
                 modifier = Modifier.size(20.dp),
                 tint = Color(0xFFF95353)
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "Cancelled On: $cancelledText",
+                text = stringResource(R.string.orders_cancelled_on, cancelledText),
                 color = Color(0xFFF95353),
                 fontSize = 14.sp,
                 fontWeight = FontWeight.SemiBold
@@ -419,7 +420,7 @@ fun OrderProductCard(
 fun DeliveryAddressSection(address: OrderDeliveryAddress?) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
-            text = "Delivery Address",
+            text = stringResource(R.string.orders_delivery_address),
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
             color = BGBlack
@@ -431,7 +432,7 @@ fun DeliveryAddressSection(address: OrderDeliveryAddress?) {
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.location),
-                contentDescription = "Location Pin",
+                contentDescription = stringResource(R.string.orders_location_pin_description),
                 modifier = Modifier.size(22.dp)
             )
             Spacer(modifier = Modifier.width(8.dp))
@@ -449,7 +450,7 @@ fun DeliveryAddressSection(address: OrderDeliveryAddress?) {
                     lineHeight = 13.sp
                 )
                 Text(
-                    text = "Pin : ${address?.pincode?.ifBlank { "--" } ?: "--"}",
+                    text = stringResource(R.string.orders_pin_label, address?.pincode?.ifBlank { "--" } ?: "--"),
                     fontSize = 13.sp,
                     lineHeight = 13.sp,
                     color = TextGray
@@ -476,7 +477,7 @@ fun DeliveredDateSection(deliveredAt: String?) {
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = "Delivered Date: $deliveredText",
+            text = stringResource(R.string.orders_delivered_date, deliveredText),
             color = Color(0xFFF1614B),
             fontSize = 14.sp,
             fontWeight = FontWeight.SemiBold
@@ -502,7 +503,7 @@ fun OrderStatusSection(statusTimeline: StatusTimeline?, currentStatus: String?) 
             .padding(16.dp)
     ) {
         Text(
-            text = "Order Status",
+            text = stringResource(R.string.orders_status_title),
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
             color = BGBlack
@@ -604,7 +605,7 @@ fun PriceBreakdownSection(data: OrderDetailsData) {
             if(!data.transactionId.isNullOrBlank()) {
                 HorizontalDivider(color = BorderColour.copy(alpha = 0.5f), thickness = 0.5.dp)
 
-                Text("Transaction ID", fontSize = 14.sp, color = TextGray)
+                Text(stringResource(R.string.orders_transaction_id), fontSize = 14.sp, color = TextGray)
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     val transactionId = data.transactionId.ifBlank { "--" }
@@ -617,7 +618,7 @@ fun PriceBreakdownSection(data: OrderDetailsData) {
                     Spacer(modifier = Modifier.width(6.dp))
                     Icon(
                         imageVector = Icons.Default.ContentCopy,
-                        contentDescription = "Copy",
+                        contentDescription = stringResource(R.string.orders_copy_description),
                         tint = TextGray,
                         modifier = Modifier
                             .size(16.dp).clickable(enabled = transactionId != "--") {
@@ -700,7 +701,7 @@ fun CancelOrderDialog(
         onDismissRequest = { if (!isLoading) onDismiss() },
         title = {
             Text(
-                text = "Cancel Item",
+                text = stringResource(R.string.orders_cancel_item),
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp
             )
@@ -708,7 +709,7 @@ fun CancelOrderDialog(
         text = {
             Column(modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    text = "Please provide a reason for cancellation:",
+                    text = stringResource(R.string.orders_cancel_reason),
                     fontSize = 14.sp,
                     color = TextGray,
                     modifier = Modifier.padding(bottom = 12.dp)
@@ -719,7 +720,7 @@ fun CancelOrderDialog(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(100.dp),
-                    label = { Text("Reason") },
+                    label = { Text(stringResource(R.string.orders_reason_label)) },
                     shape = RoundedCornerShape(8.dp),
                     colors = TextFieldDefaults.colors(
                         focusedContainerColor = Color(0xFFF5F5F5),
@@ -744,7 +745,7 @@ fun CancelOrderDialog(
                         strokeWidth = 2.dp
                     )
                 } else {
-                    Text("Confirm", color = Color.White)
+                    Text(stringResource(R.string.orders_confirm), color = Color.White)
                 }
             }
         },
@@ -754,7 +755,7 @@ fun CancelOrderDialog(
                 enabled = !isLoading,
                 colors = ButtonDefaults.outlinedButtonColors(contentColor = BGBlack)
             ) {
-                Text("Cancel")
+                Text(stringResource(R.string.orders_cancel))
             }
         }
     )

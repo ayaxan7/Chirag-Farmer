@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -100,7 +101,7 @@ fun CategoriesScreen(
             item(span = { GridItemSpan(maxLineSpan) }) {
                 Image(
                     painter = painterResource(id = bannerImageRes),
-                    contentDescription = "Banner",
+                    contentDescription = stringResource(R.string.categories_banner_description),
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(140.dp)
@@ -111,7 +112,7 @@ fun CategoriesScreen(
 
             item(span = { GridItemSpan(maxLineSpan) }) {
                 Text(
-                    text = "Categories", fontSize = 16.sp, fontWeight = FontWeight.W600
+                    text = stringResource(R.string.categories_title), fontSize = 16.sp, fontWeight = FontWeight.W600
                 )
             }
 
@@ -166,20 +167,20 @@ fun CategoriesScreen(
             when (products.loadState.refresh) {
                 is LoadState.Loading -> {
                     item(span = { GridItemSpan(maxLineSpan) }) {
-                        Text(text = "Loading products...")
+                        Text(text = stringResource(R.string.categories_loading))
                     }
                 }
 
                 is LoadState.Error -> {
                     item(span = { GridItemSpan(maxLineSpan) }) {
-                        Text(text = "No products found")
+                        Text(text = stringResource(R.string.categories_no_products))
                     }
                 }
 
                 is LoadState.NotLoading -> {
                     if (products.itemCount == 0) {
                         item(span = { GridItemSpan(maxLineSpan) }) {
-                            Text(text = "No products found")
+                            Text(text = stringResource(R.string.categories_no_products))
                         }
                     } else {
                         items(products.itemCount) { index ->
@@ -200,7 +201,7 @@ fun CategoriesScreen(
                         when (val appendState = products.loadState.append) {
                             is LoadState.Loading -> {
                                 item(span = { GridItemSpan(maxLineSpan) }) {
-                                    Text(text = "Loading more...")
+                                    Text(text = stringResource(R.string.categories_loading_more))
                                 }
                             }
 

@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -59,7 +60,7 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
         snackbarHost = { SnackbarHost(snackBarHostState) },
         topBar = {
             ChiragTopBar(
-                navController = navController, icon = R.drawable.ic_arrow, title = "Buy"
+                navController = navController, icon = R.drawable.ic_arrow, title = stringResource(R.string.buy_title)
             )
         }) { paddingValues ->
         
@@ -131,7 +132,7 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
 
                     item(span = { GridItemSpan(maxLineSpan) }) {
                         CategoryHeader(
-                            category = "Categories"
+                            category = stringResource(R.string.buy_categories)
                         )
                     }
 
@@ -163,7 +164,7 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
                     if (validVendorProducts.isNotEmpty()) {
                         item(span = { GridItemSpan(maxLineSpan) }) {
                             CategoryHeader(
-                                category = "Smart Farming"
+                                category = stringResource(R.string.buy_smart_farming)
                             )
                         }
 
@@ -187,8 +188,8 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
                     if (validDirectFromFarmersProducts.isNotEmpty()) {
                         item(span = { GridItemSpan(maxLineSpan) }) {
                             CategoryHeader(
-                                category = "Direct From Farmers",
-                                btnText = "View All",
+                                category = stringResource(R.string.buy_direct_from_farmers),
+                                btnText = stringResource(R.string.home_view_all),
                                 onClick = {
                                     val bannerResId = Categories.getBuyBannerImage("Direct From Farmers")
                                     navController.navigate(Route.BuyCategory.createRoute("Direct From Farmers", bannerResId))
@@ -215,8 +216,8 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
                     if (validSeedProducts.isNotEmpty()) {
                         item(span = { GridItemSpan(maxLineSpan) }) {
                             CategoryHeader(
-                                category = "Seeds",
-                                btnText = "View All",
+                                category = stringResource(R.string.buy_seeds),
+                                btnText = stringResource(R.string.home_view_all),
                                 onClick = {
                                     val bannerResId = Categories.getBuyBannerImage("Seeds")
                                     navController.navigate(Route.BuyCategory.createRoute("Seeds", bannerResId))
@@ -243,8 +244,8 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
                     if (validRandomProducts.isNotEmpty()) {
                         item(span = { GridItemSpan(maxLineSpan) }) {
                             CategoryHeader(
-                                category = "Popular Products",
-                                btnText = "View All",
+                                category = stringResource(R.string.buy_popular_products),
+                                btnText = stringResource(R.string.home_view_all),
                                 onClick = {
                                     navController.navigate(Route.BuyCategory.createRoute("Popular Products"))
                                 }

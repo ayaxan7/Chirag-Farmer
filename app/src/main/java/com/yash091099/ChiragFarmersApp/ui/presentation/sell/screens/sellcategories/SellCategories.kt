@@ -26,6 +26,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -48,7 +49,7 @@ fun SellCategoriesScreen(navController: NavHostController) {
     }
     Scaffold(topBar = {
         ChiragTopBar(
-            title = "Sell Produces", navController = navController, icon = R.drawable.ic_arrow
+            title = stringResource(R.string.sell_categories_title), navController = navController, icon = R.drawable.ic_arrow
         )
     }, containerColor = BGWhite, bottomBar = {
         Box(
@@ -58,7 +59,7 @@ fun SellCategoriesScreen(navController: NavHostController) {
             contentAlignment = Alignment.Center
         ) {
             ChiragButton(
-                text = "Continue", containerColor = BGBlack, contentColor = BGWhite, onClick = {
+                text = stringResource(R.string.sell_categories_continue), containerColor = BGBlack, contentColor = BGWhite, onClick = {
                     val selectedCategoryName =
                         categories.firstOrNull { it.id == selectedCategory }?.name
                     val sanitizedCategory = sanitizeCategoryForForm(selectedCategoryName.orEmpty())
@@ -81,7 +82,7 @@ fun SellCategoriesScreen(navController: NavHostController) {
                 .verticalScroll(rememberScrollState())
         ) {
             Text(
-                text = "Select Categories",
+                text = stringResource(R.string.sell_categories_select),
                 fontWeight = FontWeight.W500,
                 color = BGBlack,
                 fontSize = 16.sp

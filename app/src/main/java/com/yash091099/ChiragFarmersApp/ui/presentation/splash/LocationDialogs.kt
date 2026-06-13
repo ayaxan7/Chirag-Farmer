@@ -7,6 +7,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import com.yash091099.ChiragFarmersApp.R
 
 /**
  * Dialog to request location permission from the user
@@ -18,16 +20,16 @@ fun LocationPermissionDialog(
 ) {
     AlertDialog(
         onDismissRequest = { onPermissionDenied() },
-        title = { Text("Location Permission Required") },
-        text = { Text("This app needs access to your location to provide location-based services. Please grant location permission to continue.") },
+        title = { Text(stringResource(R.string.location_permission_title)) },
+        text = { Text(stringResource(R.string.location_permission_message)) },
         confirmButton = {
             Button(onClick = { onPermissionGranted() }) {
-                Text("Grant Permission")
+                Text(stringResource(R.string.location_permission_grant))
             }
         },
         dismissButton = {
             Button(onClick = { onPermissionDenied() }) {
-                Text("Deny")
+                Text(stringResource(R.string.location_permission_deny))
             }
         }
     )
@@ -43,16 +45,16 @@ fun LocationPermissionMandatoryDialog(
 ) {
     AlertDialog(
         onDismissRequest = { onCancel() },
-        title = { Text("Location Permission Mandatory") },
-        text = { Text("Location permission is mandatory for this app to function properly. Please grant permission to continue using the app.") },
+        title = { Text(stringResource(R.string.location_mandatory_title)) },
+        text = { Text(stringResource(R.string.location_mandatory_message)) },
         confirmButton = {
             Button(onClick = { onRetry() }) {
-                Text("Try Again")
+                Text(stringResource(R.string.location_mandatory_try_again))
             }
         },
         dismissButton = {
             Button(onClick = { onCancel() }) {
-                Text("Cancel")
+                Text(stringResource(R.string.location_mandatory_cancel))
             }
         }
     )
@@ -70,8 +72,8 @@ fun LocationServiceDisabledDialog(
 
     AlertDialog(
         onDismissRequest = { onCancel() },
-        title = { Text("Location Service Disabled") },
-        text = { Text("Location services are disabled on your device. Please enable location services to continue. You will be taken to the location settings.") },
+        title = { Text(stringResource(R.string.location_service_disabled_title)) },
+        text = { Text(stringResource(R.string.location_service_disabled_message)) },
         confirmButton = {
             Button(onClick = {
                 // Open location settings
@@ -79,12 +81,12 @@ fun LocationServiceDisabledDialog(
                 context.startActivity(intent)
                 onGoToSettings()
             }) {
-                Text("Go to Settings")
+                Text(stringResource(R.string.location_go_to_settings))
             }
         },
         dismissButton = {
             Button(onClick = { onCancel() }) {
-                Text("Cancel")
+                Text(stringResource(R.string.location_cancel))
             }
         }
     )

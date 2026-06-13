@@ -31,7 +31,7 @@ class ChiragMessagingService : FirebaseMessagingService() {
 
             // Handle data payload here if needed
             val title = remoteMessage.data["title"] ?: "ChiragFarmer"
-            val body = remoteMessage.data["body"] ?: "You have a new message"
+            val body = remoteMessage.data["body"] ?: getString(R.string.notification_new_message)
 
             // If there was no notification payload but there's data payload, show notification
             if (remoteMessage.notification == null) {
@@ -52,7 +52,7 @@ class ChiragMessagingService : FirebaseMessagingService() {
         // Create notification channel
         val channel = NotificationChannel(
             CHANNEL_ID,
-            "ChiragFarmer Notifications",
+            getString(R.string.notification_channel_name),
             NotificationManager.IMPORTANCE_HIGH
         ).apply {
             description = "Notifications from ChiragFarmer"

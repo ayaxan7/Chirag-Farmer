@@ -1,3 +1,607 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- App -->
     <string name="app_name">Chirag Farmer</string>
+
+    <!-- Bottom Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_assist">Assist</string>
+    <string name="nav_bookings">Bookings</string>
+    <string name="nav_buy">Buy</string>
+    <string name="nav_sell">Sell</string>
+
+    <!-- Splash -->
+    <string name="splash_logo_description">Logo with text</string>
+
+    <!-- Location Permission Dialogs -->
+    <string name="location_permission_title">Location Permission Required</string>
+    <string name="location_permission_message">This app needs access to your location to provide location-based services. Please grant location permission to continue.</string>
+    <string name="location_permission_grant">Grant Permission</string>
+    <string name="location_permission_deny">Deny</string>
+    <string name="location_mandatory_title">Location Permission Mandatory</string>
+    <string name="location_mandatory_message">Location permission is mandatory for this app to function properly. Please grant permission to continue using the app.</string>
+    <string name="location_mandatory_try_again">Try Again</string>
+    <string name="location_mandatory_cancel">Cancel</string>
+    <string name="location_service_disabled_title">Location Service Disabled</string>
+    <string name="location_service_disabled_message">Location services are disabled on your device. Please enable location services to continue. You will be taken to the location settings.</string>
+    <string name="location_go_to_settings">Go to Settings</string>
+    <string name="location_cancel">Cancel</string>
+
+    <!-- Auth - Phone Entry -->
+    <string name="auth_tilted_drone_description">Tilted drone</string>
+    <string name="auth_app_logo_description">App Logo</string>
+    <string name="auth_mobile_placeholder">Your Mobile Number</string>
+    <string name="auth_continue">Continue</string>
+
+    <!-- Auth - OTP Verification -->
+    <string name="otp_enter_code">Enter authentication code</string>
+    <string name="otp_description">Enter the 4-digit OTP that we have sent to your mobile number.</string>
+    <string name="otp_continue">Continue</string>
+
+    <!-- Auth - Registration -->
+    <string name="register_title">Complete your registration</string>
+    <string name="register_profile_photo">Profile Photo</string>
+    <string name="register_name_label">Name*</string>
+    <string name="register_name_placeholder">Enter Your Full Name</string>
+    <string name="register_mobile_label">Mobile Number*</string>
+    <string name="register_mobile_placeholder">Enter Your Contact Number</string>
+    <string name="register_email_label">Email ID*</string>
+    <string name="register_email_placeholder">Enter Your Email ID</string>
+    <string name="register_gender_label">Select Gender*</string>
+    <string name="register_male">Male</string>
+    <string name="register_female">Female</string>
+    <string name="register_state_label">State*</string>
+    <string name="register_state_placeholder">Select or enter location</string>
+    <string name="register_city_label">City / Town / Village*</string>
+    <string name="register_city_placeholder">Select or enter location</string>
+    <string name="register_region_label">Region Field</string>
+    <string name="register_region_placeholder">Select or enter location</string>
+    <string name="register_continue">Continue</string>
+
+    <!-- Home -->
+    <string name="home_agriculture_drones">Agriculture\nDrones</string>
+    <string name="home_seeds">Seeds</string>
+    <string name="home_sprayer">Sprayer</string>
+    <string name="home_tractors">Tractors</string>
+    <string name="home_harvesting_machines">Harvesting Machines</string>
+    <string name="home_profile_incomplete_image_description">Profile Incomplete Image</string>
+    <string name="home_buy_products_category">Buy Products For Your Farm</string>
+    <string name="home_view_all">View All</string>
+    <string name="home_agriculture_drone_label">Agriculture Drone</string>
+    <string name="home_seeds_label">Seeds</string>
+    <string name="home_sprayers_label">Sprayers</string>
+    <string name="home_tractors_label">Tractors</string>
+    <string name="home_harvesting_label">Harvesting Machines</string>
+    <string name="home_smart_farming_category">Smart Farming</string>
+    <string name="home_smart_farming_label">Smart Farming</string>
+    <string name="home_seeds_category">Seeds</string>
+    <string name="home_popular_products_category">Popular Products</string>
+    <string name="home_popular_products_label">Popular Products</string>
+    <string name="home_network_error">Network Error</string>
+    <string name="home_retry">Retry</string>
+    <string name="home_usps_category">Our USPs</string>
+    <string name="home_usps_description">USPs</string>
+    <string name="home_footer_description">Footer</string>
+    <string name="home_clients_category">Our clients</string>
+    <string name="home_clients_description">Clients List</string>
+
+    <!-- Home - Top Bar -->
+    <string name="home_logo_description">Chirag Logo White</string>
+    <string name="home_notifications_icon_description">Notifications</string>
+    <string name="home_cart_icon_description">Cart</string>
+    <string name="home_profile_icon_description">Profile</string>
+
+    <!-- Home - Search Bar -->
+    <string name="search_icon_description">Search</string>
+    <string name="search_hint">Search For </string>
+    <string name="search_camera_description">Camera search</string>
+
+    <!-- Search Screen -->
+    <string name="search_title">Search</string>
+    <string name="search_placeholder">Search For Products/Services/Rentals</string>
+
+    <!-- Notifications -->
+    <string name="notif_title">Notifications</string>
+    <string name="notif_filter_all">All</string>
+    <string name="notif_filter_buy">Buy</string>
+    <string name="notif_filter_sell">Sell</string>
+    <string name="notif_filter_service">Service</string>
+    <string name="notif_empty_description">Background illustration</string>
+    <string name="notif_retry">Retry</string>
+    <string name="notif_empty">No notifications found</string>
+    <string name="notif_today">Today</string>
+    <string name="notif_yesterday">Yesterday</string>
+    <string name="notif_earlier">Earlier</string>
+    <string name="notif_avatar_description">Notification avatar</string>
+
+    <!-- Buy Screen -->
+    <string name="buy_title">Buy</string>
+    <string name="buy_categories">Categories</string>
+    <string name="buy_smart_farming">Smart Farming</string>
+    <string name="buy_direct_from_farmers">Direct From Farmers</string>
+    <string name="buy_seeds">Seeds</string>
+    <string name="buy_popular_products">Popular Products</string>
+
+    <!-- Categories Screens -->
+    <string name="categories_banner_description">Banner</string>
+    <string name="categories_title">Categories</string>
+    <string name="categories_loading">Loading products…</string>
+    <string name="categories_no_products">No products found</string>
+    <string name="categories_loading_more">Loading more…</string>
+
+    <!-- Product Details -->
+    <string name="product_added_to_cart">Product added to cart!</string>
+    <string name="product_error_loading">Error Loading Product</string>
+    <string name="product_retry">Retry</string>
+    <string name="product_details_tab">Details</string>
+    <string name="product_back_description">Back</string>
+    <string name="product_share_description">Share</string>
+    <string name="product_cart_description">Cart</string>
+    <string name="product_image_description">Product</string>
+    <string name="product_thumbnail_description">Thumbnail %d</string>
+    <string name="product_rating_description">Rating</string>
+    <string name="product_price_format">₹%s</string>
+    <string name="product_offer_format">%s%% OFF</string>
+    <string name="product_description_title">Product Description</string>
+    <string name="product_key_features">Key Features :</string>
+    <string name="product_feature_item"> • %s</string>
+    <string name="product_sold_by">Sold by</string>
+    <string name="product_seller_description">Seller</string>
+    <string name="product_verified_description">Verified</string>
+    <string name="product_store_description">Store</string>
+    <string name="product_view_seller">View Seller</string>
+    <string name="product_similar_products">Similar Products</string>
+    <string name="product_more_for_you">More Products for you</string>
+    <string name="product_reviews_title">Reviews &amp; Ratings :</string>
+    <string name="product_rating_count">%s Ratings</string>
+    <string name="product_review_count">%s Reviews</string>
+    <string name="product_no_reviews">No reviews yet for this product.</string>
+    <string name="product_buy_now">Buy Now</string>
+
+    <!-- Seller Profile -->
+    <string name="seller_title">Seller Profile</string>
+    <string name="seller_retry">Retry</string>
+    <string name="seller_image_description">Seller Image</string>
+    <string name="seller_verified_description">Verified</string>
+    <string name="seller_ratings_label">%s ratings</string>
+    <string name="seller_products_label">Products</string>
+    <string name="seller_sold_out_label">Sold Out</string>
+    <string name="seller_share_label">Share</string>
+    <string name="seller_all_products">All Products</string>
+    <string name="seller_no_products">No products found</string>
+    <string name="seller_share_description">Share</string>
+
+    <!-- Cart -->
+    <string name="cart_error_loading">Error Loading Cart</string>
+    <string name="cart_retry">Retry</string>
+    <string name="cart_empty_title">Your Cart is Empty</string>
+    <string name="cart_empty_subtitle">Add items to get started</string>
+    <string name="cart_continue_shopping">Continue Shopping</string>
+    <string name="cart_shipping_address">Shipping Address</string>
+    <string name="cart_location_description">Location</string>
+    <string name="cart_pin_label">Pin : </string>
+    <string name="cart_change">Change</string>
+    <string name="cart_listed_products">Listed Products</string>
+    <string name="cart_subtotal">Sub-Total</string>
+    <string name="cart_delivery_fee">Delivery Fee</string>
+    <string name="cart_discount">Discount</string>
+    <string name="cart_total_cost">Total Cost</string>
+    <string name="cart_proceed_checkout">Proceed to Checkout</string>
+
+    <!-- Cart Item Card -->
+    <string name="cart_item_error_image_description">Error Image</string>
+    <string name="cart_item_decrease_description">Decrease</string>
+    <string name="cart_item_increase_description">Increase</string>
+
+    <!-- Address -->
+    <string name="address_title">Address</string>
+    <string name="address_error_loading">Error Loading Addresses</string>
+    <string name="address_retry">Retry</string>
+    <string name="address_continue">Continue</string>
+    <string name="address_empty_title">No Addresses Found</string>
+    <string name="address_empty_subtitle">Add your first address to get started</string>
+    <string name="address_selected_info">Selected address will be used for delivery</string>
+    <string name="address_location_description">Location</string>
+    <string name="address_pin_label">Pin : </string>
+    <string name="address_add_button">Add Address</string>
+    <string name="address_updating">Updating...</string>
+
+    <!-- Address Map -->
+    <string name="address_map_title">Address</string>
+    <string name="address_map_details_title">Add more address details</string>
+    <string name="address_map_search_description">Search</string>
+    <string name="address_map_search_placeholder">Search For area, street name…..</string>
+    <string name="address_map_change">CHANGE</string>
+    <string name="address_map_select_location">Select a location</string>
+    <string name="address_map_close_description">Close</string>
+    <string name="address_map_enter_details">Enter address details</string>
+    <string name="address_map_receiver_name_label">Receiver\'s name</string>
+    <string name="address_map_receiver_name_placeholder">Enter receiver\'s name</string>
+    <string name="address_map_receiver_contact_label">Receiver\'s contact</string>
+    <string name="address_map_receiver_contact_placeholder">Enter receiver\'s contact</string>
+    <string name="address_map_change_label">change</string>
+    <string name="address_map_update_hint">Update based on your exact map Pin</string>
+    <string name="address_map_floor_label">Floor</string>
+    <string name="address_map_floor_placeholder">Floor Number</string>
+    <string name="address_map_landmark_label">Landmark</string>
+    <string name="address_map_landmark_placeholder">Enter Landmark</string>
+
+    <!-- Payment -->
+    <string name="payment_title">Payment</string>
+    <string name="payment_credit_debit_cards">Credit &amp; Debit Cards</string>
+    <string name="payment_add_card">Add Card</string>
+    <string name="payment_upi">UPI Payments</string>
+    <string name="payment_more_options">More Payments Options</string>
+    <string name="payment_cash_on_delivery">Cash On Delivery</string>
+    <string name="payment_subtotal">Sub-Total</string>
+    <string name="payment_delivery_fee">Delivery Fee</string>
+    <string name="payment_discount">Discount</string>
+    <string name="payment_total_cost">Total Cost</string>
+    <string name="payment_pay_now">Pay Now</string>
+    <string name="payment_navigate_description">Navigate</string>
+    <string name="payment_online">Online</string>
+    <string name="payment_successful">Payment Successful</string>
+    <string name="payment_thank_you">Thank You for purchase</string>
+    <string name="payment_success_description">Payment Success</string>
+    <string name="payment_continue_shopping">Continue Shopping</string>
+
+    <!-- Orders -->
+    <string name="orders_title">Orders</string>
+    <string name="orders_retry">Retry</string>
+    <string name="orders_empty">No Orders found</string>
+    <string name="orders_drop_review">Drop Review</string>
+    <string name="orders_details_title">Orders Details</string>
+    <string name="orders_reorder">Reorder</string>
+    <string name="orders_cancelled_on">Cancelled On: %s</string>
+    <string name="orders_delivery_address">Delivery Address</string>
+    <string name="orders_location_pin_description">Location Pin</string>
+    <string name="orders_pin_label">Pin : %s</string>
+    <string name="orders_delivered_date">Delivered Date: %s</string>
+    <string name="orders_status_title">Order Status</string>
+    <string name="orders_transaction_id">Transaction ID</string>
+    <string name="orders_copy_description">Copy</string>
+    <string name="orders_cancel_item">Cancel Item</string>
+    <string name="orders_cancel_reason">Please provide a reason for cancellation:</string>
+    <string name="orders_reason_label">Reason</string>
+    <string name="orders_confirm">Confirm</string>
+    <string name="orders_cancel">Cancel</string>
+
+    <!-- My Orders (Buyer) -->
+    <string name="my_orders_title">My Orders</string>
+
+    <!-- Order Status (Seller) -->
+    <string name="order_status_back_description">Back</string>
+    <string name="order_status_title">Order Status</string>
+    <string name="order_status_tracking_tab">Order Tracking</string>
+    <string name="order_status_details_tab">Order Details</string>
+    <string name="order_status_order_id">Order ID: %s</string>
+    <string name="order_status_quantity">Quantity : %s</string>
+    <string name="order_status_delivery_address">Delivery Address</string>
+    <string name="order_status_cancelled_title">Cancelled</string>
+    <string name="order_status_cancelled_subtitle">Status</string>
+    <string name="order_status_checked_description">Checked</string>
+
+    <!-- Active Orders (Seller) -->
+    <string name="active_orders_retry">Retry</string>
+    <string name="active_orders_error">Error Loading Orders</string>
+    <string name="active_orders_empty">No active orders yet</string>
+    <string name="active_orders_load_more_error">Couldn\'t load more orders</string>
+    <string name="active_orders_product_description">Product name</string>
+    <string name="active_orders_buyer_label">Buyer</string>
+    <string name="active_orders_contact_label">Contact</string>
+    <string name="active_orders_order_id_label">ORDER ID</string>
+    <string name="active_orders_quantity_label">QUANTITY</string>
+    <string name="active_orders_amount_label">AMOUNT</string>
+    <string name="active_orders_location_label">LOCATION</string>
+    <string name="active_orders_update_status">Update Order Status</string>
+    <string name="active_orders_update_progress">Update Progress</string>
+    <string name="active_orders_cancel_order_description">Cancel Order</string>
+    <string name="active_orders_cancel_order_text">Cancel Order</string>
+    <string name="active_orders_cancel_confirm_title">Cancel Order</string>
+    <string name="active_orders_cancel_confirm_message">Are you sure you want to cancel this order?</string>
+    <string name="active_orders_cancel_confirm">Cancel Order</string>
+    <string name="active_orders_keep_order">Keep Order</string>
+
+    <!-- Reviews -->
+    <string name="review_title">Drop Review</string>
+    <string name="review_order_id">Order ID: %s</string>
+    <string name="review_overall_rating">Your Over All Rating</string>
+    <string name="review_star_description">Star %d</string>
+    <string name="review_write_label">Write Your Review</string>
+    <string name="review_characters_remaining">%s characters Remaining</string>
+    <string name="review_cancel">Cancel</string>
+    <string name="review_yes_submit">Yes, Submit</string>
+    <string name="review_placeholder">Drop Your Review Here</string>
+    <string name="active_orders_product_description_format">Product name %s</string>
+    <string name="orders_status_cancelled_title">Cancelled</string>
+    <string name="review_rating_description">Rating</string>
+    <string name="review_like_description">Like</string>
+    <string name="review_unlike_description">Unlike</string>
+    <string name="review_ratings_text">%s Ratings</string>
+    <string name="review_reviews_text">%s Reviews</string>
+
+    <!-- Sell -->
+    <string name="sell_title">Sell</string>
+    <string name="sell_search_placeholder">Search For Products</string>
+
+    <!-- Sell - Categories -->
+    <string name="sell_categories_title">Sell Produces</string>
+    <string name="sell_categories_continue">Continue</string>
+    <string name="sell_categories_select">Select Categories</string>
+
+    <!-- Sell - Produces Form -->
+    <string name="sell_produce_details">Produce Details</string>
+    <string name="sell_produce_category_label">Produce Category</string>
+    <string name="sell_produce_category_placeholder">Wheat, Rice, Maize, Barley, Millets Etc…….</string>
+    <string name="sell_produce_title_label">Produce Title</string>
+    <string name="sell_produce_title_placeholder">Enter Produce Tittle</string>
+    <string name="sell_images_label">Images (Max 3)</string>
+    <string name="sell_images_count">%s / 3 images</string>
+    <string name="sell_stock_label">Available Stock*</string>
+    <string name="sell_stock_placeholder">Enter quantity</string>
+    <string name="sell_location_label">Location</string>
+    <string name="sell_location_placeholder">Pratapgarh, Uttar pradesh</string>
+    <string name="sell_pricing_label">Pricing</string>
+    <string name="sell_price_placeholder">Enter Price</string>
+    <string name="sell_discount_label">Discount %</string>
+    <string name="sell_discount_placeholder">Enter Discount Percentage</string>
+    <string name="sell_description_label">Produce Description</string>
+    <string name="sell_description_placeholder">Add Produce Description</string>
+    <string name="sell_features_label">Produce Features (Comma separated)</string>
+    <string name="sell_features_placeholder">Feature 1, Feature 2, Feature 3</string>
+    <string name="sell_delivery_fee_included_label">Is delivery fee included in the total price?</string>
+    <string name="sell_delivery_included">Included</string>
+    <string name="sell_delivery_not_included">Not included</string>
+    <string name="sell_delivery_fee_label">Delivery Fee / KM</string>
+    <string name="sell_delivery_fee_placeholder">Enter Delivery Fee</string>
+    <string name="sell_product_image_description">Product image</string>
+    <string name="sell_selected_image_description">Selected product image</string>
+    <string name="sell_remove_image_description">Remove image</string>
+    <string name="sell_add_image_description">Add image</string>
+
+    <!-- Active Products (Seller) -->
+    <string name="active_products_error">Error loading products</string>
+    <string name="active_products_empty">No active products found</string>
+
+    <!-- Sold Out Products (Seller) -->
+    <string name="sold_out_products_error">Error loading products</string>
+    <string name="sold_out_products_empty">No sold out products found</string>
+
+    <!-- Assist -->
+    <string name="assist_title">Assist</string>
+    <string name="assist_banner_description">Banner</string>
+    <string name="assist_plant_trouble_title">Got Plant Trouble? We\'re\nHere to Help.</string>
+    <string name="assist_ask_solve_title">Ask. Solve. Farm Help Made\nEasy</string>
+    <string name="assist_start_icon_description">Start Icon</string>
+    <string name="assist_icon_description">Icon</string>
+
+    <!-- Assist - Image Upload -->
+    <string name="assist_image_title">Assist Image</string>
+    <string name="assist_image_next">Next</string>
+    <string name="assist_upload_photo_text">Upload a Photo of your plant</string>
+    <string name="assist_upload_description">Share a clear image of your affected plant or leaf so we can diagnose the disease instantly.</string>
+    <string name="assist_selected_image_description">Selected Plant Image</string>
+    <string name="assist_upload_image_description">Upload Image</string>
+    <string name="assist_tap_to_upload">Tap to upload photo</string>
+    <string name="assist_open_camera">Open Camera</string>
+    <string name="assist_select_language">Select your preferred language</string>
+    <string name="assist_or">Or</string>
+
+    <!-- Assist - Result -->
+    <string name="assist_result_title">Assist</string>
+    <string name="assist_result_retry">Retry</string>
+    <string name="assist_result_crop_image_description">Selected crop image</string>
+    <string name="assist_result_no_symptoms">No symptoms were returned by the analysis.</string>
+    <string name="assist_result_no_avoidance">No avoidance tips were returned by the analysis.</string>
+    <string name="assist_result_no_insecticides">No insecticides were returned by the analysis.</string>
+
+    <!-- Chat - Plant Problem Help -->
+    <string name="chat_title">Plant Problem Help</string>
+    <string name="chat_crop_hint">Select a crop or type below:</string>
+    <string name="chat_input_placeholder">Type your message…</string>
+    <string name="chat_send_description">Send</string>
+    <string name="chat_welcome_message">Hello, I am here to help you identify problems in your crop. Can you tell me which crop you are facing issues with?</string>
+    <string name="chat_error_not_authenticated">Error: Not authenticated.</string>
+    <string name="chat_error_connect">Error: Failed to connect to server.</string>
+    <string name="chat_error_no_auth_token">No authentication token found</string>
+
+    <!-- Profile -->
+    <string name="profile_title">My Account</string>
+    <string name="profile_logout">Logout</string>
+    <string name="profile_version">Version %s</string>
+    <string name="profile_retry">Retry</string>
+    <string name="profile_image_description">Profile Image</string>
+    <string name="profile_phone_format">+91 %s</string>
+    <string name="profile_edit_description">Edit Profile</string>
+    <string name="profile_orders_title">Orders\nplaced</string>
+    <string name="profile_help_title">Help &amp;\nSupport</string>
+    <string name="profile_wallet">Wallet</string>
+    <string name="profile_manage_addresses">Manage Addresses</string>
+    <string name="profile_terms">Terms and conditions</string>
+    <string name="profile_privacy">Privacy Policy</string>
+    <string name="profile_rate_app">Rate app</string>
+    <string name="profile_edit_account_title">Edit Account</string>
+    <string name="profile_name_label">NAME</string>
+    <string name="profile_email_label">EMAIL</string>
+
+    <!-- Bookings -->
+    <string name="bookings_placeholder">Assist Screen</string>
+
+    <!-- Common -->
+    <string name="common_retry">Retry</string>
+    <string name="common_back_description">Back</string>
+    <string name="common_error_image_description">Error Image</string>
+    <string name="common_marketplace_title">Marketplace</string>
+    <string name="common_search_icon_description">Search</string>
+    <string name="common_location_icon_description">Location</string>
+    <string name="common_delete_icon_description">Delete</string>
+    <string name="common_delete_item_description">Delete Item</string>
+    <string name="common_sold_out_description">Sold Out</string>
+    <string name="common_close_dialog_description">Close dialog</string>
+    <string name="common_remove_product_description">Remove Product</string>
+    <string name="common_add_image_description">Add Image</string>
+    <string name="common_verified_description">Verified</string>
+    <string name="common_rating_description">Rating</string>
+    <string name="common_share_description">Share</string>
+
+    <!-- Dialogs -->
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_confirm">Confirm</string>
+    <string name="dialog_retry">Retry</string>
+
+    <!-- Sell Categories (Sell side) -->
+    <string name="category_sell_cereals_grains">Cereals &amp;\nGrains</string>
+    <string name="category_sell_pulses_legumes">Pulses &amp;\nLegumes</string>
+    <string name="category_sell_fruits">Fruits</string>
+    <string name="category_sell_vegetables">Vegetables</string>
+    <string name="category_sell_oilseeds">Oilseeds</string>
+    <string name="category_sell_spices">Spices</string>
+    <string name="category_sell_tubers_root">Tubers and\nRoot Crops</string>
+    <string name="category_sell_flowers">Flowers</string>
+    <string name="category_sell_dry_fruits_nuts">Dry Fruits &amp;\nNuts</string>
+    <string name="category_sell_organic">Organic\nProcedure</string>
+    <string name="category_sell_livestock">Livestock\nProducts</string>
+    <string name="category_sell_other">Other</string>
+
+    <!-- Buy Categories -->
+    <string name="category_seeds">Seeds</string>
+    <string name="category_paddy_seeds">Paddy Seeds</string>
+    <string name="category_fruit_seeds">Fruits Seeds</string>
+    <string name="category_vegetable_seeds">Vegetables Seeds</string>
+    <string name="category_leafy_seeds">Leafy Seeds</string>
+    <string name="category_herb_seeds">Herb Seeds</string>
+    <string name="category_sprayers">Sprayers</string>
+    <string name="category_manual_sprayers">Manual Hand\nSprayers</string>
+    <string name="category_battery_sprayers">Battery\nSprayers</string>
+    <string name="category_knapsack_sprayers">Knapsack\nSprayers</string>
+    <string name="category_power_sprayers">Power\nSprayers</string>
+    <string name="category_htp_sprayers">HTP\nSprayers</string>
+    <string name="category_agriculture_drone">Agriculture\nDrone</string>
+    <string name="category_spraying_drones">Spraying\nDrones</string>
+    <string name="category_surveillance_drones">Surveillance/\nMonitoring Drones</string>
+    <string name="category_multispectral_drones">Mulitspectral\n&amp; Mapping</string>
+    <string name="category_tractors">Tractors</string>
+    <string name="category_4wd_tractors">4WD\nTractors</string>
+    <string name="category_row_crop_tractors">Row Crop\nTractors</string>
+    <string name="category_mini_tractors">Mini\nTractors</string>
+    <string name="category_rotavator">Rotavator\nAttachments</string>
+    <string name="category_utility_tractor">Utility\nTractor</string>
+    <string name="category_direct_from_farmers">Direct From\nFarmers</string>
+    <string name="category_cereals">Cereals</string>
+    <string name="category_pulses">Pulses</string>
+    <string name="category_vegetables_cat">Vegetables</string>
+    <string name="category_fruits_cat">Fruits</string>
+    <string name="category_oilseeds_cat">Oilseeds</string>
+    <string name="category_spices_cat">Spices</string>
+    <string name="category_organic_produce">Organic Produce</string>
+    <string name="category_livestock_products">Livestock Products</string>
+    <string name="category_pesticides">Pesticides</string>
+    <string name="category_insecticides">Insecticides</string>
+    <string name="category_fungicides">Fungicides</string>
+    <string name="category_herbicides">Herbicides\n(Weedicides)</string>
+    <string name="category_bio_pesticides">Bio-Pesticides</string>
+    <string name="category_harvesting_machines">Harvesting\nMachines</string>
+    <string name="category_combine_harvester">Combine Harvester</string>
+    <string name="category_reaper">Reaper</string>
+    <string name="category_paddy_harvester">Paddy\nHarvester</string>
+    <string name="category_sugarcane_harvester">Sugarcane Harvesters</string>
+    <string name="category_groundnut_harvester">Groundnut Harvesters</string>
+    <string name="category_soil_testers">Soil\nTesters</string>
+    <string name="category_soil_ph_meter">Soil PH Meter</string>
+    <string name="category_soil_moisture_meter">Soil Moisture Meter</string>
+    <string name="category_npk_kit">NPK Soil Testing Kit</string>
+    <string name="category_digital_soil_tester">Digital Soil Testing Device</string>
+    <string name="category_power_weeders">Power\nWeeders</string>
+    <string name="category_mini_power_weeders">Mini Power Weeders</string>
+    <string name="category_petrol_weeders">Petrol Power Weeders</string>
+    <string name="category_diesel_weeders">Diesel Power Weeders</string>
+    <string name="category_self_propelled_weeders">Self-Propelled Weeders</string>
+    <string name="category_thresher_winnowers">Thresher\nWinnowers</string>
+    <string name="category_wheat_thresher">Wheat Thresher</string>
+    <string name="category_multi_crop_thresher">Multi-Crop\nThresher</string>
+    <string name="category_paddy_thresher">Paddy\nThresher</string>
+    <string name="category_motorized_winnower">Motorized\nWinnower</string>
+    <string name="category_irrigation_tools">Irrigation\nTools</string>
+    <string name="category_pvc_pipes">PVC Pipes\n&amp; fittings</string>
+    <string name="category_submersible_pumps">Submersible\nPumps</string>
+    <string name="category_rain_guns">Rain\nGuns</string>
+    <string name="category_hose_pipes">Hose\nPipes</string>
+    <string name="category_water_pumps">Diesel/Electric\nWater Pumps</string>
+    <string name="category_timers_controllers">Timers &amp;\nControllers</string>
+    <string name="category_manual_farm_machinery">Manual Farm\nMachinery</string>
+    <string name="category_axe">Axe</string>
+    <string name="category_hoe">Hoe</string>
+    <string name="category_sickle">Sickle</string>
+    <string name="category_hedge_shears">Hedge\nShears</string>
+    <string name="category_all_products">All Products</string>
+    <string name="category_seeds_cat">Seeds</string>
+    <string name="category_sprayers_cat">Sprayers</string>
+    <string name="category_agricultural_drones">Agricultural Drones</string>
+    <string name="category_tractors_cat">Tractors</string>
+
+    <!-- Service Booking -->
+    <string name="service_book_card_description">Book Service Card</string>
+    <string name="service_dropdown_description">Toggle Dropdown</string>
+    <string name="service_dropdown_description_label">Dropdown</string>
+
+    <!-- Common Service Dropdown Items -->
+    <string name="service_harvesting_machines">Harvesting Machines</string>
+    <string name="service_manual_sprayer">Manual Sprayer</string>
+
+    <!-- Image Upload -->
+    <string name="image_upload_aadhaar_label">Front side of Aadhaar card</string>
+
+    <!-- Swipe to Reveal -->
+    <string name="swipe_delete_description">Delete</string>
+
+    <!-- Marketplace TopBar -->
+    <string name="topbar_marketplace">Marketplace</string>
+
+    <!-- Home Booking Status Messages -->
+    <string name="home_booking_fill_fields">Please fill all required fields correctly</string>
+    <string name="home_booking_success">Booking created successfully</string>
+
+    <!-- Snackbar Messages -->
+    <string name="snackbar_product_added">Product added to cart!</string>
+    <string name="snackbar_phonepe_unavailable">Unable to launch PhonePe checkout</string>
+    <string name="snackbar_address_unknown_error">Unknown error</string>
+
+    <!-- ViewModel Error Strings -->
+    <string name="error_auth_token_not_found">Authentication token not found</string>
+    <string name="error_network">Network error occurred</string>
+    <string name="error_cart_data_not_found">Cart data not found. Please try again.</string>
+    <string name="error_no_items_in_cart">No items in cart to order.</string>
+    <string name="error_order_placement_failed">Order placement failed</string>
+    <string name="error_phonepe_data_not_found">PhonePe checkout data not found. Please try again.</string>
+    <string name="error_phonepe_order_id_missing">PhonePe merchant order id is missing.</string>
+    <string name="error_phonepe_payment_failed">PhonePe payment failed</string>
+    <string name="error_product_id_not_found">Product ID not found</string>
+    <string name="error_image_upload_failed">Failed to upload image: %s</string>
+    <string name="error_invalid_price">Invalid price value</string>
+    <string name="error_invalid_discount">Invalid discount value</string>
+    <string name="error_invalid_delivery_fee">Invalid delivery fee value</string>
+    <string name="error_select_product_image">Please select at least one product image</string>
+    <string name="error_select_location">Please select a location</string>
+    <string name="error_no_changes_detected">No changes detected</string>
+    <string name="error_product_not_in_cart">Product with ID %s not found in cart</string>
+    <string name="error_review_id_missing">Review id missing</string>
+    <string name="error_invalid_review_action">Invalid review action</string>
+    <string name="error_analysis_failed">Failed to analyze crop image.</string>
+    <string name="error_selected_image_missing">Selected image is missing</string>
+    <string name="error_product_info_missing">Product information is missing for this order. Please open order details and try again.</string>
+
+    <!-- Success Messages (ViewModel) -->
+    <string name="success_product_deleted">Product deleted successfully</string>
+    <string name="success_product_updated">Product updated successfully</string>
+    <string name="success_product_added">Product added successfully</string>
+    <string name="success_payment">Payment successful</string>
+    <string name="success_booking">Booking created successfully</string>
+
+    <!-- Notification Channel -->
+    <string name="notification_channel_name">ChiragFarmer</string>
+    <string name="notification_new_message">You have a new message</string>
+
+    <!-- Form Field Labels -->
+    <string name="form_aadhaar_front_label">Front side of Aadhaar card</string>
+    <string name="form_reason_label">Reason</string>
 </resources>

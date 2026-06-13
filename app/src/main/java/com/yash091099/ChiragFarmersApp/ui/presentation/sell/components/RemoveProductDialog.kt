@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -66,7 +67,7 @@ fun RemoveProductDialog(
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.remove_produce),
-                            contentDescription = "Remove Product",
+                            contentDescription = stringResource(R.string.common_remove_product_description),
                             modifier = Modifier
                                 .width(160.dp)
                                 .height(120.dp)
@@ -111,7 +112,7 @@ fun RemoveProductDialog(
                                 )
                             ) {
                                 Text(
-                                    text = "Cancel",
+                                    text = stringResource(R.string.dialog_cancel),
                                     fontSize = 15.sp,
                                     fontWeight = FontWeight.Medium
                                 )
@@ -147,7 +148,7 @@ fun RemoveProductDialog(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Close,
-                            contentDescription = "Close dialog",
+                            contentDescription = stringResource(R.string.common_close_dialog_description),
                             tint = BGBlack
                         )
                     }

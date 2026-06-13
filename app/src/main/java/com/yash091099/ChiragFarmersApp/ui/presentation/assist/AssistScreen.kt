@@ -31,6 +31,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -50,7 +51,7 @@ fun AssistScreen(navController: NavHostController) {
         snackbarHost = { SnackbarHost(snackBarHostState) },
         topBar = {
             ChiragTopBar(
-                navController = navController, icon = R.drawable.ic_arrow, title = "Assist"
+                navController = navController, icon = R.drawable.ic_arrow,                 title = stringResource(R.string.assist_title)
             )
         }) { paddingValues ->
         Column(
@@ -63,7 +64,7 @@ fun AssistScreen(navController: NavHostController) {
         ) {
             Image(
                 painter = painterResource(id = R.drawable.assist_screen_banner),
-                contentDescription = "Banner",
+                contentDescription = stringResource(R.string.assist_banner_description),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(180.dp)
@@ -73,14 +74,14 @@ fun AssistScreen(navController: NavHostController) {
             Spacer(modifier = Modifier.height(16.dp))
             AssistCard(
                 iconRes = R.drawable.get_help,
-                title = "Got Plant Trouble? We’re\nHere to Help.",
+                title = stringResource(R.string.assist_plant_trouble_title),
                 description = "Upload plant photos to get instant disease\ndiagnosis",
                 onClick = {navController.navigate(Route.AssistImage.path)}
             )
             Spacer(modifier = Modifier.height(16.dp))
             AssistCard(
                 iconRes = R.drawable.qna,
-                title = "Ask. Solve. Farm Help Made\nEasy",
+                title = stringResource(R.string.assist_ask_solve_title),
                 description = "Ask anything about your crop, land, or agri\ninputs",
                 onClick = { navController.navigate(Route.PlantProblemHelp.path) }
             )
@@ -145,7 +146,7 @@ private fun AssistCard(
                     verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         painter = painterResource(R.drawable.ic_right_arrow),
-                        contentDescription = "Start Icon",
+                        contentDescription = stringResource(R.string.assist_start_icon_description),
                         tint = Color.White,
                         modifier = Modifier.size(16.dp)
                     )
@@ -164,7 +165,7 @@ private fun AssistCard(
             // RIGHT ICON
             Image(
                 painter = painterResource(id = iconRes),
-                contentDescription = "Icon",
+                contentDescription = stringResource(R.string.assist_icon_description),
                 modifier = Modifier.size(80.dp),
                 contentScale = ContentScale.FillBounds
             )

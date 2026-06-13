@@ -59,6 +59,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
@@ -167,7 +168,7 @@ fun ProductDetailsScreen(
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     Text(
-                        text = "Error Loading Product",
+                        text = stringResource(R.string.product_error_loading),
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = BGBlack
@@ -182,7 +183,7 @@ fun ProductDetailsScreen(
                         onClick = { viewModel.retry() },
                         colors = ButtonDefaults.buttonColors(containerColor = BGBlack)
                     ) {
-                        Text("Retry", color = BGWhite)
+                        Text(stringResource(R.string.product_retry), color = BGWhite)
                     }
                 }
             }
@@ -198,7 +199,7 @@ fun ProductDetailsScreen(
                     TopAppBar(
                         title = {
                         Text(
-                            text = "Details",
+                            text = stringResource(R.string.product_details_tab),
                             fontSize = 20.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = BGBlack
@@ -207,7 +208,7 @@ fun ProductDetailsScreen(
                         IconButton(onClick = { navController.popBackStack() }) {
                             Icon(
                                 painterResource(R.drawable.ic_arrow),
-                                contentDescription = "Back",
+                                contentDescription = stringResource(R.string.product_back_description),
                                 tint = BGBlack
                             )
                         }
@@ -222,7 +223,7 @@ fun ProductDetailsScreen(
                         }) {
                             Icon(
                                 painterResource(R.drawable.ic_share),
-                                contentDescription = "Share",
+                                contentDescription = stringResource(R.string.product_share_description),
                                 tint = BGBlack
                             )
                         }
@@ -234,7 +235,7 @@ fun ProductDetailsScreen(
                         }) {
                             Icon(
                                 painterResource(R.drawable.ic_cart_outlined),
-                                contentDescription = "Cart",
+                                contentDescription = stringResource(R.string.product_cart_description),
                                 tint = BGBlack
                             )
                         }
@@ -273,14 +274,14 @@ fun ProductDetailsScreen(
                         if (product.productImages.isNotEmpty()) {
                             AsyncImage(
                                 model = product.productImages[selectedImageIndex],
-                                contentDescription = "Product",
+                                contentDescription = stringResource(R.string.product_image_description),
                                 modifier = Modifier.fillMaxSize(),
                                 contentScale = ContentScale.Fit
                             )
                         } else {
                             Image(
                                 painter = painterResource(R.drawable.sell_category_other),
-                                contentDescription = "Product",
+                                contentDescription = stringResource(R.string.product_image_description),
                                 modifier = Modifier.fillMaxSize(),
                                 contentScale = ContentScale.Fit
                             )
@@ -296,7 +297,7 @@ fun ProductDetailsScreen(
                             product.productImages.forEachIndexed { index, imageUrl ->
                                 AsyncImage(
                                     model = imageUrl,
-                                    contentDescription = "Thumbnail $index",
+                                    contentDescription = stringResource(R.string.product_thumbnail_description, index),
                                     modifier = Modifier
                                         .size(50.dp)
                                         .clip(RoundedCornerShape(8.dp))
@@ -328,7 +329,7 @@ fun ProductDetailsScreen(
                             )
                             Icon(
                                 imageVector = Icons.Default.Star,
-                                contentDescription = "Rating",
+                                contentDescription = stringResource(R.string.product_rating_description),
                                 tint = Color(0xFFFFC107),
                                 modifier = Modifier.size(18.dp)
                             )
@@ -360,7 +361,7 @@ fun ProductDetailsScreen(
                         ) {
                             if (product.discountedPrice != product.originalPrice) {
                                 Text(
-                                    text = "₹${product.discountedPrice}",
+                                    text = stringResource(R.string.product_price_format, product.discountedPrice.toString()),
                                     fontSize = 24.sp,
                                     fontWeight = FontWeight.Bold,
                                     color = BGBlack
@@ -368,7 +369,7 @@ fun ProductDetailsScreen(
                                 Spacer(modifier = Modifier.width(8.dp))
                             }
                             Text(
-                                text = "₹${product.originalPrice}",
+                                text = stringResource(R.string.product_price_format, product.originalPrice.toString()),
                                 fontSize = 14.sp,
                                 fontWeight = if (product.discountedPrice != product.originalPrice) FontWeight.Normal else FontWeight.Bold,
                                 color = if (product.discountedPrice != product.originalPrice) Color(
@@ -379,7 +380,7 @@ fun ProductDetailsScreen(
                             if (product.discountedPrice != product.originalPrice) {
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
-                                    text = "${product.discountPercent.toInt()}% OFF",
+                                    text = stringResource(R.string.product_offer_format, product.discountPercent.toInt().toString()),
                                     fontSize = 12.sp,
                                     fontWeight = FontWeight.Bold,
                                     color = Color(0xFF4CAF50)
@@ -392,7 +393,7 @@ fun ProductDetailsScreen(
                         // Product Description
                         if (!product.productDescription.isNullOrEmpty()) {
                             Text(
-                                text = "Product Description",
+                                text = stringResource(R.string.product_description_title),
                                 fontSize = 15.sp,
                                 fontWeight = FontWeight.SemiBold,
                                 color = BGBlack
@@ -410,7 +411,7 @@ fun ProductDetailsScreen(
                         // Key Features
                         if (product.keyFeatures.isNotEmpty()) {
                             Text(
-                                text = "Key Features :",
+                                text = stringResource(R.string.product_key_features),
                                 fontSize = 15.sp,
                                 fontWeight = FontWeight.SemiBold,
                                 color = BGBlack
@@ -420,7 +421,7 @@ fun ProductDetailsScreen(
                             product.keyFeatures.forEach { feature ->
                                 Row(modifier = Modifier.padding(vertical = 1.dp)) {
                                     Text(
-                                        text = " • $feature",
+                                        text = stringResource(R.string.product_feature_item, feature),
                                         fontSize = 13.sp,
                                         color = TextGray,
                                         lineHeight = 13.sp
@@ -433,7 +434,7 @@ fun ProductDetailsScreen(
 
                         // Sold by
                         Text(
-                            text = "Sold by",
+                            text = stringResource(R.string.product_sold_by),
                             fontSize = 15.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = BGBlack
@@ -447,7 +448,7 @@ fun ProductDetailsScreen(
                             if (product.seller.profilePhoto != null) {
                                 AsyncImage(
                                     model = product.seller.profilePhoto,
-                                    contentDescription = "Seller",
+                                    contentDescription = stringResource(R.string.product_seller_description),
                                     modifier = Modifier
                                         .size(40.dp)
                                         .clip(CircleShape),
@@ -456,7 +457,7 @@ fun ProductDetailsScreen(
                             } else {
                                 Image(
                                     painter = painterResource(R.drawable.profile_icon),
-                                    contentDescription = "Seller",
+                                    contentDescription = stringResource(R.string.product_seller_description),
                                     modifier = Modifier
                                         .size(40.dp)
                                         .clip(CircleShape),
@@ -475,7 +476,7 @@ fun ProductDetailsScreen(
                                     Spacer(modifier = Modifier.width(4.dp))
                                     Icon(
                                         imageVector = Icons.Default.Verified,
-                                        contentDescription = "Verified",
+                                        contentDescription = stringResource(R.string.product_verified_description),
                                         tint = Color(0xFF2196F3),
                                         modifier = Modifier.size(16.dp)
                                     )
@@ -483,7 +484,7 @@ fun ProductDetailsScreen(
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     Icon(
                                         imageVector = Icons.Default.Star,
-                                        contentDescription = "Rating",
+                                        contentDescription = stringResource(R.string.product_rating_description),
                                         tint = Color(0xFFFFC107),
                                         modifier = Modifier.size(14.dp)
                                     )
@@ -513,18 +514,18 @@ fun ProductDetailsScreen(
                             ) {
                                 Icon(
                                     painter = painterResource(R.drawable.ic_view_seller),
-                                    contentDescription = "Store",
+                                    contentDescription = stringResource(R.string.product_store_description),
                                     modifier = Modifier.size(16.dp)
                                 )
                                 Spacer(modifier = Modifier.width(6.dp))
-                                Text("View Seller", fontSize = 12.sp)
+                                Text(stringResource(R.string.product_view_seller), fontSize = 12.sp)
                             }
                         }
 
                         if (product.similarProducts.isNotEmpty()) {
                             Spacer(modifier = Modifier.height(20.dp))
                             Text(
-                                text = "Similar Products",
+                                text = stringResource(R.string.product_similar_products),
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = BGBlack
@@ -562,7 +563,7 @@ fun ProductDetailsScreen(
                         if (product.moreProducts.isNotEmpty()) {
                             Spacer(modifier = Modifier.height(20.dp))
                             Text(
-                                text = "More Products for you",
+                                text = stringResource(R.string.product_more_for_you),
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = BGBlack
@@ -622,7 +623,7 @@ private fun ProductReviewsSection(
     onDislikeClick: (String) -> Unit,
 ) {
     Text(
-        text = "Reviews & Ratings :",
+        text = stringResource(R.string.product_reviews_title),
         fontSize = 16.sp,
         fontWeight = FontWeight.Bold,
         color = BGBlack
@@ -688,7 +689,7 @@ private fun ProductReviewsSection(
 
                                 Icon(
                                     imageVector = Icons.Default.Star,
-                                    contentDescription = "Rating",
+                                    contentDescription = stringResource(R.string.product_rating_description),
                                     tint = BGWhite,
                                     modifier = Modifier.size(28.dp)
                                 )
@@ -703,13 +704,13 @@ private fun ProductReviewsSection(
                             verticalArrangement = Arrangement.Center
                         ) {
                             Text(
-                                text = "$totalRatings Ratings",
+                                text = stringResource(R.string.product_rating_count, totalRatings.toString()),
                                 fontSize = 12.sp,
                                 color = TextGray,
                                 lineHeight = 12.sp
                             )
                             Text(
-                                text = "$totalReviews Reviews",
+                                text = stringResource(R.string.product_review_count, totalReviews.toString()),
                                 fontSize = 12.sp,
                                 color = TextGray,
                                 lineHeight = 13.sp
@@ -737,7 +738,7 @@ private fun ProductReviewsSection(
 
             if (reviews.recentReviews.isEmpty()) {
                 Text(
-                    text = "No reviews yet for this product.",
+                    text = stringResource(R.string.product_no_reviews),
                     fontSize = 13.sp,
                     color = TextGray
                 )
@@ -840,11 +841,11 @@ private fun ProductDetailsBottomBar(
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_buy_now),
-                contentDescription = "Buy Now",
+                contentDescription = stringResource(R.string.product_buy_now),
                 modifier = Modifier.size(20.dp)
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Text("Buy Now", fontSize = 14.sp, fontWeight = FontWeight.Medium)
+            Text(stringResource(R.string.product_buy_now), fontSize = 14.sp, fontWeight = FontWeight.Medium)
         }
     }
 }

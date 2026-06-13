@@ -17,7 +17,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.yash091099.ChiragFarmersApp.R
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import com.yash091099.ChiragFarmersApp.domain.model.Product
@@ -74,13 +76,13 @@ fun ActiveProductsScreen(
         }
         is LoadState.Error -> {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(text = "Error loading products")
+                Text(text = stringResource(R.string.active_products_error))
             }
         }
         else -> {
             if (products.itemCount == 0) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(text = "No active products found")
+                    Text(text = stringResource(R.string.active_products_empty))
                 }
             } else {
                 LazyVerticalGrid(

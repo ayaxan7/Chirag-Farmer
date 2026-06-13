@@ -16,8 +16,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.yash091099.ChiragFarmersApp.R
 
 @Composable
 fun VariantChip(
@@ -57,7 +59,7 @@ fun VariantChip(
 
         // Price
         Text(
-            text = "₹$price",
+            text = stringResource(R.string.product_price_format, price),
             fontSize = 13.sp,
             fontWeight = FontWeight.Bold,
             color = Color.Black
@@ -67,7 +69,7 @@ fun VariantChip(
 
         // Original Price (strikethrough)
         Text(
-            text = "₹$originalPrice",
+            text = stringResource(R.string.product_price_format, originalPrice),
             fontSize = 10.sp,
             color = Color(0xFF999999),
             textDecoration = TextDecoration.LineThrough

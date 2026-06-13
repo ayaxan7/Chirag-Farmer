@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -52,12 +53,16 @@ fun NotificationsScreen(
     modifier: Modifier = Modifier,
     viewModel: NotificationsViewModel = hiltViewModel()
 ) {
+    val allLabel = stringResource(R.string.notif_filter_all)
+    val buyLabel = stringResource(R.string.notif_filter_buy)
+    val sellLabel = stringResource(R.string.notif_filter_sell)
+    val serviceLabel = stringResource(R.string.notif_filter_service)
     val filters = remember {
         listOf(
-            NotificationFilterOption(label = "All", apiValue = ""),
-            NotificationFilterOption(label = "Buy", apiValue = "buy"),
-            NotificationFilterOption(label = "Sell", apiValue = "sell"),
-            NotificationFilterOption(label = "Service", apiValue = "service")
+            NotificationFilterOption(label = allLabel, apiValue = ""),
+            NotificationFilterOption(label = buyLabel, apiValue = "buy"),
+            NotificationFilterOption(label = sellLabel, apiValue = "sell"),
+            NotificationFilterOption(label = serviceLabel, apiValue = "service")
         )
     }
 
@@ -75,7 +80,7 @@ fun NotificationsScreen(
             ChiragTopBar(
                 navController = navController,
                 icon = R.drawable.ic_arrow,
-                title = "Notifications"
+                title = stringResource(R.string.notif_title)
             )
         }
     ) { paddingValues ->
@@ -86,7 +91,7 @@ fun NotificationsScreen(
         ) {
             Image(
                 painter = painterResource(id = R.drawable.notifications_screen_bg),
-                contentDescription = "Background illustration",
+                contentDescription = stringResource(R.string.notif_empty_description),
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .fillMaxSize()
@@ -140,7 +145,7 @@ fun NotificationsScreen(
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                             Button(onClick = { viewModel.retry() }) {
-                                Text(text = "Retry")
+                                Text(text = stringResource(R.string.notif_retry))
                             }
                         }
                     }
@@ -158,26 +163,26 @@ fun NotificationsScreen(
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Text(
-                                    text = "No notifications found",
+                                    text = stringResource(R.string.notif_empty),
                                     color = Color.Black,
                                     fontSize = 14.sp
                                 )
                             }
                         } else {
                             NotificationSection(
-                                title = "Today",
+                                title = stringResource(R.string.notif_today),
                                 notifications = groupedNotifications["Today"].orEmpty(),
                                 navController = navController
                             )
 
                             NotificationSection(
-                                title = "Yesterday",
+                                title = stringResource(R.string.notif_yesterday),
                                 notifications = groupedNotifications["Yesterday"].orEmpty(),
                                 navController = navController
                             )
 
                             NotificationSection(
-                                title = "Earlier",
+                                title = stringResource(R.string.notif_earlier),
                                 notifications = groupedNotifications["Earlier"].orEmpty(),
                                 navController = navController
                             )

@@ -48,6 +48,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -112,7 +113,7 @@ fun RegisterScreen(
     Scaffold(
         topBar = {
         ChiragTopBar(
-            title = "Complete your registration",
+            title = stringResource(R.string.register_title),
             navController = navController,
             icon = R.drawable.ic_back_arrow
         )
@@ -161,7 +162,7 @@ fun RegisterScreen(
                 ) {
 
                     Text(
-                        text = "Profile Photo", fontSize = 14.sp, fontWeight = FontWeight.Medium
+                        text = stringResource(R.string.register_profile_photo), fontSize = 14.sp, fontWeight = FontWeight.Medium
                     )
 
                     Spacer(modifier = Modifier.height(12.dp))
@@ -210,87 +211,87 @@ fun RegisterScreen(
 
                 Spacer(modifier = Modifier.height(28.dp))
 
-                LabelText("Name*")
+                LabelText(stringResource(R.string.register_name_label))
                 Spacer(modifier = Modifier.height(6.dp))
                 ChiragBasicTextField(
                     value = name,
                     onValueChange = { name = it },
-                    placeholder = "Enter Your Full Name"
+                    placeholder = stringResource(R.string.register_name_placeholder)
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                LabelText("Mobile Number*")
+                LabelText(stringResource(R.string.register_mobile_label))
                 Spacer(modifier = Modifier.height(6.dp))
                 ChiragBasicTextField(
                     value = mobileNumber,
                     onValueChange = { mobileNumber = it },
-                    placeholder = "Enter Your Contact Number",
+                    placeholder = stringResource(R.string.register_mobile_placeholder),
                     keyboardType = KeyboardType.Number
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                LabelText("Email ID*")
+                LabelText(stringResource(R.string.register_email_label))
                 Spacer(modifier = Modifier.height(6.dp))
                 ChiragBasicTextField(
                     value = email,
                     onValueChange = { email = it },
-                    placeholder = "Enter Your Email ID",
+                    placeholder = stringResource(R.string.register_email_placeholder),
                     keyboardType = KeyboardType.Email
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                LabelText("Select Gender*")
+                LabelText(stringResource(R.string.register_gender_label))
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                     GenderButton(
-                        text = "Male",
+                        text = stringResource(R.string.register_male),
                         isSelected = selectedGender == "Male",
                         onClick = { selectedGender = "Male" })
                     GenderButton(
-                        text = "Female",
+                        text = stringResource(R.string.register_female),
                         isSelected = selectedGender == "Female",
                         onClick = { selectedGender = "Female" })
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                LabelText("State*")
+                LabelText(stringResource(R.string.register_state_label))
                 Spacer(modifier = Modifier.height(6.dp))
                 ChiragBasicTextField(
                     value = state,
                     onValueChange = { state = it },
-                    placeholder = "Select or enter location"
+                    placeholder = stringResource(R.string.register_state_placeholder)
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                LabelText("City / Town / Village*")
+                LabelText(stringResource(R.string.register_city_label))
                 Spacer(modifier = Modifier.height(6.dp))
                 ChiragBasicTextField(
                     value = village,
                     onValueChange = { village = it },
-                    placeholder = "Select or enter location"
+                    placeholder = stringResource(R.string.register_city_placeholder)
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                LabelText("Region Field")
+                LabelText(stringResource(R.string.register_region_label))
                 Spacer(modifier = Modifier.height(6.dp))
                 ChiragBasicTextField(
                     value = region,
                     onValueChange = { region = it },
-                    placeholder = "Select or enter location"
+                    placeholder = stringResource(R.string.register_region_placeholder)
                 )
 
                 Spacer(modifier = Modifier.weight(1f))
                 Spacer(modifier = Modifier.height(16.dp))
 
                 ChiragButton(
-                    text = "Continue",
+                    text = stringResource(R.string.register_continue),
                     onClick = {
                         viewModel.addBusinessInfo(
                             context = context,

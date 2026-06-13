@@ -21,6 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.yash091099.ChiragFarmersApp.R
@@ -54,7 +55,7 @@ fun HomeTopBar(navController: NavHostController) {
                 title = {
                     Image(
                         painter = painterResource(R.drawable.logo_with_title),
-                        contentDescription = "Chirag Logo White",
+                        contentDescription = stringResource(R.string.home_logo_description),
                         colorFilter = ColorFilter.tint(BGWhite),
                         modifier = Modifier
                             .width(140.dp)
@@ -69,7 +70,7 @@ fun HomeTopBar(navController: NavHostController) {
                     ) {
                         Image(
                             painter = painterResource(R.drawable.ic_notifications),
-                            contentDescription = "Notifications",
+                            contentDescription = stringResource(R.string.home_notifications_icon_description),
                             colorFilter = ColorFilter.tint(BGWhite),
                             modifier = Modifier
                                 .width(20.dp)
@@ -83,7 +84,7 @@ fun HomeTopBar(navController: NavHostController) {
                         Spacer(modifier = Modifier.width(12.dp))
                         Image(
                             painter = painterResource(R.drawable.ic_cart),
-                            contentDescription = "Cart",
+                            contentDescription = stringResource(R.string.home_cart_icon_description),
                             colorFilter = ColorFilter.tint(BGWhite),
                             modifier = Modifier
                                 .width(20.dp)
@@ -97,7 +98,7 @@ fun HomeTopBar(navController: NavHostController) {
                         Spacer(modifier = Modifier.width(12.dp))
                         Image(
                             painter = painterResource(R.drawable.profile_icon),
-                            contentDescription = "Profile",
+                            contentDescription = stringResource(R.string.home_profile_icon_description),
                             modifier = Modifier
                                 .width(32.dp)
                                 .height(32.dp)

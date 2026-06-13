@@ -58,6 +58,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -110,9 +111,10 @@ fun AddressMapScreen(
     }
 
     // Show error snackbar
+    val unknownAddrError = stringResource(R.string.snackbar_address_unknown_error)
     if (!errorMessage.isNullOrEmpty()) {
         scope.launch {
-            snackbarHostState.showSnackbar(errorMessage ?: "Unknown error")
+            snackbarHostState.showSnackbar(errorMessage ?: unknownAddrError)
             viewModel.clearError()
         }
     }
@@ -149,7 +151,7 @@ fun AddressMapScreen(
     Scaffold(
         topBar = {
             ChiragTopBar(
-                navController = navController, title = "Address", icon = R.drawable.ic_arrow
+                navController = navController, title = stringResource(R.string.address_map_title), icon = R.drawable.ic_arrow
             )
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -213,13 +215,11 @@ fun AddressMapScreen(
                     Spacer(modifier = Modifier.height(20.dp))
 
                     ChiragButton(
-                        text = "Add more address details", onClick = {
+                        text = stringResource(R.string.address_map_details_title), onClick = {
                             showAddressDetailsSheet = true
                             onAddMoreDetailsClick()
                         }, modifier = Modifier.fillMaxWidth()
                     )
-
-                    Spacer(modifier = Modifier.height(12.dp))
                 }
             } else {
                 // Show only the "Add more address details" button when no default location
@@ -230,7 +230,7 @@ fun AddressMapScreen(
                         .padding(16.dp)
                 ) {
                     ChiragButton(
-                        text = "Add more address details", onClick = {
+                        text = stringResource(R.string.address_map_details_title), onClick = {
                             showAddressDetailsSheet = true
                             onAddMoreDetailsClick()
                         }, modifier = Modifier.fillMaxWidth()
@@ -263,13 +263,13 @@ fun SearchBarOverlay(modifier: Modifier = Modifier,onClick: () -> Unit={}) {
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_search),
-                contentDescription = "Search",
+                contentDescription = stringResource(R.string.address_map_search_description),
                 tint = Color.Black,
                 modifier = Modifier.size(20.dp)
             )
             Spacer(modifier = Modifier.width(12.dp))
             Text(
-                text = "Search For area, street name.....", color = Color.Gray, fontSize = 14.sp
+                text = stringResource(R.string.address_map_search_placeholder), color = Color.Gray, fontSize = 14.sp
             )
         }
     }
@@ -342,7 +342,7 @@ fun AddressDetailCard(
                     text = type, fontWeight = FontWeight.Bold, fontSize = 16.sp, color = Color.Black
                 )
                 Text(
-                    text = "CHANGE",
+                    text = stringResource(R.string.address_map_change),
                     fontWeight = FontWeight.Bold,
                     fontSize = 12.sp,
                     color = Color.Black,
@@ -386,7 +386,7 @@ fun LocationSelectionBottomSheet(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Select a location",
+                    text = stringResource(R.string.address_map_select_location),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
@@ -394,7 +394,7 @@ fun LocationSelectionBottomSheet(
                 IconButton(onClick = onDismissRequest) {
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = "Close",
+                        contentDescription = stringResource(R.string.address_map_close_description),
                         tint = Color.Black
                     )
                 }
@@ -413,7 +413,7 @@ fun LocationSelectionBottomSheet(
                     com.yash091099.ChiragFarmersApp.ui.presentation.home.components.bookservicecard.components.LocationInputField(
                         value = locationQuery,
                         onValueChange = onLocationQueryChange,
-                        placeholder = "Search For area, street name.....",
+                        placeholder = stringResource(R.string.address_map_search_placeholder),
                         suggestions = locationSuggestions,
                         onSuggestionClick = {
                             onSuggestionClick(it)
@@ -520,7 +520,7 @@ fun AddressDetailsBottomSheet(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Enter address details",
+                        text = stringResource(R.string.address_map_enter_details),
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black
@@ -528,7 +528,7 @@ fun AddressDetailsBottomSheet(
                     IconButton(onClick = onDismissRequest) {
                         Icon(
                             imageVector = Icons.Default.Close,
-                            contentDescription = "Close",
+                            contentDescription = stringResource(R.string.address_map_close_description),
                             tint = Color.Black
                         )
                     }
@@ -538,20 +538,20 @@ fun AddressDetailsBottomSheet(
 
                 // Receiver's Name
                 AddressInputField(
-                    label = "Receiver's name",
+                    label = stringResource(R.string.address_map_receiver_name_label),
                     value = receiverName,
                     onValueChange = { viewModel.receiverName.value = it },
-                    placeholder = "Enter receiver's name"
+                    placeholder = stringResource(R.string.address_map_receiver_name_placeholder)
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Receiver's Contact
                 AddressInputField(
-                    label = "Receiver's contact",
+                    label = stringResource(R.string.address_map_receiver_contact_label),
                     value = receiverContact,
                     onValueChange = { viewModel.receiverContact.value = it },
-                    placeholder = "Enter receiver's contact",
+                    placeholder = stringResource(R.string.address_map_receiver_contact_placeholder),
                     keyboardType= KeyboardType.Phone
                 )
 
@@ -596,7 +596,7 @@ fun AddressDetailsBottomSheet(
                             lineHeight = 18.sp
                         )
                         Text(
-                            text = "change",
+                            text = stringResource(R.string.address_map_change_label),
                             color = Color.Black,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Medium,
@@ -605,7 +605,7 @@ fun AddressDetailsBottomSheet(
                 }
 
                 Text(
-                    text = "Update based on your exact map Pin",
+                    text = stringResource(R.string.address_map_update_hint),
                     fontSize = 11.sp,
                     color = Color.Gray,
                     modifier = Modifier.padding(top = 8.dp)
@@ -615,18 +615,18 @@ fun AddressDetailsBottomSheet(
 
                 // Additional Form Fields
                 AddressInputField(
-                    label = "Floor",
+                    label = stringResource(R.string.address_map_floor_label),
                     value = floor,
-                    placeholder = "Floor Number",
+                    placeholder = stringResource(R.string.address_map_floor_placeholder),
                     onValueChange = { viewModel.floor.value = it }
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 AddressInputField(
-                    label = "Landmark",
+                    label = stringResource(R.string.address_map_landmark_label),
                     value = landmark,
-                    placeholder = "Enter Landmark",
+                    placeholder = stringResource(R.string.address_map_landmark_placeholder),
                     onValueChange = { viewModel.landmark.value = it }
                 )
 

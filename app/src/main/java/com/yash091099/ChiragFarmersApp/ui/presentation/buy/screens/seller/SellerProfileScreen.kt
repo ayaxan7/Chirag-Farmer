@@ -32,6 +32,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -69,7 +70,7 @@ fun SellerProfileScreen(
         topBar = {
             ChiragTopBar(
                 navController = navController,
-                title = "Seller Profile",
+                title = stringResource(R.string.seller_title),
                 icon = R.drawable.ic_arrow
             )
         }, containerColor = BGWhite
@@ -93,7 +94,7 @@ fun SellerProfileScreen(
                         Text(text = state.message, color = Color.Red)
                         Spacer(modifier = Modifier.height(16.dp))
                         Button(onClick = { viewModel.retry() }) {
-                            Text("Retry")
+                            Text(stringResource(R.string.seller_retry))
                         }
                     }
                 }
@@ -118,7 +119,7 @@ fun SellerProfileScreen(
                                 // Profile Image
                                 AsyncImage(
                                     model = sellerData.seller.profileImageUrl ?: sellerImage ?: R.drawable.sell_category_spices,
-                                    contentDescription = "Seller Image",
+                                    contentDescription = stringResource(R.string.seller_image_description),
                                     modifier = Modifier
                                         .size(100.dp)
                                         .clip(CircleShape)
@@ -138,7 +139,7 @@ fun SellerProfileScreen(
                                     Spacer(modifier = Modifier.width(4.dp))
                                     Icon(
                                         imageVector = Icons.Default.Verified,
-                                        contentDescription = "Verified",
+                                        contentDescription = stringResource(R.string.seller_verified_description),
                                         tint = Color(0xFF2196F3),
                                         modifier = Modifier.size(18.dp)
                                     )
@@ -155,12 +156,12 @@ fun SellerProfileScreen(
                         ) {
                             StatItem(
                                 value = "${String.format(Locale.getDefault(), "%.1f", sellerData.seller.rating)} ⭐",
-                                label = "${sellerData.seller.totalRatings} ratings"
+                                label = stringResource(R.string.seller_ratings_label, sellerData.seller.totalRatings.toString())
                             )
-                            StatItem(label = "Products", value = sellerData.stats.totalListings.toString())
-                            StatItem(label = "Sold Out", value = sellerData.stats.soldOutProducts.toString())
+                            StatItem(label = stringResource(R.string.seller_products_label), value = sellerData.stats.totalListings.toString())
+                            StatItem(label = stringResource(R.string.seller_sold_out_label), value = sellerData.stats.soldOutProducts.toString())
                             StatItem(
-                                label = "Share",
+                                label = stringResource(R.string.seller_share_label),
                                 icon = R.drawable.ic_share,
                                 onClick = {
                                     val shareLink = ShareUtils.generateShareLink(
@@ -178,7 +179,7 @@ fun SellerProfileScreen(
 
                         // Products Section
                         Text(
-                            text = "All Products",
+                            text = stringResource(R.string.seller_all_products),
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
@@ -186,7 +187,7 @@ fun SellerProfileScreen(
 
                         if (sellerData.products.isEmpty()) {
                             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                                Text(text = "No products found", color = TextGray)
+                                Text(text = stringResource(R.string.seller_no_products), color = TextGray)
                             }
                         } else {
                             LazyVerticalGrid(
@@ -231,7 +232,7 @@ fun StatItem(label: String, value: String? = null, icon: Int? = null, onClick: (
         if (icon != null) {
             Icon(
                 painter = painterResource(id = icon),
-                contentDescription = "Share",
+                contentDescription = stringResource(R.string.seller_share_description),
                 tint = Color.Unspecified
             )
         } else if (value != null) {

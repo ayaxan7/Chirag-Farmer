@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.yash091099.ChiragFarmersApp.R
@@ -17,7 +18,7 @@ fun MyOrders(navController: NavHostController){
         topBar = {
             ChiragTopBar(
                 navController = navController,
-                title = "My Orders",
+                title = stringResource(R.string.my_orders_title),
                 icon = R.drawable.ic_arrow
             )
         }

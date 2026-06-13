@@ -53,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import androidx.compose.ui.res.stringResource
 import coil.compose.AsyncImage
 import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.presentation.orders.DropReviewState
@@ -91,7 +92,7 @@ fun DropReviewScreen(
     Scaffold(
         topBar = {
             ChiragTopBar(
-                navController = navController, title = "Drop Review", icon = R.drawable.ic_arrow
+                navController = navController, title = stringResource(R.string.review_title), icon = R.drawable.ic_arrow
             )
         }, containerColor = BGWhite
     ) { paddingValues ->
@@ -117,7 +118,7 @@ fun DropReviewScreen(
                     Spacer(modifier = Modifier.height(24.dp))
 
                     Text(
-                        text = "Order ID: $orderId",
+                        text = stringResource(R.string.review_order_id, orderId),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Medium,
                         color = TextGray,
@@ -130,7 +131,7 @@ fun DropReviewScreen(
 
                 item {
                     Text(
-                        text = "Your Over All Rating",
+                        text = stringResource(R.string.review_overall_rating),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium,
                         color = Color.Black,
@@ -146,7 +147,7 @@ fun DropReviewScreen(
                         for (i in 1..5) {
                             Icon(
                                 imageVector = if (i <= rating) Icons.Filled.Star else Icons.Outlined.Star,
-                                contentDescription = "Star $i",
+                                contentDescription = stringResource(R.string.review_star_description, i),
                                 tint = if (i <= rating) Color(0xFFFFC107) else TextGray,
                                 modifier = Modifier
                                     .size(40.dp)
@@ -160,7 +161,7 @@ fun DropReviewScreen(
 
                 item {
                     Text(
-                        text = "Write Your Review",
+                        text = stringResource(R.string.review_write_label),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium,
                         color = Color.Black,
@@ -189,7 +190,7 @@ fun DropReviewScreen(
                             if (it.length <= maxChar) reviewText = it
                         }, placeholder = {
                             Text(
-                                "Drop Your Review Here",
+                                stringResource(R.string.review_placeholder),
                                 color = Color.DarkGray,
                                 fontSize = 12.sp
                             )
@@ -213,7 +214,7 @@ fun DropReviewScreen(
                     }
 
                     Text(
-                        text = "${maxChar - reviewText.length} characters Remaining",
+                        text = stringResource(R.string.review_characters_remaining, maxChar - reviewText.length),
                         fontSize = 10.sp,
                         color = Color.Black,
                         fontWeight = FontWeight.Medium,
@@ -245,7 +246,7 @@ fun DropReviewScreen(
                         contentColor = Color.Black
                     )
                 ) {
-                    Text("Cancel", fontSize = 14.sp, fontWeight = FontWeight.Medium)
+                    Text(stringResource(R.string.review_cancel), fontSize = 14.sp, fontWeight = FontWeight.Medium)
                 }
 
                 Button(
@@ -274,7 +275,7 @@ fun DropReviewScreen(
                         )
                     } else {
                         Text(
-                            "Yes, Submit",
+                            stringResource(R.string.review_yes_submit),
                             color = Color.White,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Medium

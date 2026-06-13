@@ -30,6 +30,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.W400
@@ -89,7 +90,7 @@ fun CommonProductCard(
                         error = {
                             Image(
                                 painter = painterResource(R.drawable.sell_category_other),
-                                contentDescription = "Error Image",
+                                contentDescription = stringResource(R.string.common_error_image_description),
                                 modifier = Modifier.fillMaxSize(),
                                 contentScale = ContentScale.Crop
                             )
@@ -189,7 +190,7 @@ fun CommonProductCard(
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_rating_star),
-                                contentDescription = "Rating",
+                                contentDescription = stringResource(R.string.common_rating_description),
                                 tint = Color(0xffF7E62D),
                                 modifier = Modifier.size(12.dp)
                             )

@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -96,7 +97,7 @@ fun CartItemCard(
                     error = {
                         Image(
                             painter = painterResource(R.drawable.sell_category_other),
-                            contentDescription = "Error Image",
+                            contentDescription = stringResource(R.string.cart_item_error_image_description),
                             modifier = Modifier.fillMaxSize(),
                             contentScale = ContentScale.Crop
                         )
@@ -172,7 +173,7 @@ fun CartItemCard(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Remove,
-                        contentDescription = "Decrease",
+                        contentDescription = stringResource(R.string.cart_item_decrease_description),
                         tint = BGBlack,
                         modifier = Modifier.size(16.dp)
                     )
@@ -195,7 +196,7 @@ fun CartItemCard(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add,
-                        contentDescription = "Increase",
+                        contentDescription = stringResource(R.string.cart_item_increase_description),
                         tint = BGWhite,
                         modifier = Modifier.size(16.dp)
                     )

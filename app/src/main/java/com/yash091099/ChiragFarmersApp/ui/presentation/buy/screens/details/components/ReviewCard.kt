@@ -23,10 +23,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
 
 @Composable
@@ -101,7 +103,7 @@ fun ReviewCard(
                     repeat(5) { index ->
                         Icon(
                             imageVector = Icons.Default.Star,
-                            contentDescription = "Rating",
+                            contentDescription = stringResource(R.string.review_rating_description),
                             tint = if (index < rating.toInt())
                                 Color(0xFFFFC107)
                             else
@@ -149,7 +151,7 @@ fun ReviewCard(
             ) {
                 Icon(
                     imageVector = Icons.Outlined.ThumbUp,
-                    contentDescription = "Like",
+                    contentDescription = stringResource(R.string.review_like_description),
                     tint = Color(0xFF666666),
                     modifier = Modifier.size(16.dp)
                 )
@@ -166,7 +168,7 @@ fun ReviewCard(
             ) {
                 Icon(
                     imageVector = Icons.Outlined.ThumbDown,
-                    contentDescription = "Unlike",
+                    contentDescription = stringResource(R.string.review_unlike_description),
                     tint = Color(0xFF666666),
                     modifier = Modifier.size(16.dp)
                 )

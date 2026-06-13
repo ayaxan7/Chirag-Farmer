@@ -47,6 +47,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -216,7 +217,7 @@ fun SellProducesScreen(
 
                 // Section Title
                 Text(
-                    text = "Produce Details",
+                    text = stringResource(R.string.sell_produce_details),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
@@ -225,30 +226,30 @@ fun SellProducesScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Product Category
-                FieldLabel(text = "Produce Category")
+                FieldLabel(text = stringResource(R.string.sell_produce_category_label))
                 Spacer(modifier = Modifier.height(6.dp))
                 ChiragBasicTextField(
                     value = productCategory,
                     onValueChange = { productCategory = it },
-                    placeholder = "Wheat, Rice, Maize, Barley, Millets Etc.......",
+                    placeholder = stringResource(R.string.sell_produce_category_placeholder),
                     readOnly = !isCategoryEditable
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Product Title
-                FieldLabel(text = "Produce Title")
+                FieldLabel(text = stringResource(R.string.sell_produce_title_label))
                 Spacer(modifier = Modifier.height(6.dp))
                 ChiragBasicTextField(
                     value = productTitle,
                     onValueChange = { productTitle = it },
-                    placeholder = "Enter Produce Tittle"
+                    placeholder = stringResource(R.string.sell_produce_title_placeholder)
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Images Gallery
-                FieldLabel(text = "Images (Max 3)")
+                FieldLabel(text = stringResource(R.string.sell_images_label))
                 Spacer(modifier = Modifier.height(10.dp))
 
                 // Display images horizontally with remove buttons
@@ -292,7 +293,7 @@ fun SellProducesScreen(
 
 //                Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "${existingImageUrls.size + selectedImageUris.size} / 3 images",
+                    text = stringResource(R.string.sell_images_count, existingImageUrls.size + selectedImageUris.size),
                     fontSize = 12.sp,
                     color = Color.Gray
                 )
@@ -304,7 +305,7 @@ fun SellProducesScreen(
 
                 val units = listOf("KG", "Unit", "Litre")
 
-                FieldLabel(text = "Available Stock*")
+                FieldLabel(text = stringResource(R.string.sell_stock_label))
 
                 Spacer(modifier = Modifier.height(6.dp))
 
@@ -317,7 +318,7 @@ fun SellProducesScreen(
                     ChiragBasicTextField(
                         value = availableStock,
                         onValueChange = { availableStock = it },
-                        placeholder = "Enter quantity",
+                        placeholder = stringResource(R.string.sell_stock_placeholder),
                         keyboardType = KeyboardType.Number,
                         modifier = Modifier.weight(1f)
                     )
@@ -349,12 +350,12 @@ fun SellProducesScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Location
-                FieldLabel(text = "Location")
+                FieldLabel(text = stringResource(R.string.sell_location_label))
                 Spacer(modifier = Modifier.height(6.dp))
                 LocationInputField(
                     value = location,
                     onValueChange = { viewModel.onLocationQueryChange(it) },
-                    placeholder = "Pratapgarh, Uttar pradesh",
+                    placeholder = stringResource(R.string.sell_location_placeholder),
                     suggestions = locationSuggestions,
                     onSuggestionClick = { viewModel.onLocationSelected(it) })
 
@@ -362,42 +363,37 @@ fun SellProducesScreen(
 
                 // Pricing
                 FieldLabel(
-                    text = "Pricing / ${
-                    selectedUnit.replaceFirstChar {
-                        if (it.isLowerCase()) it.titlecase(
-                            Locale.getDefault()
-                        ) else it.toString()
-                    }
-                }")
+                    text = stringResource(R.string.sell_pricing_label)
+                )
                 Spacer(modifier = Modifier.height(6.dp))
                 ChiragBasicTextField(
                     value = pricing,
                     onValueChange = { pricing = it },
-                    placeholder = "Enter Price",
+                    placeholder = stringResource(R.string.sell_price_placeholder),
                     keyboardType = KeyboardType.Number
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
-                FieldLabel(text = "Discount %")
+                FieldLabel(text = stringResource(R.string.sell_discount_label))
                 Spacer(modifier = Modifier.height(6.dp))
                 ChiragBasicTextField(
                     value = discountPercent,
                     onValueChange = { discountPercent = it },
-                    placeholder = "Enter Discount Percentage",
+                    placeholder = stringResource(R.string.sell_discount_placeholder),
                     keyboardType = KeyboardType.Number
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 // Product Description
-                FieldLabel(text = "Produce Description")
+                FieldLabel(text = stringResource(R.string.sell_description_label))
                 Spacer(modifier = Modifier.height(6.dp))
                 MultiLineTextField(
                     value = productDescription,
                     onValueChange = { productDescription = it },
-                    placeholder = "Add Produce Description",
+                    placeholder = stringResource(R.string.sell_description_placeholder),
                     minHeight = 120
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                FieldLabel(text = "Produce Features (Comma separated)")
+                FieldLabel(text = stringResource(R.string.sell_features_label))
                 Spacer(modifier = Modifier.height(6.dp))
                 MultiLineTextField(
                     value = productFeatures,
@@ -405,11 +401,11 @@ fun SellProducesScreen(
                         productFeatures = it
                         viewModel.onKeyFeaturesChange(it)
                     },
-                    placeholder = "Feature 1, Feature 2, Feature 3",
+                    placeholder = stringResource(R.string.sell_features_placeholder),
                     minHeight = 80
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                FieldLabel(text = "Is delivery fee included in the total price?")
+                FieldLabel(text = stringResource(R.string.sell_delivery_fee_included_label))
 //                Spacer(modifier = Modifier.height(2.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -424,7 +420,7 @@ fun SellProducesScreen(
                             selected = isDeliveryFeeIncludedInTotalPrice,
                             onClick = { isDeliveryFeeIncludedInTotalPrice = true }
                         )
-                        Text(text = "Included", fontSize = 14.sp, color = Color.Black)
+                        Text(text = stringResource(R.string.sell_delivery_included), fontSize = 14.sp, color = Color.Black)
                     }
 
                     Row(
@@ -435,18 +431,18 @@ fun SellProducesScreen(
                             selected = !isDeliveryFeeIncludedInTotalPrice,
                             onClick = { isDeliveryFeeIncludedInTotalPrice = false }
                         )
-                        Text(text = "Not included", fontSize = 14.sp, color = Color.Black)
+                        Text(text = stringResource(R.string.sell_delivery_not_included), fontSize = 14.sp, color = Color.Black)
                     }
                 }
 
                 if (!isDeliveryFeeIncludedInTotalPrice) {
                     Spacer(modifier = Modifier.height(6.dp))
-                    FieldLabel(text = "Delivery Fee / KM")
+                    FieldLabel(text = stringResource(R.string.sell_delivery_fee_label))
                     Spacer(modifier = Modifier.height(6.dp))
                     ChiragBasicTextField(
                         value = deliveryFeePerKm,
                         onValueChange = { deliveryFeePerKm = it },
-                        placeholder = "Enter Delivery Fee",
+                        placeholder = stringResource(R.string.sell_delivery_fee_placeholder),
                         keyboardType = KeyboardType.Number
                     )
                 }
@@ -517,14 +513,14 @@ private fun ImageThumbnailWithRemove(
         if (imageUrl != null) {
             Image(
                 painter = rememberAsyncImagePainter(imageUrl),
-                contentDescription = "Product image",
+                contentDescription = stringResource(R.string.sell_product_image_description),
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
         } else if (imageUri != null) {
             Image(
                 painter = rememberAsyncImagePainter(imageUri),
-                contentDescription = "Selected product image",
+                contentDescription = stringResource(R.string.sell_selected_image_description),
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
@@ -543,7 +539,7 @@ private fun ImageThumbnailWithRemove(
         ) {
             Icon(
                 imageVector = Icons.Filled.Close,
-                contentDescription = "Remove image",
+                contentDescription = stringResource(R.string.sell_remove_image_description),
                 tint = Color.White,
                 modifier = Modifier.size(16.dp)
             )
@@ -563,7 +559,7 @@ private fun AddImageButton(onClick: () -> Unit) {
     ) {
         Icon(
             imageVector = Icons.Filled.Add,
-            contentDescription = "Add image",
+            contentDescription = stringResource(R.string.sell_add_image_description),
             tint = Color.Gray,
             modifier = Modifier.size(40.dp)
         )

@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.compose.ui.res.stringResource
 import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.presentation.home.components.search.RecentSearchItem
 import com.yash091099.ChiragFarmersApp.ui.presentation.home.components.search.SearchBox
@@ -70,7 +71,7 @@ fun SearchScreen(
             ChiragTopBar(
                 navController = navController,
                 icon = R.drawable.ic_arrow,
-                title = "Search"
+                title = stringResource(R.string.search_title)
             )
         },
         containerColor = BGWhite
@@ -88,7 +89,7 @@ fun SearchScreen(
             SearchBox(
                 value = searchQuery,
                 onValueChange = { viewModel.onSearchQueryChange(it) },
-                placeholder = "Search For Products/Services/Rentals",
+                placeholder = stringResource(R.string.search_placeholder),
                 focusRequester = focusRequester
             )
 

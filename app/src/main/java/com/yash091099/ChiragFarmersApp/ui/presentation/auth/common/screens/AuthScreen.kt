@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -98,7 +99,7 @@ fun AuthScreen(
             // background image
             Image(
                 painter = painterResource(R.drawable.tilted),
-                contentDescription = "Tilted drone",
+                contentDescription = stringResource(R.string.auth_tilted_drone_description),
                 modifier = Modifier
                     .align(Alignment.BottomStart)
                     .size(200.dp)
@@ -123,7 +124,7 @@ fun AuthScreen(
             ) {
                 Image(
                     painter = painterResource(R.drawable.logo_with_title),
-                    contentDescription = "App Logo",
+                    contentDescription = stringResource(R.string.auth_app_logo_description),
                     modifier = Modifier
                         .width(280.dp)
                         .height(80.dp)
@@ -155,7 +156,7 @@ fun AuthScreen(
                 ChiragAuthTextField(
                     value = mobileNumber,
                     onValueChange = { mobileNumber = it },
-                    placeholder = "Your Mobile Number",
+                    placeholder = stringResource(R.string.auth_mobile_placeholder),
                     leadingIcon = R.drawable.ic_phone_logo,
                     keyboardType = KeyboardType.Phone,
                     maxChars = 10
@@ -194,7 +195,7 @@ fun AuthScreen(
 
                 // Continue button
                 ChiragButton(
-                    text = "Continue",
+                    text = stringResource(R.string.auth_continue),
                     onClick = {
                         viewModel.sendOTP(mobileNumber, isSignUpClicked)
                     },

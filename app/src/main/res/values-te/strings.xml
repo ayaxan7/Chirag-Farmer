@@ -1,0 +1,608 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App -->
+    <string name="app_name">చిరాగ్ ఫార్మర్</string>
+
+    <!-- Bottom Navigation -->
+    <string name="nav_home">హోమ్</string>
+    <string name="nav_assist">సహాయం</string>
+    <string name="nav_bookings">బుకింగ్‌లు</string>
+    <string name="nav_buy">కొనుగోలు</string>
+    <string name="nav_sell">అమ్మకం</string>
+
+    <!-- Splash -->
+    <string name="splash_logo_description">టెక్స్ట్ తో లోగో</string>
+
+    <!-- Location Permission Dialogs -->
+    <string name="location_permission_title">లొకేషన్ అనుమతి అవసరం</string>
+    <string name="location_permission_message">ఈ యాప్ మీకు లొకేషన్ ఆధారిత సేవలు అందించడానికి మీ లొకేషన్ యాక్సెస్ అవసరం. దయచేసి కొనసాగడానికి లొకేషన్ అనుమతిని మంజూరు చేయండి.</string>
+    <string name="location_permission_grant">అనుమతి మంజూరు చేయండి</string>
+    <string name="location_permission_deny">తిరస్కరించు</string>
+    <string name="location_mandatory_title">లొకేషన్ అనుమతి తప్పనిసరి</string>
+    <string name="location_mandatory_message">ఈ యాప్ సరిగ్గా పనిచేయడానికి లొకేషన్ అనుమతి తప్పనిసరి. దయచేసి యాప్ ఉపయోగించడం కొనసాగించడానికి అనుమతి మంజూరు చేయండి.</string>
+    <string name="location_mandatory_try_again">మళ్ళీ ప్రయత్నించండి</string>
+    <string name="location_mandatory_cancel">రద్దు చేయండి</string>
+    <string name="location_service_disabled_title">లొకేషన్ సేవ నిలిపివేయబడింది</string>
+    <string name="location_service_disabled_message">మీ పరికరంలో లొకేషన్ సేవలు నిలిపివేయబడ్డాయి. దయచేసి కొనసాగడానికి లొకేషన్ సేవలను ప్రారంభించండి. మీరు లొకేషన్ సెట్టింగ్‌లకు తీసుకెళ్ళబడతారు.</string>
+    <string name="location_go_to_settings">సెట్టింగ్‌లకు వెళ్ళండి</string>
+    <string name="location_cancel">రద్దు చేయండి</string>
+
+    <!-- Auth - Phone Entry -->
+    <string name="auth_tilted_drone_description">వంపుతిరిగిన డ్రోన్</string>
+    <string name="auth_app_logo_description">యాప్ లోగో</string>
+    <string name="auth_mobile_placeholder">మీ మొబైల్ నంబర్</string>
+    <string name="auth_continue">కొనసాగించు</string>
+
+    <!-- Auth - OTP Verification -->
+    <string name="otp_enter_code">ధృవీకరణ కోడ్ ను నమోదు చేయండి</string>
+    <string name="otp_description">మీ మొబైల్ నంబర్‌కు పంపిన 4-అంకెల OTP ను నమోదు చేయండి.</string>
+    <string name="otp_continue">కొనసాగించు</string>
+
+    <!-- Auth - Registration -->
+    <string name="register_title">మీ రిజిస్ట్రేషన్ పూర్తి చేయండి</string>
+    <string name="register_profile_photo">ప్రొఫైల్ ఫోటో</string>
+    <string name="register_name_label">పేరు*</string>
+    <string name="register_name_placeholder">మీ పూర్తి పేరు నమోదు చేయండి</string>
+    <string name="register_mobile_label">మొబైల్ నంబర్*</string>
+    <string name="register_mobile_placeholder">మీ కాంటాక్ట్ నంబర్ నమోదు చేయండి</string>
+    <string name="register_email_label">ఇమెయిల్ ID*</string>
+    <string name="register_email_placeholder">మీ ఇమెయిల్ ID నమోదు చేయండి</string>
+    <string name="register_gender_label">లింగాన్ని ఎంచుకోండి*</string>
+    <string name="register_male">పురుషుడు</string>
+    <string name="register_female">స్త్రీ</string>
+    <string name="register_state_label">రాష్ట్రం*</string>
+    <string name="register_state_placeholder">లొకేషన్ ఎంచుకోండి లేదా నమోదు చేయండి</string>
+    <string name="register_city_label">నగరం / పట్టణం / గ్రామం*</string>
+    <string name="register_city_placeholder">లొకేషన్ ఎంచుకోండి లేదా నమోదు చేయండి</string>
+    <string name="register_region_label">ప్రాంత ఫీల్డ్</string>
+    <string name="register_region_placeholder">లొకేషన్ ఎంచుకోండి లేదా నమోదు చేయండి</string>
+    <string name="register_continue">కొనసాగించు</string>
+
+    <!-- Home -->
+    <string name="home_agriculture_drones">వ్యవసాయ\nడ్రోన్లు</string>
+    <string name="home_seeds">విత్తనాలు</string>
+    <string name="home_sprayer">స్ప్రేయర్</string>
+    <string name="home_tractors">ట్రాక్టర్లు</string>
+    <string name="home_harvesting_machines">హార్వెస్టింగ్ మెషీన్లు</string>
+    <string name="home_profile_incomplete_image_description">ప్రొఫైల్ అసంపూర్ణ చిత్రం</string>
+    <string name="home_buy_products_category">మీ పొలానికి ఉత్పత్తులు కొనుగోలు చేయండి</string>
+    <string name="home_view_all">అన్నీ చూడండి</string>
+    <string name="home_agriculture_drone_label">వ్యవసాయ డ్రోన్</string>
+    <string name="home_seeds_label">విత్తనాలు</string>
+    <string name="home_sprayers_label">స్ప్రేయర్లు</string>
+    <string name="home_tractors_label">ట్రాక్టర్లు</string>
+    <string name="home_harvesting_label">హార్వెస్టింగ్ మెషీన్లు</string>
+    <string name="home_smart_farming_category">స్మార్ట్ ఫార్మింగ్</string>
+    <string name="home_smart_farming_label">స్మార్ట్ ఫార్మింగ్</string>
+    <string name="home_seeds_category">విత్తనాలు</string>
+    <string name="home_popular_products_category">ప్రముఖ ఉత్పత్తులు</string>
+    <string name="home_popular_products_label">ప్రముఖ ఉత్పత్తులు</string>
+    <string name="home_network_error">నెట్‌వర్క్ లోపం</string>
+    <string name="home_retry">మళ్ళీ ప్రయత్నించండి</string>
+    <string name="home_usps_category">మా ప్రత్యేకతలు</string>
+    <string name="home_usps_description">ప్రత్యేకతలు</string>
+    <string name="home_footer_description">ఫుటర్</string>
+    <string name="home_clients_category">మా క్లయింట్లు</string>
+    <string name="home_clients_description">క్లయింట్ల జాబితా</string>
+
+    <!-- Home - Top Bar -->
+    <string name="home_logo_description">చిరాగ్ లోగో వైట్</string>
+    <string name="home_notifications_icon_description">నోటిఫికేషన్లు</string>
+    <string name="home_cart_icon_description">కార్ట్</string>
+    <string name="home_profile_icon_description">ప్రొఫైల్</string>
+
+    <!-- Home - Search Bar -->
+    <string name="search_icon_description">శోధన</string>
+    <string name="search_hint">శోధించండి </string>
+    <string name="search_camera_description">కెమెరా శోధన</string>
+
+    <!-- Search Screen -->
+    <string name="search_title">శోధన</string>
+    <string name="search_placeholder">ఉత్పత్తులు/సేవలు/అద్దెల కోసం శోధించండి</string>
+
+    <!-- Notifications -->
+    <string name="notif_title">నోటిఫికేషన్లు</string>
+    <string name="notif_filter_all">అన్నీ</string>
+    <string name="notif_filter_buy">కొనుగోలు</string>
+    <string name="notif_filter_sell">అమ్మకం</string>
+    <string name="notif_filter_service">సేవ</string>
+    <string name="notif_empty_description">బ్యాక్‌గ్రౌండ్ ఇలస్ట్రేషన్</string>
+    <string name="notif_retry">మళ్ళీ ప్రయత్నించండి</string>
+    <string name="notif_empty">నోటిఫికేషన్లు ఏవీ కనుగొనబడలేదు</string>
+    <string name="notif_today">ఈ రోజు</string>
+    <string name="notif_yesterday">నిన్న</string>
+    <string name="notif_earlier">ఇంతకు ముందు</string>
+    <string name="notif_avatar_description">నోటిఫికేషన్ అవతార్</string>
+
+    <!-- Buy Screen -->
+    <string name="buy_title">కొనుగోలు</string>
+    <string name="buy_categories">వర్గాలు</string>
+    <string name="buy_smart_farming">స్మార్ట్ ఫార్మింగ్</string>
+    <string name="buy_direct_from_farmers">రైతుల నుండి నేరుగా</string>
+    <string name="buy_seeds">విత్తనాలు</string>
+    <string name="buy_popular_products">ప్రముఖ ఉత్పత్తులు</string>
+
+    <!-- Categories Screens -->
+    <string name="categories_banner_description">బ్యానర్</string>
+    <string name="categories_title">వర్గాలు</string>
+    <string name="categories_loading">ఉత్పత్తులు లోడ్ అవుతున్నాయి…</string>
+    <string name="categories_no_products">ఉత్పత్తులు ఏవీ కనుగొనబడలేదు</string>
+    <string name="categories_loading_more">మరిన్ని లోడ్ అవుతున్నాయి…</string>
+
+    <!-- Product Details -->
+    <string name="product_added_to_cart">ఉత్పత్తి కార్ట్‌కు జోడించబడింది!</string>
+    <string name="product_error_loading">ఉత్పత్తిని లోడ్ చేయడంలో లోపం</string>
+    <string name="product_retry">మళ్ళీ ప్రయత్నించండి</string>
+    <string name="product_details_tab">వివరాలు</string>
+    <string name="product_back_description">వెనక్కి</string>
+    <string name="product_share_description">షేర్</string>
+    <string name="product_cart_description">కార్ట్</string>
+    <string name="product_image_description">ఉత్పత్తి</string>
+    <string name="product_thumbnail_description">థంబ్‌నెయిల్ %d</string>
+    <string name="product_rating_description">రేటింగ్</string>
+    <string name="product_price_format">₹%s</string>
+    <string name="product_offer_format">%s%% ఆఫ్</string>
+    <string name="product_description_title">ఉత్పత్తి వివరణ</string>
+    <string name="product_key_features">ముఖ్య లక్షణాలు :</string>
+    <string name="product_feature_item"> • %s</string>
+    <string name="product_sold_by">విక్రేత</string>
+    <string name="product_seller_description">విక్రేత</string>
+    <string name="product_verified_description">ధృవీకరించబడింది</string>
+    <string name="product_store_description">స్టోర్</string>
+    <string name="product_view_seller">విక్రేతను చూడండి</string>
+    <string name="product_similar_products">ఇలాంటి ఉత్పత్తులు</string>
+    <string name="product_more_for_you">మీ కోసం మరిన్ని ఉత్పత్తులు</string>
+    <string name="product_reviews_title">సమీక్షలు &amp; రేటింగ్‌లు :</string>
+    <string name="product_rating_count">%s రేటింగ్‌లు</string>
+    <string name="product_review_count">%s సమీక్షలు</string>
+    <string name="product_no_reviews">ఈ ఉత్పత్తికి ఇంకా సమీక్షలు లేవు.</string>
+    <string name="product_buy_now">ఇప్పుడే కొనండి</string>
+
+    <!-- Seller Profile -->
+    <string name="seller_title">విక్రేత ప్రొఫైల్</string>
+    <string name="seller_retry">మళ్ళీ ప్రయత్నించండి</string>
+    <string name="seller_image_description">విక్రేత చిత్రం</string>
+    <string name="seller_verified_description">ధృవీకరించబడింది</string>
+    <string name="seller_ratings_label">%s రేటింగ్‌లు</string>
+    <string name="seller_products_label">ఉత్పత్తులు</string>
+    <string name="seller_sold_out_label">అమ్ముడుపోయాయి</string>
+    <string name="seller_share_label">షేర్</string>
+    <string name="seller_all_products">అన్ని ఉత్పత్తులు</string>
+    <string name="seller_no_products">ఉత్పత్తులు ఏవీ కనుగొనబడలేదు</string>
+    <string name="seller_share_description">షేర్</string>
+
+    <!-- Cart -->
+    <string name="cart_error_loading">కార్ట్ లోడ్ చేయడంలో లోపం</string>
+    <string name="cart_retry">మళ్ళీ ప్రయత్నించండి</string>
+    <string name="cart_empty_title">మీ కార్ట్ ఖాళీగా ఉంది</string>
+    <string name="cart_empty_subtitle">ప్రారంభించడానికి ఐటమ్‌లను జోడించండి</string>
+    <string name="cart_continue_shopping">షాపింగ్ కొనసాగించండి</string>
+    <string name="cart_shipping_address">డెలివరీ చిరునామా</string>
+    <string name="cart_location_description">లొకేషన్</string>
+    <string name="cart_pin_label">పిన్ : </string>
+    <string name="cart_change">మార్చు</string>
+    <string name="cart_listed_products">జాబితా చేసిన ఉత్పత్తులు</string>
+    <string name="cart_subtotal">సబ్-టోటల్</string>
+    <string name="cart_delivery_fee">డెలివరీ ఫీజు</string>
+    <string name="cart_discount">డిస్కౌంట్</string>
+    <string name="cart_total_cost">మొత్తం ఖర్చు</string>
+    <string name="cart_proceed_checkout">చెక్‌అవుట్‌కు వెళ్ళండి</string>
+
+    <!-- Cart Item Card -->
+    <string name="cart_item_error_image_description">లోపం చిత్రం</string>
+    <string name="cart_item_decrease_description">తగ్గించు</string>
+    <string name="cart_item_increase_description">పెంచు</string>
+
+    <!-- Address -->
+    <string name="address_title">చిరునామా</string>
+    <string name="address_error_loading">చిరునామాలను లోడ్ చేయడంలో లోపం</string>
+    <string name="address_retry">మళ్ళీ ప్రయత్నించండి</string>
+    <string name="address_continue">కొనసాగించు</string>
+    <string name="address_empty_title">చిరునామాలు ఏవీ కనుగొనబడలేదు</string>
+    <string name="address_empty_subtitle">ప్రారంభించడానికి మీ మొదటి చిరునామాను జోడించండి</string>
+    <string name="address_selected_info">ఎంచుకున్న చిరునామా డెలివరీ కోసం ఉపయోగించబడుతుంది</string>
+    <string name="address_location_description">లొకేషన్</string>
+    <string name="address_pin_label">పిన్ : </string>
+    <string name="address_add_button">చిరునామా జోడించండి</string>
+    <string name="address_updating">నవీకరించబడుతోంది...</string>
+
+    <!-- Address Map -->
+    <string name="address_map_title">చిరునామా</string>
+    <string name="address_map_details_title">మరిన్ని చిరునామా వివరాలను జోడించండి</string>
+    <string name="address_map_search_description">శోధన</string>
+    <string name="address_map_search_placeholder">ప్రాంతం, వీధి పేరు కోసం శోధించండి…..</string>
+    <string name="address_map_change">మార్చు</string>
+    <string name="address_map_select_location">లొకేషన్ ఎంచుకోండి</string>
+    <string name="address_map_close_description">మూసివేయి</string>
+    <string name="address_map_enter_details">చిరునామా వివరాలను నమోదు చేయండి</string>
+    <string name="address_map_receiver_name_label">స్వీకర్త పేరు</string>
+    <string name="address_map_receiver_name_placeholder">స్వీకర్త పేరు నమోదు చేయండి</string>
+    <string name="address_map_receiver_contact_label">స్వీకర్త కాంటాక్ట్</string>
+    <string name="address_map_receiver_contact_placeholder">స్వీకర్త కాంటాక్ట్ నమోదు చేయండి</string>
+    <string name="address_map_change_label">మార్చు</string>
+    <string name="address_map_update_hint">మీ ఖచ్చితమైన మ్యాప్ పిన్ ఆధారంగా అప్‌డేట్ చేయండి</string>
+    <string name="address_map_floor_label">అంతస్తు</string>
+    <string name="address_map_floor_placeholder">అంతస్తు నంబర్</string>
+    <string name="address_map_landmark_label">ల్యాండ్‌మార్క్</string>
+    <string name="address_map_landmark_placeholder">ల్యాండ్‌మార్క్ నమోదు చేయండి</string>
+
+    <!-- Payment -->
+    <string name="payment_title">చెల్లింపు</string>
+    <string name="payment_credit_debit_cards">క్రెడిట్ &amp; డెబిట్ కార్డులు</string>
+    <string name="payment_add_card">కార్డ్ జోడించండి</string>
+    <string name="payment_upi">UPI చెల్లింపులు</string>
+    <string name="payment_more_options">మరిన్ని చెల్లింపు ఎంపికలు</string>
+    <string name="payment_cash_on_delivery">డెలివరీపై నగదు</string>
+    <string name="payment_subtotal">సబ్-టోటల్</string>
+    <string name="payment_delivery_fee">డెలివరీ ఫీజు</string>
+    <string name="payment_discount">డిస్కౌంట్</string>
+    <string name="payment_total_cost">మొత్తం ఖర్చు</string>
+    <string name="payment_pay_now">ఇప్పుడే చెల్లించండి</string>
+    <string name="payment_navigate_description">నావిగేట్</string>
+    <string name="payment_online">ఆన్‌లైన్</string>
+    <string name="payment_successful">చెల్లింపు విజయవంతమైంది</string>
+    <string name="payment_thank_you">కొనుగోలు కోసం ధన్యవాదాలు</string>
+    <string name="payment_success_description">చెల్లింపు విజయం</string>
+    <string name="payment_continue_shopping">షాపింగ్ కొనసాగించండి</string>
+
+    <!-- Orders -->
+    <string name="orders_title">ఆర్డర్లు</string>
+    <string name="orders_retry">మళ్ళీ ప్రయత్నించండి</string>
+    <string name="orders_empty">ఆర్డర్లు ఏవీ కనుగొనబడలేదు</string>
+    <string name="orders_drop_review">సమీక్ష రాయండి</string>
+    <string name="orders_details_title">ఆర్డర్ వివరాలు</string>
+    <string name="orders_reorder">మళ్ళీ ఆర్డర్ చేయండి</string>
+    <string name="orders_cancelled_on">రద్దు చేసిన తేదీ: %s</string>
+    <string name="orders_delivery_address">డెలివరీ చిరునామా</string>
+    <string name="orders_location_pin_description">లొకేషన్ పిన్</string>
+    <string name="orders_pin_label">పిన్ : %s</string>
+    <string name="orders_delivered_date">డెలివరీ తేదీ: %s</string>
+    <string name="orders_status_title">ఆర్డర్ స్థితి</string>
+    <string name="orders_transaction_id">లావాదేవీ ID</string>
+    <string name="orders_copy_description">కాపీ</string>
+    <string name="orders_cancel_item">ఐటమ్ రద్దు చేయండి</string>
+    <string name="orders_cancel_reason">దయచేసి రద్దుకు కారణాన్ని అందించండి:</string>
+    <string name="orders_reason_label">కారణం</string>
+    <string name="orders_confirm">నిర్ధారించండి</string>
+    <string name="orders_cancel">రద్దు చేయండి</string>
+
+    <!-- My Orders (Buyer) -->
+    <string name="my_orders_title">నా ఆర్డర్లు</string>
+
+    <!-- Order Status (Seller) -->
+    <string name="order_status_back_description">వెనక్కి</string>
+    <string name="order_status_title">ఆర్డర్ స్థితి</string>
+    <string name="order_status_tracking_tab">ఆర్డర్ ట్రాకింగ్</string>
+    <string name="order_status_details_tab">ఆర్డర్ వివరాలు</string>
+    <string name="order_status_order_id">ఆర్డర్ ID: %s</string>
+    <string name="order_status_quantity">పరిమాణం : %s</string>
+    <string name="order_status_delivery_address">డెలివరీ చిరునామా</string>
+    <string name="order_status_cancelled_title">రద్దు చేయబడింది</string>
+    <string name="order_status_cancelled_subtitle">స్థితి</string>
+    <string name="order_status_checked_description">చెక్ చేయబడింది</string>
+
+    <!-- Active Orders (Seller) -->
+    <string name="active_orders_retry">మళ్ళీ ప్రయత్నించండి</string>
+    <string name="active_orders_error">ఆర్డర్లను లోడ్ చేయడంలో లోపం</string>
+    <string name="active_orders_empty">ఇంకా యాక్టివ్ ఆర్డర్లు లేవు</string>
+    <string name="active_orders_load_more_error">మరిన్ని ఆర్డర్లను లోడ్ చేయడం సాధ్యం కాలేదు</string>
+    <string name="active_orders_product_description">ఉత్పత్తి పేరు</string>
+    <string name="active_orders_buyer_label">కొనుగోలుదారు</string>
+    <string name="active_orders_contact_label">కాంటాక్ట్</string>
+    <string name="active_orders_order_id_label">ఆర్డర్ ID</string>
+    <string name="active_orders_quantity_label">పరిమాణం</string>
+    <string name="active_orders_amount_label">మొత్తం</string>
+    <string name="active_orders_location_label">లొకేషన్</string>
+    <string name="active_orders_update_status">ఆర్డర్ స్థితి నవీకరించండి</string>
+    <string name="active_orders_update_progress">ప్రోగ్రెస్ నవీకరించండి</string>
+    <string name="active_orders_cancel_order_description">ఆర్డర్ రద్దు చేయండి</string>
+    <string name="active_orders_cancel_order_text">ఆర్డర్ రద్దు చేయండి</string>
+    <string name="active_orders_cancel_confirm_title">ఆర్డర్ రద్దు చేయండి</string>
+    <string name="active_orders_cancel_confirm_message">మీరు ఖచ్చితంగా ఈ ఆర్డర్ రద్దు చేయాలనుకుంటున్నారా?</string>
+    <string name="active_orders_cancel_confirm">ఆర్డర్ రద్దు చేయండి</string>
+    <string name="active_orders_keep_order">ఆర్డర్ ఉంచండి</string>
+
+    <!-- Reviews -->
+    <string name="review_title">సమీక్ష రాయండి</string>
+    <string name="review_order_id">ఆర్డర్ ID: %s</string>
+    <string name="review_overall_rating">మీ మొత్తం రేటింగ్</string>
+    <string name="review_star_description">స్టార్ %d</string>
+    <string name="review_write_label">మీ సమీక్ష రాయండి</string>
+    <string name="review_characters_remaining">%s అక్షరాలు మిగిలి ఉన్నాయి</string>
+    <string name="review_cancel">రద్దు చేయండి</string>
+    <string name="review_rating_description">రేటింగ్</string>
+    <string name="review_like_description">ఇష్టం</string>
+    <string name="review_unlike_description">ఇష్టం లేదు</string>
+    <string name="review_ratings_text">%s రేటింగ్‌లు</string>
+    <string name="review_reviews_text">%s సమీక్షలు</string>
+
+    <!-- Sell -->
+    <string name="sell_title">అమ్మకం</string>
+    <string name="sell_search_placeholder">ఉత్పత్తుల కోసం శోధించండి</string>
+
+    <!-- Sell - Categories -->
+    <string name="sell_categories_title">ఉత్పత్తులను అమ్మండి</string>
+    <string name="sell_categories_continue">కొనసాగించు</string>
+    <string name="sell_categories_select">వర్గాలను ఎంచుకోండి</string>
+
+    <!-- Sell - Produces Form -->
+    <string name="sell_produce_details">ఉత్పత్తి వివరాలు</string>
+    <string name="sell_produce_category_label">ఉత్పత్తి వర్గం</string>
+    <string name="sell_produce_category_placeholder">గోధుమ, వరి, మొక్కజొన్న, బార్లీ, చిరుధాన్యాలు మొదలైనవి…….</string>
+    <string name="sell_produce_title_label">ఉత్పత్తి శీర్షిక</string>
+    <string name="sell_produce_title_placeholder">ఉత్పత్తి శీర్షిక నమోదు చేయండి</string>
+    <string name="sell_images_label">చిత్రాలు (గరిష్టం 3)</string>
+    <string name="sell_images_count">%s / 3 చిత్రాలు</string>
+    <string name="sell_stock_label">అందుబాటులో ఉన్న స్టాక్*</string>
+    <string name="sell_stock_placeholder">పరిమాణం నమోదు చేయండి</string>
+    <string name="sell_location_label">లొకేషన్</string>
+    <string name="sell_location_placeholder">ప్రతాప్‌గఢ్, ఉత్తర ప్రదేశ్</string>
+    <string name="sell_pricing_label">ధర నిర్ణయం</string>
+    <string name="sell_price_placeholder">ధర నమోదు చేయండి</string>
+    <string name="sell_discount_label">డిస్కౌంట్ %</string>
+    <string name="sell_discount_placeholder">డిస్కౌంట్ శాతం నమోదు చేయండి</string>
+    <string name="sell_description_label">ఉత్పత్తి వివరణ</string>
+    <string name="sell_description_placeholder">ఉత్పత్తి వివరణ జోడించండి</string>
+    <string name="sell_features_label">ఉత్పత్తి లక్షణాలు (కామా వేరు చేయబడినవి)</string>
+    <string name="sell_features_placeholder">ఫీచర్ 1, ఫీచర్ 2, ఫీచర్ 3</string>
+    <string name="sell_delivery_fee_included_label">మొత్తం ధరలో డెలివరీ ఫీజు చేర్చబడిందా?</string>
+    <string name="sell_delivery_included">చేర్చబడింది</string>
+    <string name="sell_delivery_not_included">చేర్చబడలేదు</string>
+    <string name="sell_delivery_fee_label">డెలివరీ ఫీజు / కి.మీ</string>
+    <string name="sell_delivery_fee_placeholder">డెలివరీ ఫీజు నమోదు చేయండి</string>
+    <string name="sell_product_image_description">ఉత్పత్తి చిత్రం</string>
+    <string name="sell_selected_image_description">ఎంచుకున్న ఉత్పత్తి చిత్రం</string>
+    <string name="sell_remove_image_description">చిత్రాన్ని తొలగించండి</string>
+    <string name="sell_add_image_description">చిత్రాన్ని జోడించండి</string>
+
+    <!-- Active Products (Seller) -->
+    <string name="active_products_error">ఉత్పత్తులను లోడ్ చేయడంలో లోపం</string>
+    <string name="active_products_empty">యాక్టివ్ ఉత్పత్తులు ఏవీ కనుగొనబడలేదు</string>
+
+    <!-- Sold Out Products (Seller) -->
+    <string name="sold_out_products_error">ఉత్పత్తులను లోడ్ చేయడంలో లోపం</string>
+    <string name="sold_out_products_empty">అమ్ముడుపోయిన ఉత్పత్తులు ఏవీ కనుగొనబడలేదు</string>
+
+    <!-- Assist -->
+    <string name="assist_title">సహాయం</string>
+    <string name="assist_banner_description">బ్యానర్</string>
+    <string name="assist_plant_trouble_title">మొక్కకు సమస్య ఉందా? మేము\nసహాయం చేయడానికి ఇక్కడ ఉన్నాము.</string>
+    <string name="assist_ask_solve_title">అడగండి. పరిష్కరించండి. వ్యవసాయ సహాయం\nసులభంగా</string>
+    <string name="assist_start_icon_description">ప్రారంభించు ఐకాన్</string>
+    <string name="assist_icon_description">ఐకాన్</string>
+
+    <!-- Assist - Image Upload -->
+    <string name="assist_image_title">సహాయ చిత్రం</string>
+    <string name="assist_image_next">తదుపరి</string>
+    <string name="assist_upload_photo_text">మీ మొక్క యొక్క ఫోటో అప్‌లోడ్ చేయండి</string>
+    <string name="assist_upload_description">మీ ప్రభావిత మొక్క లేదా ఆకు యొక్క స్పష్టమైన చిత్రాన్ని షేర్ చేయండి, తద్వారా మేము వ్యాధిని తక్షణమే గుర్తించగలము.</string>
+    <string name="assist_selected_image_description">ఎంచుకున్న మొక్క చిత్రం</string>
+    <string name="assist_upload_image_description">చిత్రం అప్‌లోడ్ చేయండి</string>
+    <string name="assist_tap_to_upload">ఫోటో అప్‌లోడ్ చేయడానికి ట్యాప్ చేయండి</string>
+    <string name="assist_open_camera">కెమెరా తెరవండి</string>
+    <string name="assist_select_language">మీ ప్రాధాన్య భాషను ఎంచుకోండి</string>
+    <string name="assist_or">లేదా</string>
+
+    <!-- Assist - Result -->
+    <string name="assist_result_title">సహాయం</string>
+    <string name="assist_result_retry">మళ్ళీ ప్రయత్నించండి</string>
+    <string name="assist_result_crop_image_description">ఎంచుకున్న పంట చిత్రం</string>
+    <string name="assist_result_no_symptoms">విశ్లేషణ ద్వారా ఎటువంటి లక్షణాలు తిరిగి రాలేదు.</string>
+    <string name="assist_result_no_avoidance">విశ్లేషణ ద్వారా ఎటువంటి నివారణ చిట్కాలు తిరిగి రాలేదు.</string>
+    <string name="assist_result_no_insecticides">విశ్లేషణ ద్వారా ఎటువంటి క్రిమిసంహారకాలు తిరిగి రాలేదు.</string>
+
+    <!-- Chat - Plant Problem Help -->
+    <string name="chat_title">మొక్క సమస్య సహాయం</string>
+    <string name="chat_crop_hint">దిగువ పంటను ఎంచుకోండి లేదా టైప్ చేయండి:</string>
+    <string name="chat_input_placeholder">మీ సందేశాన్ని టైప్ చేయండి…</string>
+    <string name="chat_send_description">పంపు</string>
+    <string name="chat_welcome_message">హలో, మీ పంటలో సమస్యలను గుర్తించడంలో సహాయం చేయడానికి నేను ఇక్కడ ఉన్నాను. మీరు ఏ పంటతో సమస్య ఎదుర్కొంటున్నారో చెప్పగలరా?</string>
+    <string name="chat_error_not_authenticated">లోపం: ప్రమాణీకరణ చేయబడలేదు.</string>
+    <string name="chat_error_connect">లోపం: సర్వర్‌కు కనెక్ట్ అవ్వడంలో విఫలమైంది.</string>
+    <string name="chat_error_no_auth_token">ప్రమాణీకరణ టోకెన్ ఏదీ కనుగొనబడలేదు</string>
+
+    <!-- Profile -->
+    <string name="profile_title">నా ఖాతా</string>
+    <string name="profile_logout">లాగ్ అవుట్</string>
+    <string name="profile_version">వెర్షన్ %s</string>
+    <string name="profile_retry">మళ్ళీ ప్రయత్నించండి</string>
+    <string name="profile_image_description">ప్రొఫైల్ చిత్రం</string>
+    <string name="profile_phone_format">+91 %s</string>
+    <string name="profile_edit_description">ప్రొఫైల్ సవరించండి</string>
+    <string name="profile_orders_title">ఆర్డర్లు\nచేసినవి</string>
+    <string name="profile_help_title">సహాయం &amp;\nసపోర్ట్</string>
+    <string name="profile_wallet">వాలెట్</string>
+    <string name="profile_manage_addresses">చిరునామాలను నిర్వహించండి</string>
+    <string name="profile_terms">నిబంధనలు మరియు షరతులు</string>
+    <string name="profile_privacy">గోప్యతా విధానం</string>
+    <string name="profile_rate_app">యాప్ రేట్ చేయండి</string>
+    <string name="profile_edit_account_title">ఖాతా సవరించండి</string>
+    <string name="profile_name_label">పేరు</string>
+    <string name="profile_email_label">ఇమెయిల్</string>
+
+    <!-- Bookings -->
+    <string name="bookings_placeholder">సహాయ స్క్రీన్</string>
+
+    <!-- Common -->
+    <string name="common_retry">మళ్ళీ ప్రయత్నించండి</string>
+    <string name="common_back_description">వెనక్కి</string>
+    <string name="common_error_image_description">లోపం చిత్రం</string>
+    <string name="common_marketplace_title">మార్కెట్‌ప్లేస్</string>
+    <string name="common_search_icon_description">శోధన</string>
+    <string name="common_location_icon_description">లొకేషన్</string>
+    <string name="common_delete_icon_description">తొలగించు</string>
+    <string name="common_delete_item_description">ఐటమ్ తొలగించు</string>
+    <string name="common_sold_out_description">అమ్ముడుపోయింది</string>
+    <string name="common_close_dialog_description">డైలాగ్ మూసివేయి</string>
+    <string name="common_remove_product_description">ఉత్పత్తి తొలగించు</string>
+    <string name="common_add_image_description">చిత్రం జోడించండి</string>
+    <string name="common_verified_description">ధృవీకరించబడింది</string>
+    <string name="common_rating_description">రేటింగ్</string>
+    <string name="common_share_description">షేర్</string>
+
+    <!-- Dialogs -->
+    <string name="dialog_cancel">రద్దు చేయండి</string>
+    <string name="dialog_confirm">నిర్ధారించండి</string>
+    <string name="dialog_retry">మళ్ళీ ప్రయత్నించండి</string>
+
+    <!-- Sell Categories (Sell side) -->
+    <string name="category_sell_cereals_grains">తృణధాన్యాలు &amp;\nధాన్యాలు</string>
+    <string name="category_sell_pulses_legumes">పప్పుధాన్యాలు &amp;\nచిక్కుళ్ళు</string>
+    <string name="category_sell_fruits">పండ్లు</string>
+    <string name="category_sell_vegetables">కూరగాయలు</string>
+    <string name="category_sell_oilseeds">నూనెగింజలు</string>
+    <string name="category_sell_spices">సుగంధ ద్రవ్యాలు</string>
+    <string name="category_sell_tubers_root">దుంపలు మరియు\nవేరు పంటలు</string>
+    <string name="category_sell_flowers">పూలు</string>
+    <string name="category_sell_dry_fruits_nuts">డ్రై ఫ్రూట్స్ &amp;\నట్స్</string>
+    <string name="category_sell_organic">సేంద్రీయ\nవిధానం</string>
+    <string name="category_sell_livestock">పశుసంపద\nఉత్పత్తులు</string>
+    <string name="category_sell_other">ఇతర</string>
+
+    <!-- Buy Categories -->
+    <string name="category_seeds">విత్తనాలు</string>
+    <string name="category_paddy_seeds">వరి విత్తనాలు</string>
+    <string name="category_fruit_seeds">పండ్ల విత్తనాలు</string>
+    <string name="category_vegetable_seeds">కూరగాయల విత్తనాలు</string>
+    <string name="category_leafy_seeds">ఆకు కూరల విత్తనాలు</string>
+    <string name="category_herb_seeds">మూలికల విత్తనాలు</string>
+    <string name="category_sprayers">స్ప్రేయర్లు</string>
+    <string name="category_manual_sprayers">చేతి\nస్ప్రేయర్లు</string>
+    <string name="category_battery_sprayers">బ్యాటరీ\nస్ప్రేయర్లు</string>
+    <string name="category_knapsack_sprayers">నాప్‌స్యాక్\nస్ప్రేయర్లు</string>
+    <string name="category_power_sprayers">పవర్\nస్ప్రేయర్లు</string>
+    <string name="category_htp_sprayers">HTP\nస్ప్రేయర్లు</string>
+    <string name="category_agriculture_drone">వ్యవసాయ\nడ్రోన్</string>
+    <string name="category_spraying_drones">స్ప్రేయింగ్\nడ్రోన్లు</string>
+    <string name="category_surveillance_drones">నిఘా/\nమానిటరింగ్ డ్రోన్లు</string>
+    <string name="category_multispectral_drones">మల్టీస్పెక్ట్రల్\n&amp; మ్యాపింగ్</string>
+    <string name="category_tractors">ట్రాక్టర్లు</string>
+    <string name="category_4wd_tractors">4WD\nట్రాక్టర్లు</string>
+    <string name="category_row_crop_tractors">రో క్రాప్\nట్రాక్టర్లు</string>
+    <string name="category_mini_tractors">మినీ\nట్రాక్టర్లు</string>
+    <string name="category_rotavator">రోటావేటర్\nఅటాచ్‌మెంట్లు</string>
+    <string name="category_utility_tractor">యుటిలిటీ\nట్రాక్టర్</string>
+    <string name="category_direct_from_farmers">రైతుల నుండి\nనేరుగా</string>
+    <string name="category_cereals">తృణధాన్యాలు</string>
+    <string name="category_pulses">పప్పుధాన్యాలు</string>
+    <string name="category_vegetables_cat">కూరగాయలు</string>
+    <string name="category_fruits_cat">పండ్లు</string>
+    <string name="category_oilseeds_cat">నూనెగింజలు</string>
+    <string name="category_spices_cat">సుగంధ ద్రవ్యాలు</string>
+    <string name="category_organic_produce">సేంద్రీయ ఉత్పత్తి</string>
+    <string name="category_livestock_products">పశుసంపద ఉత్పత్తులు</string>
+    <string name="category_pesticides">పురుగుమందులు</string>
+    <string name="category_insecticides">క్రిమిసంహారకాలు</string>
+    <string name="category_fungicides">శిలీంద్రనాశకాలు</string>
+    <string name="category_herbicides">కలుపు సంహారకాలు\n(వీడిసైడ్‌లు)</string>
+    <string name="category_bio_pesticides">బయో-పెస్టిసైడ్‌లు</string>
+    <string name="category_harvesting_machines">హార్వెస్టింగ్\nమెషీన్లు</string>
+    <string name="category_combine_harvester">కంబైన్ హార్వెస్టర్</string>
+    <string name="category_reaper">రీపర్</string>
+    <string name="category_paddy_harvester">వరి\nహార్వెస్టర్</string>
+    <string name="category_sugarcane_harvester">చెరకు హార్వెస్టర్లు</string>
+    <string name="category_groundnut_harvester">వేరుశెనగ హార్వెస్టర్లు</string>
+    <string name="category_soil_testers">మట్టి\nపరీక్షకులు</string>
+    <string name="category_soil_ph_meter">మట్టి PH మీటర్</string>
+    <string name="category_soil_moisture_meter">మట్టి తేమ మీటర్</string>
+    <string name="category_npk_kit">NPK మట్టి పరీక్ష కిట్</string>
+    <string name="category_digital_soil_tester">డిజిటల్ మట్టి పరీక్ష పరికరం</string>
+    <string name="category_power_weeders">పవర్\nవీడర్లు</string>
+    <string name="category_mini_power_weeders">మినీ పవర్ వీడర్లు</string>
+    <string name="category_petrol_weeders">పెట్రోల్ పవర్ వీడర్లు</string>
+    <string name="category_diesel_weeders">డీజిల్ పవర్ వీడర్లు</string>
+    <string name="category_self_propelled_weeders">సెల్ఫ్-ప్రొపెల్డ్ వీడర్లు</string>
+    <string name="category_thresher_winnowers">త్రెషర్\nవినోయర్లు</string>
+    <string name="category_wheat_thresher">గోధుమ త్రెషర్</string>
+    <string name="category_multi_crop_thresher">మల్టీ-క్రాప్\nత్రెషర్</string>
+    <string name="category_paddy_thresher">వరి\nత్రెషర్</string>
+    <string name="category_motorized_winnower">మోటరైజ్డ్\nవినోయర్</string>
+    <string name="category_irrigation_tools">నీటి పారుదల\nపరికరాలు</string>
+    <string name="category_pvc_pipes">PVC పైపులు\n&amp; ఫిట్టింగ్‌లు</string>
+    <string name="category_submersible_pumps">సబ్‌మెర్సిబుల్\nపంపులు</string>
+    <string name="category_rain_guns">రెయిన్\nగన్స్</string>
+    <string name="category_hose_pipes">హోస్\nపైపులు</string>
+    <string name="category_water_pumps">డీజిల్/ఎలక్ట్రిక్\nవాటర్ పంపులు</string>
+    <string name="category_timers_controllers">టైమర్లు &amp;\nకంట్రోలర్లు</string>
+    <string name="category_manual_farm_machinery">మాన్యువల్ ఫార్మ్\nమెషినరీ</string>
+    <string name="category_axe">గొడ్డలి</string>
+    <string name="category_hoe">గునపం</string>
+    <string name="category_sickle">కొడవలి</string>
+    <string name="category_hedge_shears">హెడ్జ్\nషియర్స్</string>
+    <string name="category_all_products">అన్ని ఉత్పత్తులు</string>
+    <string name="category_seeds_cat">విత్తనాలు</string>
+    <string name="category_sprayers_cat">స్ప్రేయర్లు</string>
+    <string name="category_agricultural_drones">వ్యవసాయ డ్రోన్లు</string>
+    <string name="category_tractors_cat">ట్రాక్టర్లు</string>
+
+    <!-- Service Booking -->
+    <string name="service_book_card_description">సేవ బుక్ కార్డ్</string>
+    <string name="service_dropdown_description">డ్రాప్‌డౌన్ టోగుల్</string>
+    <string name="service_dropdown_description_label">డ్రాప్‌డౌన్</string>
+
+    <!-- Common Service Dropdown Items -->
+    <string name="service_harvesting_machines">హార్వెస్టింగ్ మెషీన్లు</string>
+    <string name="service_manual_sprayer">మాన్యువల్ స్ప్రేయర్</string>
+
+    <!-- Image Upload -->
+    <string name="image_upload_aadhaar_label">ఆధార్ కార్డ్ ముందు వైపు</string>
+
+    <!-- Swipe to Reveal -->
+    <string name="swipe_delete_description">తొలగించు</string>
+
+    <!-- Marketplace TopBar -->
+    <string name="topbar_marketplace">మార్కెట్‌ప్లేస్</string>
+
+    <!-- Home Booking Status Messages -->
+    <string name="home_booking_fill_fields">దయచేసి అన్ని అవసరమైన ఫీల్డ్‌లను సరిగ్గా పూరించండి</string>
+    <string name="home_booking_success">బుకింగ్ విజయవంతంగా సృష్టించబడింది</string>
+
+    <!-- Snackbar Messages -->
+    <string name="snackbar_product_added">ఉత్పత్తి కార్ట్‌కు జోడించబడింది!</string>
+    <string name="snackbar_phonepe_unavailable">PhonePe చెక్‌అవుట్ ప్రారంభించడం సాధ్యం కాలేదు</string>
+    <string name="snackbar_address_unknown_error">తెలియని లోపం</string>
+
+    <!-- ViewModel Error Strings -->
+    <string name="error_auth_token_not_found">ప్రమాణీకరణ టోకెన్ కనుగొనబడలేదు</string>
+    <string name="error_network">నెట్‌వర్క్ లోపం సంభవించింది</string>
+    <string name="error_cart_data_not_found">కార్ట్ డేటా కనుగొనబడలేదు. దయచేసి మళ్ళీ ప్రయత్నించండి.</string>
+    <string name="error_no_items_in_cart">ఆర్డర్ చేయడానికి కార్ట్‌లో ఐటమ్‌లు లేవు.</string>
+    <string name="error_order_placement_failed">ఆర్డర్ ప్లేస్‌మెంట్ విఫలమైంది</string>
+    <string name="error_phonepe_data_not_found">PhonePe చెక్‌అవుట్ డేటా కనుగొనబడలేదు. దయచేసి మళ్ళీ ప్రయత్నించండి.</string>
+    <string name="error_phonepe_order_id_missing">PhonePe మర్చంట్ ఆర్డర్ ID లేదు.</string>
+    <string name="error_phonepe_payment_failed">PhonePe చెల్లింపు విఫలమైంది</string>
+    <string name="error_product_id_not_found">ఉత్పత్తి ID కనుగొనబడలేదు</string>
+    <string name="error_image_upload_failed">చిత్రం అప్‌లోడ్ విఫలమైంది: %s</string>
+    <string name="error_invalid_price">చెల్లని ధర విలువ</string>
+    <string name="error_invalid_discount">చెల్లని డిస్కౌంట్ విలువ</string>
+    <string name="error_invalid_delivery_fee">చెల్లని డెలివరీ ఫీజు విలువ</string>
+    <string name="error_select_product_image">దయచేసి కనీసం ఒక ఉత్పత్తి చిత్రాన్ని ఎంచుకోండి</string>
+    <string name="error_select_location">దయచేసి లొకేషన్ ఎంచుకోండి</string>
+    <string name="error_no_changes_detected">మార్పులు ఏవీ కనుగొనబడలేదు</string>
+    <string name="error_product_not_in_cart">ID %s ఉన్న ఉత్పత్తి కార్ట్‌లో కనుగొనబడలేదు</string>
+    <string name="error_review_id_missing">సమీక్ష ID లేదు</string>
+    <string name="error_invalid_review_action">చెల్లని సమీక్ష చర్య</string>
+    <string name="error_analysis_failed">పంట చిత్రాన్ని విశ్లేషించడంలో విఫలమైంది.</string>
+    <string name="error_selected_image_missing">ఎంచుకున్న చిత్రం లేదు</string>
+    <string name="error_product_info_missing">ఈ ఆర్డర్ కోసం ఉత్పత్తి సమాచారం లేదు. దయచేసి ఆర్డర్ వివరాలు తెరిచి మళ్ళీ ప్రయత్నించండి.</string>
+
+    <!-- Success Messages (ViewModel) -->
+    <string name="success_product_deleted">ఉత్పత్తి విజయవంతంగా తొలగించబడింది</string>
+    <string name="success_product_updated">ఉత్పత్తి విజయవంతంగా నవీకరించబడింది</string>
+    <string name="success_product_added">ఉత్పత్తి విజయవంతంగా జోడించబడింది</string>
+    <string name="success_payment">చెల్లింపు విజయవంతమైంది</string>
+    <string name="success_booking">బుకింగ్ విజయవంతంగా సృష్టించబడింది</string>
+
+    <!-- Notification Channel -->
+    <string name="notification_channel_name">చిరాగ్ ఫార్మర్</string>
+    <string name="notification_new_message">మీకు కొత్త సందేశం ఉంది</string>
+
+    <!-- Form Field Labels -->
+    <string name="form_aadhaar_front_label">ఆధార్ కార్డ్ ముందు వైపు</string>
+    <string name="form_reason_label">కారణం</string>
+    <!-- New keys added during code migration -->
+    <string name="review_yes_submit">అవును, సమర్పించండి</string>
+    <string name="review_placeholder">మీ సమీక్షను ఇక్కడ వ్రాయండి</string>
+    <string name="active_orders_product_description_format">ఉత్పత్తి పేరు %s</string>
+    <string name="orders_status_cancelled_title">రద్దు చేయబడింది</string>
+</resources>

@@ -52,6 +52,7 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -148,7 +149,7 @@ fun AssistImage(navController: NavHostController) {
         topBar = {
             ChiragTopBar(
                 navController = navController,
-                title = "Assist Image",
+                title = stringResource(R.string.assist_image_title),
                 icon = R.drawable.ic_arrow
             )
         },
@@ -163,7 +164,7 @@ fun AssistImage(navController: NavHostController) {
                             navController.navigate(Route.AssistResult.createRoute(imageUri.toString(), selectedLanguage.value))
                         }
                     },
-                    text = "Next",
+                    text = stringResource(R.string.assist_image_next),
                     containerColor = BGBlack,
                     contentColor = BGWhite,
                     enabled = true
@@ -180,14 +181,14 @@ fun AssistImage(navController: NavHostController) {
             horizontalAlignment = Alignment.Start
         ) {
             Text(
-                text = "Upload a Photo of your plant",
+                text = stringResource(R.string.assist_upload_photo_text),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
                 lineHeight = 16.sp
             )
             Spacer(modifier = Modifier.padding(8.dp))
             Text(
-                text = "Share a clear image of your affected plant or leaf so we can diagnose the disease instantly.",
+                text = stringResource(R.string.assist_upload_description),
                 fontSize = 14.sp,
                 fontWeight = FontWeight.W400,
                 lineHeight = 16.sp
@@ -214,7 +215,7 @@ fun AssistImage(navController: NavHostController) {
                 if (selectedImageUri.value != null) {
                     AsyncImage(
                         model = selectedImageUri.value,
-                        contentDescription = "Selected Plant Image",
+                        contentDescription = stringResource(R.string.assist_selected_image_description),
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(3.dp),
@@ -231,12 +232,12 @@ fun AssistImage(navController: NavHostController) {
                     ) {
                         Image(
                             painter = painterResource(R.drawable.upload_placeholder),
-                            contentDescription = "Upload Image",
+                            contentDescription = stringResource(R.string.assist_upload_image_description),
                             modifier = Modifier.size(45.dp)
                         )
                         Spacer(modifier = Modifier.padding(8.dp))
                         Text(
-                            text = "Tap to upload photo",
+                            text = stringResource(R.string.assist_tap_to_upload),
                             fontSize = 16.sp,
                             fontWeight = FontWeight.SemiBold,
                             lineHeight = 14.sp,
@@ -276,7 +277,7 @@ fun AssistImage(navController: NavHostController) {
                             shape = RoundedCornerShape(8.dp)
                         ) {
                             Text(
-                                text = "Open Camera"
+                                text = stringResource(R.string.assist_open_camera)
                             )
                         }
                     }
@@ -286,7 +287,7 @@ fun AssistImage(navController: NavHostController) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Select your preferred language",
+                text = stringResource(R.string.assist_select_language),
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
                 color = Color(0xFF64748B)
@@ -381,7 +382,7 @@ fun DividerWithOr(
         )
 
         Text(
-            text = "Or",
+            text = stringResource(R.string.assist_or),
             modifier = Modifier.padding(horizontal = 12.dp),
             fontSize = 14.sp,
             color = BGBlack

@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.W400
@@ -27,6 +28,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.theme.BorderColour
 import com.yash091099.ChiragFarmersApp.ui.theme.TextGray
 
@@ -88,7 +90,7 @@ fun ImageUploadBox(
 @Composable
 fun ImageUploadBoxPreview() {
     ImageUploadBox(
-        label = "Front side of Aadhaar card",
+        label = stringResource(R.string.image_upload_aadhaar_label),
         width = 130.dp,
         height = 100.dp,
         imageUri = null,

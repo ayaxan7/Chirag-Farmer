@@ -38,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -122,7 +123,7 @@ fun CartScreen(
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         Text(
-                            text = "Error Loading Cart",
+                            text = stringResource(R.string.cart_error_loading),
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
                             color = BGBlack
@@ -134,7 +135,7 @@ fun CartScreen(
                             onClick = { viewModel.retry() },
                             colors = ButtonDefaults.buttonColors(containerColor = BGBlack)
                         ) {
-                            Text("Retry", color = BGWhite)
+                            Text(stringResource(R.string.cart_retry), color = BGWhite)
                         }
                     }
                 }
@@ -164,19 +165,19 @@ fun CartScreen(
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         Text(
-                            text = "Your Cart is Empty",
+                            text = stringResource(R.string.cart_empty_title),
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
                             color = BGBlack
                         )
                         Text(
-                            text = "Add items to get started", fontSize = 14.sp, color = Color.Gray
+                            text = stringResource(R.string.cart_empty_subtitle), fontSize = 14.sp, color = Color.Gray
                         )
                         Button(
                             onClick = { navController.popBackStack() },
                             colors = ButtonDefaults.buttonColors(containerColor = BGBlack)
                         ) {
-                            Text("Continue Shopping", color = BGWhite)
+                            Text(stringResource(R.string.cart_continue_shopping), color = BGWhite)
                         }
                     }
                 }
@@ -218,7 +219,7 @@ fun CartScreen(
                                     .padding(16.dp)
                             ) {
                                 Text(
-                                    text = "Shipping Address",
+                                    text = stringResource(R.string.cart_shipping_address),
                                     fontSize = 14.sp,
                                     fontWeight = FontWeight.Bold,
                                     color = BGBlack
@@ -230,7 +231,7 @@ fun CartScreen(
                                 ) {
                                     Icon(
                                         painter = painterResource(R.drawable.location),
-                                        contentDescription = "Location",
+                                        contentDescription = stringResource(R.string.cart_location_description),
                                         modifier = Modifier.size(24.dp),
                                         tint = BGBlack
                                     )
@@ -255,7 +256,7 @@ fun CartScreen(
                                         Spacer(modifier = Modifier.height(2.dp))
                                         Row {
                                             Text(
-                                                text = "Pin : ", fontSize = 13.sp, color = TextGray
+                                                text = stringResource(R.string.cart_pin_label), fontSize = 13.sp, color = TextGray
                                             )
                                             Text(
                                                 text = address.pincode,
@@ -278,7 +279,7 @@ fun CartScreen(
                                         )
                                     ) {
                                         Text(
-                                            text = "Change",
+                                            text = stringResource(R.string.cart_change),
                                             fontSize = 12.sp,
                                             color = BGWhite,
                                             fontWeight = FontWeight.Medium,
@@ -291,7 +292,7 @@ fun CartScreen(
                             Spacer(modifier = Modifier.height(8.dp))
                             // Listed Products Section
                             Text(
-                                text = "Listed Products",
+                                text = stringResource(R.string.cart_listed_products),
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = BGBlack,
@@ -313,7 +314,7 @@ fun CartScreen(
                                     imageUrl = item.productImage ?: "",
                                     productName = item.productName,
                                     sellerName = item.sellerName,
-                                    price = "₹${item.finalPrice}",
+                                    price = stringResource(R.string.product_price_format, item.finalPrice),
                                     deliveryDate = "Delivery by 7 June 2025",
                                     quantity = "${item.quantity}",
                                     onQuantityDecrease = {
@@ -359,13 +360,13 @@ fun CartScreen(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                text = "Sub-Total",
+                                text = stringResource(R.string.cart_subtotal),
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Normal,
                                 color = BGBlack
                             )
                             Text(
-                                text = "₹${summary.subtotal}",
+                                text = stringResource(R.string.product_price_format, summary.subtotal),
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Normal,
                                 color = BGBlack
@@ -380,13 +381,13 @@ fun CartScreen(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                text = "Delivery Fee",
+                                text = stringResource(R.string.cart_delivery_fee),
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Normal,
                                 color = BGBlack
                             )
                             Text(
-                                text = "₹${summary.totalDeliveryFee}",
+                                text = stringResource(R.string.product_price_format, summary.totalDeliveryFee),
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Normal,
                                 color = BGBlack
@@ -401,13 +402,13 @@ fun CartScreen(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                text = "Discount",
+                                text = stringResource(R.string.cart_discount),
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Normal,
                                 color = BGBlack
                             )
                             Text(
-                                text = "₹%.2f".format(summary.totalDiscount),
+                                text = stringResource(R.string.product_price_format, "%.2f".format(summary.totalDiscount)),
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Normal,
                                 color = BGBlack
@@ -428,13 +429,13 @@ fun CartScreen(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                text = "Total Cost",
+                                text = stringResource(R.string.cart_total_cost),
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = BGBlack
                             )
                             Text(
-                                text = "₹%.2f".format(summary.totalAmount),
+                                text = stringResource(R.string.product_price_format, "%.2f".format(summary.totalAmount)),
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = BGBlack
@@ -460,7 +461,7 @@ fun CartScreen(
                             }
                         } else {
                             ChiragButton(
-                                text = "Proceed to Checkout",
+                                text = stringResource(R.string.cart_proceed_checkout),
                                 onClick = {
                                     if (address == null) {
                                         navController.navigate(Route.AddressList.path)

@@ -25,6 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.W500
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -60,7 +61,7 @@ fun ChiragTopBar(
         if (icon != null) {
             Icon(
                 painter = painterResource(icon),
-                contentDescription = "Back",
+                contentDescription = stringResource(R.string.common_back_description),
                 modifier = Modifier
                     .padding(start = 16.dp)
                     .size(16.dp)
@@ -116,7 +117,7 @@ fun ChiragTopBarPreview() {
     ChiragFarmerTheme {
         ChiragTopBar(
             navController = navController,
-            title = "Marketplace",
+            title = stringResource(R.string.common_marketplace_title),
             icon = R.drawable.ic_arrow,
             buttonText = "Sell Product",
             buttonIcon = Icons.Default.Add,

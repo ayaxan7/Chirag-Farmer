@@ -36,6 +36,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -117,7 +118,7 @@ fun EditProfileScreen(
         topBar = {
         ChiragTopBar(
             navController = navController,
-            title = "Edit Account",
+            title = stringResource(R.string.profile_edit_account_title),
             icon = R.drawable.ic_arrow,
         )
     }, bottomBar = {
@@ -161,7 +162,7 @@ fun EditProfileScreen(
                     }) {
                 AsyncImage(
                     model = profileImageState,
-                    contentDescription = "Profile Image",
+                    contentDescription = stringResource(R.string.profile_image_description),
                     placeholder = painterResource(id = R.drawable.profile_placeholder),
                     error = painterResource(id = R.drawable.profile_placeholder),
                     fallback = painterResource(id = R.drawable.profile_placeholder),
@@ -177,7 +178,7 @@ fun EditProfileScreen(
 
             // Inline Editable fields list
             EditFieldItem(
-                label = "NAME", value = nameState, onValueChange = { nameState = it })
+                label = stringResource(R.string.profile_name_label), value = nameState, onValueChange = { nameState = it })
 
             HorizontalDivider(color = BorderColour, thickness = 1.dp)
 //
@@ -190,7 +191,7 @@ fun EditProfileScreen(
 //
 //            HorizontalDivider(color = BorderColour, thickness = 1.dp)
             EditFieldItem(
-                label = "EMAIL",
+                label = stringResource(R.string.profile_email_label),
                 value = emailState,
                 onValueChange = { emailState = it },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)

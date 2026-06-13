@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import androidx.compose.ui.res.stringResource
 import coil.compose.AsyncImage
 import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UserPlacedOrder
@@ -83,7 +84,7 @@ fun MyOrdersScreen(
         topBar = {
             ChiragTopBar(
                 navController = navController,
-                title = "Orders",
+                title = stringResource(R.string.orders_title),
                 icon = R.drawable.ic_arrow
             )
         },
@@ -167,7 +168,7 @@ fun OrderList(
                 Text(text = state.message, color = Color.Red, textAlign = TextAlign.Center)
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(onClick = onRetry, colors = ButtonDefaults.buttonColors(containerColor = BGBlack)) {
-                    Text("Retry", color = Color.White)
+                    Text(stringResource(R.string.orders_retry), color = Color.White)
                 }
             }
         }
@@ -175,7 +176,7 @@ fun OrderList(
         is MyOrdersUiState.Success -> {
             if (state.orders.isEmpty()) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(text = "No Orders found", color = TextGray, fontSize = 16.sp)
+                    Text(text = stringResource(R.string.orders_empty), color = TextGray, fontSize = 16.sp)
                 }
             } else {
                 LazyColumn(
@@ -272,7 +273,7 @@ fun OrderCard(
                     modifier = Modifier.height(36.dp)
                 ) {
                     Text(
-                        text = "Drop Review",
+                        text = stringResource(R.string.orders_drop_review),
                         color = Color.White,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold

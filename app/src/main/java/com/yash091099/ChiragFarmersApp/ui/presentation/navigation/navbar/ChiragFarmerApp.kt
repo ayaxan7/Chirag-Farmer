@@ -17,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.destinations.AppDestinations
@@ -62,10 +63,10 @@ fun ChiragFarmerApp(navController: NavHostController, deepLinkFlow: SharedFlow<I
                         Icon(
                             painter = if (currentRoute == destination.route) painterResource(id = destination.selectedIcon)
                             else painterResource(id = destination.unSelectedIcon),
-                            contentDescription = destination.label
+                            contentDescription = stringResource(destination.labelRes)
                         )
                     },
-                    label = { Text(destination.label) },
+                    label = { Text(stringResource(destination.labelRes)) },
                     selected = currentRoute == destination.route,
                     onClick = {
                         navController.navigate(destination.route) {

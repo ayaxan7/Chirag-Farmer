@@ -24,6 +24,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -57,7 +58,7 @@ fun NotificationItem(
             if (imageUrl.isNullOrBlank()) {
                 Image(
                     painter = painterResource(id = avatarRes),
-                    contentDescription = "Notification avatar",
+                    contentDescription = stringResource(R.string.notif_avatar_description),
                     modifier = Modifier
                         .size(48.dp)
                         .clip(CircleShape),
@@ -66,7 +67,7 @@ fun NotificationItem(
             } else {
                 AsyncImage(
                     model = imageUrl,
-                    contentDescription = "Notification avatar",
+                    contentDescription = stringResource(R.string.notif_avatar_description),
                     modifier = Modifier
                         .size(48.dp)
                         .clip(CircleShape),

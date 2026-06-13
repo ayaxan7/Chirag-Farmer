@@ -23,8 +23,10 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.theme.BorderColour
 import com.yash091099.ChiragFarmersApp.ui.theme.TextGray
 
@@ -74,7 +76,7 @@ fun SearchBox(
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Search,
-                    contentDescription = "Search",
+                    contentDescription = stringResource(R.string.search_icon_description),
                     tint = Color(0xFF666666),
                     modifier = Modifier.size(20.dp)
                 )

@@ -18,8 +18,10 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.theme.TextGray
 
 @Composable
@@ -58,7 +60,7 @@ fun ProductImageUpload(
             // Plus icon
             Icon(
                 imageVector = Icons.Default.Add,
-                contentDescription = "Add Image",
+                contentDescription = stringResource(R.string.common_add_image_description),
                 tint = Color(0xFF888888),
                 modifier = Modifier.size(32.dp)
             )

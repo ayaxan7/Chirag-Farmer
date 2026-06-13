@@ -43,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -100,7 +101,7 @@ fun PlantProblemHelpScreen(
         containerColor = BGWhite, topBar = {
             ChiragTopBar(
                 navController = navController,
-                title = "Plant Problem Help",
+                title = stringResource(R.string.chat_title),
                 icon = R.drawable.ic_arrow
             )
         }
@@ -205,7 +206,7 @@ fun CropSuggestionsRow(
             .padding(horizontal = 16.dp, vertical = 6.dp)
     ) {
         Text(
-            text = "Select a crop or type below:",
+            text = stringResource(R.string.chat_crop_hint),
             fontSize = 12.sp,
             color = Color.Gray,
             fontWeight = FontWeight.Medium
@@ -260,7 +261,7 @@ fun ChatInputBar(
         ) {
             if (value.isEmpty()) {
                 Text(
-                    text = "Type your message...", color = BorderGray, fontSize = 14.sp
+                    text = stringResource(R.string.chat_input_placeholder), color = BorderGray, fontSize = 14.sp
                 )
             }
             BasicTextField(
@@ -288,7 +289,7 @@ fun ChatInputBar(
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.Send,
-                contentDescription = "Send",
+                contentDescription = stringResource(R.string.chat_send_description),
                 tint = Color.White,
                 modifier = Modifier.size(18.dp)
             )

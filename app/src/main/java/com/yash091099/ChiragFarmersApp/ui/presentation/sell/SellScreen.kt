@@ -23,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -128,7 +129,7 @@ fun SellScreen(
         topBar = {
             ChiragTopBar(
                 navController = navController,
-                title = "Sell",
+                title = stringResource(R.string.sell_title),
                 icon = R.drawable.ic_arrow,
                 buttonText = "Sell Product",
                 buttonIcon = Icons.Default.Add,
@@ -151,7 +152,7 @@ fun SellScreen(
             SearchBox(
                 value = searchQuery,
                 onValueChange = { viewModel.onSearchQueryChange(it) },
-                placeholder = "Search For Products"
+                placeholder = stringResource(R.string.sell_search_placeholder)
             )
 
             Spacer(modifier = Modifier.padding(8.dp))

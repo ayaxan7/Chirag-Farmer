@@ -40,6 +40,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.navigation.NavHostController
@@ -74,13 +75,14 @@ fun PaymentScreen(
         viewModel.verifyPhonePePayment()
     }
 
+    val phonePeUnavailableMsg = stringResource(R.string.snackbar_phonepe_unavailable)
     LaunchedEffect(phonePeLaunchRequest) {
         val request = phonePeLaunchRequest ?: return@LaunchedEffect
 
         try {
             startPhonePeCheckout(context, request.token, request.orderId, phonePeLauncher)
         } catch (e: Exception) {
-            snackbarHostState.showSnackbar(e.message ?: "Unable to launch PhonePe checkout")
+            snackbarHostState.showSnackbar(e.message ?: phonePeUnavailableMsg)
         } finally {
             viewModel.clearPhonePeLaunchRequest()
         }
@@ -108,7 +110,7 @@ fun PaymentScreen(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             ChiragTopBar(
-                navController = navController, icon = R.drawable.ic_arrow, title = "Payment"
+                navController = navController, icon = R.drawable.ic_arrow, title = stringResource(R.string.payment_title)
             )
         }) { paddingValues ->
         Box(
@@ -125,7 +127,7 @@ fun PaymentScreen(
                 Spacer(modifier = Modifier.height(16.dp))
                 // Credit & Debit Cards Section
                 Text(
-                    text = "Credit & Debit Cards",
+                    text = stringResource(R.string.payment_credit_debit_cards),
                     fontSize = 15.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Color.Black,
@@ -136,7 +138,7 @@ fun PaymentScreen(
 
                 PaymentOptionItem(
                     icon = R.drawable.ic_card,
-                    title = "Add Card",
+                    title = stringResource(R.string.payment_add_card),
                     isSelected = false,
                     showChevron = true,
                     onClick = { /* Navigate to add card */ },
@@ -148,7 +150,7 @@ fun PaymentScreen(
                 // UPI Payments Section
                 if (installedUpiApps.isNotEmpty()) {
                     Text(
-                        text = "UPI Payments",
+                        text = stringResource(R.string.payment_upi),
                         fontSize = 15.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = Color.Black,
@@ -171,7 +173,7 @@ fun PaymentScreen(
 
                 // More Payment Options Section
                 Text(
-                    text = "More Payments Options",
+                    text = stringResource(R.string.payment_more_options),
                     fontSize = 15.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Color.Black,
@@ -202,7 +204,7 @@ fun PaymentScreen(
 
                 PaymentOptionItem(
                     icon = R.drawable.icon_cod,
-                    title = "Cash On Delivery",
+                    title = stringResource(R.string.payment_cash_on_delivery),
                     isSelected = selectedPayment == "Cash On Delivery",
                     onClick = { selectedPayment = "Cash On Delivery" },
                     modifier = Modifier.padding(horizontal = 16.dp)
@@ -229,13 +231,13 @@ fun PaymentScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "Sub-Total",
+                        text = stringResource(R.string.payment_subtotal),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Normal,
                         color = BGBlack
                     )
                     Text(
-                        text = "₹%.2f".format(subtotal),
+                        text = stringResource(R.string.product_price_format, "%.2f".format(subtotal)),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Normal,
                         color = BGBlack
@@ -247,13 +249,13 @@ fun PaymentScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "Delivery Fee",
+                        text = stringResource(R.string.payment_delivery_fee),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Normal,
                         color = BGBlack
                     )
                     Text(
-                        text = "₹%.2f".format(totalDeliveryFee),
+                        text = stringResource(R.string.product_price_format, "%.2f".format(totalDeliveryFee)),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Normal,
                         color = BGBlack
@@ -266,13 +268,13 @@ fun PaymentScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "Discount",
+                        text = stringResource(R.string.payment_discount),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Normal,
                         color = BGBlack
                     )
                     Text(
-                        text = "₹%.2f".format(totalDiscount),
+                        text = stringResource(R.string.product_price_format, "%.2f".format(totalDiscount)),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Normal,
                         color = BGBlack
@@ -284,13 +286,13 @@ fun PaymentScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "Total Cost",
+                        text = stringResource(R.string.payment_total_cost),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         color = BGBlack
                     )
                     Text(
-                        text = "₹%.2f".format(totalAmount),
+                        text = stringResource(R.string.product_price_format, "%.2f".format(totalAmount)),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         color = BGBlack
@@ -316,7 +318,7 @@ fun PaymentScreen(
                     }
                 } else {
                     ChiragButton(
-                        text = "Pay Now",
+                        text = stringResource(R.string.payment_pay_now),
                         onClick = {
                             if (selectedPayment != null) {
                                 viewModel.placeOrder(
@@ -400,7 +402,7 @@ fun PaymentOptionItem(
         if (showChevron) {
             Icon(
                 imageVector = Icons.Default.ChevronRight,
-                contentDescription = "Navigate",
+                contentDescription = stringResource(R.string.payment_navigate_description),
                 tint = Color.Black,
                 modifier = Modifier.size(20.dp)
             )

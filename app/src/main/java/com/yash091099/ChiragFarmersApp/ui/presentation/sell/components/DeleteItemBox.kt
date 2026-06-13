@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.theme.DeleteRed
@@ -31,7 +32,7 @@ fun DeleteItemBox(
             }) {
         Image(
             painter = painterResource(R.drawable.ic_delete),
-            contentDescription = "Delete Item",
+            contentDescription = stringResource(R.string.common_delete_item_description),
             modifier = Modifier
                 .fillMaxSize(.5f)
                 .align(Alignment.Center)

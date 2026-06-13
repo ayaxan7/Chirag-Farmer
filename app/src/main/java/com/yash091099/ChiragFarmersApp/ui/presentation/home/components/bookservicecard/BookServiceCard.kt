@@ -42,6 +42,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -114,7 +115,7 @@ fun BookServiceCardContent(
                 // Background Image
                 Image(
                     painter = painterResource(R.drawable.book_service_card),
-                    contentDescription = "Book Service Card",
+                    contentDescription = stringResource(R.string.service_book_card_description),
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
                 )
@@ -194,7 +195,7 @@ fun BookServiceCardContent(
 
                                     Icon(
                                         imageVector = Icons.Default.KeyboardArrowDown,
-                                        contentDescription = "Toggle Dropdown",
+                                        contentDescription = stringResource(R.string.service_dropdown_description),
                                         tint = Color.White,
                                         modifier = Modifier
                                             .size(18.dp)

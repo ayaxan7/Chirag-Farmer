@@ -32,6 +32,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -76,7 +77,7 @@ fun ProfileScreen(
         topBar = {
             ChiragTopBar(
                 navController = navController,
-                title = "My Account",
+                title = stringResource(R.string.profile_title),
                 icon = R.drawable.ic_arrow,
             )
         }, containerColor = BGWhite
@@ -142,7 +143,7 @@ fun ProfileScreen(
                                 .padding(horizontal = 16.dp, vertical = 24.dp)
                         ) {
                             ChiragButton(
-                                text = "Logout",
+                                text = stringResource(R.string.profile_logout),
                                 onClick = {
                                     scope.launch {
                                         viewModel.logout()
@@ -159,7 +160,7 @@ fun ProfileScreen(
 
                     item {
                         Text(
-                            text = "Version ${BuildConfig.VERSION_NAME}",
+                            text = stringResource(R.string.profile_version, BuildConfig.VERSION_NAME),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(bottom = 32.dp),
@@ -198,7 +199,7 @@ private fun ProfileErrorState(
         )
         Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = onRetry) {
-            Text(text = "Retry")
+            Text(text = stringResource(R.string.profile_retry))
         }
     }
 }
@@ -216,7 +217,7 @@ fun ProfileHeader(
         Box {
             AsyncImage(
                 model = profileImageUrl,
-                contentDescription = "Profile Image",
+                contentDescription = stringResource(R.string.profile_image_description),
                 placeholder = painterResource(id = R.drawable.profile_placeholder),
                 error = painterResource(id = R.drawable.profile_placeholder),
                 fallback = painterResource(id = R.drawable.profile_placeholder),
@@ -235,7 +236,7 @@ fun ProfileHeader(
                 text = name, fontSize = 22.sp, fontWeight = FontWeight.Bold, color = BGBlack
             )
             Text(
-                text = "+91 $phone", fontSize = 14.sp, color = TextGray
+                text = stringResource(R.string.profile_phone_format, phone), fontSize = 14.sp, color = TextGray
             )
             Text(
                 text = email,
@@ -249,7 +250,7 @@ fun ProfileHeader(
         IconButton(onClick = onEditClick) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_edit_profile),
-                contentDescription = "Edit Profile",
+                contentDescription = stringResource(R.string.profile_edit_description),
                 modifier = Modifier.size(24.dp)
             )
         }
@@ -267,7 +268,7 @@ fun QuickActionsRow(
         horizontalArrangement = Arrangement.Start
     ) {
         QuickActionCard(
-            title = "Orders\nplaced",
+            title = stringResource(R.string.profile_orders_title),
             icon = R.drawable.ic_ordersplaced,
             modifier = Modifier.width(110.dp),
             onClick = {
@@ -277,7 +278,7 @@ fun QuickActionsRow(
             modifier = Modifier.size(16.dp)
         )
         QuickActionCard(
-            title = "Help &\nSupport",
+            title = stringResource(R.string.profile_help_title),
             icon = R.drawable.ic_help_n_support,
             modifier = Modifier.width(110.dp)
         )
@@ -289,13 +290,13 @@ fun MenuListSection(
     navController: NavHostController
 ) {
     Column {
-        MenuItem(icon = R.drawable.ic_wallet, title = "Wallet")
+        MenuItem(icon = R.drawable.ic_wallet, title = stringResource(R.string.profile_wallet))
         MenuItem(
             icon = R.drawable.location,
-            title = "Manage Addresses",
+            title = stringResource(R.string.profile_manage_addresses),
             onClick = { navController.navigate(Route.AddressList.path) })
-        MenuItem(icon = R.drawable.ic_terms_n_conditions, title = "Terms and conditions")
-        MenuItem(icon = R.drawable.ic_privacy_policy, title = "Privacy Policy")
-        MenuItem(icon = R.drawable.ic_rating, title = "Rate app")
+        MenuItem(icon = R.drawable.ic_terms_n_conditions, title = stringResource(R.string.profile_terms))
+        MenuItem(icon = R.drawable.ic_privacy_policy, title = stringResource(R.string.profile_privacy))
+        MenuItem(icon = R.drawable.ic_rating, title = stringResource(R.string.profile_rate_app))
     }
 }

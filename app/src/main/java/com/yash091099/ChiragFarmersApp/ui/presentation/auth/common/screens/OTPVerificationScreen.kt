@@ -36,6 +36,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -165,7 +166,7 @@ fun OTPVerificationScreen(
                 ) {
                     // Title
                     Text(
-                        text = "Enter authentication code",
+                        text = stringResource(R.string.otp_enter_code),
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = BGBlack
@@ -175,7 +176,7 @@ fun OTPVerificationScreen(
 
                     // Description
                     Text(
-                        text = "Enter the 4-digit OTP that we have sent to your mobile number.",
+                        text = stringResource(R.string.otp_description),
                         fontSize = 12.sp,
                         color = BGBlack,
                         lineHeight = 24.sp
@@ -222,7 +223,7 @@ fun OTPVerificationScreen(
 
                     // Continue button
                     ChiragButton(
-                        text = "Continue", onClick = {
+                        text = stringResource(R.string.otp_continue), onClick = {
                             if (phoneNumber != null && requestId != null) {
                                 viewModel.verifyOTP(phoneNumber, otpValue, requestId, isSignUp)
                             }

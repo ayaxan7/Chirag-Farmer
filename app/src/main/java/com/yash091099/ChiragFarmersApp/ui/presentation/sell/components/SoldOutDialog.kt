@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -67,7 +68,7 @@ fun SoldOutDialog(
                         // Illustration
                         Image(
                             painter = painterResource(id = R.drawable.sold_out),
-                            contentDescription = "Sold Out",
+                            contentDescription = stringResource(R.string.common_sold_out_description),
                             modifier = Modifier
                                 .width(160.dp)
                                 .height(120.dp)
@@ -113,7 +114,7 @@ fun SoldOutDialog(
                                 )
                             ) {
                                 Text(
-                                    text = "Cancel",
+                                    text = stringResource(R.string.dialog_cancel),
                                     fontSize = 15.sp,
                                     fontWeight = FontWeight.Medium
                                 )
@@ -150,7 +151,7 @@ fun SoldOutDialog(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Close,
-                            contentDescription = "Close dialog",
+                            contentDescription = stringResource(R.string.common_close_dialog_description),
                             tint = BGBlack
                         )
                     }

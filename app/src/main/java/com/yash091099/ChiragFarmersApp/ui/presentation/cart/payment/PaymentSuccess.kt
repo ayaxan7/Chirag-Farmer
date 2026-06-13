@@ -16,6 +16,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -38,7 +39,7 @@ fun PaymentSuccess(
     Scaffold(
         containerColor = BGWhite, bottomBar = {
             ChiragButton(
-                text = "Continue Shopping",
+                text = stringResource(R.string.payment_continue_shopping),
                 onClick = {
                     // Navigate to home - the order response cache will persist
                     // and will be cleared on the next order placement or when needed
@@ -62,20 +63,20 @@ fun PaymentSuccess(
 
             Image(
                 painter = painterResource(id = R.drawable.payment_success),
-                contentDescription = "Payment Success",
+                contentDescription = stringResource(R.string.payment_success_description),
                 modifier = Modifier.size(120.dp)
             )
 
             Spacer(modifier = Modifier.height(24.dp))
 
             Text(
-                text = "Payment Successful", fontSize = 24.sp, fontWeight = FontWeight.Bold
+                text = stringResource(R.string.payment_successful), fontSize = 24.sp, fontWeight = FontWeight.Bold
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Thank You for purchase",
+                text = stringResource(R.string.payment_thank_you),
                 fontSize = 18.sp,
                 color = TextGray,
                 fontWeight = FontWeight.Medium
