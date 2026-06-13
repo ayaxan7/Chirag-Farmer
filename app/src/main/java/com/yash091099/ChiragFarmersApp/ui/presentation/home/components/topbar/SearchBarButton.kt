@@ -65,7 +65,7 @@ fun SearchBarButton(
                 text = stringResource(R.string.search_hint), fontSize = 14.sp, color = TextDarkGray,
             )
             Text(
-                text = "Products",
+                text = " "+stringResource(R.string.search_products),
                 fontSize = 14.sp,
                 color = BGBlack,
                 fontWeight = FontWeight.SemiBold

@@ -49,7 +49,6 @@ import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
 fun HomeScreen(
     navController: NavHostController, viewModel: HomeViewModel = hiltViewModel()
 ) {
-    rememberCoroutineScope()
     val isProfileComplete by viewModel.isProfileComplete.collectAsStateWithLifecycle()
     val homeMixedProductsUiState by viewModel.homeMixedProductsUiState.collectAsStateWithLifecycle()
 

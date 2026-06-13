@@ -96,6 +96,10 @@
     <string name="search_hint">శోధించండి </string>
     <string name="search_camera_description">కెమెరా శోధన</string>
 
+    <!-- Telugu (values-te/strings.xml) -->
+    <string name="search_products"> శోధించండి</string>
+
+
     <!-- Search Screen -->
     <string name="search_title">శోధన</string>
     <string name="search_placeholder">ఉత్పత్తులు/సేవలు/అద్దెల కోసం శోధించండి</string>
@@ -414,6 +418,7 @@
     <string name="profile_wallet">వాలెట్</string>
     <string name="profile_manage_addresses">చిరునామాలను నిర్వహించండి</string>
     <string name="profile_terms">నిబంధనలు మరియు షరతులు</string>
+    <string name="profile_language">భాష</string>
     <string name="profile_privacy">గోప్యతా విధానం</string>
     <string name="profile_rate_app">యాప్ రేట్ చేయండి</string>
     <string name="profile_edit_account_title">ఖాతా సవరించండి</string>

@@ -95,7 +95,8 @@
     <string name="search_icon_description">ਖੋਜ</string>
     <string name="search_hint">ਖੋਜ ਕਰੋ </string>
     <string name="search_camera_description">ਕੈਮਰਾ ਖੋਜ</string>
-
+    <!-- Punjabi (values-pa/strings.xml) -->
+    <string name="search_products"> ਖੋਜੋ</string>
     <!-- Search Screen -->
     <string name="search_title">ਖੋਜ</string>
     <string name="search_placeholder">ਉਤਪਾਦਾਂ/ਸੇਵਾਵਾਂ/ਕਿਰਾਏ ਲਈ ਖੋਜ ਕਰੋ</string>
@@ -415,6 +416,7 @@
     <string name="profile_manage_addresses">ਪਤਿਆਂ ਦਾ ਪ੍ਰਬੰਧ ਕਰੋ</string>
     <string name="profile_terms">ਨਿਯਮ ਅਤੇ ਸ਼ਰਤਾਂ</string>
     <string name="profile_privacy">ਪਰਾਈਵੇਸੀ ਨੀਤੀ</string>
+    <string name="profile_language">ਭਾਸ਼ਾ</string>
     <string name="profile_rate_app">ਐਪ ਨੂੰ ਰੇਟ ਕਰੋ</string>
     <string name="profile_edit_account_title">ਖਾਤਾ ਸੰਪਾਦਿਤ ਕਰੋ</string>
     <string name="profile_name_label">ਨਾਮ</string>

@@ -96,6 +96,9 @@
     <string name="search_hint">खोजें </string>
     <string name="search_camera_description">कैमरा खोज</string>
 
+    <!-- Hindi (values-hi/strings.xml) -->
+    <string name="search_products"> खोजें</string>
+
     <!-- Search Screen -->
     <string name="search_title">खोजें</string>
     <string name="search_placeholder">उत्पाद/सेवा/किराये की खोज करें</string>
@@ -419,7 +422,7 @@
     <string name="profile_edit_account_title">खाता संपादित करें</string>
     <string name="profile_name_label">नाम</string>
     <string name="profile_email_label">ईमेल</string>
-
+    <string name="profile_language">भाषा</string>
     <!-- Bookings -->
     <string name="bookings_placeholder">सहायता स्क्रीन</string>
 

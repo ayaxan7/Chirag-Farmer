@@ -95,6 +95,8 @@
     <string name="search_icon_description">Search</string>
     <string name="search_hint">Search For </string>
     <string name="search_camera_description">Camera search</string>
+    <!-- English -->
+    <string name="search_products"> Products</string>
 
     <!-- Search Screen -->
     <string name="search_title">Search</string>
@@ -419,6 +421,7 @@
     <string name="profile_manage_addresses">Manage Addresses</string>
     <string name="profile_terms">Terms and conditions</string>
     <string name="profile_privacy">Privacy Policy</string>
+    <string name="profile_language">Language</string>
     <string name="profile_rate_app">Rate app</string>
     <string name="profile_edit_account_title">Edit Account</string>
     <string name="profile_name_label">NAME</string>
