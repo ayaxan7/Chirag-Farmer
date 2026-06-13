@@ -2,6 +2,7 @@ package com.yash091099.ChiragFarmersApp.data.repository
 
 import android.util.Log
 import com.google.gson.Gson
+import retrofit2.HttpException
 import com.yash091099.ChiragFarmersApp.data.local.ChiragDataStore
 import com.yash091099.ChiragFarmersApp.data.model.auth.AddBusinessInfoRequest
 import com.yash091099.ChiragFarmersApp.data.model.auth.AuthResponse
@@ -35,12 +36,29 @@ class AuthRepository @Inject constructor(
     private val chiragDataStore: ChiragDataStore
 ) {
 
+    private fun getErrorMessage(e: Exception): String {
+        if (e is HttpException) {
+            return try {
+                val errorBody = e.response()?.errorBody()?.string()
+                if (!errorBody.isNullOrBlank()) {
+                    val errorResponse = Gson().fromJson(errorBody, AuthResponse::class.java)
+                    errorResponse.message
+                } else {
+                    e.message ?: "Network error occurred"
+                }
+            } catch (_: Exception) {
+                e.message ?: "Network error occurred"
+            }
+        }
+        return e.message ?: "Network error occurred"
+    }
+
     suspend fun sendLoginOTP(phone: String): Result<AuthResponse<SendOTPData>> {
         return try {
             val response = apiService.sendLoginOTP(SendOTPRequest(phone = phone, role = "farmer"))
             Result.success(response)
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(Exception(getErrorMessage(e)))
         }
     }
 
@@ -49,7 +67,7 @@ class AuthRepository @Inject constructor(
             val response = apiService.sendRegistrationOTP(SendOTPRequest(phone = phone, role = "farmer"))
             Result.success(response)
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(Exception(getErrorMessage(e)))
         }
     }
 
