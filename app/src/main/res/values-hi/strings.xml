@@ -97,7 +97,7 @@
     <string name="search_camera_description">कैमरा खोज</string>
 
     <!-- Hindi (values-hi/strings.xml) -->
-    <string name="search_products"> खोजें</string>
+    <string name="search_products"> वस्तुएँ</string>
 
     <!-- Search Screen -->
     <string name="search_title">खोजें</string>
@@ -423,6 +423,12 @@
     <string name="profile_name_label">नाम</string>
     <string name="profile_email_label">ईमेल</string>
     <string name="profile_language">भाषा</string>
+    <string name="lang_english">अंग्रेज़ी</string>
+    <string name="lang_hindi">हिन्दी</string>
+    <string name="lang_punjabi">पंजाबी</string>
+    <string name="lang_telugu">तेलुगु</string>
+    <string name="lang_select_title">भाषा चुनें</string>
+    <string name="lang_select_subtitle">अपनी पसंदीदा भाषा चुनें</string>
     <!-- Bookings -->
     <string name="bookings_placeholder">सहायता स्क्रीन</string>
 

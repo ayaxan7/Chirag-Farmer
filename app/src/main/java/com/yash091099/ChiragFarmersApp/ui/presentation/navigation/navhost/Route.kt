@@ -63,6 +63,7 @@ sealed class Route(val path: String) {
      }
      object Profile: Route("profile")
      object EditProfile: Route("edit_profile")
+    object Language: Route("language")
      object Payment: Route("payment?subtotal={subtotal}&totalDiscount={totalDiscount}&totalDeliveryFee={totalDeliveryFee}&totalAmount={totalAmount}") {
          fun createRoute(subtotal: Double, totalDiscount: Double, totalDeliveryFee: Double, totalAmount: Double) = 
              "payment?subtotal=$subtotal&totalDiscount=$totalDiscount&totalDeliveryFee=$totalDeliveryFee&totalAmount=$totalAmount"

@@ -417,6 +417,12 @@
     <string name="profile_terms">ਨਿਯਮ ਅਤੇ ਸ਼ਰਤਾਂ</string>
     <string name="profile_privacy">ਪਰਾਈਵੇਸੀ ਨੀਤੀ</string>
     <string name="profile_language">ਭਾਸ਼ਾ</string>
+    <string name="lang_english">ਅੰਗਰੇਜ਼ੀ</string>
+    <string name="lang_hindi">ਹਿੰਦੀ</string>
+    <string name="lang_punjabi">ਪੰਜਾਬੀ</string>
+    <string name="lang_telugu">ਤੇਲਗੂ</string>
+    <string name="lang_select_title">ਭਾਸ਼ਾ ਚੁਣੋ</string>
+    <string name="lang_select_subtitle">ਆਪਣੀ ਪਸੰਦੀਦਾ ਭਾਸ਼ਾ ਚੁਣੋ</string>
     <string name="profile_rate_app">ਐਪ ਨੂੰ ਰੇਟ ਕਰੋ</string>
     <string name="profile_edit_account_title">ਖਾਤਾ ਸੰਪਾਦਿਤ ਕਰੋ</string>
     <string name="profile_name_label">ਨਾਮ</string>

@@ -297,7 +297,10 @@ fun MenuListSection(
             onClick = { navController.navigate(Route.AddressList.path) })
         MenuItem(icon = R.drawable.ic_terms_n_conditions, title = stringResource(R.string.profile_terms))
         MenuItem(icon = R.drawable.ic_privacy_policy, title = stringResource(R.string.profile_privacy))
-        MenuItem(icon = R.drawable.ic_language, title = stringResource(R.string.profile_language))
+        MenuItem(
+            icon = R.drawable.ic_language,
+            title = stringResource(R.string.profile_language),
+            onClick = { navController.navigate(Route.Language.path) })
         MenuItem(icon = R.drawable.ic_rating, title = stringResource(R.string.profile_rate_app))
     }
 }
