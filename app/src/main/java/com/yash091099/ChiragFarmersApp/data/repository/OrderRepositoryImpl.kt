@@ -24,6 +24,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
+import timber.log.Timber
 import javax.inject.Inject
 
 class OrderRepositoryImpl @Inject constructor(
@@ -34,6 +35,7 @@ class OrderRepositoryImpl @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun getActiveOrdersPaged(): Flow<PagingData<Order>> {
         return chiragDataStore.getAuthToken().flatMapLatest { token ->
+            Timber.tag("ActiveOrders").d("getActiveOrdersPaged tokenPresent=%s", token.isNullOrBlank().not())
             Pager(
                 config = PagingConfig(
                     pageSize = 10,
@@ -50,9 +52,12 @@ class OrderRepositoryImpl @Inject constructor(
     override suspend fun getActiveOrders(page: Int, limit: Int): Result<OrdersData> {
         return try {
             val token = chiragDataStore.getAuthToken().first()
+            Timber.tag("ActiveOrders").d("getActiveOrders page=%s limit=%s tokenPresent=%s", page, limit, token.isNullOrBlank().not())
             val response = api.getActiveOrders("Bearer $token", page, limit)
+            Timber.tag("ActiveOrders").d("getActiveOrders success=%s ordersCount=%s", response.success, response.data.orders.size)
             Result.success(response.toDomain())
         } catch (e: Exception) {
+            Timber.tag("ActiveOrders").e(e, "getActiveOrders failed")
             Result.failure(Exception(getErrorMessage(e)))
         }
     }

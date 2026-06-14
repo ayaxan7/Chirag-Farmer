@@ -1,5 +1,6 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.sell.tabs
 
+import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -56,6 +57,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import com.yash091099.ChiragFarmersApp.domain.model.Order
+import timber.log.Timber
 import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.ChiragButton
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.screens.orderstatus.OrderSummaryCard
@@ -77,8 +79,20 @@ fun ActiveOrdersScreen(
     val orders = viewModel.activeOrders.collectAsLazyPagingItems()
     val orderTrackingState by viewModel.orderTrackingState.collectAsState()
 
+    LaunchedEffect(orders.loadState) {
+        val refresh = orders.loadState.refresh
+        val append = orders.loadState.append
+        if (refresh is LoadState.Error) {
+            Timber.tag("ActiveOrdersUI").e(refresh.error, "refresh error itemCount=%s device=%s", orders.itemCount, Build.MODEL)
+        }
+        if (append is LoadState.Error) {
+            Timber.tag("ActiveOrdersUI").e(append.error, "append error itemCount=%s", orders.itemCount)
+        }
+    }
+
     LaunchedEffect(selectedOrderId) {
         if (selectedOrderId != null) {
+            Timber.tag("ActiveOrdersUI").d("selectedOrderId=%s", selectedOrderId)
             viewModel.selectOrder(selectedOrderId)
         }
     }

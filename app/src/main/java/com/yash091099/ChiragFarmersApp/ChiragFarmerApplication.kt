@@ -9,7 +9,7 @@ import com.phonepe.intent.sdk.api.PhonePeKt
 import com.phonepe.intent.sdk.api.models.PhonePeEnvironment
 import com.yash091099.ChiragFarmersApp.data.local.ChiragDataStore
 import com.yash091099.ChiragFarmersApp.utils.Constants.CLOUDINARY_CLOUD_NAME
-import com.yash091099.ChiragFarmersApp.utils.logging.CrashlvticsTree
+import com.yash091099.ChiragFarmersApp.utils.logging.CrashlyticsTree
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -27,7 +27,7 @@ class ChiragFarmerApplication : Application() {
     lateinit var chiragDataStore: ChiragDataStore
 
     @Inject
-    lateinit var crashlvticsTree: CrashlvticsTree
+    lateinit var crashlyticsTree: CrashlyticsTree
 
     private val applicationScope = CoroutineScope(
         SupervisorJob() + Dispatchers.IO
@@ -39,7 +39,7 @@ class ChiragFarmerApplication : Application() {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         } else {
-            Timber.plant(crashlvticsTree)
+            Timber.plant(crashlyticsTree)
         }
 
         Timber.d("App initialization started")

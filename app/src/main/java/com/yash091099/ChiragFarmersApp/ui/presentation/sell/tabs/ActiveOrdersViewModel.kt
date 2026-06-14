@@ -1,5 +1,6 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.sell.tabs
 
+import android.os.Build
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yash091099.ChiragFarmersApp.data.remote.dto.OrderTrackingData
@@ -16,6 +17,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 sealed class OrderTrackingState {
@@ -40,7 +42,9 @@ class ActiveOrdersViewModel @Inject constructor(
     private val repository: com.yash091099.ChiragFarmersApp.domain.repository.OrderRepository
 ) : ViewModel() {
 
-    private val activeOrdersFlow: Flow<PagingData<Order>> = getActiveOrdersUseCase().cachedIn(viewModelScope)
+    private val activeOrdersFlow: Flow<PagingData<Order>> = getActiveOrdersUseCase().cachedIn(viewModelScope).also {
+        Timber.tag("ActiveOrdersVM").d("created device=%s SDK=%s", Build.MODEL, Build.VERSION.SDK_INT)
+    }
 
     private val _orderTrackingState = MutableStateFlow<OrderTrackingState>(OrderTrackingState.Idle)
     val orderTrackingState: StateFlow<OrderTrackingState> = _orderTrackingState.asStateFlow()
@@ -52,6 +56,7 @@ class ActiveOrdersViewModel @Inject constructor(
         get() = activeOrdersFlow
 
     fun selectOrder(orderId: String?) {
+        Timber.tag("ActiveOrdersVM").d("selectOrder orderId=%s", orderId)
         if (orderId != null) {
             fetchOrderTracking(orderId)
         } else {
@@ -60,13 +65,16 @@ class ActiveOrdersViewModel @Inject constructor(
     }
 
     private fun fetchOrderTracking(id: String) {
+        Timber.tag("ActiveOrdersVM").d("fetchOrderTracking id=%s", id)
         viewModelScope.launch {
             _orderTrackingState.value = OrderTrackingState.Loading
             getOrderTrackingUseCase(id).fold(
                 onSuccess = { response ->
+                    Timber.tag("ActiveOrdersVM").d("fetchOrderTracking success id=%s", id)
                     _orderTrackingState.value = OrderTrackingState.Success(response.data)
                 },
                 onFailure = { exception ->
+                    Timber.tag("ActiveOrdersVM").e(exception, "fetchOrderTracking failed id=%s", id)
                     _orderTrackingState.value = OrderTrackingState.Error(
                         exception.message ?: "Failed to load tracking details"
                     )
@@ -76,18 +84,21 @@ class ActiveOrdersViewModel @Inject constructor(
     }
 
     fun updateOrderStatus(id: String, productId: String, status: String) {
+        Timber.tag("ActiveOrdersVM").d("updateOrderStatus id=%s productId=%s status=%s", id, productId, status)
         viewModelScope.launch {
             updateOrderStatusUseCase(id, productId, status).onSuccess { response ->
+                Timber.tag("ActiveOrdersVM").d("updateOrderStatus success=%s", response.success)
                 if (response.success) {
                     fetchOrderTracking(id)
                 }
-            }.onFailure {
-                // Error handling could be added here
+            }.onFailure { error ->
+                Timber.tag("ActiveOrdersVM").e(error, "updateOrderStatus failed id=%s", id)
             }
         }
     }
 
     fun cancelOrder(orderId: String, productId: String, reason: String) {
+        Timber.tag("ActiveOrdersVM").d("cancelOrder orderId=%s productId=%s", orderId, productId)
         viewModelScope.launch {
             _cancelOrderState.value = CancelOrderState.Loading
             repository.sellerCancelOrder(
@@ -98,6 +109,7 @@ class ActiveOrdersViewModel @Inject constructor(
                 )
             ).fold(
                 onSuccess = { response ->
+                    Timber.tag("ActiveOrdersVM").d("cancelOrder success=%s message=%s", response.success, response.message)
                     if (response.success) {
                         _cancelOrderState.value = CancelOrderState.Success(response.message)
                     } else {
@@ -105,6 +117,7 @@ class ActiveOrdersViewModel @Inject constructor(
                     }
                 },
                 onFailure = { error ->
+                    Timber.tag("ActiveOrdersVM").e(error, "cancelOrder failed orderId=%s", orderId)
                     _cancelOrderState.value = CancelOrderState.Error(
                         error.message ?: "Failed to cancel order"
                     )
