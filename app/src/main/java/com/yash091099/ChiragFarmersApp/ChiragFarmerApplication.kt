@@ -26,6 +26,9 @@ class ChiragFarmerApplication : Application() {
     @Inject
     lateinit var chiragDataStore: ChiragDataStore
 
+    @Inject
+    lateinit var crashlvticsTree: CrashlvticsTree
+
     private val applicationScope = CoroutineScope(
         SupervisorJob() + Dispatchers.IO
     )
@@ -36,7 +39,7 @@ class ChiragFarmerApplication : Application() {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         } else {
-            Timber.plant(CrashlvticsTree())
+            Timber.plant(crashlvticsTree)
         }
 
         Timber.d("App initialization started")

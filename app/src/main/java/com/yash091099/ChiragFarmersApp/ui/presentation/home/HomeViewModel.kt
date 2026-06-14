@@ -2,7 +2,6 @@ package com.yash091099.ChiragFarmersApp.ui.presentation.home
 
 import android.content.Context
 import timber.log.Timber
-import com.google.firebase.messaging.FirebaseMessaging
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yash091099.ChiragFarmersApp.BuildConfig
@@ -22,6 +21,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
+import com.google.firebase.messaging.FirebaseMessaging
 import com.yash091099.ChiragFarmersApp.domain.model.BookingRequest
 import com.yash091099.ChiragFarmersApp.domain.usecase.CreateBookingUseCase
 
@@ -51,7 +51,8 @@ class HomeViewModel @Inject constructor(
     private val createBookingUseCase: CreateBookingUseCase,
     private val updateDefaultLocationUseCase: UpdateDefaultLocationUseCase,
     private val productRepository: ProductRepository,
-    private val locationManager: LocationManager
+    private val locationManager: LocationManager,
+    private val firebaseMessaging: FirebaseMessaging
 ) : ViewModel() {
 
 
@@ -150,7 +151,7 @@ class HomeViewModel @Inject constructor(
 
                 // Verify Firebase is initialized before attempting to get token
                 val firebaseToken = try {
-                    FirebaseMessaging.getInstance().token.await()
+                    firebaseMessaging.token.await()
                 } catch (e: IllegalStateException) {
                     Timber.e("Firebase not initialized: ${e.message}")
                     return@launch
