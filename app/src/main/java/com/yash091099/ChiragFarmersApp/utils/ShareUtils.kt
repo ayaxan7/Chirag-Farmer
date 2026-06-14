@@ -1,6 +1,6 @@
 package com.yash091099.ChiragFarmersApp.utils
 
-import android.util.Log
+import timber.log.Timber
 import com.yash091099.ChiragFarmersApp.BuildConfig
 import org.hashids.Hashids
 
@@ -68,11 +68,11 @@ object ShareUtils {
         val shareUrl = BuildConfig.BASE_URL + "share"
 //        val shareUrl = "https://backend.chiragvendor.com/" + "share"
         val normalizedType = type.trim().lowercase()
-        Log.d("ShareUtils", "objectID: $id")
+        Timber.d("objectID: $id")
         val encodedId = encodeId(id)
-        Log.d("ShareUtils", "Encoded ID: $encodedId")
+        Timber.d("Encoded ID: $encodedId")
         val finalUrl = "$shareUrl/$normalizedType/$encodedId"
-        Log.d("ShareUtils", "Generated share URL: $finalUrl")
+        Timber.d("Generated share URL: $finalUrl")
         return finalUrl.trim()
     }
 }

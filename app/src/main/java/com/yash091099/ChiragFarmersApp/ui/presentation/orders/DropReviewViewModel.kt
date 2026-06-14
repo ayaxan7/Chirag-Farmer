@@ -1,6 +1,6 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.orders
 
-import android.util.Log
+import timber.log.Timber
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yash091099.ChiragFarmersApp.data.remote.dto.RateProductRequest
@@ -35,14 +35,14 @@ class DropReviewViewModel @Inject constructor(
 			_state.value = DropReviewState.Loading
 
 			val resolvedProductId = resolveProductId(orderId = orderId, productId = productId)
-			Log.d("DropReviewViewModel", "Resolved Product Id: $resolvedProductId")
-			Log.d("DropReviewViewModel", "Order Id: $orderId, Product Id: $resolvedProductId, Rating: $rating, Review: $review")
+			Timber.d("Resolved Product Id: $resolvedProductId")
+			Timber.d("Order Id: $orderId, Product Id: $resolvedProductId, Rating: $rating, Review: $review")
 
 			if (resolvedProductId.isBlank()) {
 				_state.value = DropReviewState.Error("Product information is missing for this order. Please open order details and try again.")
 				return@launch
 			}
-//			Log.d("DropReviewViewModel", "Order Id: $orderId, Product Id: $resolvedProductId, Rating: $rating, Review: $review")
+//			Timber.d("Order Id: $orderId, Product Id: $resolvedProductId, Rating: $rating, Review: $review")
 			rateProductUseCase(
 				RateProductRequest(
 					orderId = orderId,
@@ -68,54 +68,54 @@ class DropReviewViewModel @Inject constructor(
 	private suspend fun resolveProductId(orderId: String, productId: String): String {
 		if (productId.isNotBlank()) return productId
 
-		Log.d("DropReviewViewModel", "Resolving product id for order: $orderId")
+		Timber.d("Resolving product id for order: $orderId")
 
 		val fromOrderDetails = getOrderDetailsUseCase(orderId).fold(
 			onSuccess = { response ->
 				try {
 					val items = response.data.items
-					Log.d("DropReviewViewModel", "OrderDetails returned ${'$'}{items.size} items")
+					Timber.d("OrderDetails returned ${'$'}{items.size} items")
 					val pid = items.firstOrNull { !it.productId.isNullOrBlank() }?.productId.orEmpty()
-					Log.d("DropReviewViewModel", "ProductId from order details: ${'$'}pid")
+					Timber.d("ProductId from order details: ${'$'}pid")
 					pid
 				} catch (e: Exception) {
-					Log.d("DropReviewViewModel", "Error reading order details: ${'$'}{e.message}")
+					Timber.d("Error reading order details: ${'$'}{e.message}")
 					""
 				}
 			},
 			onFailure = { err ->
-				Log.d("DropReviewViewModel", "getOrderDetails failed: ${'$'}{err.message}")
+				Timber.d("getOrderDetails failed: ${'$'}{err.message}")
 				""
 			}
 		)
 		if (fromOrderDetails.isNotBlank()) return fromOrderDetails
 
-		Log.d("DropReviewViewModel", "Falling back to user placed orders lookup (type=complete)")
+		Timber.d("Falling back to user placed orders lookup (type=complete)")
 
 		val fromPlacedOrders = getUserPlacedOrdersUseCase(type = "complete", page = 1, limit = 100).fold(
 			onSuccess = { response ->
 				try {
 					val orders = response.data.orders
-					Log.d("DropReviewViewModel", "PlacedOrders returned ${'$'}{orders.size} orders")
+					Timber.d("PlacedOrders returned ${'$'}{orders.size} orders")
 					val matched = orders.firstOrNull {
 						it.orderObjectId == orderId && !it.productId.isNullOrBlank()
 					}
 					val pid = matched?.productId.orEmpty()
-					Log.d("DropReviewViewModel", "ProductId from placed orders: ${'$'}pid")
+					Timber.d("ProductId from placed orders: ${'$'}pid")
 					pid
 				} catch (e: Exception) {
-					Log.d("DropReviewViewModel", "Error reading placed orders: ${'$'}{e.message}")
+					Timber.d("Error reading placed orders: ${'$'}{e.message}")
 					""
 				}
 			},
 			onFailure = { err ->
-				Log.d("DropReviewViewModel", "getUserPlacedOrders failed: ${'$'}{err.message}")
+				Timber.d("getUserPlacedOrders failed: ${'$'}{err.message}")
 				""
 			}
 		)
 		if (fromPlacedOrders.isNotBlank()) return fromPlacedOrders
 
-		Log.d("DropReviewViewModel", "Unable to resolve product id for order: $orderId")
+		Timber.d("Unable to resolve product id for order: $orderId")
 		return ""
 	}
 

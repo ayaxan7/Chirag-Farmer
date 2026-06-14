@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
-import android.util.Log
+import timber.log.Timber
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -105,7 +105,7 @@ class PaymentViewModel @Inject constructor(
         
         val packageManager = context.packageManager
         val resolveInfoList = packageManager.queryIntentActivities(upiIntent, PackageManager.MATCH_ALL)
-        Log.d("PaymentViewModel", "Found ${resolveInfoList.size} UPI apps")
+        Timber.d("Found ${resolveInfoList.size} UPI apps")
         var upiApps = resolveInfoList.map { resolveInfo ->
             UpiAppInfo(
                 name = resolveInfo.loadLabel(packageManager).toString(),
@@ -116,7 +116,7 @@ class PaymentViewModel @Inject constructor(
 
         // Fallback: If no apps found via intent, check for common UPI apps by package name
         if (upiApps.isEmpty()) {
-            Log.d("PaymentViewModel", "No apps found via intent, trying fallback...")
+            Timber.d("No apps found via intent, trying fallback...")
             val commonUpiPackages = listOf(
                 "com.google.android.apps.nbu.paisa.user" to "Google Pay",
                 "com.phonepe.app" to "PhonePe",
@@ -139,13 +139,13 @@ class PaymentViewModel @Inject constructor(
                     }
                 } catch (e: PackageManager.NameNotFoundException) {
                     // App not installed
-                    Log.d("PaymentViewModel", "App not installed: $pkg with ${e.stackTrace}")
+                    Timber.d("App not installed: $pkg with ${e.stackTrace}")
                 }
             }
             upiApps = fallbackApps
         }
 
-        Log.d("PaymentViewModel", "Installed UPI apps: $upiApps")
+        Timber.d("Installed UPI apps: $upiApps")
         _installedUpiApps.value = upiApps
     }
 
@@ -180,23 +180,23 @@ class PaymentViewModel @Inject constructor(
                     return@launch
                 }
 
-                Log.d("PaymentViewModel", "Placing order with request: $request")
+                Timber.d("Placing order with request: $request")
 
                 placeOrderUseCase(request).fold(
                     onSuccess = { response ->
-                        Log.d("PaymentViewModel", "Order placed successfully: ${response.data?.order?.orderId}")
+                        Timber.d("Order placed successfully: ${response.data?.order?.orderId}")
                         orderResponseCache.setOrderResponse(response)
                         cartDataCache.clearCartData() // Clear cart data after successful order
                         clearPhonePeCheckoutState()
                         _paymentState.value = PaymentUiState.Success(response)
                     },
                     onFailure = { exception ->
-                        Log.e("PaymentViewModel", "Order placement failed", exception)
+                        Timber.e(exception, "Order placement failed")
                         _paymentState.value = PaymentUiState.Error(exception.message ?: "Order placement failed")
                     }
                 )
             } catch (e: Exception) {
-                Log.e("PaymentViewModel", "Exception in placeOrder", e)
+                Timber.e(e, "Exception in placeOrder")
                 _paymentState.value = PaymentUiState.Error(getErrorMessage(e))
             }
         }
@@ -226,7 +226,7 @@ class PaymentViewModel @Inject constructor(
                     return@launch
                 }
 
-                Log.d("PaymentViewModel", "Creating PhonePe checkout with request: $request")
+                Timber.d("Creating PhonePe checkout with request: $request")
 
                 initiatePhonePeCheckoutUseCase(request).fold(
                     onSuccess = { response ->
@@ -258,14 +258,14 @@ class PaymentViewModel @Inject constructor(
                         )
                     },
                     onFailure = { exception ->
-                        Log.e("PaymentViewModel", "PhonePe checkout failed", exception)
+                        Timber.e(exception, "PhonePe checkout failed")
                         _paymentState.value = PaymentUiState.Error(
                             exception.message ?: "Unable to start PhonePe checkout"
                         )
                     }
                 )
             } catch (e: Exception) {
-                Log.e("PaymentViewModel", "Exception in startPhonePeCheckout", e)
+                Timber.e(e, "Exception in startPhonePeCheckout")
                 _paymentState.value = PaymentUiState.Error(getErrorMessage(e))
             }
         }

@@ -2,7 +2,7 @@ package com.yash091099.ChiragFarmersApp.services
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.util.Log
+import timber.log.Timber
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -11,12 +11,12 @@ import com.yash091099.ChiragFarmersApp.R
 class ChiragMessagingService : FirebaseMessagingService() {
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        Log.d(TAG, "Message received from: ${remoteMessage.from}")
+        Timber.d("Message received from: ${remoteMessage.from}")
 
         // Check if message contains a notification payload
         remoteMessage.notification?.let {
-            Log.d(TAG, "Message notification title: ${it.title}")
-            Log.d(TAG, "Message notification body: ${it.body}")
+            Timber.d("Message notification title: ${it.title}")
+            Timber.d("Message notification body: ${it.body}")
 
             // Send notification to user
             sendNotification(
@@ -27,7 +27,7 @@ class ChiragMessagingService : FirebaseMessagingService() {
 
         // Check if message contains a data payload
         if (remoteMessage.data.isNotEmpty()) {
-            Log.d(TAG, "Message data payload: ${remoteMessage.data}")
+            Timber.d("Message data payload: ${remoteMessage.data}")
 
             // Handle data payload here if needed
             val title = remoteMessage.data["title"] ?: "ChiragFarmer"
@@ -41,7 +41,7 @@ class ChiragMessagingService : FirebaseMessagingService() {
     }
 
     override fun onNewToken(token: String) {
-        Log.d(TAG, "Refreshed token: $token")
+        Timber.d("Refreshed token: $token")
         // Note: The token sync is handled automatically when the app opens via HomeViewModel
         // This callback is called when FCM generates a new token
     }
@@ -73,7 +73,7 @@ class ChiragMessagingService : FirebaseMessagingService() {
         val notificationId = (System.currentTimeMillis() / 1000).toInt()
         notificationManager.notify(notificationId, notificationBuilder.build())
 
-        Log.d(TAG, "Notification shown with ID: $notificationId")
+        Timber.d("Notification shown with ID: $notificationId")
     }
 
     companion object {

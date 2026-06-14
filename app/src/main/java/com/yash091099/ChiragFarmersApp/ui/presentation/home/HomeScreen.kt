@@ -1,6 +1,7 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.home
 
 import android.util.Log
+import timber.log.Timber
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -58,7 +59,6 @@ fun HomeScreen(
         R.drawable.smart_farmer,
         R.drawable.smart_farmer
     )
-
     val productCategories = listOf(
         Pair(stringResource(R.string.home_agriculture_drones), R.drawable.agri_drone),
         Pair(stringResource(R.string.home_seeds), R.drawable.agri_seeds),
@@ -81,18 +81,12 @@ fun HomeScreen(
     LaunchedEffect(bookingStatus) {
         when (bookingStatus) {
             is BookingStatus.Success -> {
-                Log.d(
-                    "HomeScreen",
-                    "Booking Success: ${(bookingStatus as BookingStatus.Success).message}"
-                )
+                Timber.d("Booking Success: ${(bookingStatus as BookingStatus.Success).message}")
                 viewModel.resetBookingStatus()
             }
 
             is BookingStatus.Error -> {
-                Log.e(
-                    "HomeScreen",
-                    "Booking Error: ${(bookingStatus as BookingStatus.Error).message}"
-                )
+                Timber.e("Booking Error: ${(bookingStatus as BookingStatus.Error).message}")
                 viewModel.resetBookingStatus()
             }
 

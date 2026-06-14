@@ -8,6 +8,7 @@ plugins {
     id("com.google.dagger.hilt.android")
     id("kotlin-parcelize")
     alias(libs.plugins.google.gms.google.services)
+    alias(libs.plugins.google.firebase.crashlytics)
 }
 val localPropertiesFile = rootProject.file("local.properties")
 val localProperties = Properties().apply {
@@ -95,6 +96,8 @@ dependencies {
     // Hilt
     implementation(libs.hilt.android)
     implementation(libs.firebase.messaging)
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.timber)
     implementation(libs.androidx.compose.material3.adaptive.navigation.suite)
     implementation(libs.androidx.lifecycle.process)
     implementation(libs.androidx.compose.foundation)

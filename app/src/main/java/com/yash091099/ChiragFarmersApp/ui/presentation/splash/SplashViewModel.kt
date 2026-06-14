@@ -1,6 +1,6 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.splash
 
-import android.util.Log
+import timber.log.Timber
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yash091099.ChiragFarmersApp.data.location.LocationManager
@@ -46,17 +46,17 @@ class SplashViewModel @Inject constructor(
                 // First, check if auth token exists
                 authRepository.getAuthToken().collect { token ->
                     if (token != null && token.isNotEmpty()) {
-                        Log.d("SplashViewModel", "Token found, checking location permissions")
+                        Timber.d("Token found, checking location permissions")
                         // Token exists, now check location permissions
                         _authCheckStatus.value = AuthCheckStatus.CheckingLocationPermission
                         checkLocationPermission()
                     } else {
-                        Log.d("SplashViewModel", "No token found, navigating to Auth")
+                        Timber.d("No token found, navigating to Auth")
                         _authCheckStatus.value = AuthCheckStatus.NavigateToAuth
                     }
                 }
             } catch (e: Exception) {
-                Log.e("SplashViewModel", "Error checking authentication status: ${e.message}")
+                Timber.e("Error checking authentication status: ${e.message}")
                 _authCheckStatus.value = AuthCheckStatus.NavigateToAuth
             }
         }
@@ -68,10 +68,10 @@ class SplashViewModel @Inject constructor(
                 val permissionGranted = locationManager.isLocationPermissionGranted()
 
                 if (permissionGranted) {
-                    Log.d("SplashViewModel", "Location permission granted, checking location service")
+                    Timber.d("Location permission granted, checking location service")
                     checkLocationService()
                 } else {
-                    Log.d("SplashViewModel", "Location permission not granted, showing dialog")
+                    Timber.d("Location permission not granted, showing dialog")
                     if (permissionDenialCount >= MAX_PERMISSION_DENIALS) {
                         _authCheckStatus.value = AuthCheckStatus.ShowLocationPermissionMandatoryDialog
                     } else {
@@ -79,7 +79,7 @@ class SplashViewModel @Inject constructor(
                     }
                 }
             } catch (e: Exception) {
-                Log.e("SplashViewModel", "Error checking location permission: ${e.message}")
+                Timber.e("Error checking location permission: ${e.message}")
                 _authCheckStatus.value = AuthCheckStatus.NavigateToAuth
             }
         }
@@ -91,14 +91,14 @@ class SplashViewModel @Inject constructor(
                 val locationServiceEnabled = locationManager.isLocationServiceEnabled()
 
                 if (locationServiceEnabled) {
-                    Log.d("SplashViewModel", "Location service enabled, navigating to Home")
+                    Timber.d("Location service enabled, navigating to Home")
                     _authCheckStatus.value = AuthCheckStatus.NavigateToHome
                 } else {
-                    Log.d("SplashViewModel", "Location service disabled, showing dialog")
+                    Timber.d("Location service disabled, showing dialog")
                     _authCheckStatus.value = AuthCheckStatus.ShowLocationServiceDisabledDialog
                 }
             } catch (e: Exception) {
-                Log.e("SplashViewModel", "Error checking location service: ${e.message}")
+                Timber.e("Error checking location service: ${e.message}")
                 _authCheckStatus.value = AuthCheckStatus.NavigateToAuth
             }
         }
@@ -108,7 +108,7 @@ class SplashViewModel @Inject constructor(
      * Called when user responds to location permission dialog
      */
     fun onLocationPermissionGrantedByUser() {
-        Log.d("SplashViewModel", "User interaction: Location permission granted by user")
+        Timber.d("User interaction: Location permission granted by user")
         checkLocationService()
     }
 
@@ -116,7 +116,7 @@ class SplashViewModel @Inject constructor(
      * Called when user denies location permission
      */
     fun onLocationPermissionDeniedByUser() {
-        Log.d("SplashViewModel", "User interaction: Location permission denied by user")
+        Timber.d("User interaction: Location permission denied by user")
         permissionDenialCount++
         checkLocationPermission()
     }
@@ -125,7 +125,7 @@ class SplashViewModel @Inject constructor(
      * Called when user goes to location settings
      */
     fun onUserReturnedFromSettings() {
-        Log.d("SplashViewModel", "User interaction: Returned from settings, rechecking location")
+        Timber.d("User interaction: Returned from settings, rechecking location")
         checkLocationPermission()
     }
 
@@ -133,7 +133,7 @@ class SplashViewModel @Inject constructor(
      * Called when user cancels the location service dialog
      */
     fun onLocationServiceDialogCancelled() {
-        Log.d("SplashViewModel", "User interaction: Location service dialog cancelled")
+        Timber.d("User interaction: Location service dialog cancelled")
         _authCheckStatus.value = AuthCheckStatus.NavigateToAuth
     }
 
@@ -141,7 +141,7 @@ class SplashViewModel @Inject constructor(
      * Called when user cancels the mandatory permission dialog
      */
     fun onMandatoryPermissionDialogCancelled() {
-        Log.d("SplashViewModel", "User interaction: Mandatory permission dialog cancelled")
+        Timber.d("User interaction: Mandatory permission dialog cancelled")
         _authCheckStatus.value = AuthCheckStatus.NavigateToAuth
     }
 }

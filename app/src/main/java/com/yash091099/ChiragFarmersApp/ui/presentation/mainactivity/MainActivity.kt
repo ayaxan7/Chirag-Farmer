@@ -4,7 +4,7 @@ import android.Manifest
 import android.os.Build
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import timber.log.Timber
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
@@ -33,9 +33,9 @@ class MainActivity : ComponentActivity() {
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
-            Log.d("MainActivity", "Notification permission granted")
+            Timber.d("Notification permission granted")
         } else {
-            Log.w("MainActivity", "Notification permission denied by user")
+            Timber.w("Notification permission denied by user")
         }
     }
 
@@ -55,11 +55,11 @@ class MainActivity : ComponentActivity() {
             val userRole = dataStore.getUserRole().first()
             val userPhone = dataStore.getUserPhone().first()
 
-            Log.d("MainActivity", "========== AUTH DATA ==========")
-            Log.d("MainActivity", "Token: ${token ?: "No token found"}")
-            Log.d("MainActivity", "User Role: ${userRole ?: "No role found"}")
-            Log.d("MainActivity", "User Phone: ${userPhone ?: "No phone found"}")
-            Log.d("MainActivity", "================================")
+            Timber.d("========== AUTH DATA ==========")
+            Timber.d("Token: ${token ?: "No token found"}")
+            Timber.d("User Role: ${userRole ?: "No role found"}")
+            Timber.d("User Phone: ${userPhone ?: "No phone found"}")
+            Timber.d("================================")
         }
 
         // Emit the initial intent (if any) so the Composable NavController can react to deep links

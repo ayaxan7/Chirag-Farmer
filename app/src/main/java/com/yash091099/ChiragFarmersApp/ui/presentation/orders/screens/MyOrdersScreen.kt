@@ -1,6 +1,6 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.orders.screens
 
-import android.util.Log
+import timber.log.Timber
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -151,7 +151,7 @@ fun OrderList(
     navController: NavHostController,
     currentType: String
 ) {
-    Log.d("OrderList", "currentType: $currentType")
+    Timber.d("currentType: $currentType")
     when (state) {
         is MyOrdersUiState.Loading -> {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {

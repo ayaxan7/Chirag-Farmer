@@ -1,6 +1,6 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.auth.common.screens
 
-import android.util.Log
+import timber.log.Timber
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -75,32 +75,29 @@ fun OTPVerificationScreen(
         try {
             focusRequester.requestFocus()
         } catch (e: Exception) {
-            Log.e("OTPVerificationScreen", "Error requesting focus: ${e.message}")
+            Timber.e("Error requesting focus: ${e.message}")
         }
     }
 
-    Log.d(
-        "OTPVerificationScreen",
-        "phoneNumber: $phoneNumber, requestId: $requestId, isSignUp: $isSignUp"
-    )
+    Timber.d("phoneNumber: $phoneNumber, requestId: $requestId, isSignUp: $isSignUp")
 
     // Handle UI state changes
     LaunchedEffect(uiState) {
         when (val state = uiState) {
             is OTPUiState.Success -> {
-                Log.d("OTPVerificationScreen", "OTP Verification Success!")
-                Log.d("OTPVerificationScreen", "isSignUp: $isSignUp")
+                Timber.d("OTP Verification Success!")
+                Timber.d("isSignUp: $isSignUp")
 
                 // Navigate based on whether it's signup or login
                 if (isSignUp) {
                     // Navigate to RegisterScreen for new users
-                    Log.d("OTPVerificationScreen", "Navigating to RegisterScreen (Signup)")
+                    Timber.d("Navigating to RegisterScreen (Signup)")
                     navController.navigate(Route.Register.path) {
                         popUpTo(Route.Auth.path) { inclusive = true }
                     }
                 } else {
                     // Navigate to HomeScreen for existing users
-                    Log.d("OTPVerificationScreen", "Navigating to HomeScreen (Login)")
+                    Timber.d("Navigating to HomeScreen (Login)")
                     navController.navigate(Route.Home.path) {
                         popUpTo(Route.Auth.path) { inclusive = true }
                     }

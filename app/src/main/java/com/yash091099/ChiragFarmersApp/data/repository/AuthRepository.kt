@@ -1,6 +1,6 @@
 package com.yash091099.ChiragFarmersApp.data.repository
 
-import android.util.Log
+import timber.log.Timber
 import com.google.gson.Gson
 import com.yash091099.ChiragFarmersApp.data.local.ChiragDataStore
 import com.yash091099.ChiragFarmersApp.data.model.auth.AddBusinessInfoRequest
@@ -203,15 +203,15 @@ class AuthRepository @Inject constructor(
             if (!deviceId.isNullOrEmpty()) {
                 deleteDeviceToken(deviceId).fold(
                     onSuccess = {
-                        Log.d("AuthRepository", "FCM token deleted from server successfully")
+                        Timber.d("FCM token deleted from server successfully")
                     },
                     onFailure = { exception ->
-                        Log.w("AuthRepository", "Failed to delete FCM token: ${exception.message}")
+                        Timber.w("Failed to delete FCM token: ${exception.message}")
                     }
                 )
             }
         } catch (e: Exception) {
-            Log.e("AuthRepository", "Error during FCM token deletion: ${e.message}")
+            Timber.e("Error during FCM token deletion: ${e.message}")
         }
 
         // Clear local auth data
@@ -282,7 +282,7 @@ class AuthRepository @Inject constructor(
 
             val request = DeleteDeviceTokenRequest(deviceId = deviceId)
             val response = apiService.deleteDeviceToken("Bearer $token", request)
-            Log.d("AuthRepository", "Device token deleted $response")
+            Timber.d("Device token deleted $response")
             Result.success(response)
         } catch (e: Exception) {
             Result.failure(Exception(getErrorMessage(e)))

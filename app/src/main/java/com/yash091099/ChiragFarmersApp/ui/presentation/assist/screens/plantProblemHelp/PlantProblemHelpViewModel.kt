@@ -1,6 +1,6 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.assist.screens.plantProblemHelp
 
-import android.util.Log
+import timber.log.Timber
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yash091099.ChiragFarmersApp.data.local.ChiragDataStore
@@ -95,7 +95,7 @@ class PlantProblemHelpViewModel @Inject constructor(
                     loadFallbackWelcome()
                 }
             } catch (e: Exception) {
-                Log.e("PlantProblemHelpVM", "Failed to initialize chat: ${e.message}", e)
+                Timber.e(e, "Failed to initialize chat: ${e.message}")
                 _error.value = getErrorMessage(e)
                 loadFallbackWelcome()
             } finally {
@@ -175,7 +175,7 @@ class PlantProblemHelpViewModel @Inject constructor(
                     )
                 }
             } catch (e: Exception) {
-                Log.e("PlantProblemHelpVM", "Failed to send message: ${e.message}", e)
+                Timber.e(e, "Failed to send message: ${e.message}")
                 _messages.value += ChatMessage(
                     content = "Error: Failed to connect to server.", sender = Sender.BOT
                 )

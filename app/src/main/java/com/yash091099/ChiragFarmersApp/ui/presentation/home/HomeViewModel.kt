@@ -1,7 +1,7 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.home
 
 import android.content.Context
-import android.util.Log
+import timber.log.Timber
 import com.google.firebase.messaging.FirebaseMessaging
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -109,7 +109,7 @@ class HomeViewModel @Inject constructor(
                     }
                 },
                 onFailure = {
-                    Log.e("HomeViewModel", "Error fetching profile status: ${it.message}")
+                    Timber.e("Error fetching profile status: ${it.message}")
                 }
             )
             _isLoading.value = false
@@ -146,46 +146,43 @@ class HomeViewModel @Inject constructor(
             try {
                 // Get device ID
                 val deviceId = DeviceIdProvider.getDeviceId(context)
-                Log.d("HomeViewModel", "Device ID obtained: $deviceId")
+                Timber.d("Device ID obtained: $deviceId")
 
                 // Verify Firebase is initialized before attempting to get token
                 val firebaseToken = try {
                     FirebaseMessaging.getInstance().token.await()
                 } catch (e: IllegalStateException) {
-                    Log.e("HomeViewModel", "Firebase not initialized: ${e.message}")
+                    Timber.e("Firebase not initialized: ${e.message}")
                     return@launch
                 } catch (e: Exception) {
-                    Log.e("HomeViewModel", "Failed to get Firebase token: ${e.message}", e)
+                    Timber.e(e, "Failed to get Firebase token: ${e.message}")
                     return@launch
                 }
 
                 if (firebaseToken.isBlank()) {
-                    Log.w("HomeViewModel", "FCM token fetched from Firebase was empty")
+                    Timber.w("FCM token fetched from Firebase was empty")
                     return@launch
                 }
 
                 val endpoint = "${BuildConfig.BASE_URL}api/farmers/device-token"
-                Log.d("HomeViewModel", "FCM token fetched from Firebase: $firebaseToken")
-                Log.d("HomeViewModel", "Device ID: $deviceId")
-                Log.d("HomeViewModel", "Sending FCM token to: $endpoint")
+                Timber.d("FCM token fetched from Firebase: $firebaseToken")
+                Timber.d("Device ID: $deviceId")
+                Timber.d("Sending FCM token to: $endpoint")
 
                 authRepository.updateDeviceToken(firebaseToken, deviceId).fold(
                     onSuccess = { response ->
                         if (response.success) {
-                            Log.d("HomeViewModel", "FCM token synced successfully with backend")
+                            Timber.d("FCM token synced successfully with backend")
                         } else {
-                            Log.w(
-                                "HomeViewModel",
-                                "Backend returned a non-success response while syncing FCM token: ${response.message ?: "Unknown error"}"
-                            )
+                            Timber.w("Backend returned a non-success response while syncing FCM token: ${response.message ?: "Unknown error"}")
                         }
                     },
                     onFailure = { exception ->
-                        Log.e("HomeViewModel", "Error syncing FCM token: ${exception.message}", exception)
+                        Timber.e(exception, "Error syncing FCM token: ${exception.message}")
                     }
                 )
             } catch (e: Exception) {
-                Log.e("HomeViewModel", "Failed to fetch or sync FCM token: ${e.message}", e)
+                Timber.e(e, "Failed to fetch or sync FCM token: ${e.message}")
             }
         }
     }
@@ -209,7 +206,7 @@ class HomeViewModel @Inject constructor(
                 result.onSuccess { suggestions ->
                     _locationSuggestions.value = suggestions
                 }.onFailure {
-                    Log.e("HomeViewModel", "Error fetching location suggestions: ${it.message}")
+                    Timber.e("Error fetching location suggestions: ${it.message}")
                 }
             }
         }
@@ -219,7 +216,7 @@ class HomeViewModel @Inject constructor(
         _locationQuery.value = location.displayName
         _selectedLocation.value = location
         _locationSuggestions.value = emptyList()
-        Log.d("HomeViewModel", "Selected location: ${location.displayName} (${location.latitude}, ${location.longitude})")
+        Timber.d("Selected location: ${location.displayName} (${location.latitude}, ${location.longitude})")
     }
 
     fun onServiceSelected(service: String) {
@@ -263,11 +260,11 @@ class HomeViewModel @Inject constructor(
                 onSuccess = {
                     _bookingStatus.value = BookingStatus.Success("Booking created successfully")
                     clearForm()
-                    Log.d("HomeViewModel", "Booking created successfully: $request ")
+                    Timber.d("Booking created successfully: $request ")
                 },
                 onFailure = {
                     _bookingStatus.value = BookingStatus.Error(it.message ?: "Booking failed")
-                    Log.e("HomeViewModel", "Booking failed: ${it.message}")
+                    Timber.e("Booking failed: ${it.message}")
                 }
             )
         }
@@ -305,7 +302,7 @@ class HomeViewModel @Inject constructor(
                 // Get user's current GPS location
                 fetchCurrentLocationAndUpdateDefault()
             } catch (e: Exception) {
-                Log.e("HomeViewModel", "Exception in updateDefaultLocationOnScreenOpen: ${e.message}")
+                Timber.e("Exception in updateDefaultLocationOnScreenOpen: ${e.message}")
             }
         }
     }
@@ -317,37 +314,37 @@ class HomeViewModel @Inject constructor(
 
             if (currentLocation != null) {
                 val (latitude, longitude) = currentLocation
-                Log.d("HomeViewModel", "Current location obtained: $latitude, $longitude")
+                Timber.d("Current location obtained: $latitude, $longitude")
                 updateLocationWithCoordinates(latitude, longitude)
             } else {
-                Log.w("HomeViewModel", "Unable to get current location from device")
+                Timber.w("Unable to get current location from device")
                 // Location unavailable - don't send any API request
             }
         } catch (e: Exception) {
-            Log.e("HomeViewModel", "Error fetching current location: ${e.message}", e)
+            Timber.e(e, "Error fetching current location: ${e.message}")
         }
     }
 
     private suspend fun updateLocationWithCoordinates(latitude: Double, longitude: Double) {
         try {
-            Log.d("HomeViewModel", "Updating default location with coordinates: $latitude, $longitude")
+            Timber.d("Updating default location with coordinates: $latitude, $longitude")
 
             // Call the API to update default location
             val result = updateDefaultLocationUseCase(latitude, longitude)
             result.fold(
                 onSuccess = { response ->
                     if (response.success) {
-                        Log.d("HomeViewModel", "Default location updated successfully: ${response.message}")
+                        Timber.d("Default location updated successfully: ${response.message}")
                     } else {
-                        Log.w("HomeViewModel", "Failed to update default location: ${response.message}")
+                        Timber.w("Failed to update default location: ${response.message}")
                     }
                 },
                 onFailure = { exception ->
-                    Log.e("HomeViewModel", "Error updating default location: ${exception.message}")
+                    Timber.e("Error updating default location: ${exception.message}")
                 }
             )
         } catch (e: Exception) {
-            Log.e("HomeViewModel", "Exception in updateLocationWithCoordinates: ${e.message}")
+            Timber.e("Exception in updateLocationWithCoordinates: ${e.message}")
         }
     }
 }
