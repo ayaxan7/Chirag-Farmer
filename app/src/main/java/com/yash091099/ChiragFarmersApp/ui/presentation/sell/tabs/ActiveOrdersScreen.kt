@@ -233,6 +233,7 @@ fun ActiveOrdersContent(
                             }) { index ->
 
                             orders[index]?.let { order ->
+                                Timber.tag("ActiveOrdersUI").d("order[%s] orderObjectId=%s orderId=%s product=%s buyer=%s amount=%s status=%s", index, order.orderObjectId, order.orderId, order.productName, order.buyerName, order.amountPaid, order.status)
                                 OrderCard(
                                    order= order, onOrderClick = onOrderClick
                                 )

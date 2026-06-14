@@ -40,7 +40,7 @@ class ActiveOrdersPagingSource(
                 limit = params.loadSize
             )
 
-            Timber.tag("ActiveOrders").d("API response success=%s message=%s", response.success, response.message)
+            Timber.tag("ActiveOrders").d("API response success=%s message=%s | full=%s", response.success, response.message, response)
 
             if (!response.success) {
                 Timber.tag("ActiveOrders").e("API success=false message=%s", response.message)
