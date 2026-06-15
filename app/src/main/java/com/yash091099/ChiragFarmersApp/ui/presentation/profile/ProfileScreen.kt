@@ -23,6 +23,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -70,6 +71,12 @@ fun ProfileScreen(
             }
         }
     }
+    BackHandler {
+        navController.navigate(Route.Home.path) {
+            popUpTo(0) { inclusive = true }
+        }
+    }
+
     LaunchedEffect(Unit) {
         viewModel.loadProfile()
     }
@@ -79,6 +86,11 @@ fun ProfileScreen(
                 navController = navController,
                 title = stringResource(R.string.profile_title),
                 icon = R.drawable.ic_arrow,
+                onBackClick = {
+                    navController.navigate(Route.Home.path) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
             )
         }, containerColor = BGWhite
     ) { paddingValues ->

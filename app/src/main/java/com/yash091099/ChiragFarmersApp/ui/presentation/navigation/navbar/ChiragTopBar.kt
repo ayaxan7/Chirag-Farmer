@@ -45,7 +45,8 @@ fun ChiragTopBar(
     icon: Int? = null,
     buttonText: String? = null,
     buttonIcon: ImageVector? = null,
-    onButtonClick: () -> Unit = {}
+    onButtonClick: () -> Unit = {},
+    onBackClick: (() -> Unit)? = null
 ) {
     TopAppBar(
         title = {
@@ -66,7 +67,7 @@ fun ChiragTopBar(
                     .padding(start = 16.dp)
                     .size(16.dp)
                     .clickable {
-                        navController.popBackStack()
+                        if (onBackClick != null) onBackClick() else navController.popBackStack()
                     },
                 tint = Color.Black
             )

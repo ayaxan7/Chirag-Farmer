@@ -103,7 +103,9 @@ fun HomeTopBar(navController: NavHostController) {
                                 .width(32.dp)
                                 .height(32.dp)
                                 .clickable {
-                                    navController.navigate(Route.Profile.path)
+                                    navController.navigate(Route.Profile.path) {
+                                        popUpTo(Route.Home.path) { inclusive = true }
+                                    }
                                 }
                         )
                         Spacer(modifier = Modifier.width(12.dp))
