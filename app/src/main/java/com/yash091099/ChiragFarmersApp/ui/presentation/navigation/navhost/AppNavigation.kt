@@ -97,8 +97,8 @@ fun AppNavigation(
             RegisterSuccessScreen(navController = navController)
         }
         composable(Route.Home.path) {
-            val viewModel: HomeViewModel = hiltViewModel()
-            HomeScreen(navController = navController, viewModel = viewModel)
+//            val viewModel: HomeViewModel = hiltViewModel()
+            HomeScreen(navController = navController)
         }
         composable(Route.Cart.path, arguments = listOf(navArgument("isBuyNow") {
             type = NavType.BoolType
