@@ -10,7 +10,10 @@ import com.phonepe.intent.sdk.api.models.PhonePeEnvironment
 import com.yash091099.ChiragFarmersApp.data.local.ChiragDataStore
 import com.yash091099.ChiragFarmersApp.utils.Constants.CLOUDINARY_CLOUD_NAME
 import com.yash091099.ChiragFarmersApp.utils.logging.CrashlyticsTree
+import com.yash091099.ChiragFarmersApp.utils.logging.SentryTree
 import dagger.hilt.android.HiltAndroidApp
+import io.sentry.Sentry
+import io.sentry.android.core.SentryAndroid
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -36,13 +39,38 @@ class ChiragFarmerApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
-        } else {
-            Timber.plant(crashlyticsTree)
+        SentryAndroid.init(this) { options ->
+            options.dsn = BuildConfig.SENTRY_DSN
+            options.isEnableAutoSessionTracking = true
+            options.tracesSampleRate = 0.0
+
+            options.environment =
+                if (BuildConfig.DEBUG) "development" else "production"
+
+            options.release =
+                "${BuildConfig.APPLICATION_ID}@${BuildConfig.VERSION_NAME}+${BuildConfig.VERSION_CODE}"
+        }
+        Sentry.configureScope {
+            it.setTag(
+                "build_type",
+                if (BuildConfig.DEBUG) "debug" else "release"
+            )
         }
 
-        Timber.d("App initialization started")
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+            Timber.plant(SentryTree())
+        } else {
+            Timber.plant(crashlyticsTree)
+            Timber.plant(SentryTree())
+        }
+
+        Timber.tag("SENTRY").i(
+            "environment=%s release=%s buildType=%s",
+            if (BuildConfig.DEBUG) "debug" else "production",
+            "${BuildConfig.APPLICATION_ID}@${BuildConfig.VERSION_NAME}+${BuildConfig.VERSION_CODE}",
+            if (BuildConfig.DEBUG) "debug" else "release"
+        )
 
         // OSMDroid
         Configuration.getInstance().userAgentValue = BuildConfig.APPLICATION_ID

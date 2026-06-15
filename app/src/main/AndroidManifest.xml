@@ -37,6 +37,9 @@
         android:roundIcon="@drawable/chirag_logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.ChiragFarmer">
+        <meta-data
+            android:name="io.sentry.auto-init"
+            android:value="false" />
         <activity
             android:name=".ui.presentation.mainactivity.MainActivity"
             android:exported="true"

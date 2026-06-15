@@ -11,8 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -22,20 +22,19 @@ import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
 
 @Composable
 fun BookingsScreen(navController: NavHostController) {
-    val snackbarHostState= remember { SnackbarHostState() }
+    val snackbarHostState = remember { SnackbarHostState() }
     Scaffold(
         containerColor = BGWhite,
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             ChiragTopBar(
-                navController = navController, icon = R.drawable.ic_arrow,
-                title="Bookings"
+                navController = navController, icon = R.drawable.ic_arrow, title = "Bookings"
             )
-        }
-    ) {paddingValues ->
+        }) { paddingValues ->
         Box(
-            modifier = Modifier.fillMaxSize().padding(16.dp),
-            contentAlignment = Alignment.Center
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp), contentAlignment = Alignment.Center
         ) {
             Text(
                 text = stringResource(R.string.bookings_placeholder),
@@ -45,4 +44,3 @@ fun BookingsScreen(navController: NavHostController) {
         }
     }
 }
-

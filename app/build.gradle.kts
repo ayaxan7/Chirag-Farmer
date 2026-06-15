@@ -21,6 +21,7 @@ val cloudinaryCloudName=localProperties.getProperty("CLOUD_NAME")?:"MISSING_CLOU
 val cloudinaryUploadPreset=localProperties.getProperty("CLOUDINARY_UPLOAD_PRESET")?:"MISSING_UPLOAD_PRESET"
 val phonePeMerchantId = localProperties.getProperty("PHONEPE_MERCHANT_ID") ?: "MISSING_PHONEPE_MERCHANT_ID"
 val hashidsSalt = localProperties.getProperty("HASHIDS_SALT") ?: "MISSING_HASHIDS_SALT"
+val sentryDsn = localProperties.getProperty("SENTRY_DSN") ?: "MISSING_SENTRY_DSN"
 android {
     namespace = "com.yash091099.ChiragFarmersApp"
     compileSdk {
@@ -43,6 +44,7 @@ android {
         buildConfigField("String", "CLOUDINARY_UPLOAD_PRESET", "\"$cloudinaryUploadPreset\"")
         buildConfigField("String", "PHONEPE_MERCHANT_ID", "\"$phonePeMerchantId\"")
         buildConfigField("String", "HASHIDS_SALT", "\"$hashidsSalt\"")
+        buildConfigField("String", "SENTRY_DSN", "\"$sentryDsn\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -85,7 +87,7 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.material3)
-    implementation(libs.coil.compose)
+//    implementation(libs.coil.compose)
     // Add ConstraintLayout (for traditional XML layouts used by AAR resources)
     implementation(libs.androidx.constraintlayout)
     // Retrofit
@@ -98,6 +100,7 @@ dependencies {
     implementation(libs.firebase.messaging)
     implementation(libs.firebase.crashlytics)
     implementation(libs.timber)
+    implementation(libs.sentry.android)
     implementation(libs.androidx.compose.material3.adaptive.navigation.suite)
     implementation(libs.androidx.lifecycle.process)
     implementation(libs.androidx.compose.foundation)
