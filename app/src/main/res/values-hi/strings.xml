@@ -614,4 +614,19 @@
     <string name="review_placeholder">अपनी समीक्षा यहाँ लिखें</string>
     <string name="active_orders_product_description_format">उत्पाद का नाम %s</string>
     <string name="orders_status_cancelled_title">रद्द किया गया</string>
+    <!-- Service Booking Card -->
+    <string name="service_booking_title">कृषि\nसेवाओं की\nज़रूरत है?</string>
+
+    <string name="service_booking_subtitle">
+ड्रोन स्प्रेइंग, मिट्टी परीक्षण जैसी सेवाओं के लिए सत्यापित प्रदाताओं से तुरंत जुड़ें
+</string>
+
+    <string name="service_select_service">सेवा चुनें</string>
+
+    <string name="service_book_now">अभी बुक करें</string>
+
+    <!-- Service Types -->
+    <string name="service_drone_spraying">ड्रोन स्प्रेइंग</string>
+    <string name="service_soil_testing">मिट्टी परीक्षण</string>
+    <string name="service_tractor_rental">ट्रैक्टर किराया</string>
 </resources>

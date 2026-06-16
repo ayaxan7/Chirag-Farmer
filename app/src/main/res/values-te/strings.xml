@@ -616,4 +616,19 @@
     <string name="review_placeholder">మీ సమీక్షను ఇక్కడ వ్రాయండి</string>
     <string name="active_orders_product_description_format">ఉత్పత్తి పేరు %s</string>
     <string name="orders_status_cancelled_title">రద్దు చేయబడింది</string>
+    <!-- Service Booking Card -->
+    <string name="service_booking_title">వ్యవసాయ\nసేవలు\nకావాలా?</string>
+
+    <string name="service_booking_subtitle">
+డ్రోన్ స్ప్రేయింగ్, నేల పరీక్ష వంటి సేవల కోసం ధృవీకరించబడిన సేవాదారులతో వెంటనే కనెక్ట్ అవ్వండి
+</string>
+
+    <string name="service_select_service">సేవను ఎంచుకోండి</string>
+
+    <string name="service_book_now">ఇప్పుడే బుక్ చేయండి</string>
+
+    <!-- Service Types -->
+    <string name="service_drone_spraying">డ్రోన్ స్ప్రేయింగ్</string>
+    <string name="service_soil_testing">నేల పరీక్ష</string>
+    <string name="service_tractor_rental">ట్రాక్టర్ అద్దె</string>
 </resources>

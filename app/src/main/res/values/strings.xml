@@ -552,7 +552,21 @@
     <string name="service_book_card_description">Book Service Card</string>
     <string name="service_dropdown_description">Toggle Dropdown</string>
     <string name="service_dropdown_description_label">Dropdown</string>
+    <!-- Service Booking Card -->
+    <string name="service_booking_title">Need Farm\nServices?\nBook in Minutes</string>
 
+    <string name="service_booking_subtitle">
+    From drone spraying, soil testing\nconnect with verified providers instantly
+</string>
+
+    <string name="service_select_service">Select Service</string>
+
+    <string name="service_book_now">Book Now</string>
+
+    <!-- Service Types -->
+    <string name="service_drone_spraying">Drone Spraying</string>
+    <string name="service_soil_testing">Soil Testing</string>
+    <string name="service_tractor_rental">Tractor Rental</string>
     <!-- Common Service Dropdown Items -->
     <string name="service_harvesting_machines">Harvesting Machines</string>
     <string name="service_manual_sprayer">Manual Sprayer</string>

@@ -122,7 +122,21 @@
     <string name="buy_direct_from_farmers">ਕਿਸਾਨਾਂ ਤੋਂ ਸਿੱਧਾ</string>
     <string name="buy_seeds">ਬੀਜ</string>
     <string name="buy_popular_products">ਮਸ਼ਹੂਰ ਉਤਪਾਦ</string>
+    <!-- Service Booking Card -->
+    <string name="service_booking_title">ਖੇਤੀ\nਸੇਵਾਵਾਂ ਦੀ\nਲੋੜ ਹੈ?</string>
 
+    <string name="service_booking_subtitle">
+ਡਰੋਨ ਛਿੜਕਾਅ, ਮਿੱਟੀ ਟੈਸਟਿੰਗ ਵਰਗੀਆਂ ਸੇਵਾਵਾਂ ਲਈ ਪ੍ਰਮਾਣਿਤ ਸੇਵਾ ਪ੍ਰਦਾਤਾਵਾਂ ਨਾਲ ਤੁਰੰਤ ਜੁੜੋ
+</string>
+
+    <string name="service_select_service">ਸੇਵਾ ਚੁਣੋ</string>
+
+    <string name="service_book_now">ਹੁਣੇ ਬੁੱਕ ਕਰੋ</string>
+
+    <!-- Service Types -->
+    <string name="service_drone_spraying">ਡਰੋਨ ਛਿੜਕਾਅ</string>
+    <string name="service_soil_testing">ਮਿੱਟੀ ਟੈਸਟਿੰਗ</string>
+    <string name="service_tractor_rental">ਟ੍ਰੈਕਟਰ ਕਿਰਾਏ 'ਤੇ</string>
     <!-- Categories Screens -->
     <string name="categories_banner_description">ਬੈਨਰ</string>
     <string name="categories_title">ਸ਼੍ਰੇਣੀਆਂ</string>

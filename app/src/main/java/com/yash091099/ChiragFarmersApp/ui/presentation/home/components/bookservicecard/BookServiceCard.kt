@@ -56,8 +56,7 @@ import com.yash091099.ChiragFarmersApp.ui.theme.ChiragFarmerTheme
 
 @Composable
 fun BookServiceCard(
-    modifier: Modifier = Modifier,
-    navController: NavHostController
+    modifier: Modifier = Modifier, navController: NavHostController
 ) {
     var expanded by remember { mutableStateOf(false) }
     var selectedService by remember { mutableStateOf<String?>(null) }
@@ -71,7 +70,7 @@ fun BookServiceCard(
             selectedService = it
             expanded = false
         },
-        navController=navController
+        navController = navController
     )
 }
 
@@ -85,13 +84,9 @@ fun BookServiceCardContent(
     navController: NavHostController
 ) {
     val services = listOf(
-        "Drone Spraying",
-        "Soil Testing",
-        "Tractor Rental",
-        "Soil Testing",
-        "Tractor Rental",
-        "Soil Testing",
-        "Tractor Rental"
+        stringResource(R.string.service_drone_spraying),
+        stringResource(R.string.service_soil_testing),
+        stringResource(R.string.service_tractor_rental)
     )
 
     Column(
@@ -122,7 +117,7 @@ fun BookServiceCardContent(
 
                 // Heading
                 Text(
-                    text = "Need Farm\nServices?\nBook in Minutes",
+                    text = stringResource(R.string.service_booking_title),
                     color = BGWhite,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.W700,
@@ -141,7 +136,7 @@ fun BookServiceCardContent(
                 ) {
 
                     Text(
-                        text = "From drone spraying, soil testing\nconnect with verified providers instantly",
+                        text = stringResource(R.string.service_booking_subtitle),
                         color = BGWhite,
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Medium,
@@ -185,7 +180,7 @@ fun BookServiceCardContent(
                                 ) {
 
                                     Text(
-                                        text = selectedService ?: "Select Service",
+                                        text = selectedService ?: stringResource(R.string.service_select_service),
                                         color = Color.White,
                                         fontSize = 10.sp,
                                         fontWeight = FontWeight.Medium
@@ -261,7 +256,7 @@ fun BookServiceCardContent(
                                 contentPadding = PaddingValues(horizontal = 14.dp)
                             ) {
                                 Text(
-                                    text = "Book Now",
+                                    text = stringResource(R.string.service_book_now),
                                     color = Color.White,
                                     fontSize = 8.sp,
                                     fontWeight = FontWeight.SemiBold,
