@@ -207,7 +207,7 @@
     <string name="address_location_description">लोकेशन</string>
     <string name="address_pin_label">पिन : </string>
     <string name="address_add_button">पता जोड़ें</string>
-    <string name="address_updating">अपडेट हो रहा है...</string>
+    <string name="address_updating">अपडेट हो रहा है…</string>
 
     <!-- Address Map -->
     <string name="address_map_title">पता</string>

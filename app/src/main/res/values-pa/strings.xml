@@ -136,7 +136,7 @@
     <!-- Service Types -->
     <string name="service_drone_spraying">ਡਰੋਨ ਛਿੜਕਾਅ</string>
     <string name="service_soil_testing">ਮਿੱਟੀ ਟੈਸਟਿੰਗ</string>
-    <string name="service_tractor_rental">ਟ੍ਰੈਕਟਰ ਕਿਰਾਏ 'ਤੇ</string>
+    <string name="service_tractor_rental">ਟ੍ਰੈਕਟਰ ਕਿਰਾਏ \'ਤੇ</string>
     <!-- Categories Screens -->
     <string name="categories_banner_description">ਬੈਨਰ</string>
     <string name="categories_title">ਸ਼੍ਰੇਣੀਆਂ</string>
@@ -219,7 +219,7 @@
     <string name="address_location_description">ਸਥਾਨ</string>
     <string name="address_pin_label">ਪਿੰਨ : </string>
     <string name="address_add_button">ਪਤਾ ਸ਼ਾਮਲ ਕਰੋ</string>
-    <string name="address_updating">ਅੱਪਡੇਟ ਹੋ ਰਿਹਾ ਹੈ...</string>
+    <string name="address_updating">ਅੱਪਡੇਟ ਹੋ ਰਿਹਾ ਹੈ…</string>
 
     <!-- Address Map -->
     <string name="address_map_title">ਪਤਾ</string>

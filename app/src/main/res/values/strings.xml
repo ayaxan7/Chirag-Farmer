@@ -206,7 +206,7 @@
     <string name="address_location_description">Location</string>
     <string name="address_pin_label">Pin : </string>
     <string name="address_add_button">Add Address</string>
-    <string name="address_updating">Updating...</string>
+    <string name="address_updating">Updating…</string>
 
     <!-- Address Map -->
     <string name="address_map_title">Address</string>

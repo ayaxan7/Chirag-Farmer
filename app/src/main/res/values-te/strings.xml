@@ -208,7 +208,7 @@
     <string name="address_location_description">లొకేషన్</string>
     <string name="address_pin_label">పిన్ : </string>
     <string name="address_add_button">చిరునామా జోడించండి</string>
-    <string name="address_updating">నవీకరించబడుతోంది...</string>
+    <string name="address_updating">నవీకరించబడుతోంది…</string>
 
     <!-- Address Map -->
     <string name="address_map_title">చిరునామా</string>
