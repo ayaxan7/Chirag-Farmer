@@ -628,4 +628,61 @@
     <string name="review_placeholder">ਆਪਣੀ ਸਮੀਖਿਆ ਇੱਥੇ ਲਿਖੋ</string>
     <string name="active_orders_product_description_format">ਉਤਪਾਦ ਦਾ ਨਾਮ %s</string>
     <string name="orders_status_cancelled_title">ਰੱਦ ਕੀਤਾ ਗਿਆ</string>
+
+    <!-- Assist Screen - Card Descriptions -->
+    <string name="assist_card_plant_diagnosis">ਬਿਮਾਰੀ ਦੀ ਤੁਰੰਤ ਪਛਾਣ ਲਈ ਪੌਦੇ ਦੀਆਂ ਫ਼ੋਟੋਆਂ ਅਪਲੋਡ ਕਰੋ</string>
+    <string name="assist_card_ask_solve">ਆਪਣੀ ਫ਼ਸਲ, ਜ਼ਮੀਨ ਜਾਂ ਖੇਤੀ ਇਨਪੁਟ ਬਾਰੇ ਕੁਝ ਵੀ ਪੁੱਛੋ</string>
+    <string name="assist_start_now">ਹੁਣੇ ਸ਼ੁਰੂ ਕਰੋ</string>
+
+    <!-- Assist Result -->
+    <string name="assist_result_analyze_another">ਕਿਸੇ ਹੋਰ ਤਸਵੀਰ ਦਾ ਵਿਸ਼ਲੇਸ਼ਣ ਕਰੋ</string>
+    <string name="assist_result_analyzing">ਫ਼ਸਲ ਦੀ ਤਸਵੀਰ ਦਾ ਵਿਸ਼ਲੇਸ਼ਣ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ…</string>
+    <string name="assist_result_disease_identified">ਪਛਾਣੀ ਗਈ ਬਿਮਾਰੀ: %s</string>
+    <string name="assist_result_crop_label">ਫ਼ਸਲ: %s</string>
+    <string name="assist_result_symptoms_identified">ਪਛਾਣੇ ਗਏ ਲੱਛਣ</string>
+    <string name="assist_result_avoid">ਬਚੋ</string>
+    <string name="assist_result_insecticides_header">ਕੀਟਨਾਸ਼ਕ (ਹਰ 7-10 ਦਿਨਾਂ ਵਿੱਚ ਇੱਕ ਵਾਰ ਸਪਰੇਅ ਕਰੋ)</string>
+    <string name="assist_result_pesticide_name">ਕੀਟਨਾਸ਼ਕ ਦਾ ਨਾਮ</string>
+    <string name="assist_result_dosage_use">ਖੁਰਾਕ/ਵਰਤੋਂ</string>
+    <string name="assist_result_target">ਨਿਸ਼ਾਨਾ</string>
+
+    <!-- Auth Screen -->
+    <string name="auth_hey_there">ਸਤ ਸ੍ਰੀ ਅਕਾਲ,</string>
+    <string name="auth_register_to_continue">ਜਾਰੀ ਰੱਖਣ ਲਈ ਰਜਿਸਟਰ ਕਰੋ</string>
+    <string name="auth_login_to_continue">ਜਾਰੀ ਰੱਖਣ ਲਈ ਲੌਗਿਨ ਕਰੋ</string>
+
+    <!-- Register Success -->
+    <string name="register_success_message">ਤੁਸੀਂ ਸਫ਼ਲਤਾਪੂਰਵਕ ਰਜਿਸਟਰ ਹੋ ਗਏ ਹੋ!</string>
+    <string name="register_success_done">ਹੋ ਗਿਆ</string>
+
+    <!-- Search Screen -->
+    <string name="search_recent">ਹਾਲ ਹੀ ਦੇ</string>
+    <string name="search_results">ਨਤੀਜੇ</string>
+    <string name="search_clear_all">ਸਭ ਸਾਫ਼ ਕਰੋ</string>
+
+    <!-- Sell Status Messages -->
+    <string name="sell_status_available">ਉਤਪਾਦ ਉਪਲਬਧ ਵਜੋਂ ਦਰਸਾਇਆ ਗਿਆ</string>
+    <string name="sell_status_sold_out">ਉਤਪਾਦ ਵਿਕਿਆ ਹੋਇਆ ਦਰਸਾਇਆ ਗਿਆ</string>
+    <string name="sell_status_update_failed">ਉਤਪਾਦ ਦੀ ਸਥਿਤੀ ਅਪਡੇਟ ਕਰਨ ਵਿੱਚ ਅਸਫ਼ਲ</string>
+    <string name="sell_status_delete_failed">ਉਤਪਾਦ ਮਿਟਾਉਣ ਵਿੱਚ ਅਸਫ਼ਲ</string>
+
+    <!-- Remove Produce Dialog -->
+    <string name="dialog_remove_produce_title">ਉਪਜ ਹਟਾਓ?</string>
+    <string name="dialog_remove_produce_message">ਕੀ ਤੁਸੀਂ ਪੱਕਾ ਇਸ ਉਪਜ ਦੀ ਸੂਚੀ ਨੂੰ ਹਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?</string>
+    <string name="dialog_yes_remove">ਹਾਂ, ਹਟਾਓ</string>
+
+    <!-- Sold Out Dialog -->
+    <string name="dialog_mark_sold_out_title">ਵਿਕਿਆ ਹੋਇਆ ਦਰਸਾਓ</string>
+    <string name="dialog_mark_sold_out_message">ਕੀ ਤੁਸੀਂ ਪੱਕਾ ਇਸ ਉਪਜ ਨੂੰ ਵਿਕਿਆ ਹੋਇਆ ਦਰਸਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?</string>
+    <string name="dialog_yes_sold_out">ਹਾਂ, ਵਿਕ ਗਿਆ</string>
+
+    <!-- Snackbar Messages with params -->
+    <string name="snackbar_product_added_items">ਉਤਪਾਦ ਕਾਰਟ ਵਿੱਚ ਸ਼ਾਮਲ ਕੀਤਾ ਗਿਆ! (%d ਆਈਟਮਾਂ)</string>
+    <string name="snackbar_error_prefix">ਗੜਬੜ: %s</string>
+
+    <!-- Profile -->
+    <string name="profile_photo_updated">ਪ੍ਰੋਫ਼ਾਈਲ ਫ਼ੋਟੋ ਸਫ਼ਲਤਾਪੂਰਵਕ ਅਪਡੇਟ ਕੀਤੀ ਗਈ!</string>
+
+    <!-- Error Messages -->
+    <string name="error_not_authenticated">ਪ੍ਰਮਾਣਿਤ ਨਹੀਂ ਹੈ</string>
 </resources>

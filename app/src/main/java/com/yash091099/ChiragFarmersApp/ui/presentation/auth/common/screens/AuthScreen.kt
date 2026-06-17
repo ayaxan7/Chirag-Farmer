@@ -138,13 +138,13 @@ fun AuthScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Hey there,",
+                        text = stringResource(R.string.auth_hey_there),
                         fontSize = 16.sp,
                         color = TextGray
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = if(isSignUpClicked) "Register to continue" else "Login to continue",
+                        text = if(isSignUpClicked) stringResource(R.string.auth_register_to_continue) else stringResource(R.string.auth_login_to_continue),
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black

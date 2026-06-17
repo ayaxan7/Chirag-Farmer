@@ -76,7 +76,7 @@ fun RemoveProductDialog(
                         Spacer(modifier = Modifier.height(10.dp))
 
                         Text(
-                            text = "Remove Produce?",
+                            text = stringResource(R.string.dialog_remove_produce_title),
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
                             color = BGBlack
@@ -85,7 +85,7 @@ fun RemoveProductDialog(
                         Spacer(modifier = Modifier.height(4.dp))
 
                         Text(
-                            text = "Are you sure you want to remove this produce listing?",
+                            text = stringResource(R.string.dialog_remove_produce_message),
                             fontSize = 14.sp,
                             color = BGBlack,
                             textAlign = TextAlign.Center,
@@ -132,7 +132,7 @@ fun RemoveProductDialog(
                                 )
                             ) {
                                 Text(
-                                    text = "Yes, Remove",
+                                    text = stringResource(R.string.dialog_yes_remove),
                                     fontSize = 15.sp,
                                     fontWeight = FontWeight.Medium
                                 )

@@ -632,4 +632,61 @@
     <string name="service_drone_spraying">డ్రోన్ స్ప్రేయింగ్</string>
     <string name="service_soil_testing">నేల పరీక్ష</string>
     <string name="service_tractor_rental">ట్రాక్టర్ అద్దె</string>
+
+    <!-- Assist Screen - Card Descriptions -->
+    <string name="assist_card_plant_diagnosis">తక్షణ వ్యాధి నిర్ధారణ కోసం మొక్క ఫోటోలను అప్‌లోడ్ చేయండి</string>
+    <string name="assist_card_ask_solve">మీ పంట, భూమి లేదా వ్యవసాయ ఇన్‌పుట్‌ల గురించి ఏదైనా అడగండి</string>
+    <string name="assist_start_now">ఇప్పుడే ప్రారంభించండి</string>
+
+    <!-- Assist Result -->
+    <string name="assist_result_analyze_another">మరొక చిత్రాన్ని విశ్లేషించండి</string>
+    <string name="assist_result_analyzing">పంట చిత్రాన్ని విశ్లేషిస్తోంది…</string>
+    <string name="assist_result_disease_identified">గుర్తించిన వ్యాధి: %s</string>
+    <string name="assist_result_crop_label">పంట: %s</string>
+    <string name="assist_result_symptoms_identified">గుర్తించిన లక్షణాలు</string>
+    <string name="assist_result_avoid">నివారించండి</string>
+    <string name="assist_result_insecticides_header">క్రిమిసంహారకాలు (ప్రతి 7-10 రోజులకు ఒకసారి పిచికారీ చేయండి)</string>
+    <string name="assist_result_pesticide_name">పురుగుమందు పేరు</string>
+    <string name="assist_result_dosage_use">మోతాదు/వాడకం</string>
+    <string name="assist_result_target">లక్ష్యం</string>
+
+    <!-- Auth Screen -->
+    <string name="auth_hey_there">హాయ్,</string>
+    <string name="auth_register_to_continue">కొనసాగించడానికి నమోదు చేయండి</string>
+    <string name="auth_login_to_continue">కొనసాగించడానికి లాగిన్ చేయండి</string>
+
+    <!-- Register Success -->
+    <string name="register_success_message">మీరు విజయవంతంగా నమోదు చేసుకున్నారు!</string>
+    <string name="register_success_done">పూర్తయింది</string>
+
+    <!-- Search Screen -->
+    <string name="search_recent">ఇటీవలి</string>
+    <string name="search_results">ఫలితాలు</string>
+    <string name="search_clear_all">అన్నీ క్లియర్ చేయండి</string>
+
+    <!-- Sell Status Messages -->
+    <string name="sell_status_available">ఉత్పత్తి అందుబాటులో ఉన్నట్లు గుర్తించబడింది</string>
+    <string name="sell_status_sold_out">ఉత్పత్తి అమ్ముడుపోయినట్లు గుర్తించబడింది</string>
+    <string name="sell_status_update_failed">ఉత్పత్తి స్థితిని నవీకరించడంలో విఫలమైంది</string>
+    <string name="sell_status_delete_failed">ఉత్పత్తిని తొలగించడంలో విఫలమైంది</string>
+
+    <!-- Remove Produce Dialog -->
+    <string name="dialog_remove_produce_title">ఉత్పత్తిని తొలగించాలా?</string>
+    <string name="dialog_remove_produce_message">మీరు ఖచ్చితంగా ఈ ఉత్పత్తి జాబితాను తొలగించాలనుకుంటున్నారా?</string>
+    <string name="dialog_yes_remove">అవును, తొలగించండి</string>
+
+    <!-- Sold Out Dialog -->
+    <string name="dialog_mark_sold_out_title">అమ్ముడుపోయినట్లు గుర్తించండి</string>
+    <string name="dialog_mark_sold_out_message">మీరు ఖచ్చితంగా ఈ ఉత్పత్తిని అమ్ముడుపోయినట్లు గుర్తించాలనుకుంటున్నారా?</string>
+    <string name="dialog_yes_sold_out">అవును, అమ్ముడుపోయింది</string>
+
+    <!-- Snackbar Messages with params -->
+    <string name="snackbar_product_added_items">ఉత్పత్తి కార్ట్‌కు జోడించబడింది! (%d ఐటమ్‌లు)</string>
+    <string name="snackbar_error_prefix">లోపం: %s</string>
+
+    <!-- Profile -->
+    <string name="profile_photo_updated">ప్రొఫైల్ ఫోటో విజయవంతంగా నవీకరించబడింది!</string>
+
+    <!-- Error Messages -->
+    <string name="error_not_authenticated">ప్రమాణీకరణ చేయబడలేదు</string>
 </resources>

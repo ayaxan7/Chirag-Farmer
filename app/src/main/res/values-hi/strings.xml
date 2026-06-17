@@ -630,4 +630,61 @@
     <string name="service_drone_spraying">ड्रोन स्प्रेइंग</string>
     <string name="service_soil_testing">मिट्टी परीक्षण</string>
     <string name="service_tractor_rental">ट्रैक्टर किराया</string>
+
+    <!-- Assist Screen - Card Descriptions -->
+    <string name="assist_card_plant_diagnosis">बीमारी की तुरंत पहचान के लिए पौधे की फोटो अपलोड करें</string>
+    <string name="assist_card_ask_solve">अपनी फसल, जमीन या कृषि इनपुट के बारे में कुछ भी पूछें</string>
+    <string name="assist_start_now">अभी शुरू करें</string>
+
+    <!-- Assist Result -->
+    <string name="assist_result_analyze_another">दूसरी छवि का विश्लेषण करें</string>
+    <string name="assist_result_analyzing">फसल छवि का विश्लेषण किया जा रहा है…</string>
+    <string name="assist_result_disease_identified">पहचाना गया रोग: %s</string>
+    <string name="assist_result_crop_label">फसल: %s</string>
+    <string name="assist_result_symptoms_identified">पहचाने गए लक्षण</string>
+    <string name="assist_result_avoid">बचाव</string>
+    <string name="assist_result_insecticides_header">कीटनाशक (हर 7-10 दिन में एक बार छिड़काव करें)</string>
+    <string name="assist_result_pesticide_name">कीटनाशक का नाम</string>
+    <string name="assist_result_dosage_use">खुराक/उपयोग</string>
+    <string name="assist_result_target">लक्ष्य</string>
+
+    <!-- Auth Screen -->
+    <string name="auth_hey_there">नमस्ते,</string>
+    <string name="auth_register_to_continue">जारी रखने के लिए पंजीकरण करें</string>
+    <string name="auth_login_to_continue">जारी रखने के लिए लॉगिन करें</string>
+
+    <!-- Register Success -->
+    <string name="register_success_message">आपने सफलतापूर्वक पंजीकरण कर लिया है!</string>
+    <string name="register_success_done">पूर्ण</string>
+
+    <!-- Search Screen -->
+    <string name="search_recent">हाल ही के</string>
+    <string name="search_results">परिणाम</string>
+    <string name="search_clear_all">सभी साफ़ करें</string>
+
+    <!-- Sell Status Messages -->
+    <string name="sell_status_available">उत्पाद उपलब्ध के रूप में चिह्नित किया गया</string>
+    <string name="sell_status_sold_out">उत्पाद बिक गया के रूप में चिह्नित किया गया</string>
+    <string name="sell_status_update_failed">उत्पाद स्थिति अपडेट करने में विफल</string>
+    <string name="sell_status_delete_failed">उत्पाद हटाने में विफल</string>
+
+    <!-- Remove Produce Dialog -->
+    <string name="dialog_remove_produce_title">उपज हटाएं?</string>
+    <string name="dialog_remove_produce_message">क्या आप वाकई इस उपज लिस्टिंग को हटाना चाहते हैं?</string>
+    <string name="dialog_yes_remove">हाँ, हटाएं</string>
+
+    <!-- Sold Out Dialog -->
+    <string name="dialog_mark_sold_out_title">बिक गया के रूप में चिह्नित करें</string>
+    <string name="dialog_mark_sold_out_message">क्या आप वाकई इस उपज को बिक गया के रूप में चिह्नित करना चाहते हैं?</string>
+    <string name="dialog_yes_sold_out">हाँ, बिक गया</string>
+
+    <!-- Snackbar Messages with params -->
+    <string name="snackbar_product_added_items">उत्पाद कार्ट में जोड़ा गया! (%d आइटम)</string>
+    <string name="snackbar_error_prefix">त्रुटि: %s</string>
+
+    <!-- Profile -->
+    <string name="profile_photo_updated">प्रोफ़ाइल फोटो सफलतापूर्वक अपडेट की गई!</string>
+
+    <!-- Error Messages -->
+    <string name="error_not_authenticated">प्रमाणित नहीं है</string>
 </resources>

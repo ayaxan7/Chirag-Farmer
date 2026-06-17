@@ -75,14 +75,14 @@ fun AssistScreen(navController: NavHostController) {
             AssistCard(
                 iconRes = R.drawable.get_help,
                 title = stringResource(R.string.assist_plant_trouble_title),
-                description = "Upload plant photos to get instant disease\ndiagnosis",
+                description = stringResource(R.string.assist_card_plant_diagnosis),
                 onClick = {navController.navigate(Route.AssistImage.path)}
             )
             Spacer(modifier = Modifier.height(16.dp))
             AssistCard(
                 iconRes = R.drawable.qna,
                 title = stringResource(R.string.assist_ask_solve_title),
-                description = "Ask anything about your crop, land, or agri\ninputs",
+                description = stringResource(R.string.assist_card_ask_solve),
                 onClick = { navController.navigate(Route.PlantProblemHelp.path) }
             )
         }
@@ -152,7 +152,7 @@ private fun AssistCard(
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = "Start Now",
+                        text = stringResource(R.string.assist_start_now),
                         color = Color.White,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium

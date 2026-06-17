@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -49,7 +50,7 @@ fun RegisterSuccessScreen(
                 // Illustration — b/w XML vector drawable
                 Image(
                     painter = painterResource(id = R.drawable.register_success),
-                    contentDescription = "Registration success illustration",
+                    contentDescription = stringResource(R.string.register_success_message),
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(340.dp)
@@ -59,7 +60,7 @@ fun RegisterSuccessScreen(
 
                 // Success message
                 Text(
-                    text = "You have registered successfully!",
+                    text = stringResource(R.string.register_success_message),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Normal,
                     color = Color.Black
@@ -72,7 +73,7 @@ fun RegisterSuccessScreen(
                     .padding(horizontal = 24.dp, vertical = 24.dp)
             ) {
                 ChiragButton(
-                    text = "Done",
+                    text = stringResource(R.string.register_success_done),
                     onClick = {
                         // Navigate to home screen and clear back stack
                         navController.navigate(Route.Home.path) {

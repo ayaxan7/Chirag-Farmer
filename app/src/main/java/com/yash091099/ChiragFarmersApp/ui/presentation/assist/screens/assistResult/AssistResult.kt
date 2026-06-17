@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -32,8 +34,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -87,7 +89,7 @@ fun AssistResultScreen(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 12.dp),
                 shape = RoundedCornerShape(10.dp)
             ) {
-                Text(text = "Analyze Another Image", color = BGBlack)
+                Text(text = stringResource(R.string.assist_result_analyze_another), color = BGBlack)
             }
         }
     ) { innerPadding ->
@@ -115,7 +117,7 @@ fun AssistResultScreen(
                             CircularProgressIndicator(color = BGBlack)
                             Spacer(modifier = Modifier.height(16.dp))
                             Text(
-                                text = "Analyzing crop image...",
+                                text = stringResource(R.string.assist_result_analyzing),
                                 color = BGBlack,
                                 fontSize = 15.sp,
                                 fontWeight = FontWeight.Medium
@@ -171,7 +173,7 @@ private fun AssistResultContent(
     imageUri: String = ""
 ) {
     Text(
-        text = "Disease Identified: ${data.diseaseName}",
+        text = stringResource(R.string.assist_result_disease_identified, data.diseaseName),
         fontSize = 16.sp,
         fontWeight = FontWeight.SemiBold,
         color = BGBlack
@@ -206,14 +208,14 @@ private fun AssistResultContent(
     Spacer(modifier = Modifier.height(16.dp))
 
     Text(
-        text = "Crop: ${data.cropName}",
+        text = stringResource(R.string.assist_result_crop_label, data.cropName),
         fontSize = 16.sp,
         fontWeight = FontWeight.SemiBold,
         color = BGBlack
     )
 
     Spacer(modifier = Modifier.height(8.dp))
-    SectionTitle(text = "Symptoms Identified")
+    SectionTitle(text = stringResource(R.string.assist_result_symptoms_identified))
     Spacer(modifier = Modifier.height(4.dp))
     if (data.symptoms.isEmpty()) {
         EmptySectionText(text = stringResource(R.string.assist_result_no_symptoms))
@@ -225,7 +227,7 @@ private fun AssistResultContent(
 
     Spacer(modifier = Modifier.height(8.dp))
 
-    SectionTitle(text = "Avoid")
+    SectionTitle(text = stringResource(R.string.assist_result_avoid))
     Spacer(modifier = Modifier.height(4.dp))
     if (data.avoid.isEmpty()) {
         EmptySectionText(text = stringResource(R.string.assist_result_no_avoidance))
@@ -237,7 +239,7 @@ private fun AssistResultContent(
 
     Spacer(modifier = Modifier.height(8.dp))
 
-    SectionTitle(text = "Insecticides (Spray once every 7-10 days)")
+    SectionTitle(text = stringResource(R.string.assist_result_insecticides_header))
     Spacer(modifier = Modifier.height(4.dp))
     InsecticideTable(data.insecticides)
     Spacer(modifier = Modifier.height(20.dp))
@@ -290,19 +292,19 @@ fun InsecticideTable(items: List<CropInsecticideUiModel>) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                "Pesticide Name",
+                stringResource(R.string.assist_result_pesticide_name),
                 fontWeight = FontWeight.Bold,
                 fontSize = 12.sp,
                 modifier = Modifier.weight(1f)
             )
             Text(
-                "Dosage/Use",
+                stringResource(R.string.assist_result_dosage_use),
                 fontWeight = FontWeight.Bold,
                 fontSize = 12.sp,
                 modifier = Modifier.weight(1f)
             )
             Text(
-                "Target",
+                stringResource(R.string.assist_result_target),
                 fontWeight = FontWeight.Bold,
                 fontSize = 12.sp,
                 modifier = Modifier.weight(1f)

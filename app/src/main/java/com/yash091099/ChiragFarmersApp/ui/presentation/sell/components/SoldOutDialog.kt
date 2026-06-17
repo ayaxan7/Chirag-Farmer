@@ -78,7 +78,7 @@ fun SoldOutDialog(
 
                         // Title
                         Text(
-                            text = "Mark as Sold Out",
+                            text = stringResource(R.string.dialog_mark_sold_out_title),
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color.Black
@@ -88,7 +88,7 @@ fun SoldOutDialog(
 
                         // Message
                         Text(
-                            text = "Are you sure you want to mark this produce as Sold Out?",
+                            text = stringResource(R.string.dialog_mark_sold_out_message),
                             fontSize = 14.sp,
                             color = BGBlack,
                             textAlign = TextAlign.Center,
@@ -135,7 +135,7 @@ fun SoldOutDialog(
                                 )
                             ) {
                                 Text(
-                                    text = "Yes, Sold Out",
+                                    text = stringResource(R.string.dialog_yes_sold_out),
                                     fontSize = 15.sp,
                                     fontWeight = FontWeight.Medium
                                 )

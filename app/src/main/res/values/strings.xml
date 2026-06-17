@@ -629,4 +629,61 @@
     <!-- Form Field Labels -->
     <string name="form_aadhaar_front_label">Front side of Aadhaar card</string>
     <string name="form_reason_label">Reason</string>
+
+    <!-- Assist Screen - Card Descriptions -->
+    <string name="assist_card_plant_diagnosis">Upload plant photos to get instant disease diagnosis</string>
+    <string name="assist_card_ask_solve">Ask anything about your crop, land, or agri inputs</string>
+    <string name="assist_start_now">Start Now</string>
+
+    <!-- Assist Result -->
+    <string name="assist_result_analyze_another">Analyze Another Image</string>
+    <string name="assist_result_analyzing">Analyzing crop image…</string>
+    <string name="assist_result_disease_identified">Disease Identified: %s</string>
+    <string name="assist_result_crop_label">Crop: %s</string>
+    <string name="assist_result_symptoms_identified">Symptoms Identified</string>
+    <string name="assist_result_avoid">Avoid</string>
+    <string name="assist_result_insecticides_header">Insecticides (Spray once every 7-10 days)</string>
+    <string name="assist_result_pesticide_name">Pesticide Name</string>
+    <string name="assist_result_dosage_use">Dosage/Use</string>
+    <string name="assist_result_target">Target</string>
+
+    <!-- Auth Screen -->
+    <string name="auth_hey_there">Hey there,</string>
+    <string name="auth_register_to_continue">Register to continue</string>
+    <string name="auth_login_to_continue">Login to continue</string>
+
+    <!-- Register Success -->
+    <string name="register_success_message">You have registered successfully!</string>
+    <string name="register_success_done">Done</string>
+
+    <!-- Search Screen -->
+    <string name="search_recent">Recent</string>
+    <string name="search_results">Results</string>
+    <string name="search_clear_all">Clear all</string>
+
+    <!-- Sell Status Messages -->
+    <string name="sell_status_available">Product marked as Available</string>
+    <string name="sell_status_sold_out">Product marked as Sold Out</string>
+    <string name="sell_status_update_failed">Failed to update product status</string>
+    <string name="sell_status_delete_failed">Failed to delete product</string>
+
+    <!-- Remove Produce Dialog -->
+    <string name="dialog_remove_produce_title">Remove Produce?</string>
+    <string name="dialog_remove_produce_message">Are you sure you want to remove this produce listing?</string>
+    <string name="dialog_yes_remove">Yes, Remove</string>
+
+    <!-- Sold Out Dialog -->
+    <string name="dialog_mark_sold_out_title">Mark as Sold Out</string>
+    <string name="dialog_mark_sold_out_message">Are you sure you want to mark this produce as Sold Out?</string>
+    <string name="dialog_yes_sold_out">Yes, Sold Out</string>
+
+    <!-- Snackbar Messages with params -->
+    <string name="snackbar_product_added_items">Product added to cart! (%d items)</string>
+    <string name="snackbar_error_prefix">Error: %s</string>
+
+    <!-- Profile -->
+    <string name="profile_photo_updated">Profile photo updated successfully!</string>
+
+    <!-- Error Messages -->
+    <string name="error_not_authenticated">Not authenticated</string>
 </resources>
