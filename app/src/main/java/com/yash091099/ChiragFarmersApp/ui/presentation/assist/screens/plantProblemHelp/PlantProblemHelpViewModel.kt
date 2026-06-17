@@ -16,10 +16,14 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
+import com.yash091099.ChiragFarmersApp.R
 import javax.inject.Inject
 
 @HiltViewModel
 class PlantProblemHelpViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val chatApiService: ChatApiService, private val chiragDataStore: ChiragDataStore
 ) : ViewModel() {
 
@@ -43,7 +47,7 @@ class PlantProblemHelpViewModel @Inject constructor(
             try {
                 val token = chiragDataStore.getAuthToken().first()
                 if (token.isNullOrEmpty()) {
-                    _error.value = "No authentication token found"
+                    _error.value = context.getString(R.string.chat_error_no_auth_token)
                     _isLoading.value = false
                     return@launch
                 }
@@ -108,7 +112,7 @@ class PlantProblemHelpViewModel @Inject constructor(
         if (_messages.value.isEmpty()) {
             _messages.value = listOf(
                 ChatMessage(
-                    content = "Hello, I am here to help you identify problems in your crop. Can you tell me which crop you are facing issues with?",
+                    content = context.getString(R.string.chat_welcome_message),
                     sender = Sender.BOT
                 )
             )
@@ -130,7 +134,7 @@ class PlantProblemHelpViewModel @Inject constructor(
                 val token = chiragDataStore.getAuthToken().first()
                 if (token.isNullOrEmpty()) {
                     _messages.value += ChatMessage(
-                        content = "Error: Not authenticated.", sender = Sender.BOT
+                        content = context.getString(R.string.chat_error_not_authenticated), sender = Sender.BOT
                     )
                     return@launch
                 }
@@ -170,14 +174,14 @@ class PlantProblemHelpViewModel @Inject constructor(
                     }
                 } else {
                     _messages.value += ChatMessage(
-                        content = "Failed to generate AI response: ${response.message}",
+                        content = context.getString(R.string.chat_error_generate_response, response.message),
                         sender = Sender.BOT
                     )
                 }
             } catch (e: Exception) {
                 Timber.e(e, "Failed to send message: ${e.message}")
                 _messages.value += ChatMessage(
-                    content = "Error: Failed to connect to server.", sender = Sender.BOT
+                    content = context.getString(R.string.chat_error_connect), sender = Sender.BOT
                 )
             } finally {
                 _isLoading.value = false

@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.data.remote.dto.AddProductRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.LocationRequestDto
 import com.yash091099.ChiragFarmersApp.data.remote.dto.ProductDetailsData
@@ -15,6 +16,7 @@ import com.yash091099.ChiragFarmersApp.domain.usecase.GetProductDetailsUseCase
 import com.yash091099.ChiragFarmersApp.domain.usecase.UpdateProductUseCase
 import com.yash091099.ChiragFarmersApp.utils.CloudinaryUploader
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,6 +42,7 @@ sealed class FetchProductState {
 
 @HiltViewModel
 class SellProducesViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val getLocationSuggestionsUseCase: GetLocationSuggestionsUseCase,
     private val addProductUseCase: AddProductUseCase,
     private val updateProductUseCase: UpdateProductUseCase,
@@ -95,7 +98,7 @@ class SellProducesViewModel @Inject constructor(
                 )
             }.onFailure { error ->
                 _fetchProductState.value = FetchProductState.Error(
-                    error.message ?: "Failed to fetch product details"
+                    error.message ?: context.getString(R.string.error_failed_fetch_details)
                 )
             }
         }
@@ -156,7 +159,6 @@ class SellProducesViewModel @Inject constructor(
     }
 
     fun submitProduct(
-        context: Context,
         category: String,
         title: String,
         availableStock: String,
@@ -179,7 +181,7 @@ class SellProducesViewModel @Inject constructor(
                     // UPDATE MODE
                     val productIdValue = _productId.value
                     if (productIdValue == null) {
-                        _addProductState.value = AddProductState.Error("Product ID not found")
+                        _addProductState.value = AddProductState.Error(context.getString(R.string.error_product_id_not_found))
                         return@launch
                     }
 
@@ -197,7 +199,7 @@ class SellProducesViewModel @Inject constructor(
                                 val uploadedUrl = CloudinaryUploader.uploadImage(context, uri)
                                 allImageUrls.add(uploadedUrl)
                             } catch (e: Exception) {
-                                _addProductState.value = AddProductState.Error("Failed to upload image: ${e.message}")
+                                _addProductState.value = AddProductState.Error(context.getString(R.string.error_image_upload_failed, e.message))
                                 return@launch
                             }
                         }
@@ -209,17 +211,17 @@ class SellProducesViewModel @Inject constructor(
                     val deliveryFeeValue = deliveryFee.takeIf { it.isNotBlank() }?.toDoubleOrNull()
 
                     if (priceValue == null) {
-                        _addProductState.value = AddProductState.Error("Invalid price value")
+                        _addProductState.value = AddProductState.Error(context.getString(R.string.error_invalid_price))
                         return@launch
                     }
 
                     if (discount.isNotBlank() && discountValue == null) {
-                        _addProductState.value = AddProductState.Error("Invalid discount value")
+                        _addProductState.value = AddProductState.Error(context.getString(R.string.error_invalid_discount))
                         return@launch
                     }
 
                     if (deliveryFee.isNotBlank() && deliveryFeeValue == null) {
-                        _addProductState.value = AddProductState.Error("Invalid delivery fee value")
+                        _addProductState.value = AddProductState.Error(context.getString(R.string.error_invalid_delivery_fee))
                         return@launch
                     }
 
@@ -246,23 +248,23 @@ class SellProducesViewModel @Inject constructor(
 
                     // Submit update
                     updateProductUseCase(updateRequest).onSuccess {
-                        _addProductState.value = AddProductState.Success("Product updated successfully")
+                        _addProductState.value = AddProductState.Success(context.getString(R.string.success_product_updated))
                         resetForm()
                     }.onFailure { error ->
                         _addProductState.value = AddProductState.Error(
-                            error.message ?: "Failed to update product"
+                            error.message ?: context.getString(R.string.error_failed_update_product)
                         )
                     }
 
                 } else {
                     // ADD MODE
                     if (_selectedImageUris.value.isEmpty()) {
-                        _addProductState.value = AddProductState.Error("Please select at least one product image")
+                        _addProductState.value = AddProductState.Error(context.getString(R.string.error_select_product_image))
                         return@launch
                     }
 
                     if (selectedLoc == null) {
-                        _addProductState.value = AddProductState.Error("Please select a location")
+                        _addProductState.value = AddProductState.Error(context.getString(R.string.error_select_location))
                         return@launch
                     }
 
@@ -275,7 +277,7 @@ class SellProducesViewModel @Inject constructor(
                             val uploadedUrl = CloudinaryUploader.uploadImage(context, uri)
                             uploadedImageUrls.add(uploadedUrl)
                         } catch (e: Exception) {
-                            _addProductState.value = AddProductState.Error("Failed to upload image: ${e.message}")
+                                _addProductState.value = AddProductState.Error(context.getString(R.string.error_image_upload_failed, e.message))
                             return@launch
                         }
                     }
@@ -286,17 +288,17 @@ class SellProducesViewModel @Inject constructor(
                     val deliveryFeeValue = deliveryFee.takeIf { it.isNotBlank() }?.toDoubleOrNull()
 
                     if (priceValue == null) {
-                        _addProductState.value = AddProductState.Error("Invalid price value")
+                        _addProductState.value = AddProductState.Error(context.getString(R.string.error_invalid_price))
                         return@launch
                     }
 
                     if (discount.isNotBlank() && discountValue == null) {
-                        _addProductState.value = AddProductState.Error("Invalid discount value")
+                        _addProductState.value = AddProductState.Error(context.getString(R.string.error_invalid_discount))
                         return@launch
                     }
 
                     if (deliveryFee.isNotBlank() && deliveryFeeValue == null) {
-                        _addProductState.value = AddProductState.Error("Invalid delivery fee value")
+                        _addProductState.value = AddProductState.Error(context.getString(R.string.error_invalid_delivery_fee))
                         return@launch
                     }
 
@@ -321,18 +323,18 @@ class SellProducesViewModel @Inject constructor(
 
                     // Submit product
                     addProductUseCase(request).onSuccess {
-                        _addProductState.value = AddProductState.Success("Product added successfully")
+                        _addProductState.value = AddProductState.Success(context.getString(R.string.success_product_added))
                         resetForm()
                     }.onFailure { error ->
                         _addProductState.value = AddProductState.Error(
-                            error.message ?: "Failed to add product"
+                            error.message ?: context.getString(R.string.error_failed_add_product)
                         )
                     }
                 }
 
             } catch (e: Exception) {
                 _addProductState.value = AddProductState.Error(
-                    e.message ?: "An error occurred"
+                    e.message ?: context.getString(R.string.error_an_error_occurred)
                 )
             }
         }

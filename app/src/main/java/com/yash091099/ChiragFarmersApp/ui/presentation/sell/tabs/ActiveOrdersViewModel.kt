@@ -18,6 +18,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
+import com.yash091099.ChiragFarmersApp.R
 import javax.inject.Inject
 
 sealed class OrderTrackingState {
@@ -36,6 +39,7 @@ sealed class CancelOrderState {
 
 @HiltViewModel
 class ActiveOrdersViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     getActiveOrdersUseCase: GetActiveOrdersUseCase,
     private val getOrderTrackingUseCase: GetOrderTrackingUseCase,
     private val updateOrderStatusUseCase: UpdateOrderStatusUseCase,
@@ -76,7 +80,7 @@ class ActiveOrdersViewModel @Inject constructor(
                 onFailure = { exception ->
                     Timber.tag("ActiveOrdersVM").e(exception, "fetchOrderTracking failed id=%s", id)
                     _orderTrackingState.value = OrderTrackingState.Error(
-                        exception.message ?: "Failed to load tracking details"
+                        exception.message ?: context.getString(R.string.error_failed_load_tracking)
                     )
                 }
             )
@@ -119,7 +123,7 @@ class ActiveOrdersViewModel @Inject constructor(
                 onFailure = { error ->
                     Timber.tag("ActiveOrdersVM").e(error, "cancelOrder failed orderId=%s", orderId)
                     _cancelOrderState.value = CancelOrderState.Error(
-                        error.message ?: "Failed to cancel order"
+                        error.message ?: context.getString(R.string.error_failed_cancel_order)
                     )
                 }
             )

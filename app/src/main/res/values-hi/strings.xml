@@ -615,6 +615,37 @@
     <string name="review_placeholder">अपनी समीक्षा यहाँ लिखें</string>
     <string name="active_orders_product_description_format">उत्पाद का नाम %s</string>
     <string name="orders_status_cancelled_title">रद्द किया गया</string>
+    <!-- Group A additions -->
+    <string name="bookings_title">बुकिंग्स</string>
+    <string name="categories_error_load_more">और उत्पाद लोड करने में विफल</string>
+    <string name="common_produce_image">उपज की छवि</string>
+    <string name="common_loading">लोड हो रहा है…</string>
+    <string name="common_saving">सहेजा जा रहा है…</string>
+    <string name="profile_farmer_fallback">किसान</string>
+    <string name="profile_phone_unavailable">फ़ोन अनुपलब्ध</string>
+    <string name="profile_email_unavailable">ईमेल अनुपलब्ध</string>
+    <string name="profile_save_changes">बदलाव सहेजें</string>
+    <string name="sell_product_sell">उत्पाद बेचें</string>
+    <string name="sell_tab_active_products">सक्रिय उत्पाद</string>
+    <string name="sell_tab_sold_out_products">बिक चुके उत्पाद</string>
+    <string name="sell_tab_active_orders">सक्रिय ऑर्डर</string>
+    <string name="sell_produce_edit">उपज संपादित करें</string>
+    <string name="sell_uploading_product">उत्पाद अपलोड हो रहा है…</string>
+    <string name="sell_submitting">सबमिट हो रहा है…</string>
+    <string name="sell_update_product">उत्पाद अपडेट करें</string>
+    <string name="sell_submit">जमा करें</string>
+    <string name="auth_already_account">पहले से खाता है? </string>
+    <string name="auth_dont_have_account">खाता नहीं है? </string>
+    <string name="auth_login_label">लॉगिन</string>
+    <string name="auth_signup_label">साइनअप</string>
+    <string name="address_fetching_location">लोकेशन लाई जा रही है…</string>
+    <string name="address_use_current_location">वर्तमान स्थान का उपयोग करें</string>
+    <string name="address_category_home">घर</string>
+    <string name="address_category_work">कार्य स्थल</string>
+    <string name="address_category_hotel">होटल</string>
+    <string name="address_category_other">अन्य</string>
+    <string name="address_confirm">पता पुष्टि करें</string>
+
     <!-- Service Booking Card -->
     <string name="service_booking_title">कृषि\nसेवाओं की\nज़रूरत है?</string>
 
@@ -687,4 +718,142 @@
 
     <!-- Error Messages -->
     <string name="error_not_authenticated">प्रमाणित नहीं है</string>
+
+    <!-- Group B/D/F additions -->
+    <string name="error_failed_load_products">उत्पाद लोड करने में विफल</string>
+    <string name="error_failed_load_buy_now">बाय नाउ चेकआउट लोड करने में विफल</string>
+    <string name="error_failed_load_cart">कार्ट लोड करने में विफल</string>
+    <string name="error_failed_load_detail">उत्पाद विवरण लोड करने में विफल</string>
+    <string name="error_failed_load_reviews">उत्पाद समीक्षाएं लोड करने में विफल</string>
+    <string name="error_failed_add_to_cart">उत्पाद कार्ट में जोड़ने में विफल</string>
+    <string name="error_failed_update_review">समीक्षा प्रतिक्रिया अपडेट करने में असमर्थ</string>
+    <string name="error_failed_submit_review">समीक्षा सबमिट करने में असमर्थ</string>
+    <string name="error_failed_load_profile">प्रोफ़ाइल लोड करने में विफल</string>
+    <string name="error_failed_update_profile">प्रोफ़ाइल अपडेट करने में विफल</string>
+    <string name="error_failed_update_language">भाषा अपडेट करने में त्रुटि</string>
+    <string name="error_failed_load_tracking">ट्रैकिंग विवरण लोड करने में विफल</string>
+    <string name="error_failed_cancel_order">ऑर्डर रद्द करने में विफल</string>
+    <string name="error_failed_update_status">उत्पाद स्थिति अपडेट करने में विफल</string>
+    <string name="error_failed_fetch_details">उत्पाद विवरण प्राप्त करने में विफल</string>
+    <string name="error_failed_update_product">उत्पाद अपडेट करने में विफल</string>
+    <string name="error_failed_add_product">उत्पाद जोड़ने में विफल</string>
+    <string name="error_failed_load_addresses">पते लोड करने में विफल</string>
+    <string name="error_failed_set_default_address">डिफ़ॉल्ट पता सेट करने में विफल</string>
+    <string name="error_failed_add_location">स्थान जोड़ने में विफल</string>
+    <string name="error_unable_fetch_location">वर्तमान स्थान प्राप्त करने में असमर्थ</string>
+    <string name="error_failed_load_seller">विक्रेता विवरण लोड करने में विफल</string>
+    <string name="error_unknown_crop">अज्ञात फसल</string>
+    <string name="error_unknown_disease">अज्ञात रोग</string>
+    <string name="error_no_description">कोई विवरण उपलब्ध नहीं है।</string>
+    <string name="error_home_booking_failed">बुकिंग विफल</string>
+    <string name="error_phonepe_token_missing">PhonePe चेकआउट टोकन सर्वर द्वारा वापस नहीं किया गया।</string>
+    <string name="error_phonepe_verification_failed">PhonePe भुगतान सत्यापित करने में असमर्थ</string>
+    <string name="error_phonepe_verification_timed_out">PhonePe भुगतान सत्यापन का समय समाप्त हो गया।</string>
+    <string name="error_payment_still_pending">भुगतान अभी भी लंबित है। कृपया कुछ समय बाद पुनः जांचें।</string>
+    <string name="chat_error_generate_response">AI प्रतिक्रिया उत्पन्न करने में विफल: %s</string>
+    <string name="chat_option_yellow_leaves">पीली पत्तियां</string>
+    <string name="chat_option_leaf_curling">पत्तियों का मुड़ना</string>
+    <string name="chat_option_spots_on_leaves">पत्तियों पर धब्बे</string>
+    <string name="chat_option_wilting">मुरझाना</string>
+    <string name="chat_option_other">अन्य</string>
+
+    <!-- Additional ViewModel Error Strings -->
+    <string name="error_unable_start_phonepe_checkout">PhonePe चेकआउट शुरू करने में असमर्थ</string>
+    <string name="error_location_permission_not_granted">लोकेशन अनुमति नहीं दी गई</string>
+    <string name="error_fetching_location">लोकेशन प्राप्त करने में त्रुटि: %s</string>
+    <string name="error_updating_location">लोकेशन अपडेट करने में त्रुटि: %s</string>
+    <string name="error_user_not_found">उपयोगकर्ता नहीं मिला</string>
+    <string name="error_failed_load_notifications">सूचनाएं लोड करने में विफल</string>
+    <string name="error_an_error_occurred">एक त्रुटि हुई</string>
+    <string name="address_location_format">स्थान: %1$.4f, %2$.4f</string>
+    <string name="notification_view_booking">बुकिंग देखें</string>
+    <string name="notification_view_order">ऑर्डर देखें</string>
+    <string name="notification_view_details">विवरण देखें</string>
+
+    <!-- Group C: Order Status Timeline -->
+    <string name="order_status_step_placed">ऑर्डर प्लेस किया गया</string>
+    <string name="order_status_step_packed">पैक किया गया</string>
+    <string name="order_status_step_shipped">शिप किया गया</string>
+    <string name="order_status_step_out_for_delivery">डिलीवरी के लिए निकला</string>
+    <string name="order_status_step_delivered">डिलीवर किया गया</string>
+
+    <!-- Group C: Order Status Subtitles -->
+    <string name="order_status_sub_placed_on">प्लेस किया गया</string>
+    <string name="order_status_sub_packing_date">पैकिंग तिथि</string>
+    <string name="order_status_sub_shipping_date">शिपिंग तिथि</string>
+    <string name="order_status_sub_delivery_date">डिलीवरी तिथि</string>
+    <string name="order_status_sub_confirmation_date">डिलीवरी पुष्टि तिथि</string>
+
+    <!-- Group C: Order Details Price Breakdown -->
+    <string name="orders_payment_method">भुगतान विधि</string>
+    <string name="orders_order_date">ऑर्डर तिथि</string>
+
+    <!-- Group C: Order Status Fallbacks -->
+    <string name="order_status_pending">लंबित</string>
+
+    <!-- Cart Screen -->
+    <string name="cart_top_bar_checkout">चेकआउट</string>
+    <string name="cart_top_bar_my_cart">मेरी कार्ट</string>
+    <string name="cart_delivery_by">%s तक डिलीवरी</string>
+
+    <!-- Product Details -->
+    <string name="product_details_add_to_cart">कार्ट में जोड़ें</string>
+    <string name="product_details_in_cart">कार्ट में</string>
+
+    <!-- My Orders Tabs -->
+    <string name="orders_tab_active">सक्रिय</string>
+    <string name="orders_tab_complete">पूर्ण</string>
+    <string name="orders_tab_cancelled">रद्द</string>
+
+    <!-- Validation Messages -->
+    <string name="validation_mobile_required">मोबाइल नंबर आवश्यक है</string>
+    <string name="validation_mobile_10_digits">मोबाइल नंबर 10 अंकों का होना चाहिए</string>
+    <string name="validation_mobile_start_digit">मोबाइल नंबर 6, 7, 8 या 9 से शुरू होना चाहिए</string>
+    <string name="validation_mobile_valid">कृपया एक वैध मोबाइल नंबर दर्ज करें</string>
+    <string name="validation_email_required">ईमेल आवश्यक है</string>
+    <string name="validation_email_contains_at">ईमेल में @ होना चाहिए</string>
+    <string name="validation_email_domain">ईमेल में एक डोमेन होना चाहिए</string>
+    <string name="validation_email_valid">कृपया एक वैध ईमेल पता दर्ज करें</string>
+
+    <!-- Service Dropdown -->
+    <string name="service_tractor_services">ट्रैक्टर सेवाएं</string>
+    <string name="service_power_weeder">पावर वीडर</string>
+    <string name="service_thresher_winnower">थ्रेशर / विनोवर</string>
+    <string name="service_biofertilizer">जैव उर्वरक</string>
+    <string name="service_seedling_supply">पौध आपूर्ति</string>
+    <string name="service_irrigation">सिंचाई</string>
+    <string name="service_custom_equipment">कस्टम उपकरण (किराया)</string>
+    <string name="service_farm_labour">खेत मजदूर</string>
+    <string name="service_produce_transport">उपज संग्रह और परिवहन</string>
+    <string name="service_crop_advisory">फसल सलाह / बीमा</string>
+
+    <!-- Unit Options -->
+    <string name="unit_kg">किग्रा</string>
+    <string name="unit_unit">यूनिट</string>
+    <string name="unit_litre">लीटर</string>
+
+    <!-- Chat Crop Suggestions -->
+    <string name="chat_crop_tomato">टमाटर</string>
+    <string name="chat_crop_potato">आलू</string>
+    <string name="chat_crop_chili">मिर्च</string>
+    <string name="chat_crop_onion">प्याज</string>
+    <string name="chat_crop_wheat">गेहूं</string>
+    <string name="chat_crop_rice">चावल</string>
+
+    <!-- Error Fallbacks -->
+    <string name="error_unknown">अज्ञात त्रुटि</string>
+
+    <!-- Notification Channel -->
+    <string name="notification_channel_description">ChiragFarmer से सूचनाएं</string>
+
+    <!-- Share -->
+    <string name="share_seller_profile">विक्रेता प्रोफ़ाइल साझा करें</string>
+
+    <!-- Currency -->
+    <string name="currency_rs">रु.</string>
+
+    <!-- Fallback Names -->
+    <string name="fallback_product">उत्पाद</string>
+    <string name="fallback_seller">विक्रेता</string>
+    <string name="fallback_address">पता</string>
 </resources>

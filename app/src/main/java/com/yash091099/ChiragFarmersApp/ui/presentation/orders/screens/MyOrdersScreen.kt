@@ -74,7 +74,7 @@ fun MyOrdersScreen(
 
     val pagerState = rememberPagerState(pageCount = { 3 })
     val scope = rememberCoroutineScope()
-    val tabs = listOf("Active", "Complete", "Cancelled")
+    val tabs = listOf(stringResource(R.string.orders_tab_active), stringResource(R.string.orders_tab_complete), stringResource(R.string.orders_tab_cancelled))
 
     LaunchedEffect(pagerState.currentPage) {
         viewModel.onTabSelected(pagerState.currentPage)
@@ -246,7 +246,7 @@ fun OrderCard(
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
-                    text = "₹${order.productPrice}",
+                    text = stringResource(R.string.product_price_format, order.productPrice),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black

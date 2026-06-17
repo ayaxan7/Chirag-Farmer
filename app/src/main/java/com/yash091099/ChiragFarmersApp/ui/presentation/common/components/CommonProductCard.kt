@@ -161,7 +161,7 @@ fun CommonProductCard(
                         horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Text(
-                            text = "₹${product.currentPrice}",
+                            text = stringResource(R.string.product_price_format, product.currentPrice),
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Bold,
                             color = BGBlack,

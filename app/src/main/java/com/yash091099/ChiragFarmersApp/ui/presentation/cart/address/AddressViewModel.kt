@@ -13,10 +13,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
+import com.yash091099.ChiragFarmersApp.R
 import javax.inject.Inject
 
 @HiltViewModel
 class AddressListViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val getFarmerAddressesUseCase: GetFarmerAddressesUseCase,
     private val setDefaultAddressUseCase: SetDefaultAddressUseCase
 ) : ViewModel() {
@@ -48,7 +52,7 @@ class AddressListViewModel @Inject constructor(
                 },
                 onFailure = { exception ->
                     _addressState.value = AddressListUiState.Error(
-                        exception.message ?: "Failed to load addresses"
+                        exception.message ?: context.getString(R.string.error_failed_load_addresses)
                     )
                 }
             )
@@ -66,7 +70,7 @@ class AddressListViewModel @Inject constructor(
                 onFailure = { exception ->
                     _isOperationInProgress.value = false
                     _addressState.value = AddressListUiState.Error(
-                        exception.message ?: "Failed to set default address"
+                        exception.message ?: context.getString(R.string.error_failed_set_default_address)
                     )
                 }
             )

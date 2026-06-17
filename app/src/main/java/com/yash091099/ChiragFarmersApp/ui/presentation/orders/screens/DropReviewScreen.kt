@@ -110,8 +110,8 @@ fun DropReviewScreen(
                 item {
                     ReviewItemCard(
                         imageUrl = imageUrl,
-                        title = productName ?: "Product",
-                        seller = sellerName ?: "Seller",
+                        title = productName ?: stringResource(R.string.fallback_product),
+                        seller = sellerName ?: stringResource(R.string.fallback_seller),
                         price = formatPrice(pricePaid)
                     )
 
@@ -351,10 +351,11 @@ fun ReviewItemCard(
     }
 }
 
+@Composable
 private fun formatPrice(pricePaid: String?): String {
     if (pricePaid.isNullOrBlank()) return "--"
     val value = pricePaid.toDoubleOrNull()
-    return if (value != null) "Rs.${
+    return if (value != null) "${stringResource(R.string.currency_rs)}${
         String.format(
             Locale.getDefault(),
             "%.2f",

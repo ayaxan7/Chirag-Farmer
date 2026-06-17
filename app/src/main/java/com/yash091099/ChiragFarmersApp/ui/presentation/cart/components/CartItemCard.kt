@@ -214,7 +214,7 @@ fun CartItemCardPreview() {
             imageRes = R.drawable.sprayer,
             productName = "Premium Wheat Seeds",
             sellerName = "Chirag Seeds Farm",
-            price = "₹1,200",
+            price = stringResource(R.string.product_price_format, "1200"),
             deliveryDate = "Delivery by 25th Oct",
             quantity = "1 kg",
             onQuantityDecrease = {},

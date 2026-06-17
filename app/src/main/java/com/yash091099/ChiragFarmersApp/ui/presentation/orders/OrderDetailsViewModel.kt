@@ -1,5 +1,6 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.orders
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yash091099.ChiragFarmersApp.data.remote.dto.OrderDetailsData
@@ -7,7 +8,9 @@ import com.yash091099.ChiragFarmersApp.domain.usecase.GetOrderDetailsUseCase
 import com.yash091099.ChiragFarmersApp.domain.usecase.CancelOrderItemUseCase
 import com.yash091099.ChiragFarmersApp.domain.usecase.UpdateOrderStatusUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
+import com.yash091099.ChiragFarmersApp.R
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -35,6 +38,7 @@ sealed class UpdateStatusState {
 
 @HiltViewModel
 class OrderDetailsViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val getOrderDetailsUseCase: GetOrderDetailsUseCase,
     private val cancelOrderItemUseCase: CancelOrderItemUseCase,
     private val updateOrderStatusUseCase: UpdateOrderStatusUseCase
@@ -61,7 +65,7 @@ class OrderDetailsViewModel @Inject constructor(
                     }
                 },
                 onFailure = { error ->
-                    _uiState.value = OrderDetailsUiState.Error(error.message ?: "Unknown error")
+                    _uiState.value = OrderDetailsUiState.Error(error.message ?: context.getString(R.string.error_unknown))
                 }
             )
         }
@@ -79,7 +83,7 @@ class OrderDetailsViewModel @Inject constructor(
                     }
                 },
                 onFailure = { error ->
-                    _cancelOrderState.value = CancelOrderState.Error(error.message ?: "Unknown error")
+                    _cancelOrderState.value = CancelOrderState.Error(error.message ?: context.getString(R.string.error_unknown))
                 }
             )
         }
@@ -97,7 +101,7 @@ class OrderDetailsViewModel @Inject constructor(
                     }
                 },
                 onFailure = { error ->
-                    _updateStatusState.value = UpdateStatusState.Error(error.message ?: "Unknown error")
+                    _updateStatusState.value = UpdateStatusState.Error(error.message ?: context.getString(R.string.error_unknown))
                 }
             )
         }

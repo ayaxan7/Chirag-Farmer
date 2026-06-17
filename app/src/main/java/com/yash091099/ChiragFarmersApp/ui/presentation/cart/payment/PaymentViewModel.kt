@@ -3,6 +3,7 @@ package com.yash091099.ChiragFarmersApp.ui.presentation.cart.payment
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import com.yash091099.ChiragFarmersApp.R
 import android.graphics.drawable.Drawable
 import timber.log.Timber
 import androidx.core.net.toUri
@@ -50,7 +51,7 @@ sealed class PaymentUiState {
     object Loading : PaymentUiState()
     data class Success(
         val response: PlaceOrderResponse? = null,
-        val message: String = "Payment successful"
+        val message: String = ""
     ) : PaymentUiState()
     data class Error(val message: String) : PaymentUiState()
 }
@@ -165,7 +166,7 @@ class PaymentViewModel @Inject constructor(
             try {
                 val cachedCartData = cartDataCache.getCartData()
                 if (cachedCartData == null) {
-                    _paymentState.value = PaymentUiState.Error("Cart data not found. Please try again.")
+                    _paymentState.value = PaymentUiState.Error(context.getString(R.string.error_cart_data_not_found))
                     return@launch
                 }
 
@@ -176,7 +177,7 @@ class PaymentViewModel @Inject constructor(
                 )
 
                 if (request.items.isEmpty()) {
-                    _paymentState.value = PaymentUiState.Error("No items in cart to order.")
+                    _paymentState.value = PaymentUiState.Error(context.getString(R.string.error_no_items_in_cart))
                     return@launch
                 }
 
@@ -192,7 +193,7 @@ class PaymentViewModel @Inject constructor(
                     },
                     onFailure = { exception ->
                         Timber.e(exception, "Order placement failed")
-                        _paymentState.value = PaymentUiState.Error(exception.message ?: "Order placement failed")
+                        _paymentState.value = PaymentUiState.Error(exception.message ?: context.getString(R.string.error_order_placement_failed))
                     }
                 )
             } catch (e: Exception) {
@@ -211,7 +212,7 @@ class PaymentViewModel @Inject constructor(
             try {
                 val cachedCartData = cartDataCache.getCartData()
                 if (cachedCartData == null) {
-                    _paymentState.value = PaymentUiState.Error("Cart data not found. Please try again.")
+                    _paymentState.value = PaymentUiState.Error(context.getString(R.string.error_cart_data_not_found))
                     return@launch
                 }
 
@@ -222,7 +223,7 @@ class PaymentViewModel @Inject constructor(
                 )
 
                 if (request.items.isEmpty()) {
-                    _paymentState.value = PaymentUiState.Error("No items in cart to order.")
+                    _paymentState.value = PaymentUiState.Error(context.getString(R.string.error_no_items_in_cart))
                     return@launch
                 }
 
@@ -245,7 +246,7 @@ class PaymentViewModel @Inject constructor(
 
                         if (token.isNullOrBlank() || orderId.isNullOrBlank() || merchantOrderId.isNullOrBlank()) {
                             _paymentState.value = PaymentUiState.Error(
-                                response.message.ifBlank { "PhonePe checkout token was not returned by the server." }
+                                response.message.ifBlank { context.getString(R.string.error_phonepe_token_missing) }
                             )
                             return@fold
                         }
@@ -260,7 +261,7 @@ class PaymentViewModel @Inject constructor(
                     onFailure = { exception ->
                         Timber.e(exception, "PhonePe checkout failed")
                         _paymentState.value = PaymentUiState.Error(
-                            exception.message ?: "Unable to start PhonePe checkout"
+                            exception.message ?: context.getString(R.string.error_unable_start_phonepe_checkout)
                         )
                     }
                 )
@@ -273,13 +274,13 @@ class PaymentViewModel @Inject constructor(
 
     fun verifyPhonePePayment() {
         val pendingCheckout = pendingPhonePeCheckout ?: run {
-            _paymentState.value = PaymentUiState.Error("PhonePe checkout data not found. Please try again.")
+            _paymentState.value = PaymentUiState.Error(context.getString(R.string.error_phonepe_data_not_found))
             return
         }
 
         val merchantOrderId = pendingCheckout.merchantOrderId
         if (merchantOrderId.isNullOrBlank()) {
-            _paymentState.value = PaymentUiState.Error("PhonePe merchant order id is missing.")
+            _paymentState.value = PaymentUiState.Error(context.getString(R.string.error_phonepe_order_id_missing))
             return
         }
 
@@ -312,7 +313,7 @@ class PaymentViewModel @Inject constructor(
                     }
                 },
                 onFailure = { exception ->
-                    handlePhonePeFailure(exception.message ?: "Unable to verify PhonePe payment")
+                    handlePhonePeFailure(exception.message ?: context.getString(R.string.error_phonepe_verification_failed))
                 }
             )
         }
@@ -346,7 +347,7 @@ class PaymentViewModel @Inject constructor(
                 },
                 onFailure = { exception ->
                     if (attempt == PHONEPE_POLL_MAX_ATTEMPTS - 1) {
-                        handlePhonePeFailure(exception.message ?: "PhonePe payment verification timed out.")
+                        handlePhonePeFailure(exception.message ?: context.getString(R.string.error_phonepe_verification_timed_out))
                         return
                     }
                 }
@@ -354,7 +355,7 @@ class PaymentViewModel @Inject constructor(
         }
 
         if (_paymentState.value !is PaymentUiState.Success) {
-            handlePhonePeFailure("Payment is still pending. Please check again after some time.")
+            handlePhonePeFailure(context.getString(R.string.error_payment_still_pending))
         }
     }
 
@@ -363,13 +364,13 @@ class PaymentViewModel @Inject constructor(
         cartDataCache.clearCartData()
         orderResponseCache.clearOrderResponse()
         clearPhonePeCheckoutState()
-        _paymentState.value = PaymentUiState.Success(message = response.message.ifBlank { "Payment successful" })
+        _paymentState.value = PaymentUiState.Success(message = response.message.ifBlank { context.getString(R.string.success_payment) })
     }
 
     private fun handlePhonePeFailure(message: String) {
         phonePePollingJob?.cancel()
         clearPhonePeCheckoutState()
-        _paymentState.value = PaymentUiState.Error(message.ifBlank { "PhonePe payment failed" })
+        _paymentState.value = PaymentUiState.Error(message.ifBlank { context.getString(R.string.error_phonepe_payment_failed) })
     }
 
     private fun clearPhonePeCheckoutState() {

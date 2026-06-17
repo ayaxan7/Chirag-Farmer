@@ -20,6 +20,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -53,7 +54,7 @@ fun CategoryItem(
         ) {
             Image(
                 painter = painterResource(id = category.image),
-                contentDescription = category.name,
+                contentDescription = if (category.displayNameRes != null) stringResource(category.displayNameRes) else category.name,
                 modifier = Modifier
                     .fillMaxSize(.9f)
                     .clip(CircleShape),
@@ -65,7 +66,7 @@ fun CategoryItem(
 
         // Category Name
         Text(
-            text = category.name,
+            text = if (category.displayNameRes != null) stringResource(category.displayNameRes) else category.name,
             fontSize = 13.sp,
             fontWeight = FontWeight.Normal,
             color = Color.Black,

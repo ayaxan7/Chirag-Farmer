@@ -55,7 +55,7 @@ class ChiragMessagingService : FirebaseMessagingService() {
             getString(R.string.notification_channel_name),
             NotificationManager.IMPORTANCE_HIGH
         ).apply {
-            description = "Notifications from ChiragFarmer"
+            description = getString(R.string.notification_channel_description)
             enableVibration(true)
         }
         notificationManager.createNotificationChannel(channel)

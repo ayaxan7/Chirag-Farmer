@@ -182,7 +182,7 @@ fun OrderSummaryCard(data: OrderTrackingData) {
                             color = Color(0xFF1A1C1E)
                         )
                         Text(
-                            text = "₹${data.amountPaid?.toInt() ?: 0}",
+                            text = stringResource(R.string.product_price_format, data.amountPaid?.toInt() ?: 0),
                             fontWeight = FontWeight.Bold,
                             fontSize = 18.sp,
                             color = Teal
@@ -231,11 +231,11 @@ fun ProgressTimeline(
     onStatusUpdate: (String) -> Unit
 ) {
     val statuses = listOf(
-        Triple("Order Placed", "Placed On", data.orderPlacedAt),
-        Triple("Packed", "Packing Date", data.packedAt),
-        Triple("Shipped", "Shipping Date", data.shippedAt),
-        Triple("Out for Delivery", "Delivery Date", data.outForDeliveryAt),
-        Triple("Delivered", "Confirmation Delivered Date", data.deliveredAt)
+        Triple(stringResource(R.string.order_status_step_placed), stringResource(R.string.order_status_sub_placed_on), data.orderPlacedAt),
+        Triple(stringResource(R.string.order_status_step_packed), stringResource(R.string.order_status_sub_packing_date), data.packedAt),
+        Triple(stringResource(R.string.order_status_step_shipped), stringResource(R.string.order_status_sub_shipping_date), data.shippedAt),
+        Triple(stringResource(R.string.order_status_step_out_for_delivery), stringResource(R.string.order_status_sub_delivery_date), data.outForDeliveryAt),
+        Triple(stringResource(R.string.order_status_step_delivered), stringResource(R.string.order_status_sub_confirmation_date), data.deliveredAt)
     )
 
     val isCancelled = data.orderStatus?.trim()?.equals("cancelled", ignoreCase = true) == true
@@ -261,7 +261,7 @@ fun ProgressTimeline(
                     showLine = index < statuses.size - 1,
                     onCheckClick = { if (timestamp == null) onStatusUpdate(status) }
                 ) {
-                    CustomDateField(timestamp?.let { formatDate(it) } ?: "Pending")
+                    CustomDateField(timestamp?.let { formatDate(it) } ?: stringResource(R.string.order_status_pending))
                 }
             }
         } else {
@@ -301,27 +301,27 @@ fun ProgressTimeline(
                 onCheckClick = {},
                 borderOverride = Color(0xFFF44336)
             ) {
-                CustomDateField(data.cancelledAt?.let { formatDate(it) } ?: "Cancelled")
+                CustomDateField(data.cancelledAt?.let { formatDate(it) } ?: stringResource(R.string.order_status_cancelled_title))
             }
         }
     }
 }
 
-fun formatDate(dateString: String): String {
+fun formatDate(dateString: String): String? {
     return try {
         val inputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
         val outputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         val date = inputFormat.parse(dateString)
-        date?.let { outputFormat.format(it) } ?: "Pending"
+        date?.let { outputFormat.format(it) }
     } catch (e: Exception) {
         try {
             val isoFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
             isoFormat.timeZone = TimeZone.getTimeZone("UTC")
             val outputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
             val date = isoFormat.parse(dateString)
-            date?.let { outputFormat.format(it) } ?: "Pending"
+            date?.let { outputFormat.format(it) }
         } catch (e2: Exception) {
-            dateString
+            null
         }
     }
 }
@@ -449,11 +449,11 @@ fun CustomDateField(value: String) {
             .padding(horizontal = 12.dp),
         contentAlignment = Alignment.CenterStart
     ) {
-        Text(
-            text = value,
-            color = if (value == "Pending") TextGray else Color.Black,
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Bold
-        )
+    Text(
+        text = value,
+        color = TextGray,
+        fontSize = 14.sp,
+        fontWeight = FontWeight.Bold
+    )
     }
 }

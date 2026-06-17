@@ -271,7 +271,7 @@ fun FarmerAddressItem(
         Spacer(modifier = Modifier.width(12.dp))
         Column(modifier = Modifier.weight(1.0f)) {
             Text(
-                text = address.name ?: "Address",
+                text = address.name ?: stringResource(R.string.fallback_address),
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black

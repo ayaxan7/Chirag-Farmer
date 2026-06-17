@@ -6,8 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yash091099.ChiragFarmersApp.data.model.auth.FarmerProfileData
 import com.yash091099.ChiragFarmersApp.data.repository.AuthRepository
+import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.utils.CloudinaryUploader
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,6 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val authRepository: AuthRepository
 ) : ViewModel() {
 
@@ -40,7 +43,7 @@ class ProfileViewModel @Inject constructor(
                         _uiState.value = ProfileUiState.Success(response.data)
                     } else {
                         _uiState.value = ProfileUiState.Error(
-                            response.message ?: "Failed to load profile"
+                            response.message ?: context.getString(R.string.error_failed_load_profile)
                         )
                     }
                 },
@@ -53,12 +56,12 @@ class ProfileViewModel @Inject constructor(
                             when (exception) {
                                 is HttpException -> {
                                     if (exception.code() == 404) {
-                                        "User not found"
+                                        context.getString(R.string.error_user_not_found)
                                     } else {
-                                        exception.message ?: "Failed to load profile"
+                                        exception.message ?: context.getString(R.string.error_failed_load_profile)
                                     }
                                 }
-                                else -> exception.message ?: "Failed to load profile"
+                                else -> exception.message ?: context.getString(R.string.error_failed_load_profile)
                             }
                         )
                     }
@@ -104,7 +107,7 @@ class ProfileViewModel @Inject constructor(
                 }
 
                 if (changedFields.isEmpty()) {
-                    _updateProfileUiState.value = UpdateProfileUiState.Error("No changes detected")
+                    _updateProfileUiState.value = UpdateProfileUiState.Error(context.getString(R.string.error_no_changes_detected))
                     return@launch
                 }
 
@@ -129,13 +132,13 @@ class ProfileViewModel @Inject constructor(
                             _uiState.value = ProfileUiState.Unauthorized
                         }
                         _updateProfileUiState.value = UpdateProfileUiState.Error(
-                            exception.message ?: "Failed to update profile"
+                            exception.message ?: context.getString(R.string.error_failed_update_profile)
                         )
                     }
                 )
             } catch (e: Exception) {
                 _updateProfileUiState.value = UpdateProfileUiState.Error(
-                    e.message ?: "Failed to update profile"
+                    e.message ?: context.getString(R.string.error_failed_update_profile)
                 )
             }
         }

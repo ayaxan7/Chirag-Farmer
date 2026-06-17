@@ -109,7 +109,7 @@ fun EditProfileScreen(
         if (uri != null) {
             selectedProfileImageUri = uri
             profileImageState = uri
-            Toast.makeText(context, "Profile photo updated successfully!", Toast.LENGTH_SHORT)
+            Toast.makeText(context, context.getString(R.string.profile_photo_updated), Toast.LENGTH_SHORT)
                 .show()
         }
     }
@@ -124,7 +124,7 @@ fun EditProfileScreen(
     }, bottomBar = {
         // Premium Save button to save the updated states
         ChiragButton(
-            text = if (updateProfileUiState is UpdateProfileUiState.Loading) "Saving..." else "Save Changes",
+            text = if (updateProfileUiState is UpdateProfileUiState.Loading) stringResource(R.string.common_saving) else stringResource(R.string.profile_save_changes),
             onClick = {
                 val profile = (uiState as? ProfileUiState.Success)?.profile ?: return@ChiragButton
                 viewModel.updateProfile(

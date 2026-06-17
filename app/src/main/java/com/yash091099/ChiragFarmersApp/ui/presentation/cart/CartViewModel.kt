@@ -1,7 +1,9 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.cart
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.data.remote.dto.CartAddressDto
 import com.yash091099.ChiragFarmersApp.data.remote.dto.CartItemDto
 import com.yash091099.ChiragFarmersApp.data.remote.dto.CartSummary
@@ -11,6 +13,7 @@ import com.yash091099.ChiragFarmersApp.domain.usecase.GetCartUseCase
 import com.yash091099.ChiragFarmersApp.domain.usecase.RemoveFromCartUseCase
 import com.yash091099.ChiragFarmersApp.domain.usecase.UpdateCartQuantityUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,6 +22,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CartViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val getCartUseCase: GetCartUseCase,
     private val getBuyNowUseCase: GetBuyNowUseCase,
     private val removeFromCartUseCase: RemoveFromCartUseCase,
@@ -72,7 +76,7 @@ class CartViewModel @Inject constructor(
                 },
                 onFailure = { exception ->
                     _cartState.value = CartUiState.Error(
-                        exception.message ?: "Failed to load buy now checkout"
+                        exception.message ?: context.getString(R.string.error_failed_load_buy_now)
                     )
                 }
             )
@@ -93,7 +97,7 @@ class CartViewModel @Inject constructor(
                 },
                 onFailure = { exception ->
                     _cartState.value = CartUiState.Error(
-                        exception.message ?: "Failed to load cart"
+                        exception.message ?: context.getString(R.string.error_failed_load_cart)
                     )
                 }
             )

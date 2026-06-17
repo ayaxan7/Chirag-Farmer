@@ -1,12 +1,15 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.assist.screens.assistResult
 
+import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.data.remote.dto.CropAnalysisDataDto
 import com.yash091099.ChiragFarmersApp.data.remote.dto.CropInsecticideDto
 import com.yash091099.ChiragFarmersApp.domain.repository.CropAnalysisRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -37,6 +40,7 @@ sealed class AssistResultUiState {
 
 @HiltViewModel
 class AssistResultViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val cropAnalysisRepository: CropAnalysisRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -59,7 +63,7 @@ class AssistResultViewModel @Inject constructor(
 
     private fun loadAnalysis() {
         if (imageUri.isBlank()) {
-            _uiState.value = AssistResultUiState.Error("Selected image is missing")
+            _uiState.value = AssistResultUiState.Error(context.getString(R.string.error_selected_image_missing))
             return
         }
 
@@ -71,7 +75,7 @@ class AssistResultViewModel @Inject constructor(
                 },
                 onFailure = { error ->
                     _uiState.value = AssistResultUiState.Error(
-                        error.message ?: "Failed to analyze crop image"
+                        error.message ?: context.getString(R.string.error_analysis_failed)
                     )
                 }
             )
@@ -80,10 +84,10 @@ class AssistResultViewModel @Inject constructor(
 
     private fun CropAnalysisDataDto.toUiModel(): CropAnalysisUiModel {
         return CropAnalysisUiModel(
-            cropName = cropName.orEmpty().ifBlank { "Unknown Crop" },
-            diseaseName = diseaseIdentified?.name.orEmpty().ifBlank { "Unknown Disease" },
+            cropName = cropName.orEmpty().ifBlank { context.getString(R.string.error_unknown_crop) },
+            diseaseName = diseaseIdentified?.name.orEmpty().ifBlank { context.getString(R.string.error_unknown_disease) },
             confidence = diseaseIdentified?.confidence,
-            about = diseaseIdentified?.about.orEmpty().ifBlank { "No description available." },
+            about = diseaseIdentified?.about.orEmpty().ifBlank { context.getString(R.string.error_no_description) },
             symptoms = symptomsIdentified,
             avoid = avoid,
             insecticides = insecticides.map { it.toUiModel() }

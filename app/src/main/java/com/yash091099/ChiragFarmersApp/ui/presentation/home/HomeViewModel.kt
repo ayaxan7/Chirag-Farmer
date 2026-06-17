@@ -5,6 +5,7 @@ import timber.log.Timber
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yash091099.ChiragFarmersApp.BuildConfig
+import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.data.location.LocationManager
 import com.yash091099.ChiragFarmersApp.data.remote.dto.MixedProductItem
 import com.yash091099.ChiragFarmersApp.data.repository.AuthRepository
@@ -131,7 +132,7 @@ class HomeViewModel @Inject constructor(
                 },
                 onFailure = { exception ->
                     _homeMixedProductsUiState.value = HomeMixedProductsUiState.Error(
-                        exception.message ?: "Failed to load products"
+                        exception.message ?: context.getString(R.string.error_failed_load_products)
                     )
                 }
             )
@@ -242,7 +243,7 @@ class HomeViewModel @Inject constructor(
         val locName = _locationQuery.value
 
         if (lat == 0.0 || lon == 0.0 || service.isEmpty() || area == 0) {
-            _bookingStatus.value = BookingStatus.Error("Please fill all required fields correctly")
+            _bookingStatus.value = BookingStatus.Error(context.getString(R.string.home_booking_fill_fields))
             return
         }
 
@@ -259,12 +260,12 @@ class HomeViewModel @Inject constructor(
             val result = createBookingUseCase(request)
             result.fold(
                 onSuccess = {
-                    _bookingStatus.value = BookingStatus.Success("Booking created successfully")
+                    _bookingStatus.value = BookingStatus.Success(context.getString(R.string.success_booking))
                     clearForm()
                     Timber.d("Booking created successfully: $request ")
                 },
                 onFailure = {
-                    _bookingStatus.value = BookingStatus.Error(it.message ?: "Booking failed")
+                    _bookingStatus.value = BookingStatus.Error(it.message ?: context.getString(R.string.error_home_booking_failed))
                     Timber.e("Booking failed: ${it.message}")
                 }
             )

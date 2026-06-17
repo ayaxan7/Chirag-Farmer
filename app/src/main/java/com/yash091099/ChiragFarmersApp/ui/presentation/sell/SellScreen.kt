@@ -131,7 +131,7 @@ fun SellScreen(
                 navController = navController,
                 title = stringResource(R.string.sell_title),
                 icon = R.drawable.ic_arrow,
-                buttonText = "Sell Product",
+                buttonText = stringResource(R.string.sell_product_sell),
                 buttonIcon = Icons.Default.Add,
                 onButtonClick = {
                     navController.navigate(Route.SellCategories.path) {
@@ -157,7 +157,11 @@ fun SellScreen(
 
             Spacer(modifier = Modifier.padding(8.dp))
 
-            val tabs = listOf("Active Products", "Products Sold Out", "Active Orders")
+            val tabs = listOf(
+                stringResource(R.string.sell_tab_active_products),
+                stringResource(R.string.sell_tab_sold_out_products),
+                stringResource(R.string.sell_tab_active_orders)
+            )
 
             TabRow(
                 selectedTabIndex = pagerState.currentPage,

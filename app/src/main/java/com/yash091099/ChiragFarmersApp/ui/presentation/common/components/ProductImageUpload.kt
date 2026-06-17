@@ -67,7 +67,7 @@ fun ProductImageUpload(
         }
 
         Text(
-            text = "Produce Image", fontSize = 11.sp, color = TextGray
+            text = stringResource(R.string.common_produce_image), fontSize = 11.sp, color = TextGray
         )
     }
 }

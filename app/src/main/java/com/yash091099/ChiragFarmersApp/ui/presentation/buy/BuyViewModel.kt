@@ -1,10 +1,13 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.buy
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.data.remote.dto.MixedProductItem
 import com.yash091099.ChiragFarmersApp.domain.repository.ProductRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,6 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BuyViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val productRepository: ProductRepository
 ) : ViewModel() {
 
@@ -38,7 +42,7 @@ class BuyViewModel @Inject constructor(
                 },
                 onFailure = { exception ->
                     _uiState.value = BuyUiState.Error(
-                        exception.message ?: "Failed to load products"
+                        exception.message ?: context.getString(R.string.error_failed_load_products)
                     )
                 }
             )

@@ -686,4 +686,186 @@
 
     <!-- Error Messages -->
     <string name="error_not_authenticated">Not authenticated</string>
+
+    <!-- Group A additions -->
+    <!-- Bookings -->
+    <string name="bookings_title">Bookings</string>
+
+    <!-- Categories -->
+    <string name="categories_error_load_more">Failed to load more products</string>
+
+    <!-- Common -->
+    <string name="common_produce_image">Produce Image</string>
+    <string name="common_loading">Loading…</string>
+    <string name="common_saving">Saving…</string>
+
+    <!-- Profile -->
+    <string name="profile_farmer_fallback">Farmer</string>
+    <string name="profile_phone_unavailable">Phone unavailable</string>
+    <string name="profile_email_unavailable">Email unavailable</string>
+    <string name="profile_save_changes">Save Changes</string>
+
+    <!-- Sell Screen -->
+    <string name="sell_product_sell">Sell Product</string>
+    <string name="sell_tab_active_products">Active Products</string>
+    <string name="sell_tab_sold_out_products">Products Sold Out</string>
+    <string name="sell_tab_active_orders">Active Orders</string>
+    <string name="sell_produce_edit">Edit Produce</string>
+    <string name="sell_uploading_product">Uploading Product…</string>
+    <string name="sell_submitting">Submitting…</string>
+    <string name="sell_update_product">Update Product</string>
+    <string name="sell_submit">Submit</string>
+
+    <!-- Auth Screen -->
+    <string name="auth_already_account">Already have an account? </string>
+    <string name="auth_dont_have_account">Don\'t have an account? </string>
+    <string name="auth_login_label">Login</string>
+    <string name="auth_signup_label">Signup</string>
+
+    <!-- Address Map -->
+    <string name="address_fetching_location">Fetching location…</string>
+    <string name="address_use_current_location">Use Current Location</string>
+    <string name="address_category_home">Home</string>
+    <string name="address_category_work">Work</string>
+    <string name="address_category_hotel">Hotel</string>
+    <string name="address_category_other">Other</string>
+    <string name="address_confirm">Confirm address</string>
+
+    <!-- Group B/D/F additions -->
+    <string name="error_failed_load_products">Failed to load products</string>
+    <string name="error_failed_load_buy_now">Failed to load buy now checkout</string>
+    <string name="error_failed_load_cart">Failed to load cart</string>
+    <string name="error_failed_load_detail">Failed to load product details</string>
+    <string name="error_failed_load_reviews">Failed to load product reviews</string>
+    <string name="error_failed_add_to_cart">Failed to add product to cart</string>
+    <string name="error_failed_update_review">Unable to update review reaction</string>
+    <string name="error_failed_submit_review">Unable to submit review</string>
+    <string name="error_failed_load_profile">Failed to load profile</string>
+    <string name="error_failed_update_profile">Failed to update profile</string>
+    <string name="error_failed_update_language">Error updating language</string>
+    <string name="error_failed_load_tracking">Failed to load tracking details</string>
+    <string name="error_failed_cancel_order">Failed to cancel order</string>
+    <string name="error_failed_update_status">Failed to update product status</string>
+    <string name="error_failed_fetch_details">Failed to fetch product details</string>
+    <string name="error_failed_update_product">Failed to update product</string>
+    <string name="error_failed_add_product">Failed to add product</string>
+    <string name="error_failed_load_addresses">Failed to load addresses</string>
+    <string name="error_failed_set_default_address">Failed to set default address</string>
+    <string name="error_failed_add_location">Failed to add location</string>
+    <string name="error_unable_fetch_location">Unable to fetch current location</string>
+    <string name="error_failed_load_seller">Failed to load seller details</string>
+    <string name="error_unknown_crop">Unknown Crop</string>
+    <string name="error_unknown_disease">Unknown Disease</string>
+    <string name="error_no_description">No description available.</string>
+    <string name="error_home_booking_failed">Booking failed</string>
+    <string name="error_phonepe_token_missing">PhonePe checkout token was not returned by the server.</string>
+    <string name="error_phonepe_verification_failed">Unable to verify PhonePe payment</string>
+    <string name="error_phonepe_verification_timed_out">PhonePe payment verification timed out.</string>
+    <string name="error_payment_still_pending">Payment is still pending. Please check again after some time.</string>
+    <string name="chat_error_generate_response">Failed to generate AI response: %s</string>
+    <string name="chat_option_yellow_leaves">Yellow leaves</string>
+    <string name="chat_option_leaf_curling">Leaf curling</string>
+    <string name="chat_option_spots_on_leaves">Spots on leaves</string>
+    <string name="chat_option_wilting">Wilting</string>
+    <string name="chat_option_other">Other</string>
+
+    <!-- Additional ViewModel Error Strings -->
+    <string name="error_unable_start_phonepe_checkout">Unable to start PhonePe checkout</string>
+    <string name="error_location_permission_not_granted">Location permission not granted</string>
+    <string name="error_fetching_location">Error fetching location: %s</string>
+    <string name="error_updating_location">Error updating location: %s</string>
+    <string name="error_user_not_found">User not found</string>
+    <string name="error_failed_load_notifications">Failed to load notifications</string>
+    <string name="error_an_error_occurred">An error occurred</string>
+    <string name="address_location_format">Location: %1$.4f, %2$.4f</string>
+    <string name="notification_view_booking">View Booking</string>
+    <string name="notification_view_order">View Order</string>
+    <string name="notification_view_details">View Details</string>
+
+    <!-- Group C: Order Status Timeline -->
+    <string name="order_status_step_placed">Order Placed</string>
+    <string name="order_status_step_packed">Packed</string>
+    <string name="order_status_step_shipped">Shipped</string>
+    <string name="order_status_step_out_for_delivery">Out for Delivery</string>
+    <string name="order_status_step_delivered">Delivered</string>
+
+    <!-- Group C: Order Status Subtitles -->
+    <string name="order_status_sub_placed_on">Placed On</string>
+    <string name="order_status_sub_packing_date">Packing Date</string>
+    <string name="order_status_sub_shipping_date">Shipping Date</string>
+    <string name="order_status_sub_delivery_date">Delivery Date</string>
+    <string name="order_status_sub_confirmation_date">Confirmation Delivered Date</string>
+
+    <!-- Group C: Order Details Price Breakdown -->
+    <string name="orders_payment_method">Payment Method</string>
+    <string name="orders_order_date">Order Date</string>
+
+    <!-- Group C: Order Status Fallbacks -->
+    <string name="order_status_pending">Pending</string>
+
+    <!-- Cart Screen -->
+    <string name="cart_top_bar_checkout">Checkout</string>
+    <string name="cart_top_bar_my_cart">My Cart</string>
+    <string name="cart_delivery_by">Delivery by %s</string>
+
+    <!-- Product Details -->
+    <string name="product_details_add_to_cart">Add to Cart</string>
+    <string name="product_details_in_cart">In Cart</string>
+
+    <!-- My Orders Tabs -->
+    <string name="orders_tab_active">Active</string>
+    <string name="orders_tab_complete">Complete</string>
+    <string name="orders_tab_cancelled">Cancelled</string>
+
+    <!-- Validation Messages -->
+    <string name="validation_mobile_required">Mobile number is required</string>
+    <string name="validation_mobile_10_digits">Mobile number must be 10 digits</string>
+    <string name="validation_mobile_start_digit">Mobile number must start with 6, 7, 8, or 9</string>
+    <string name="validation_mobile_valid">Please enter a valid mobile number</string>
+    <string name="validation_email_required">Email is required</string>
+    <string name="validation_email_contains_at">Email must contain @</string>
+    <string name="validation_email_domain">Email must contain a domain</string>
+    <string name="validation_email_valid">Please enter a valid email address</string>
+
+    <!-- Service Dropdown -->
+    <string name="service_tractor_services">Tractor Services</string>
+    <string name="service_power_weeder">Power Weeder</string>
+    <string name="service_thresher_winnower">Thresher / Winnower</string>
+    <string name="service_biofertilizer">Biofertilizer</string>
+    <string name="service_seedling_supply">Seedling Supply</string>
+    <string name="service_irrigation">Irrigation</string>
+    <string name="service_custom_equipment">Custom Equipment (Rental)</string>
+    <string name="service_farm_labour">Farm Labour</string>
+    <string name="service_produce_transport">Produce Collection &amp; Transport</string>
+    <string name="service_crop_advisory">Crop Advisory / Insurance</string>
+
+    <!-- Unit Options -->
+    <string name="unit_kg">KG</string>
+    <string name="unit_unit">Unit</string>
+    <string name="unit_litre">Litre</string>
+
+    <!-- Chat Crop Suggestions -->
+    <string name="chat_crop_tomato">Tomato</string>
+    <string name="chat_crop_potato">Potato</string>
+    <string name="chat_crop_chili">Chili</string>
+    <string name="chat_crop_onion">Onion</string>
+    <string name="chat_crop_wheat">Wheat</string>
+    <string name="chat_crop_rice">Rice</string>
+
+    <!-- Error Fallbacks -->
+    <string name="error_unknown">Unknown error</string>
+
+    <!-- Notification Channel -->
+    <string name="notification_channel_description">Notifications from ChiragFarmer</string>
+
+    <!-- Share -->
+    <string name="share_seller_profile">Share seller profile</string>
+
+    <!-- Currency -->
+    <string name="currency_rs">Rs.</string>
+
+    <!-- Fallback Names -->
+    <string name="fallback_product">Product</string>
+    <string name="fallback_seller">Seller</string>
+    <string name="fallback_address">Address</string>
 </resources>

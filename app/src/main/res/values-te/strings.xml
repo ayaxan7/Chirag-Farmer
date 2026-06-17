@@ -689,4 +689,173 @@
 
     <!-- Error Messages -->
     <string name="error_not_authenticated">ప్రమాణీకరణ చేయబడలేదు</string>
+
+    <!-- Group A additions -->
+    <string name="bookings_title">బుకింగ్‌లు</string>
+    <string name="categories_error_load_more">మరిన్ని ఉత్పత్తులను లోడ్ చేయడంలో విఫలమైంది</string>
+    <string name="common_produce_image">ఉత్పత్తి చిత్రం</string>
+    <string name="common_loading">లోడ్ అవుతోంది…</string>
+    <string name="common_saving">సేవ్ అవుతోంది…</string>
+    <string name="profile_farmer_fallback">రైతు</string>
+    <string name="profile_phone_unavailable">ఫోన్ అందుబాటులో లేదు</string>
+    <string name="profile_email_unavailable">ఇమెయిల్ అందుబాటులో లేదు</string>
+    <string name="profile_save_changes">మార్పులను సేవ్ చేయండి</string>
+    <string name="sell_product_sell">ఉత్పత్తిని అమ్మండి</string>
+    <string name="sell_tab_active_products">చురుకైన ఉత్పత్తులు</string>
+    <string name="sell_tab_sold_out_products">అమ్ముడుపోయిన ఉత్పత్తులు</string>
+    <string name="sell_tab_active_orders">చురుకైన ఆర్డర్లు</string>
+    <string name="sell_produce_edit">ఉత్పత్తిని సవరించండి</string>
+    <string name="sell_uploading_product">ఉత్పత్తిని అప్‌లోడ్ చేస్తోంది…</string>
+    <string name="sell_submitting">సమర్పిస్తోంది…</string>
+    <string name="sell_update_product">ఉత్పత్తిని నవీకరించండి</string>
+    <string name="sell_submit">సమర్పించండి</string>
+    <string name="auth_already_account">ఇప్పటికే ఖాతా ఉందా? </string>
+    <string name="auth_dont_have_account">ఖాతా లేదా? </string>
+    <string name="auth_login_label">లాగిన్</string>
+    <string name="auth_signup_label">సైన్అప్</string>
+    <string name="address_fetching_location">లొకేషన్ తీసుకువస్తోంది…</string>
+    <string name="address_use_current_location">ప్రస్తుత లొకేషన్ ఉపయోగించండి</string>
+    <string name="address_category_home">ఇల్లు</string>
+    <string name="address_category_work">పని</string>
+    <string name="address_category_hotel">హోటల్</string>
+    <string name="address_category_other">ఇతర</string>
+    <string name="address_confirm">చిరునామాను నిర్ధారించండి</string>
+
+    <!-- Group B/D/F additions -->
+    <string name="error_failed_load_products">ఉత్పత్తులను లోడ్ చేయడంలో విఫలమైంది</string>
+    <string name="error_failed_load_buy_now">బయ్ నౌ చెక్‌అవుట్ లోడ్ చేయడంలో విఫలమైంది</string>
+    <string name="error_failed_load_cart">కార్ట్ లోడ్ చేయడంలో విఫలమైంది</string>
+    <string name="error_failed_load_detail">ఉత్పత్తి వివరాలను లోడ్ చేయడంలో విఫలమైంది</string>
+    <string name="error_failed_load_reviews">ఉత్పత్తి సమీక్షలను లోడ్ చేయడంలో విఫలమైంది</string>
+    <string name="error_failed_add_to_cart">ఉత్పత్తిని కార్ట్‌కు జోడించడంలో విఫలమైంది</string>
+    <string name="error_failed_update_review">సమీక్ష ప్రతిచర్యను నవీకరించలేరు</string>
+    <string name="error_failed_submit_review">సమీక్షను సమర్పించలేరు</string>
+    <string name="error_failed_load_profile">ప్రొఫైల్ లోడ్ చేయడంలో విఫలమైంది</string>
+    <string name="error_failed_update_profile">ప్రొఫైల్ నవీకరించడంలో విఫలమైంది</string>
+    <string name="error_failed_update_language">భాషను నవీకరించడంలో లోపం</string>
+    <string name="error_failed_load_tracking">ట్రాకింగ్ వివరాలను లోడ్ చేయడంలో విఫలమైంది</string>
+    <string name="error_failed_cancel_order">ఆర్డర్ రద్దు చేయడంలో విఫలమైంది</string>
+    <string name="error_failed_update_status">ఉత్పత్తి స్థితిని నవీకరించడంలో విఫలమైంది</string>
+    <string name="error_failed_fetch_details">ఉత్పత్తి వివరాలను పొందడంలో విఫలమైంది</string>
+    <string name="error_failed_update_product">ఉత్పత్తిని నవీకరించడంలో విఫలమైంది</string>
+    <string name="error_failed_add_product">ఉత్పత్తిని జోడించడంలో విఫలమైంది</string>
+    <string name="error_failed_load_addresses">చిరునామాలను లోడ్ చేయడంలో విఫలమైంది</string>
+    <string name="error_failed_set_default_address">డిఫాల్ట్ చిరునామాను సెట్ చేయడంలో విఫలమైంది</string>
+    <string name="error_failed_add_location">లొకేషన్ జోడించడంలో విఫలమైంది</string>
+    <string name="error_unable_fetch_location">ప్రస్తుత లొకేషన్ పొందలేరు</string>
+    <string name="error_failed_load_seller">విక్రేత వివరాలను లోడ్ చేయడంలో విఫలమైంది</string>
+    <string name="error_unknown_crop">తెలియని పంట</string>
+    <string name="error_unknown_disease">తెలియని వ్యాధి</string>
+    <string name="error_no_description">వివరణ అందుబాటులో లేదు.</string>
+    <string name="error_home_booking_failed">బుకింగ్ విఫలమైంది</string>
+    <string name="error_phonepe_token_missing">PhonePe చెక్‌అవుట్ టోకెన్ సర్వర్ ద్వారా తిరిగి ఇవ్వబడలేదు.</string>
+    <string name="error_phonepe_verification_failed">PhonePe చెల్లింపును ధృవీకరించలేరు</string>
+    <string name="error_phonepe_verification_timed_out">PhonePe చెల్లింపు ధృవీకరణ సమయం ముగిసింది.</string>
+    <string name="error_payment_still_pending">చెల్లింపు ఇంకా పెండింగ్‌లో ఉంది. దయచేసి కొంత సమయం తర్వాత మళ్ళీ తనిఖీ చేయండి.</string>
+    <string name="chat_error_generate_response">AI ప్రతిస్పందనను రూపొందించడంలో విఫలమైంది: %s</string>
+    <string name="chat_option_yellow_leaves">పసుపు ఆకులు</string>
+    <string name="chat_option_leaf_curling">ఆకు ముడుతలు</string>
+    <string name="chat_option_spots_on_leaves">ఆకులపై మచ్చలు</string>
+    <string name="chat_option_wilting">వాడిపోవడం</string>
+    <string name="chat_option_other">ఇతర</string>
+
+    <!-- Additional ViewModel Error Strings -->
+    <string name="error_unable_start_phonepe_checkout">PhonePe చెక్‌అవుట్ ప్రారంభించడంలో విఫలమైంది</string>
+    <string name="error_location_permission_not_granted">లొకేషన్ అనుమతి మంజూరు చేయబడలేదు</string>
+    <string name="error_fetching_location">లొకేషన్ పొందడంలో లోపం: %s</string>
+    <string name="error_updating_location">లొకేషన్ నవీకరించడంలో లోపం: %s</string>
+    <string name="error_user_not_found">వినియోగదారు కనుగొనబడలేదు</string>
+    <string name="error_failed_load_notifications">నోటిఫికేషన్‌లను లోడ్ చేయడంలో విఫలమైంది</string>
+    <string name="error_an_error_occurred">ఒక లోపం సంభవించింది</string>
+    <string name="address_location_format">స్థానం: %1$.4f, %2$.4f</string>
+    <string name="notification_view_booking">బుకింగ్ చూడండి</string>
+    <string name="notification_view_order">ఆర్డర్ చూడండి</string>
+    <string name="notification_view_details">వివరాలు చూడండి</string>
+
+    <!-- Group C: Order Status Timeline -->
+    <string name="order_status_step_placed">ఆర్డర్ ప్లేస్ చేయబడింది</string>
+    <string name="order_status_step_packed">ప్యాక్ చేయబడింది</string>
+    <string name="order_status_step_shipped">షిప్ చేయబడింది</string>
+    <string name="order_status_step_out_for_delivery">డెలివరీ కోసం బయటకు</string>
+    <string name="order_status_step_delivered">డెలివరీ చేయబడింది</string>
+
+    <!-- Group C: Order Status Subtitles -->
+    <string name="order_status_sub_placed_on">ప్లేస్ చేయబడింది</string>
+    <string name="order_status_sub_packing_date">ప్యాకింగ్ తేదీ</string>
+    <string name="order_status_sub_shipping_date">షిప్పింగ్ తేదీ</string>
+    <string name="order_status_sub_delivery_date">డెలివరీ తేదీ</string>
+    <string name="order_status_sub_confirmation_date">డెలివరీ నిర్ధారణ తేదీ</string>
+
+    <!-- Group C: Order Details Price Breakdown -->
+    <string name="orders_payment_method">చెల్లింపు పద్ధతి</string>
+    <string name="orders_order_date">ఆర్డర్ తేదీ</string>
+
+    <!-- Group C: Order Status Fallbacks -->
+    <string name="order_status_pending">పెండింగ్</string>
+
+    <!-- Cart Screen -->
+    <string name="cart_top_bar_checkout">చెక్అవుట్</string>
+    <string name="cart_top_bar_my_cart">నా కార్ట్</string>
+    <string name="cart_delivery_by">%s నాటికి డెలివరీ</string>
+
+    <!-- Product Details -->
+    <string name="product_details_add_to_cart">కార్ట్‌లో జోడించండి</string>
+    <string name="product_details_in_cart">కార్ట్‌లో ఉంది</string>
+
+    <!-- My Orders Tabs -->
+    <string name="orders_tab_active">చురుకుగా</string>
+    <string name="orders_tab_complete">పూర్తయింది</string>
+    <string name="orders_tab_cancelled">రద్దు చేయబడింది</string>
+
+    <!-- Validation Messages -->
+    <string name="validation_mobile_required">మొబైల్ నంబర్ అవసరం</string>
+    <string name="validation_mobile_10_digits">మొబైల్ నంబర్ 10 అంకెలు ఉండాలి</string>
+    <string name="validation_mobile_start_digit">మొబైల్ నంబర్ 6, 7, 8 లేదా 9 తో మొదలవ్వాలి</string>
+    <string name="validation_mobile_valid">దయచేసి చెల్లుబాటు అయ్యే మొబైల్ నంబర్ నమోదు చేయండి</string>
+    <string name="validation_email_required">ఇమెయిల్ అవసరం</string>
+    <string name="validation_email_contains_at">ఇమెయిల్‌లో @ ఉండాలి</string>
+    <string name="validation_email_domain">ఇమెయిల్‌లో డొమైన్ ఉండాలి</string>
+    <string name="validation_email_valid">దయచేసి చెల్లుబాటు అయ్యే ఇమెయిల్ చిరునామా నమోదు చేయండి</string>
+
+    <!-- Service Dropdown -->
+    <string name="service_tractor_services">ట్రాక్టర్ సేవలు</string>
+    <string name="service_power_weeder">పవర్ వీడర్</string>
+    <string name="service_thresher_winnower">త్రెషర్ / వినోవర్</string>
+    <string name="service_biofertilizer">జీవ ఎరువులు</string>
+    <string name="service_seedling_supply">మొక్కల సరఫరా</string>
+    <string name="service_irrigation">నీటిపారుదల</string>
+    <string name="service_custom_equipment">కస్టమ్ పరికరాలు (అద్దె)</string>
+    <string name="service_farm_labour">వ్యవసాయ కూలీ</string>
+    <string name="service_produce_transport">పంట సేకరణ &amp; రవాణా</string>
+    <string name="service_crop_advisory">పంట సలహా / భీమా</string>
+
+    <!-- Unit Options -->
+    <string name="unit_kg">కేజీ</string>
+    <string name="unit_unit">యూనిట్</string>
+    <string name="unit_litre">లీటరు</string>
+
+    <!-- Chat Crop Suggestions -->
+    <string name="chat_crop_tomato">టమాటా</string>
+    <string name="chat_crop_potato">బంగాళాదుంప</string>
+    <string name="chat_crop_chili">మిరపకాయ</string>
+    <string name="chat_crop_onion">ఉల్లిపాయ</string>
+    <string name="chat_crop_wheat">గోధుమ</string>
+    <string name="chat_crop_rice">వరి</string>
+
+    <!-- Error Fallbacks -->
+    <string name="error_unknown">తెలియని లోపం</string>
+
+    <!-- Notification Channel -->
+    <string name="notification_channel_description">ChiragFarmer నుండి నోటిఫికేషన్లు</string>
+
+    <!-- Share -->
+    <string name="share_seller_profile">విక్రేత ప్రొఫైల్ షేర్ చేయండి</string>
+
+    <!-- Currency -->
+    <string name="currency_rs">రూ.</string>
+
+    <!-- Fallback Names -->
+    <string name="fallback_product">ఉత్పత్తి</string>
+    <string name="fallback_seller">విక్రేత</string>
+    <string name="fallback_address">చిరునామా</string>
 </resources>

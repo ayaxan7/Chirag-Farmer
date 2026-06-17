@@ -1,11 +1,14 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.home.screens.notifications
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.data.remote.dto.NotificationItemDto
 import com.yash091099.ChiragFarmersApp.data.remote.dto.NotificationPagination
 import com.yash091099.ChiragFarmersApp.domain.repository.NotificationRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,6 +40,7 @@ sealed class NotificationsUiState {
 
 @HiltViewModel
 class NotificationsViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val notificationRepository: NotificationRepository
 ) : ViewModel() {
 
@@ -64,7 +68,7 @@ class NotificationsViewModel @Inject constructor(
                     },
                     onFailure = { exception ->
                         _uiState.value = NotificationsUiState.Error(
-                            exception.message ?: "Failed to load notifications"
+                            exception.message ?: context.getString(R.string.error_failed_load_notifications)
                         )
                     }
                 )
@@ -102,9 +106,9 @@ class NotificationsViewModel @Inject constructor(
         orderId: String?
     ): String {
         return when {
-            !bookingId.isNullOrBlank() || tag == "service" || type.contains("BOOKING") -> "View Booking"
-            !orderId.isNullOrBlank() || tag == "buy" || tag == "sell" || type.contains("ORDER") -> "View Order"
-            else -> "View Details"
+            !bookingId.isNullOrBlank() || tag == "service" || type.contains("BOOKING") -> context.getString(R.string.notification_view_booking)
+            !orderId.isNullOrBlank() || tag == "buy" || tag == "sell" || type.contains("ORDER") -> context.getString(R.string.notification_view_order)
+            else -> context.getString(R.string.notification_view_details)
         }
     }
 }

@@ -172,7 +172,7 @@ fun SellerProfileScreen(
                                         type = "text/plain"
                                         putExtra(Intent.EXTRA_TEXT, shareLink)
                                     }
-                                    context.startActivity(Intent.createChooser(sendIntent, "Share seller profile"))
+                                    context.startActivity(Intent.createChooser(sendIntent, context.getString(R.string.share_seller_profile)))
                                 }
                             )
                         }

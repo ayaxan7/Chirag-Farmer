@@ -251,7 +251,7 @@ private fun OrderDetailsContent(
                 orderId = item.orderNumber.orEmpty(),
                 productName = item.productName.orEmpty(),
                 sellerName = item.sellerName.orEmpty(),
-                price = formatCurrency(item.pricePaid),
+                price = formatCurrency(item.pricePaid, stringResource(R.string.product_price_format)),
                 quantity = item.quantity.orEmpty(),
                 itemStatus = item.itemStatus,
                 cancellationDetails = item.cancellationDetails,
@@ -488,11 +488,11 @@ fun DeliveredDateSection(deliveredAt: String?) {
 @Composable
 fun OrderStatusSection(statusTimeline: StatusTimeline?, currentStatus: String?) {
     val steps = listOf(
-        "Order\nPlaced" to (statusTimeline?.placed != null),
-        "Packed" to (statusTimeline?.packed != null),
-        "Shipped" to (statusTimeline?.shipped != null),
-        "Out for\nDelivery" to (statusTimeline?.outForDelivery != null),
-        "Delivered" to (statusTimeline?.delivered != null)
+        stringResource(R.string.order_status_step_placed) to (statusTimeline?.placed != null),
+        stringResource(R.string.order_status_step_packed) to (statusTimeline?.packed != null),
+        stringResource(R.string.order_status_step_shipped) to (statusTimeline?.shipped != null),
+        stringResource(R.string.order_status_step_out_for_delivery) to (statusTimeline?.outForDelivery != null),
+        stringResource(R.string.order_status_step_delivered) to (statusTimeline?.delivered != null)
     )
     val activeIndex = getActiveStatusIndex(currentStatus, steps)
 
@@ -588,15 +588,15 @@ fun PriceBreakdownSection(data: OrderDetailsData) {
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        PriceRow("Sub-Total", formatCurrency(data.subtotal))
+        PriceRow(stringResource(R.string.cart_subtotal), formatCurrency(data.subtotal, stringResource(R.string.product_price_format)))
         HorizontalDivider(color = BorderColour.copy(alpha = 0.5f), thickness = 0.5.dp)
-        PriceRow("Delivery Fee", formatCurrency(data.deliveryFee))
+        PriceRow(stringResource(R.string.cart_delivery_fee), formatCurrency(data.deliveryFee, stringResource(R.string.product_price_format)))
         HorizontalDivider(color = BorderColour.copy(alpha = 0.5f), thickness = 0.5.dp)
-        PriceRow("Discount", formatCurrency(data.discount))
+        PriceRow(stringResource(R.string.cart_discount), formatCurrency(data.discount, stringResource(R.string.product_price_format)))
         HorizontalDivider(color = BorderColour.copy(alpha = 0.5f), thickness = 0.5.dp)
-        PriceRow("Payment Method", data.paymentMethod?.ifBlank { "--" } ?: "--")
+        PriceRow(stringResource(R.string.orders_payment_method), data.paymentMethod?.ifBlank { "--" } ?: "--")
         HorizontalDivider(color = BorderColour.copy(alpha = 0.5f), thickness = 0.5.dp)
-        PriceRow("Order Date", parseAndFormatDate(data.orderDate) ?: "--")
+        PriceRow(stringResource(R.string.orders_order_date), parseAndFormatDate(data.orderDate) ?: "--")
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -650,8 +650,8 @@ fun PriceRow(label: String, value: String) {
     }
 }
 
-private fun formatCurrency(value: Double?): String {
-    return value?.let { "₹${String.format(Locale.US, "%.2f", it)}" } ?: "--"
+private fun formatCurrency(value: Double?, format: String = "%s"): String {
+    return value?.let { String.format(format, String.format(Locale.US, "%.2f", it)) } ?: "--"
 }
 
 private fun parseAndFormatDate(dateString: String?): String? {

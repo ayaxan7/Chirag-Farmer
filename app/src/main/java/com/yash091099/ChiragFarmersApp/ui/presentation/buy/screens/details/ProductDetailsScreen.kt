@@ -103,18 +103,20 @@ fun ProductDetailsScreen(
     // Show snackbar when cart action completes
     when (val state = cartState) {
         is CartActionState.Success -> {
+            val message = stringResource(R.string.snackbar_product_added_items, state.cartItemsCount)
             LaunchedEffect(state) {
                 coroutineScope.launch {
-                    snackbarHostState.showSnackbar("Product added to cart! (${state.cartItemsCount} items)")
+                    snackbarHostState.showSnackbar(message)
                     viewModel.resetCartState()
                 }
             }
         }
 
         is CartActionState.Error -> {
+            val message = stringResource(R.string.snackbar_error_prefix, state.message)
             LaunchedEffect(state) {
                 coroutineScope.launch {
-                    snackbarHostState.showSnackbar("Error: ${state.message}")
+                    snackbarHostState.showSnackbar(message)
                     viewModel.resetCartState()
                 }
             }
@@ -814,14 +816,14 @@ private fun ProductDetailsBottomBar(
                     painter = painterResource(
                         if (isInCart) R.drawable.ic_cart_outlined else R.drawable.ic_cart_outlined
                     ),
-                    contentDescription = if (isInCart) "In Cart" else "Add to Cart",
+                    contentDescription = if (isInCart) stringResource(R.string.product_details_in_cart) else stringResource(R.string.product_details_add_to_cart),
                     modifier = Modifier.size(20.dp),
                     tint = if (isInCart) BGWhite else BGWhite
                 )
                 Spacer(modifier = Modifier.width(8.dp))
             }
             Text(
-                if (isInCart) "In Cart" else "Add to Cart",
+                if (isInCart) stringResource(R.string.product_details_in_cart) else stringResource(R.string.product_details_add_to_cart),
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
                 color = if (isInCart) BGWhite else BGWhite

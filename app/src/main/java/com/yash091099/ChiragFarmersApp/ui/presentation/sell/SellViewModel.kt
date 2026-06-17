@@ -1,13 +1,16 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.sell
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.domain.model.Product
 import com.yash091099.ChiragFarmersApp.domain.usecase.DeleteProductUseCase
 import com.yash091099.ChiragFarmersApp.domain.usecase.GetFarmerProductsUseCase
 import com.yash091099.ChiragFarmersApp.domain.usecase.ToggleSoldOutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,6 +35,7 @@ sealed class DeleteProductState {
 }
 @HiltViewModel
 class SellViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val getFarmerProductsUseCase: GetFarmerProductsUseCase,
     private val toggleSoldOutUseCase: ToggleSoldOutUseCase,
     private val deleteProductUseCase: DeleteProductUseCase
@@ -88,9 +92,9 @@ class SellViewModel @Inject constructor(
 
             toggleSoldOutUseCase(productId).onSuccess { isAvailable ->
                 val message = if (isAvailable) {
-                    "Product marked as Available"
+                    context.getString(R.string.sell_status_available)
                 } else {
-                    "Product marked as Sold Out"
+                    context.getString(R.string.sell_status_sold_out)
                 }
                 _toggleState.value = ToggleSoldOutState.Success(message, isAvailable)
 
@@ -99,7 +103,7 @@ class SellViewModel @Inject constructor(
                 _soldOutSearchQuery.value = _soldOutSearchQuery.value
             }.onFailure { error ->
                 _toggleState.value = ToggleSoldOutState.Error(
-                    error.message ?: "Failed to update product status"
+                    error.message ?: context.getString(R.string.sell_status_update_failed)
                 )
             }
         }
@@ -110,14 +114,14 @@ class SellViewModel @Inject constructor(
             _deleteState.value = DeleteProductState.Loading
 
             deleteProductUseCase(productId).onSuccess {
-                _deleteState.value = DeleteProductState.Success("Product deleted successfully")
+                _deleteState.value = DeleteProductState.Success(context.getString(R.string.success_product_deleted))
 
                 // Refresh both lists after deletion
                 _activeSearchQuery.value = _activeSearchQuery.value
                 _soldOutSearchQuery.value = _soldOutSearchQuery.value
             }.onFailure { error ->
                 _deleteState.value = DeleteProductState.Error(
-                    error.message ?: "Failed to delete product"
+                    error.message ?: context.getString(R.string.sell_status_delete_failed)
                 )
             }
         }

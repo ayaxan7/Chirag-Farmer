@@ -12,6 +12,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
+import com.yash091099.ChiragFarmersApp.R
 import javax.inject.Inject
 
 sealed class DropReviewState {
@@ -23,6 +26,7 @@ sealed class DropReviewState {
 
 @HiltViewModel
 class DropReviewViewModel @Inject constructor(
+	@ApplicationContext private val context: Context,
 	private val rateProductUseCase: RateProductUseCase,
 	private val getOrderDetailsUseCase: GetOrderDetailsUseCase,
 	private val getUserPlacedOrdersUseCase: GetUserPlacedOrdersUseCase
@@ -39,7 +43,7 @@ class DropReviewViewModel @Inject constructor(
 			Timber.d("Order Id: $orderId, Product Id: $resolvedProductId, Rating: $rating, Review: $review")
 
 			if (resolvedProductId.isBlank()) {
-				_state.value = DropReviewState.Error("Product information is missing for this order. Please open order details and try again.")
+				_state.value = DropReviewState.Error(context.getString(R.string.error_product_info_missing))
 				return@launch
 			}
 //			Timber.d("Order Id: $orderId, Product Id: $resolvedProductId, Rating: $rating, Review: $review")
@@ -59,7 +63,7 @@ class DropReviewViewModel @Inject constructor(
 					}
 				},
 				onFailure = { error ->
-					_state.value = DropReviewState.Error(error.message ?: "Unable to submit review")
+					_state.value = DropReviewState.Error(error.message ?: context.getString(R.string.error_failed_submit_review))
 				}
 			)
 		}

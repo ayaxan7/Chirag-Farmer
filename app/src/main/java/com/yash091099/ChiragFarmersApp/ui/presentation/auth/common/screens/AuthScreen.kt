@@ -173,7 +173,7 @@ fun AuthScreen(
                     Text(
                         text = buildAnnotatedString {
                             withStyle(style = SpanStyle(color = BGBlack)) {
-                                append(if(isSignUpClicked) "Already have an account? " else "Don't have an account? ")
+                                append(if(isSignUpClicked) stringResource(R.string.auth_already_account) else stringResource(R.string.auth_dont_have_account))
                             }
                             withStyle(
                                 style = SpanStyle(
@@ -181,7 +181,7 @@ fun AuthScreen(
                                     fontWeight = FontWeight.Bold
                                 )
                             ) {
-                                append(if(isSignUpClicked) "Login" else "Signup")
+                                append(if(isSignUpClicked) stringResource(R.string.auth_login_label) else stringResource(R.string.auth_signup_label))
                             }
                         },
                         fontSize = 14.sp,

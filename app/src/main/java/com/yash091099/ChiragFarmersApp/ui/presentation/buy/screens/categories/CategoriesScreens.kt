@@ -64,7 +64,7 @@ fun CategoriesScreen(
     val categories = Categories.getBuySubcategories(categoryName)
 
     val allCategories = listOf(
-        BuySellCategory("All\nProduces", R.drawable.sell_category_all, 0)
+        BuySellCategory("All\nProduces", R.drawable.sell_category_all, 0, displayNameRes = R.string.category_all_products)
     ) + categories
 
     val products = viewModel.products.collectAsLazyPagingItems()
@@ -75,9 +75,12 @@ fun CategoriesScreen(
         viewModel.onCategoryChipSelected(null)
     }
 
-    val categoryDisplayText =
-        allCategories.find { it.id == selectedCategoryId }?.name?.replace("\n", " ")
-            ?: "All Produces"
+    val selectedCat = allCategories.find { it.id == selectedCategoryId }
+    val categoryDisplayText = if (selectedCat?.displayNameRes != null) {
+        stringResource(selectedCat.displayNameRes)
+    } else {
+        selectedCat?.name?.replace("\n", " ") ?: stringResource(R.string.category_all_products)
+    }
 
     Scaffold(
         modifier = modifier, containerColor = BGWhite, topBar = {
@@ -207,7 +210,7 @@ fun CategoriesScreen(
 
                             is LoadState.Error -> {
                                 item(span = { GridItemSpan(maxLineSpan) }) {
-                                    Text(text = appendState.error.message ?: "Failed to load more products")
+                                    Text(text = appendState.error.message ?: stringResource(R.string.categories_error_load_more))
                                 }
                             }
 

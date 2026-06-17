@@ -1,12 +1,15 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.profile
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateLanguageRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.UpdateLanguageResponse
 import com.yash091099.ChiragFarmersApp.data.repository.AuthRepository
+import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.utils.getErrorMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,6 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LanguageViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val authRepository: AuthRepository
 ) : ViewModel() {
 
@@ -35,7 +39,7 @@ class LanguageViewModel @Inject constructor(
                     }
                 },
                 onFailure = { e ->
-                    _updateLanguageState.value = UpdateLanguageState.Error(e.message ?: "Error updating language")
+                    _updateLanguageState.value = UpdateLanguageState.Error(e.message ?: context.getString(R.string.error_failed_update_language))
                 }
             )
         }

@@ -1,5 +1,6 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.buy.screens.details
 
+import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,7 +11,9 @@ import com.yash091099.ChiragFarmersApp.domain.repository.ProductRepository
 import com.yash091099.ChiragFarmersApp.domain.usecase.AddToCartUseCase
 import com.yash091099.ChiragFarmersApp.domain.usecase.GetProductReviewsUseCase
 import com.yash091099.ChiragFarmersApp.domain.usecase.ReactToReviewUseCase
+import com.yash091099.ChiragFarmersApp.R
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,6 +23,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProductDetailsViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val productRepository: ProductRepository,
     private val addToCartUseCase: AddToCartUseCase,
     private val getProductReviewsUseCase: GetProductReviewsUseCase,
@@ -61,7 +65,7 @@ class ProductDetailsViewModel @Inject constructor(
                 },
                 onFailure = { exception ->
                     _uiState.value = ProductDetailsUiState.Error(
-                        exception.message ?: "Failed to load product details"
+                        exception.message ?: context.getString(R.string.error_failed_load_detail)
                     )
                 }
             )
@@ -75,7 +79,7 @@ class ProductDetailsViewModel @Inject constructor(
             },
             onFailure = { exception ->
                 _reviewsState.value = ProductReviewsUiState.Error(
-                    exception.message ?: "Failed to load product reviews"
+                    exception.message ?: context.getString(R.string.error_failed_load_reviews)
                 )
             }
         )
@@ -92,7 +96,7 @@ class ProductDetailsViewModel @Inject constructor(
                 },
                 onFailure = { exception ->
                     _cartState.value = CartActionState.Error(
-                        exception.message ?: "Failed to add product to cart"
+                        exception.message ?: context.getString(R.string.error_failed_add_to_cart)
                     )
                 }
             )
@@ -102,13 +106,13 @@ class ProductDetailsViewModel @Inject constructor(
     fun reactToReview(reviewId: String?, action: String) {
         val trimmedReviewId = reviewId?.trim().orEmpty()
         if (trimmedReviewId.isBlank()) {
-            _reviewReactionState.value = ReviewReactionUiState.Error("Review id missing")
+            _reviewReactionState.value = ReviewReactionUiState.Error(context.getString(R.string.error_review_id_missing))
             return
         }
 
         val normalizedAction = action.trim().lowercase(Locale.getDefault())
         if (normalizedAction != "like" && normalizedAction != "dislike") {
-            _reviewReactionState.value = ReviewReactionUiState.Error("Invalid review action")
+            _reviewReactionState.value = ReviewReactionUiState.Error(context.getString(R.string.error_invalid_review_action))
             return
         }
 
@@ -133,7 +137,7 @@ class ProductDetailsViewModel @Inject constructor(
                 },
                 onFailure = { exception ->
                     _reviewReactionState.value = ReviewReactionUiState.Error(
-                        exception.message ?: "Unable to update review reaction"
+                        exception.message ?: context.getString(R.string.error_failed_update_review)
                     )
                 }
             )

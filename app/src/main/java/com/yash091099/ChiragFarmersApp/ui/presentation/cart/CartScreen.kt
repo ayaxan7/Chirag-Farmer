@@ -109,7 +109,7 @@ fun CartScreen(
                     ChiragTopBar(
                         navController = navController,
                         icon = R.drawable.ic_arrow,
-                        title = if (isBuyNow) "Checkout" else "My Cart"
+                        title = if (isBuyNow) stringResource(R.string.cart_top_bar_checkout) else stringResource(R.string.cart_top_bar_my_cart)
                     )
                 }) { paddingValues ->
                 Box(
@@ -151,7 +151,7 @@ fun CartScreen(
                     ChiragTopBar(
                         navController = navController,
                         icon = R.drawable.ic_arrow,
-                        title = if (isBuyNow) "Checkout" else "My Cart"
+                        title = if (isBuyNow) stringResource(R.string.cart_top_bar_checkout) else stringResource(R.string.cart_top_bar_my_cart)
                     )
                 }) { paddingValues ->
                 Box(
@@ -197,7 +197,7 @@ fun CartScreen(
                     ChiragTopBar(
                         navController = navController,
                         icon = R.drawable.ic_arrow,
-                        title = if (isBuyNow) "Checkout" else "My Cart"
+                        title = if (isBuyNow) stringResource(R.string.cart_top_bar_checkout) else stringResource(R.string.cart_top_bar_my_cart)
                     )
                 }) { paddingValues ->
                 Box(
@@ -315,7 +315,7 @@ fun CartScreen(
                                     productName = item.productName,
                                     sellerName = item.sellerName,
                                     price = stringResource(R.string.product_price_format, item.finalPrice),
-                                    deliveryDate = "Delivery by 7 June 2025",
+                                    deliveryDate = stringResource(R.string.cart_delivery_by, "7 June 2025"),
                                     quantity = "${item.quantity}",
                                     onQuantityDecrease = {
                                         viewModel.decrementQuantity(item.productId)

@@ -50,20 +50,20 @@ fun ServiceDropdown(
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
 
     val services = listOf(
-        "Drone Spraying",
-        "Tractor Services",
+        stringResource(R.string.service_drone_spraying),
+        stringResource(R.string.service_tractor_services),
         stringResource(R.string.service_harvesting_machines),
-        "Soil Testing",
-        "Power Weeder",
+        stringResource(R.string.service_soil_testing),
+        stringResource(R.string.service_power_weeder),
         stringResource(R.string.service_manual_sprayer),
-        "Thresher / Winnower",
-        "Biofertilizer",
-        "Seedling Supply",
-        "Irrigation",
-        "Custom Equipment (Rental)",
-        "Farm Labour",
-        "Produce Collection & Transport",
-        "Crop Advisory / Insurance"
+        stringResource(R.string.service_thresher_winnower),
+        stringResource(R.string.service_biofertilizer),
+        stringResource(R.string.service_seedling_supply),
+        stringResource(R.string.service_irrigation),
+        stringResource(R.string.service_custom_equipment),
+        stringResource(R.string.service_farm_labour),
+        stringResource(R.string.service_produce_transport),
+        stringResource(R.string.service_crop_advisory)
     )
 
     Box(modifier = modifier) {
@@ -83,7 +83,7 @@ fun ServiceDropdown(
                 .padding(horizontal = 14.dp, vertical = 14.dp),
                 verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = selectedService.ifEmpty { placeholder },
+                    text = selectedService.ifEmpty { stringResource(R.string.service_select_service) },
                     fontSize = 14.sp,
                     color = if (selectedService.isEmpty()) TextGray else Color.Black,
                     modifier = Modifier.weight(1f)

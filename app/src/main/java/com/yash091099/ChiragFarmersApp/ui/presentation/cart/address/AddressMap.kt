@@ -309,7 +309,7 @@ fun UseCurrentLocationButton(
             }
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = if (isLoading) "Fetching location..." else "Use Current Location",
+                text = if (isLoading) stringResource(R.string.address_fetching_location) else stringResource(R.string.address_use_current_location),
                 color = Color.Black,
                 fontWeight = FontWeight.Bold,
                 fontSize = 14.sp
@@ -559,10 +559,10 @@ fun AddressDetailsBottomSheet(
 
                 // Address Category Chips
                 val categories = listOf(
-                    "Home" to Icons.Default.Home,
-                    "Work" to Icons.Default.Work,
-                    "Hotel" to Icons.Default.Apartment,
-                    "Other" to Icons.Default.LocationOn
+                    stringResource(R.string.address_category_home) to Icons.Default.Home,
+                    stringResource(R.string.address_category_work) to Icons.Default.Work,
+                    stringResource(R.string.address_category_hotel) to Icons.Default.Apartment,
+                    stringResource(R.string.address_category_other) to Icons.Default.LocationOn
                 )
 
                 LazyRow(
@@ -640,7 +640,7 @@ fun AddressDetailsBottomSheet(
                     .padding(16.dp)
             ) {
                 ChiragButton(
-                    text = if (isLoading) "Saving..." else "Confirm address",
+                    text = if (isLoading) stringResource(R.string.common_saving) else stringResource(R.string.address_confirm),
                     onClick = onConfirmClick,
                     enabled = !isLoading && receiverName.isNotBlank() && receiverContact.isNotBlank(),
                     modifier = Modifier.fillMaxWidth()

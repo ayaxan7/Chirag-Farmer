@@ -198,7 +198,7 @@ fun MessageBubble(message: ChatMessage) {
 fun CropSuggestionsRow(
     onCropSelected: (String) -> Unit
 ) {
-    val crops = listOf("Tomato", "Potato", "Chili", "Onion", "Wheat", "Rice")
+    val crops = listOf(stringResource(R.string.chat_crop_tomato), stringResource(R.string.chat_crop_potato), stringResource(R.string.chat_crop_chili), stringResource(R.string.chat_crop_onion), stringResource(R.string.chat_crop_wheat), stringResource(R.string.chat_crop_rice))
 
     Column(
         modifier = Modifier

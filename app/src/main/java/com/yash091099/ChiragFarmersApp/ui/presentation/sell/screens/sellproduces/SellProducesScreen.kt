@@ -78,7 +78,6 @@ fun SellProducesScreen(
     selectedCategory: String? = null,
     viewModel: SellProducesViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
     var productCategory by remember { mutableStateOf("") }
     var isCategoryEditable by remember { mutableStateOf(true) }
     var productTitle by remember { mutableStateOf("") }
@@ -197,7 +196,7 @@ fun SellProducesScreen(
         ChiragTopBar(
             navController = navController,
             icon = R.drawable.ic_arrow,
-            title = if (isEditMode) "Edit Produce" else "Sell Produces"
+            title = if (isEditMode) stringResource(R.string.sell_produce_edit) else stringResource(R.string.sell_categories_title)
         )
     },
         containerColor = BGWhite,
@@ -303,7 +302,7 @@ fun SellProducesScreen(
                 var expanded by remember { mutableStateOf(false) }
                 var selectedUnit by remember { mutableStateOf("kg") }
 
-                val units = listOf("KG", "Unit", "Litre")
+                val units = listOf(stringResource(R.string.unit_kg), stringResource(R.string.unit_unit), stringResource(R.string.unit_litre))
 
                 FieldLabel(text = stringResource(R.string.sell_stock_label))
 
@@ -450,14 +449,13 @@ fun SellProducesScreen(
 
                 // Submit Button
                 ChiragButton(
-                    text = if (fetchProductState is FetchProductState.Loading) "Loading..."
-                    else if (addProductState is AddProductState.UploadingProduct) "Uploading Product..."
-                    else if (addProductState is AddProductState.Loading) "Submitting..."
-                    else if (isEditMode) "Update Product"
-                    else "Submit", onClick = {
+                    text = if (fetchProductState is FetchProductState.Loading) stringResource(R.string.common_loading)
+                    else if (addProductState is AddProductState.UploadingProduct) stringResource(R.string.sell_uploading_product)
+                    else if (addProductState is AddProductState.Loading) stringResource(R.string.sell_submitting)
+                    else if (isEditMode) stringResource(R.string.sell_update_product)
+                    else stringResource(R.string.sell_submit), onClick = {
                         val keyFeaturesList = productFeatures.split(",").map { it.trim() }.filter { it.isNotEmpty() }
                         viewModel.submitProduct(
-                            context = context,
                             category = productCategory,
                             title = productTitle,
                             availableStock = availableStock,

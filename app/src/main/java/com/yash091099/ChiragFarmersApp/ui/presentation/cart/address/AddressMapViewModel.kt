@@ -3,6 +3,7 @@ package com.yash091099.ChiragFarmersApp.ui.presentation.cart.address
 import android.content.Context
 import android.location.Address
 import android.location.Geocoder
+import com.yash091099.ChiragFarmersApp.R
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -44,7 +45,7 @@ class AddressMapViewModel @Inject constructor(
     private val _currentLocation = MutableStateFlow<GeoPoint?>(null)
     val currentLocation: StateFlow<GeoPoint?> = _currentLocation.asStateFlow()
 
-    private val _currentAddress = MutableStateFlow("Fetching location...")
+    private val _currentAddress = MutableStateFlow(context.getString(R.string.address_fetching_location))
     val currentAddress: StateFlow<String> = _currentAddress.asStateFlow()
 
     private val _locationQuery = MutableStateFlow("")
@@ -142,7 +143,7 @@ class AddressMapViewModel @Inject constructor(
                 },
                 onFailure = {
                     _isLoadingLocation.value = false
-                    _errorMessage.value = it.message ?: "Failed to add location"
+                    _errorMessage.value = it.message ?: context.getString(R.string.error_failed_add_location)
                 }
             )
         }
@@ -171,12 +172,12 @@ class AddressMapViewModel @Inject constructor(
                     )
                     _currentAddress.value = addressFromCoordinates
                 } else {
-                    _errorMessage.value = "Unable to fetch current location"
+                    _errorMessage.value = context.getString(R.string.error_unable_fetch_location)
                 }
             } catch (e: SecurityException) {
-                _errorMessage.value = "Location permission not granted"
+                _errorMessage.value = context.getString(R.string.error_location_permission_not_granted)
             } catch (e: Exception) {
-                _errorMessage.value = "Error fetching location: ${e.message}"
+                _errorMessage.value = context.getString(R.string.error_fetching_location, e.message)
             } finally {
                 _isLoadingLocation.value = false
             }
@@ -194,10 +195,10 @@ class AddressMapViewModel @Inject constructor(
                 val address = addresses[0]
                 buildAddressString(address)
             } else {
-                "Location: $latitude, $longitude"
+                context.getString(R.string.address_location_format, latitude, longitude)
             }
         } catch (e: IOException) {
-            "Location: $latitude, $longitude"
+            context.getString(R.string.address_location_format, latitude, longitude)
         }
     }
 
@@ -214,7 +215,7 @@ class AddressMapViewModel @Inject constructor(
                 val address = getAddressFromCoordinates(latitude, longitude)
                 _currentAddress.value = address
             } catch (e: Exception) {
-                _errorMessage.value = "Error updating location: ${e.message}"
+                _errorMessage.value = context.getString(R.string.error_updating_location, e.message)
             }
         }
     }

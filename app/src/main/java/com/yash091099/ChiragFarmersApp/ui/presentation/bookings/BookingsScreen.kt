@@ -28,7 +28,7 @@ fun BookingsScreen(navController: NavHostController) {
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             ChiragTopBar(
-                navController = navController, icon = R.drawable.ic_arrow, title = "Bookings"
+                navController = navController, icon = R.drawable.ic_arrow, title = stringResource(R.string.bookings_title)
             )
         }) { paddingValues ->
         Box(

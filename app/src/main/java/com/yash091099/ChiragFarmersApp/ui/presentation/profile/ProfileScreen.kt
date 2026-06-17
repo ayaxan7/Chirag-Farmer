@@ -124,9 +124,9 @@ fun ProfileScreen(
                 ) {
                     item {
                         ProfileHeader(
-                            name = profile.username ?: "Farmer",
-                            phone = profile.phoneNumber ?: "Phone unavailable",
-                            email = profile.email ?: "Email unavailable",
+                            name = profile.username ?: stringResource(R.string.profile_farmer_fallback),
+                            phone = profile.phoneNumber ?: stringResource(R.string.profile_phone_unavailable),
+                            email = profile.email ?: stringResource(R.string.profile_email_unavailable),
                             profileImageUrl = profile.profileImage,
                             onEditClick = { navController.navigate(Route.EditProfile.path) })
                     }

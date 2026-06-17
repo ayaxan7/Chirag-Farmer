@@ -371,7 +371,7 @@ fun OrderCard(order: Order, onOrderClick: (String?) -> Unit) {
             Row(modifier = Modifier.fillMaxWidth()) {
                 DetailItem(
                     label = stringResource(R.string.active_orders_amount_label),
-                    value = "₹${order.amountPaid}",
+                    value = stringResource(R.string.product_price_format, order.amountPaid),
                     valueColor = Color(0xFF3BB69A),
                     modifier = Modifier.weight(1f)
                 )

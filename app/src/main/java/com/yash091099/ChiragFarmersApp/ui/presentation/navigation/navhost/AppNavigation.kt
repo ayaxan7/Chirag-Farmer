@@ -3,6 +3,7 @@ package com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost
 import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -301,7 +302,7 @@ fun AppNavigation(
                     type = NavType.StringType; nullable = true; defaultValue = null
                 })) { backStackEntry ->
             backStackEntry.arguments?.getString("sellerId") ?: ""
-            backStackEntry.arguments?.getString("sellerName") ?: "Seller"
+            backStackEntry.arguments?.getString("sellerName") ?: stringResource(R.string.fallback_seller)
             val sellerImage = backStackEntry.arguments?.getString("sellerImage")
             SellerProfileScreen(
                 navController = navController, sellerImage = sellerImage
