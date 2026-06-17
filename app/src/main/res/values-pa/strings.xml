@@ -854,4 +854,11 @@
     <string name="fallback_product">ਉਤਪਾਦ</string>
     <string name="fallback_seller">ਵੇਚਣ ਵਾਲਾ</string>
     <string name="fallback_address">ਪਤਾ</string>
+
+    <!-- Rating Breakdown Labels -->
+    <string name="rating_very_good">ਬਹੁਤ ਵਧੀਆ</string>
+    <string name="rating_good">ਵਧੀਆ</string>
+    <string name="rating_ok_ok">ਠੀਕ-ਠਾਕ</string>
+    <string name="rating_bad">ਮਾੜਾ</string>
+    <string name="rating_very_bad">ਬਹੁਤ ਮਾੜਾ</string>
 </resources>

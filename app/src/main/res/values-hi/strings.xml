@@ -856,4 +856,11 @@
     <string name="fallback_product">उत्पाद</string>
     <string name="fallback_seller">विक्रेता</string>
     <string name="fallback_address">पता</string>
+
+    <!-- Rating Breakdown Labels -->
+    <string name="rating_very_good">बहुत अच्छा</string>
+    <string name="rating_good">अच्छा</string>
+    <string name="rating_ok_ok">ठीक-ठाक</string>
+    <string name="rating_bad">खराब</string>
+    <string name="rating_very_bad">बहुत खराब</string>
 </resources>

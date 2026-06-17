@@ -858,4 +858,11 @@
     <string name="fallback_product">ఉత్పత్తి</string>
     <string name="fallback_seller">విక్రేత</string>
     <string name="fallback_address">చిరునామా</string>
+
+    <!-- Rating Breakdown Labels -->
+    <string name="rating_very_good">చాలా మంచిది</string>
+    <string name="rating_good">మంచిది</string>
+    <string name="rating_ok_ok">ఓకే-ఓకే</string>
+    <string name="rating_bad">చెడ్డ</string>
+    <string name="rating_very_bad">చాలా చెడ్డ</string>
 </resources>

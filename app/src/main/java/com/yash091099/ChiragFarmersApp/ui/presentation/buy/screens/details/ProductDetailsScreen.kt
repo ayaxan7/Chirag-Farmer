@@ -725,15 +725,15 @@ private fun ProductReviewsSection(
 
                 Column(modifier = Modifier.weight(1f)) {
                     val breakdown = reviews.ratingBreakdown
-                    RatingProgressBar("Very Good", getBreakdownProgress(breakdown, 5, totalRatings), getBreakdownCount(breakdown, 5), Color(0xFF4CAF50))
+                    RatingProgressBar(stringResource(R.string.rating_very_good), getBreakdownProgress(breakdown, 5, totalRatings), getBreakdownCount(breakdown, 5), Color(0xFF4CAF50))
                     Spacer(modifier = Modifier.height(6.dp))
-                    RatingProgressBar("Good", getBreakdownProgress(breakdown, 4, totalRatings), getBreakdownCount(breakdown, 4), Color(0xFF8BC34A))
+                    RatingProgressBar(stringResource(R.string.rating_good), getBreakdownProgress(breakdown, 4, totalRatings), getBreakdownCount(breakdown, 4), Color(0xFF8BC34A))
                     Spacer(modifier = Modifier.height(6.dp))
-                    RatingProgressBar("Ok-Ok", getBreakdownProgress(breakdown, 3, totalRatings), getBreakdownCount(breakdown, 3), Color(0xFFFFC107))
+                    RatingProgressBar(stringResource(R.string.rating_ok_ok), getBreakdownProgress(breakdown, 3, totalRatings), getBreakdownCount(breakdown, 3), Color(0xFFFFC107))
                     Spacer(modifier = Modifier.height(6.dp))
-                    RatingProgressBar("Bad", getBreakdownProgress(breakdown, 2, totalRatings), getBreakdownCount(breakdown, 2), Color(0xFFFF9800))
+                    RatingProgressBar(stringResource(R.string.rating_bad), getBreakdownProgress(breakdown, 2, totalRatings), getBreakdownCount(breakdown, 2), Color(0xFFFF9800))
                     Spacer(modifier = Modifier.height(6.dp))
-                    RatingProgressBar("Very Bad", getBreakdownProgress(breakdown, 1, totalRatings), getBreakdownCount(breakdown, 1), Color(0xFFF44336))
+                    RatingProgressBar(stringResource(R.string.rating_very_bad), getBreakdownProgress(breakdown, 1, totalRatings), getBreakdownCount(breakdown, 1), Color(0xFFF44336))
                 }
             }
             Spacer(modifier = Modifier.height(12.dp))
