@@ -373,7 +373,8 @@
     <!-- Active Products (Seller) -->
     <string name="active_products_error">ਉਤਪਾਦ ਲੋਡ ਕਰਨ ਵਿੱਚ ਗੜਬੜ</string>
     <string name="active_products_empty">ਕੋਈ ਸਰਗਰਮ ਉਤਪਾਦ ਨਹੀਂ ਮਿਲਿਆ</string>
-
+    <string name="product_mark_as_sold">ਵਿਕਿਆ ਹੋਇਆ ਦਰਸਾਓ</string>
+    <string name="product_marked_as_sold">ਵਿਕਿਆ ਹੋਇਆ ਦਰਸਾਇਆ ਗਿਆ</string>
     <!-- Sold Out Products (Seller) -->
     <string name="sold_out_products_error">ਉਤਪਾਦ ਲੋਡ ਕਰਨ ਵਿੱਚ ਗੜਬੜ</string>
     <string name="sold_out_products_empty">ਕੋਈ ਵਿਕ ਚੁੱਕਾ ਉਤਪਾਦ ਨਹੀਂ ਮਿਲਿਆ</string>

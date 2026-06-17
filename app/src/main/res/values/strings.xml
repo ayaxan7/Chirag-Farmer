@@ -364,11 +364,13 @@
     <!-- Active Products (Seller) -->
     <string name="active_products_error">Error loading products</string>
     <string name="active_products_empty">No active products found</string>
+    <!-- Product Card -->
+    <string name="product_mark_as_sold">Mark as Sold</string>
 
     <!-- Sold Out Products (Seller) -->
     <string name="sold_out_products_error">Error loading products</string>
     <string name="sold_out_products_empty">No sold out products found</string>
-
+    <string name="product_marked_as_sold">Marked as Sold</string>
     <!-- Assist -->
     <string name="assist_title">Assist</string>
     <string name="assist_banner_description">Banner</string>

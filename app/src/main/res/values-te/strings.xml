@@ -305,7 +305,8 @@
     <string name="active_orders_cancel_confirm_message">మీరు ఖచ్చితంగా ఈ ఆర్డర్ రద్దు చేయాలనుకుంటున్నారా?</string>
     <string name="active_orders_cancel_confirm">ఆర్డర్ రద్దు చేయండి</string>
     <string name="active_orders_keep_order">ఆర్డర్ ఉంచండి</string>
-
+    <string name="product_mark_as_sold">అమ్మినదిగా గుర్తించండి</string>
+    <string name="product_marked_as_sold">అమ్మినదిగా గుర్తించబడింది</string>
     <!-- Reviews -->
     <string name="review_title">సమీక్ష రాయండి</string>
     <string name="review_order_id">ఆర్డర్ ID: %s</string>

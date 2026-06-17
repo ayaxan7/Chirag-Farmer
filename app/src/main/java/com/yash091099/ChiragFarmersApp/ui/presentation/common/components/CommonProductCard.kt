@@ -211,7 +211,9 @@ fun CommonProductCard(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         val backgroundColor = if (product.isSoldOut) DisabledButtonGray else BGBlack
-                        val text = if (product.isSoldOut) "Marked as Sold" else "Mark as Sold"
+                        val text =
+                            if (product.isSoldOut) stringResource(R.string.product_marked_as_sold)
+                            else stringResource(R.string.product_mark_as_sold)
                         val clickableModifier =
                             if (product.isSoldOut) Modifier else Modifier.clickable { onMarkAsSoldClick() }
                         Box(

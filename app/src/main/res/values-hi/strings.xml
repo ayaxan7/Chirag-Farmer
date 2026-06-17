@@ -304,7 +304,8 @@
     <string name="active_orders_cancel_confirm_message">क्या आप वाकई यह ऑर्डर रद्द करना चाहते हैं?</string>
     <string name="active_orders_cancel_confirm">ऑर्डर रद्द करें</string>
     <string name="active_orders_keep_order">ऑर्डर रखें</string>
-
+    <string name="product_mark_as_sold">बेचा गया चिह्नित करें</string>
+    <string name="product_marked_as_sold">बेचा गया चिह्नित</string>
     <!-- Reviews -->
     <string name="review_title">समीक्षा लिखें</string>
     <string name="review_order_id">ऑर्डर आईडी: %s</string>
