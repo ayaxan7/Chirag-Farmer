@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -45,12 +46,32 @@ import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
 fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltViewModel()) {
     val snackBarHostState = remember { SnackbarHostState() }
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+    val langTag = LocalConfiguration.current.locales[0].toLanguageTag()
+    val carouselImages = when {
+        langTag.startsWith("hi") -> listOf(
+            R.drawable.buy_banner_hi,
+            R.drawable.buy_banner_hi,
+            R.drawable.buy_banner_hi,
+        )
 
-    val carouselImages = listOf(
-        R.drawable.buy_banner,
-        R.drawable.buy_banner,
-        R.drawable.buy_banner,
-    )
+        langTag.startsWith("te") -> listOf(
+            R.drawable.buy_banner_te,
+            R.drawable.buy_banner_te,
+            R.drawable.buy_banner_te,
+        )
+
+        langTag.startsWith("pa") -> listOf(
+            R.drawable.buy_banner_pa,
+            R.drawable.buy_banner_pa,
+            R.drawable.buy_banner_pa,
+        )
+
+        else -> listOf(
+            R.drawable.buy_banner,
+            R.drawable.buy_banner,
+            R.drawable.buy_banner,
+        )
+    }
 
     val categories = remember { Categories.buyCategories }
 
@@ -60,10 +81,12 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
         snackbarHost = { SnackbarHost(snackBarHostState) },
         topBar = {
             ChiragTopBar(
-                navController = navController, icon = R.drawable.ic_arrow, title = stringResource(R.string.buy_title)
+                navController = navController,
+                icon = R.drawable.ic_arrow,
+                title = stringResource(R.string.buy_title)
             )
         }) { paddingValues ->
-        
+
         when (val state = uiState.value) {
             is BuyUiState.Loading -> {
                 Box(
@@ -84,8 +107,7 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = state.message,
-                        modifier = Modifier.padding(16.dp)
+                        text = state.message, modifier = Modifier.padding(16.dp)
                     )
                 }
             }
@@ -98,7 +120,8 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
 
                 // Filter products to show only valid ones
                 val validVendorProducts = state.vendorProducts.filter { isValidProduct(it) }
-                val validDirectFromFarmersProducts = state.directFromFarmersProducts.filter { isValidProduct(it) }
+                val validDirectFromFarmersProducts =
+                    state.directFromFarmersProducts.filter { isValidProduct(it) }
                 val validSeedProducts = state.seedProducts.filter { isValidProduct(it) }
                 val validRandomProducts = state.randomProducts.filter { isValidProduct(it) }
 
@@ -126,7 +149,9 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
 
                     item(span = { GridItemSpan(maxLineSpan) }) {
                         ImageCarousel(
-                            images = carouselImages, modifier = Modifier.fillMaxWidth(), isIndicatorVisible = false
+                            images = carouselImages,
+                            modifier = Modifier.fillMaxWidth(),
+                            isIndicatorVisible = false
                         )
                     }
 
@@ -138,23 +163,25 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
 
                     item(span = { GridItemSpan(maxLineSpan) }) {
                         LazyRow(
-                            modifier = Modifier
-                                .fillMaxWidth(),
+                            modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
                             items(categories) { category ->
                                 CategoryItem(
-                                    category = category,
-                                    selected = false,
-                                    onClick = {
-                                        val routeCategoryName = category.name
-                                            .replace("\n", " ")
-                                            .trim()
+                                    category = category, selected = false, onClick = {
+                                        val routeCategoryName =
+                                            category.name.replace("\n", " ").trim()
 
-                                        val bannerResId = category.bannerImage ?: Categories.getBuyBannerImage(routeCategoryName)
+                                        val bannerResId =
+                                            category.bannerImage ?: Categories.getBuyBannerImage(
+                                                routeCategoryName
+                                            )
 
                                         navController.navigate(
-                                            Route.BuyCategory.createRoute(routeCategoryName, bannerResId)
+                                            Route.BuyCategory.createRoute(
+                                                routeCategoryName,
+                                                bannerResId
+                                            )
                                         )
                                     })
                             }
@@ -177,10 +204,9 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
                                     currentPrice = product.finalPrice.toInt().toString(),
                                     originalPrice = product.originalPrice.toInt().toString(),
                                     rating = product.rating
-                                ),onClick = {
+                                ), onClick = {
                                     navController.navigate(Route.ProductDetails.createRoute(product.id))
-                                },
-                                modifier = Modifier.padding(bottom = 12.dp)
+                                }, modifier = Modifier.padding(bottom = 12.dp)
                             )
                         }
                     }
@@ -191,10 +217,15 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
                                 category = stringResource(R.string.buy_direct_from_farmers),
                                 btnText = stringResource(R.string.home_view_all),
                                 onClick = {
-                                    val bannerResId = Categories.getBuyBannerImage("Direct From Farmers")
-                                    navController.navigate(Route.BuyCategory.createRoute("Direct From Farmers", bannerResId))
-                                }
-                            )
+                                    val bannerResId =
+                                        Categories.getBuyBannerImage("Direct From Farmers")
+                                    navController.navigate(
+                                        Route.BuyCategory.createRoute(
+                                            "Direct From Farmers",
+                                            bannerResId
+                                        )
+                                    )
+                                })
                         }
                         items(validDirectFromFarmersProducts) { product ->
                             CommonProductCard(
@@ -205,10 +236,9 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
                                     currentPrice = product.finalPrice.toInt().toString(),
                                     originalPrice = product.originalPrice.toInt().toString(),
                                     rating = product.rating
-                                ),onClick = {
+                                ), onClick = {
                                     navController.navigate(Route.ProductDetails.createRoute(product.id))
-                                },
-                                modifier = Modifier.padding(bottom = 12.dp)
+                                }, modifier = Modifier.padding(bottom = 12.dp)
                             )
                         }
                     }
@@ -220,9 +250,13 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
                                 btnText = stringResource(R.string.home_view_all),
                                 onClick = {
                                     val bannerResId = Categories.getBuyBannerImage("Seeds")
-                                    navController.navigate(Route.BuyCategory.createRoute("Seeds", bannerResId))
-                                }
-                            )
+                                    navController.navigate(
+                                        Route.BuyCategory.createRoute(
+                                            "Seeds",
+                                            bannerResId
+                                        )
+                                    )
+                                })
                         }
                         items(validSeedProducts) { product ->
                             CommonProductCard(
@@ -233,10 +267,9 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
                                     currentPrice = product.finalPrice.toInt().toString(),
                                     originalPrice = product.originalPrice.toInt().toString(),
                                     rating = product.rating
-                                ),onClick = {
+                                ), onClick = {
                                     navController.navigate(Route.ProductDetails.createRoute(product.id))
-                                },
-                                modifier = Modifier.padding(bottom = 12.dp)
+                                }, modifier = Modifier.padding(bottom = 12.dp)
                             )
                         }
                     }
@@ -248,8 +281,7 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
                                 btnText = stringResource(R.string.home_view_all),
                                 onClick = {
                                     navController.navigate(Route.BuyCategory.createRoute("Popular Products"))
-                                }
-                            )
+                                })
                         }
                         items(validRandomProducts) { product ->
                             CommonProductCard(
@@ -260,11 +292,9 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
                                     currentPrice = product.finalPrice.toInt().toString(),
                                     originalPrice = product.originalPrice.toInt().toString(),
                                     rating = product.rating
-                                ),
-                                onClick = {
+                                ), onClick = {
                                     navController.navigate(Route.ProductDetails.createRoute(product.id))
-                                },
-                                modifier = Modifier.padding(bottom = 12.dp)
+                                }, modifier = Modifier.padding(bottom = 12.dp)
                             )
                         }
                     }
