@@ -1,6 +1,8 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.splash
 
 import android.Manifest
+import android.content.Intent
+import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -44,8 +46,13 @@ fun SplashScreen(
     var showLocationPermissionMandatoryDialog by remember { mutableStateOf(false) }
     var showLocationServiceDisabledDialog by remember { mutableStateOf(false) }
 
-    // Permission launcher
-    val permissionLauncher = rememberLauncherForActivityResult(
+    val notificationPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        viewModel.onNotificationPermissionResult(isGranted)
+    }
+
+    val locationPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
@@ -55,9 +62,18 @@ fun SplashScreen(
         }
     }
 
+    val locationSettingsLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) {
+        viewModel.onUserReturnedFromSettings()
+    }
+
     // Handle different auth check statuses
     LaunchedEffect(authCheckStatus) {
         when (authCheckStatus) {
+            AuthCheckStatus.RequestNotificationPermission -> {
+                notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
             AuthCheckStatus.NavigateToHome -> {
                 navController.navigate(Route.Home.path) {
                     popUpTo(Route.Splash.path) { inclusive = true }
@@ -86,7 +102,7 @@ fun SplashScreen(
         LocationPermissionDialog(
             onPermissionGranted = {
                 showLocationPermissionDialog = false
-                permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
             },
             onPermissionDenied = {
                 showLocationPermissionDialog = false
@@ -100,7 +116,7 @@ fun SplashScreen(
         LocationPermissionMandatoryDialog(
             onRetry = {
                 showLocationPermissionMandatoryDialog = false
-                permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
             },
             onCancel = {
                 showLocationPermissionMandatoryDialog = false
@@ -114,7 +130,7 @@ fun SplashScreen(
         LocationServiceDisabledDialog(
             onGoToSettings = {
                 showLocationServiceDisabledDialog = false
-                viewModel.onUserReturnedFromSettings()
+                locationSettingsLauncher.launch(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
             },
             onCancel = {
                 showLocationServiceDisabledDialog = false

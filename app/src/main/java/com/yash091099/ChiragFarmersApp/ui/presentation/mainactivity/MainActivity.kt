@@ -1,13 +1,10 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.mainactivity
 
-import android.Manifest
-import android.os.Build
 import android.content.Intent
 import android.os.Bundle
 import timber.log.Timber
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
@@ -28,25 +25,9 @@ class MainActivity : ComponentActivity() {
     // Shared flow to emit incoming intents (deep links) to Compose so NavController can handle them
     private val deepLinkFlow = MutableSharedFlow<Intent>(replay = 1)
 
-    // Request notification permission for Android 13+
-    private val notificationPermissionRequest = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-            Timber.d("Notification permission granted")
-        } else {
-            Timber.w("Notification permission denied by user")
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
-
-        // Request notification permission for Android 13+ (API 33+)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            notificationPermissionRequest.launch(Manifest.permission.POST_NOTIFICATIONS)
-        }
 
         // Log auth token and user data from DataStore
         val dataStore = ChiragDataStore(this)

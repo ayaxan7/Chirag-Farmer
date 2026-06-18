@@ -1,11 +1,18 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.splash
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.core.content.ContextCompat
 import timber.log.Timber
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yash091099.ChiragFarmersApp.data.location.LocationManager
 import com.yash091099.ChiragFarmersApp.data.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,6 +22,7 @@ import javax.inject.Inject
 sealed class AuthCheckStatus {
     object Loading : AuthCheckStatus()
     object CheckingAuth : AuthCheckStatus()
+    object RequestNotificationPermission : AuthCheckStatus()
     object CheckingLocationPermission : AuthCheckStatus()
     object ShowLocationPermissionDialog : AuthCheckStatus()
     object ShowLocationPermissionMandatoryDialog : AuthCheckStatus()
@@ -27,7 +35,8 @@ sealed class AuthCheckStatus {
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     private val authRepository: AuthRepository,
-    private val locationManager: LocationManager
+    private val locationManager: LocationManager,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
 
     private val _authCheckStatus = MutableStateFlow<AuthCheckStatus>(AuthCheckStatus.Loading)
@@ -35,6 +44,7 @@ class SplashViewModel @Inject constructor(
 
     private var permissionDenialCount = 0
     private val MAX_PERMISSION_DENIALS = 1 // After 1 denial, show mandatory dialog
+    private var destinationAfterChecks: AuthCheckStatus = AuthCheckStatus.NavigateToAuth
 
     init {
         checkAuthenticationStatus()
@@ -44,22 +54,39 @@ class SplashViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 // First, check if auth token exists
-                authRepository.getAuthToken().collect { token ->
-                    if (token != null && token.isNotEmpty()) {
-                        Timber.d("Token found, checking location permissions")
-                        // Token exists, now check location permissions
-                        _authCheckStatus.value = AuthCheckStatus.CheckingLocationPermission
-                        checkLocationPermission()
-                    } else {
-                        Timber.d("No token found, navigating to Auth")
-                        _authCheckStatus.value = AuthCheckStatus.NavigateToAuth
-                    }
+                val token = authRepository.getAuthToken().first()
+                destinationAfterChecks = if (!token.isNullOrEmpty()) {
+                    AuthCheckStatus.NavigateToHome
+                } else {
+                    AuthCheckStatus.NavigateToAuth
                 }
+                checkNotificationPermission()
             } catch (e: Exception) {
                 Timber.e("Error checking authentication status: ${e.message}")
                 _authCheckStatus.value = AuthCheckStatus.NavigateToAuth
             }
         }
+    }
+
+    private fun checkNotificationPermission() {
+        val notificationPermissionGranted =
+            Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+                ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED
+
+        if (notificationPermissionGranted) {
+            checkLocationPermission()
+        } else {
+            _authCheckStatus.value = AuthCheckStatus.RequestNotificationPermission
+        }
+    }
+
+    /** Continue startup whether the user grants or declines notifications. */
+    fun onNotificationPermissionResult(isGranted: Boolean) {
+        Timber.d("Notification permission result: $isGranted")
+        checkLocationPermission()
     }
 
     private fun checkLocationPermission() {
@@ -91,8 +118,8 @@ class SplashViewModel @Inject constructor(
                 val locationServiceEnabled = locationManager.isLocationServiceEnabled()
 
                 if (locationServiceEnabled) {
-                    Timber.d("Location service enabled, navigating to Home")
-                    _authCheckStatus.value = AuthCheckStatus.NavigateToHome
+                    Timber.d("Location service enabled, continuing startup")
+                    _authCheckStatus.value = destinationAfterChecks
                 } else {
                     Timber.d("Location service disabled, showing dialog")
                     _authCheckStatus.value = AuthCheckStatus.ShowLocationServiceDisabledDialog
@@ -145,5 +172,4 @@ class SplashViewModel @Inject constructor(
         _authCheckStatus.value = AuthCheckStatus.NavigateToAuth
     }
 }
-
 

@@ -97,15 +97,6 @@ fun AssistImage(navController: NavHostController) {
     val cameraImageUri = rememberSaveable { mutableStateOf<Uri?>(null) }
     val selectedLanguage = rememberSaveable { mutableStateOf("hindi") }
     val showLanguageMenu = remember { mutableStateOf(false) }
-    val cameraPermissionGranted = rememberSaveable {
-        mutableStateOf(
-            ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.CAMERA
-            ) == PackageManager.PERMISSION_GRANTED
-        )
-    }
-
     // Launcher for picking image from gallery
     val pickImageLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia()
@@ -129,7 +120,6 @@ fun AssistImage(navController: NavHostController) {
     val requestCameraPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
-        cameraPermissionGranted.value = isGranted
         if (isGranted) {
             // Permission granted, now open camera
             val imageFile = createImageFile(context)
@@ -251,8 +241,12 @@ fun AssistImage(navController: NavHostController) {
                                 .width(100.dp)
                                 .height(30.dp),
                             onClick = {
-                                // Check if permission is already granted
-                                if (cameraPermissionGranted.value) {
+                                val hasCameraPermission = ContextCompat.checkSelfPermission(
+                                    context,
+                                    Manifest.permission.CAMERA
+                                ) == PackageManager.PERMISSION_GRANTED
+
+                                if (hasCameraPermission) {
                                     // Permission already granted, open camera directly
                                     val imageFile = createImageFile(context)
                                     cameraImageUri.value =
