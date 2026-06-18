@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -53,12 +54,33 @@ fun HomeScreen(
     val isProfileComplete by viewModel.isProfileComplete.collectAsStateWithLifecycle()
     val homeMixedProductsUiState by viewModel.homeMixedProductsUiState.collectAsStateWithLifecycle()
 
-    val carouselImages = listOf(
-        R.drawable.smart_farmer,
-        R.drawable.smart_farmer,
-        R.drawable.smart_farmer,
-        R.drawable.smart_farmer
-    )
+    val langTag = LocalConfiguration.current.locales[0].toLanguageTag()
+    val carouselImages = when {
+        langTag.startsWith("hi") -> listOf(
+            R.drawable.smart_farmer_hi,
+            R.drawable.smart_farmer_hi,
+            R.drawable.smart_farmer_hi,
+            R.drawable.smart_farmer_hi
+        )
+        langTag.startsWith("te") -> listOf(
+            R.drawable.smart_farmer_te,
+            R.drawable.smart_farmer_te,
+            R.drawable.smart_farmer_te,
+            R.drawable.smart_farmer_te
+        )
+        langTag.startsWith("pa") -> listOf(
+            R.drawable.smart_farmer_pu,
+            R.drawable.smart_farmer_pu,
+            R.drawable.smart_farmer_pu,
+            R.drawable.smart_farmer_pu
+        )
+        else -> listOf(
+            R.drawable.smart_farmer,
+            R.drawable.smart_farmer,
+            R.drawable.smart_farmer,
+            R.drawable.smart_farmer
+        )
+    }
     val productCategories = listOf(
         Pair(stringResource(R.string.home_agriculture_drones), R.drawable.agri_drone),
         Pair(stringResource(R.string.home_seeds), R.drawable.agri_seeds),
