@@ -300,9 +300,13 @@ fun SellProducesScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 var expanded by remember { mutableStateOf(false) }
-                var selectedUnit by remember { mutableStateOf("kg") }
-
-                val units = listOf(stringResource(R.string.unit_kg), stringResource(R.string.unit_unit), stringResource(R.string.unit_litre))
+                val defaultUnit = stringResource(R.string.unit_kg)
+                var selectedUnit by remember(defaultUnit) { mutableStateOf(defaultUnit) }
+                val units = listOf(
+                    defaultUnit,
+                    stringResource(R.string.unit_unit),
+                    stringResource(R.string.unit_litre)
+                )
 
                 FieldLabel(text = stringResource(R.string.sell_stock_label))
 
@@ -563,4 +567,3 @@ private fun AddImageButton(onClick: () -> Unit) {
         )
     }
 }
-

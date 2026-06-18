@@ -45,6 +45,7 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.home.components.ImageCaro
 import com.yash091099.ChiragFarmersApp.ui.presentation.home.components.bookservicecard.BookServiceCard
 import com.yash091099.ChiragFarmersApp.ui.presentation.home.components.topbar.HomeTopBar
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost.Route
+import com.yash091099.ChiragFarmersApp.ui.presentation.sell.data.Categories
 import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
 
 @Composable
@@ -88,11 +89,11 @@ fun HomeScreen(
         else -> R.drawable.home_footer
     }
     val productCategories = listOf(
-        Pair(stringResource(R.string.home_agriculture_drones), R.drawable.agri_drone),
-        Pair(stringResource(R.string.home_seeds), R.drawable.agri_seeds),
-        Pair(stringResource(R.string.home_sprayer), R.drawable.agri_sprayer),
-        Pair(stringResource(R.string.home_tractors), R.drawable.agri_tractor),
-        Pair(stringResource(R.string.home_harvesting_machines), R.drawable.agri_harvester)
+        Triple(stringResource(R.string.home_agriculture_drones), R.drawable.agri_drone, "Agriculture Drone"),
+        Triple(stringResource(R.string.home_seeds), R.drawable.agri_seeds, "Seeds"),
+        Triple(stringResource(R.string.home_sprayer), R.drawable.agri_sprayer, "Sprayers"),
+        Triple(stringResource(R.string.home_tractors), R.drawable.agri_tractor, "Tractors"),
+        Triple(stringResource(R.string.home_harvesting_machines), R.drawable.agri_harvester, "Harvesting Machines")
     )
     val bookingStatus by viewModel.bookingStatus.collectAsStateWithLifecycle()
 
@@ -168,14 +169,6 @@ fun HomeScreen(
                     onClick = {
                         navController.navigate(Route.Buy.path)
                     })
-                val agriDroneLabel = stringResource(R.string.home_agriculture_drone_label)
-                val seedsLabel = stringResource(R.string.home_seeds)
-                val sprayerLabel = stringResource(R.string.home_sprayer)
-                val sprayersLabel = stringResource(R.string.home_sprayers_label)
-                val tractorsLabel = stringResource(R.string.home_tractors)
-                val tractorsLabelRes = stringResource(R.string.home_tractors_label)
-                val harvestingMachinesLabel = stringResource(R.string.home_harvesting_machines)
-                val harvestingLabel = stringResource(R.string.home_harvesting_label)
                 LazyRow(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -183,37 +176,13 @@ fun HomeScreen(
                     items(productCategories) { category ->
                         ProductCategoryCard(
                             title = category.first, imageRes = category.second, onClick = {
-                                val categoryName = when {
-                                    category.first.contains(
-                                        agriDroneLabel.substringBefore(" "), ignoreCase = true
-                                    ) -> agriDroneLabel
-
-                                    category.first.equals(
-                                        seedsLabel,
-                                        ignoreCase = true
-                                    ) -> seedsLabel
-
-                                    category.first.equals(
-                                        sprayerLabel, ignoreCase = true
-                                    ) -> sprayersLabel
-
-                                    category.first.equals(
-                                        tractorsLabel, ignoreCase = true
-                                    ) -> tractorsLabelRes
-
-                                    category.first.equals(
-                                        harvestingMachinesLabel, ignoreCase = true
-                                    ) -> harvestingLabel
-
-                                    else -> ""
-                                }
-                                if (categoryName.isNotEmpty()) {
-                                    navController.navigate(
-                                        Route.BuyCategory.createRoute(
-                                            categoryName, R.drawable.buy_banner
-                                        )
+                                val categoryName = category.third
+                                navController.navigate(
+                                    Route.BuyCategory.createRoute(
+                                        categoryName,
+                                        Categories.getBuyBannerImage(categoryName, langTag)
                                     )
-                                }
+                                )
                             })
                     }
                 }
@@ -289,9 +258,11 @@ fun HomeScreen(
                                 category = seedsCategoryLabel,
                                 btnText = stringResource(R.string.home_view_all),
                                 onClick = {
+                                    val categoryName = "Seeds"
                                     navController.navigate(
                                         Route.BuyCategory.createRoute(
-                                            seedsCategoryLabel, R.drawable.buy_banner
+                                            categoryName,
+                                            Categories.getBuyBannerImage(categoryName, langTag)
                                         )
                                     )
                                 })
@@ -330,7 +301,12 @@ fun HomeScreen(
                                 }
                             }
                         }
-
+                        val bannerImageResId=when{
+                            langTag.startsWith("hi") -> R.drawable.buy_banner_hi
+                            langTag.startsWith("te") -> R.drawable.buy_banner_te
+                            langTag.startsWith("pa") -> R.drawable.buy_banner_pa
+                            else -> R.drawable.buy_banner
+                        }
                         // Popular Products — show max 4 items, 2 rows of 2
                         if (successState.popularProducts.isNotEmpty()) {
                             val popularLabel = stringResource(R.string.home_popular_products_label)
@@ -340,7 +316,7 @@ fun HomeScreen(
                                 onClick = {
                                     navController.navigate(
                                         Route.BuyCategory.createRoute(
-                                            popularLabel, R.drawable.buy_banner
+                                            popularLabel, bannerImageResId
                                         )
                                     )
                                 })
