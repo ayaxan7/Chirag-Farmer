@@ -9,7 +9,10 @@ data class BuySellCategory(
     val apiValue: String? = null,
     val bannerImage: Int? = null,
     val subCategories: List<BuySellCategory> = emptyList(),
-    val displayNameRes: Int? = null
+    val displayNameRes: Int? = null,
+    val bannerImageHi: Int? = null,
+    val bannerImageTe: Int? = null,
+    val bannerImagePa: Int? = null
 )
 
 object Categories {
@@ -35,6 +38,9 @@ object Categories {
             id = 1,
             apiValue = "seeds",
             bannerImage = R.drawable.seeds_banner,
+            bannerImageHi = R.drawable.seeds_banner_hi,
+            bannerImageTe = R.drawable.seeds_banner_te,
+            bannerImagePa = R.drawable.seeds_banner_pa,
             displayNameRes = R.string.category_seeds,
             subCategories = listOf(
                 BuySellCategory(
@@ -73,6 +79,9 @@ object Categories {
             id = 2,
             apiValue = "sprayers",
             bannerImage = R.drawable.agri_sprayers_banner,
+            bannerImageHi = R.drawable.agri_sprayers_banner_hi,
+            bannerImageTe = R.drawable.agri_sprayers_banner_te,
+            bannerImagePa = R.drawable.agri_sprayers_banner_pa,
             displayNameRes = R.string.category_sprayers,
             subCategories = listOf(
                 BuySellCategory(
@@ -117,6 +126,9 @@ object Categories {
             id = 3,
             apiValue = "drones",
             bannerImage = R.drawable.agri_drones,
+            bannerImageHi = R.drawable.agri_drones_hi,
+            bannerImageTe = R.drawable.agri_drones_te,
+            bannerImagePa = R.drawable.agri_drones_pa,
             displayNameRes = R.string.category_agriculture_drone,
             subCategories = listOf(
                 BuySellCategory(
@@ -147,6 +159,9 @@ object Categories {
             id = 4,
             apiValue = "tractors",
             bannerImage = R.drawable.tractors_banner,
+            bannerImageHi = R.drawable.tractors_banner_hi,
+            bannerImageTe = R.drawable.tractors_banner_te,
+            bannerImagePa = R.drawable.tractors_banner_pa,
             displayNameRes = R.string.category_tractors,
             subCategories = listOf(
                 BuySellCategory(
@@ -191,6 +206,9 @@ object Categories {
             id = 5,
             apiValue = "direct-from-farmers",
             bannerImage = R.drawable.direct_from_farmers_banner,
+            bannerImageHi = R.drawable.direct_from_farmers_banner_hi,
+            bannerImageTe = R.drawable.direct_from_farmers_banner_te,
+            bannerImagePa = R.drawable.direct_from_farmers_banner_pa,
             displayNameRes = R.string.category_direct_from_farmers,
             subCategories = listOf(
                 BuySellCategory(
@@ -256,6 +274,9 @@ object Categories {
             id = 6,
             apiValue = "pesticides",
             bannerImage = R.drawable.direct_from_farmers_banner,
+            bannerImageHi = R.drawable.direct_from_farmers_banner_hi,
+            bannerImageTe = R.drawable.direct_from_farmers_banner_te,
+            bannerImagePa = R.drawable.direct_from_farmers_banner_pa,
             displayNameRes = R.string.category_pesticides,
             subCategories = listOf(
                 BuySellCategory(
@@ -293,6 +314,9 @@ object Categories {
             id = 7,
             apiValue = "harvesting machines",
             bannerImage = R.drawable.direct_from_farmers_banner,
+            bannerImageHi = R.drawable.direct_from_farmers_banner_hi,
+            bannerImageTe = R.drawable.direct_from_farmers_banner_te,
+            bannerImagePa = R.drawable.direct_from_farmers_banner_pa,
             displayNameRes = R.string.category_harvesting_machines,
             subCategories = listOf(
                 BuySellCategory(
@@ -337,6 +361,9 @@ object Categories {
             id = 8,
             apiValue = "soil testers",
             bannerImage = R.drawable.direct_from_farmers_banner,
+            bannerImageHi = R.drawable.direct_from_farmers_banner_hi,
+            bannerImageTe = R.drawable.direct_from_farmers_banner_te,
+            bannerImagePa = R.drawable.direct_from_farmers_banner_pa,
             displayNameRes = R.string.category_soil_testers,
             subCategories = listOf(
                 BuySellCategory(
@@ -374,6 +401,9 @@ object Categories {
             id = 9,
             apiValue = "power weeders",
             bannerImage = R.drawable.direct_from_farmers_banner,
+            bannerImageHi = R.drawable.direct_from_farmers_banner_hi,
+            bannerImageTe = R.drawable.direct_from_farmers_banner_te,
+            bannerImagePa = R.drawable.direct_from_farmers_banner_pa,
             displayNameRes = R.string.category_power_weeders,
             subCategories = listOf(
                 BuySellCategory(
@@ -411,6 +441,9 @@ object Categories {
             id = 10,
             apiValue = "thresher winnower",
             bannerImage = R.drawable.direct_from_farmers_banner,
+            bannerImageHi = R.drawable.direct_from_farmers_banner_hi,
+            bannerImageTe = R.drawable.direct_from_farmers_banner_te,
+            bannerImagePa = R.drawable.direct_from_farmers_banner_pa,
             displayNameRes = R.string.category_thresher_winnowers,
             subCategories = listOf(
                 BuySellCategory(
@@ -448,6 +481,9 @@ object Categories {
             id = 11,
             apiValue = "irrigation tools",
             bannerImage = R.drawable.direct_from_farmers_banner,
+            bannerImageHi = R.drawable.direct_from_farmers_banner_hi,
+            bannerImageTe = R.drawable.direct_from_farmers_banner_te,
+            bannerImagePa = R.drawable.direct_from_farmers_banner_pa,
             displayNameRes = R.string.category_irrigation_tools,
             subCategories = listOf(
                 BuySellCategory(
@@ -499,6 +535,9 @@ object Categories {
             id = 12,
             apiValue = "manual farm machinery",
             bannerImage = R.drawable.direct_from_farmers_banner,
+            bannerImageHi = R.drawable.direct_from_farmers_banner_hi,
+            bannerImageTe = R.drawable.direct_from_farmers_banner_te,
+            bannerImagePa = R.drawable.direct_from_farmers_banner_pa,
             displayNameRes = R.string.category_manual_farm_machinery,
             subCategories = listOf(
                 BuySellCategory(
@@ -534,7 +573,7 @@ object Categories {
     )
 
     private val defaultBuySubcategories = listOf(
-        BuySellCategory("All Products", R.drawable.sell_category_other, 1, displayNameRes = R.string.category_all_products),
+//        BuySellCategory("All Products", R.drawable.sell_category_other, 1, displayNameRes = R.string.category_all_products),
         BuySellCategory("Seeds", R.drawable.buy_category_seeds, 2, apiValue = "seeds", displayNameRes = R.string.category_seeds_cat),
         BuySellCategory("Sprayers", R.drawable.buy_category_sprayers, 3, apiValue = "sprayers", displayNameRes = R.string.category_sprayers_cat),
         BuySellCategory(
@@ -552,11 +591,12 @@ object Categories {
     }
 
     fun getBuyBannerImage(categoryName: String, langTag: String = "en"): Int {
-        val baseBanner = getBuyCategory(categoryName)?.bannerImage ?: R.drawable.buy_banner
+        val category = getBuyCategory(categoryName)
+        val baseBanner = category?.bannerImage ?: R.drawable.buy_banner
         return when {
-            langTag.startsWith("hi") -> baseBanner
-            langTag.startsWith("te") -> baseBanner
-            langTag.startsWith("pa") -> baseBanner
+            langTag.startsWith("hi") -> category?.bannerImageHi ?: baseBanner
+            langTag.startsWith("te") -> category?.bannerImageTe ?: baseBanner
+            langTag.startsWith("pa") -> category?.bannerImagePa ?: baseBanner
             else -> baseBanner
         }
     }
