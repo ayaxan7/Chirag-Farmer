@@ -81,6 +81,12 @@ fun HomeScreen(
             R.drawable.smart_farmer
         )
     }
+    val footerImage=when{
+        langTag.startsWith("hi") -> R.drawable.home_footer_hi
+        langTag.startsWith("te") -> R.drawable.home_footer_te
+        langTag.startsWith("pa") -> R.drawable.home_footer_pu
+        else -> R.drawable.home_footer
+    }
     val productCategories = listOf(
         Pair(stringResource(R.string.home_agriculture_drones), R.drawable.agri_drone),
         Pair(stringResource(R.string.home_seeds), R.drawable.agri_seeds),
@@ -409,7 +415,7 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(16.dp))
             }
             Image(
-                painter = painterResource(R.drawable.home_footer),
+                painter = painterResource(footerImage),
                 contentDescription = stringResource(R.string.home_footer_description),
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.FillWidth

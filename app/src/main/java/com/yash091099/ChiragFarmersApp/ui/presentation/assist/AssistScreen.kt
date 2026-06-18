@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -46,12 +47,19 @@ import com.yash091099.ChiragFarmersApp.ui.theme.BorderGray
 @Composable
 fun AssistScreen(navController: NavHostController) {
     val snackBarHostState = remember { SnackbarHostState() }
+    val langTag = LocalConfiguration.current.locales[0].toLanguageTag()
+    val banner=when {
+        langTag.startsWith("hi") -> R.drawable.assist_screen_banner_hi
+        langTag.startsWith("te") -> R.drawable.assist_screen_banner_te
+        langTag.startsWith("pa")-> R.drawable.assist_screen_banner_pu
+        else -> R.drawable.assist_screen_banner
+    }
     Scaffold(
         containerColor = BGWhite,
         snackbarHost = { SnackbarHost(snackBarHostState) },
         topBar = {
             ChiragTopBar(
-                navController = navController, icon = R.drawable.ic_arrow,                 title = stringResource(R.string.assist_title)
+                navController = navController, icon = R.drawable.ic_arrow,title = stringResource(R.string.assist_title)
             )
         }) { paddingValues ->
         Column(
@@ -63,7 +71,7 @@ fun AssistScreen(navController: NavHostController) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
-                painter = painterResource(id = R.drawable.assist_screen_banner),
+                painter = painterResource(id = banner),
                 contentDescription = stringResource(R.string.assist_banner_description),
                 modifier = Modifier
                     .fillMaxWidth()
