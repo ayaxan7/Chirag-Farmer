@@ -551,8 +551,14 @@ object Categories {
         return buyCategories.firstOrNull { it.matches(categoryName) }
     }
 
-    fun getBuyBannerImage(categoryName: String): Int {
-        return getBuyCategory(categoryName)?.bannerImage ?: R.drawable.buy_banner
+    fun getBuyBannerImage(categoryName: String, langTag: String = "en"): Int {
+        val baseBanner = getBuyCategory(categoryName)?.bannerImage ?: R.drawable.buy_banner
+        return when {
+            langTag.startsWith("hi") -> baseBanner
+            langTag.startsWith("te") -> baseBanner
+            langTag.startsWith("pa") -> baseBanner
+            else -> baseBanner
+        }
     }
 
     fun getBuyApiCategory(categoryName: String): String? {

@@ -82,10 +82,12 @@ fun CategoriesScreen(
         selectedCat?.name?.replace("\n", " ") ?: stringResource(R.string.category_all_products)
     }
 
+    val categoryTitle = Categories.getBuyCategory(categoryName)?.displayNameRes?.let { stringResource(it) } ?: categoryName
+
     Scaffold(
         modifier = modifier, containerColor = BGWhite, topBar = {
             ChiragTopBar(
-                navController = navController, title = categoryName, icon = R.drawable.ic_arrow
+                navController = navController, title = categoryTitle, icon = R.drawable.ic_arrow
             )
         }) { paddingValues ->
 

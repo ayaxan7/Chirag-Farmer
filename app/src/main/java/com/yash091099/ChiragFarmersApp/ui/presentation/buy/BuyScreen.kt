@@ -172,10 +172,9 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
                                         val routeCategoryName =
                                             category.name.replace("\n", " ").trim()
 
-                                        val bannerResId =
-                                            category.bannerImage ?: Categories.getBuyBannerImage(
-                                                routeCategoryName
-                                            )
+                                        val bannerResId = Categories.getBuyBannerImage(
+                                            routeCategoryName, langTag
+                                        )
 
                                         navController.navigate(
                                             Route.BuyCategory.createRoute(
@@ -217,8 +216,9 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
                                 category = stringResource(R.string.buy_direct_from_farmers),
                                 btnText = stringResource(R.string.home_view_all),
                                 onClick = {
-                                    val bannerResId =
-                                        Categories.getBuyBannerImage("Direct From Farmers")
+                                    val bannerResId = Categories.getBuyBannerImage(
+                                        "Direct From Farmers", langTag
+                                    )
                                     navController.navigate(
                                         Route.BuyCategory.createRoute(
                                             "Direct From Farmers",
@@ -226,6 +226,7 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
                                         )
                                     )
                                 })
+
                         }
                         items(validDirectFromFarmersProducts) { product ->
                             CommonProductCard(
@@ -249,7 +250,9 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
                                 category = stringResource(R.string.buy_seeds),
                                 btnText = stringResource(R.string.home_view_all),
                                 onClick = {
-                                    val bannerResId = Categories.getBuyBannerImage("Seeds")
+                                    val bannerResId = Categories.getBuyBannerImage(
+                                        "Seeds", langTag
+                                    )
                                     navController.navigate(
                                         Route.BuyCategory.createRoute(
                                             "Seeds",
