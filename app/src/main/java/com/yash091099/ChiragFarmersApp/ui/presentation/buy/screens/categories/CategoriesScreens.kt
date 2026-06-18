@@ -50,6 +50,11 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.sell.data.BuySellCategory
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.data.Categories
 import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
 
+private fun String.singleLine(): String =
+    replace("\n", " ")
+        .replace(Regex("\\s+"), " ")
+        .trim()
+
 @Composable
 fun CategoriesScreen(
     modifier: Modifier = Modifier,
@@ -79,10 +84,13 @@ fun CategoriesScreen(
     val categoryDisplayText = if (selectedCat?.displayNameRes != null) {
         stringResource(selectedCat.displayNameRes)
     } else {
-        selectedCat?.name?.replace("\n", " ") ?: stringResource(R.string.category_all_products)
-    }
+        selectedCat?.name ?: stringResource(R.string.category_all_products)
+    }.singleLine()
 
-    val categoryTitle = Categories.getBuyCategory(categoryName)?.displayNameRes?.let { stringResource(it) } ?: categoryName
+    val categoryTitle = (
+        Categories.getBuyCategory(categoryName)?.displayNameRes?.let { stringResource(it) }
+            ?: categoryName
+        ).singleLine()
 
     Scaffold(
         modifier = modifier, containerColor = BGWhite, topBar = {
