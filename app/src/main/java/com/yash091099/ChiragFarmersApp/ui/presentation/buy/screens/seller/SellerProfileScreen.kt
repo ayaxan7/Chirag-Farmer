@@ -41,6 +41,7 @@ import coil.compose.AsyncImage
 import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.CommonProductCard
 import com.yash091099.ChiragFarmersApp.ui.presentation.common.data.CommonProductCardData
+import com.yash091099.ChiragFarmersApp.utils.formatAmount
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragTopBar
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost.Route
 import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
@@ -205,8 +206,8 @@ fun SellerProfileScreen(
                                             imageRes = R.drawable.sprayer,
                                             productName = product.productName,
                                             brandName = product.sellerName,
-                                            currentPrice = product.effectivePrice.toString(),
-                                            originalPrice = product.originalPrice.toString(),
+                                            currentPrice = product.effectivePrice.formatAmount(),
+                                            originalPrice = product.originalPrice.formatAmount(),
                                             rating = product.rating
                                         ),
                                         onClick = {

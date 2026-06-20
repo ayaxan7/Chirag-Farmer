@@ -52,9 +52,9 @@ fun SellerProductDto.toDomain(): Product {
         productName = name,
         imageUrl = imageUrl ?: "",
         sellerName = sellerName,
-        effectivePrice = discountedPrice.toInt(),
+        effectivePrice = discountedPrice,
         availableQuantity = 0,
-        originalPrice = originalPrice.toInt(),
+        originalPrice = originalPrice,
         rating = rating.toString()
     )
 }

@@ -48,9 +48,9 @@ fun ProductDto.toDomain(): Product {
         productName = productName,
         imageUrl = thumbUrl,
         sellerName = sellerName,
-        effectivePrice = effectivePrice.toInt(),
+        effectivePrice = effectivePrice,
         availableQuantity = availableQuantity,
-        originalPrice = regularPrice?.toInt() ?: 0,
+        originalPrice = regularPrice ?: 0.0,
         rating = rating?.toString() ?: "0.0"
     )
 }

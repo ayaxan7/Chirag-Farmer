@@ -44,6 +44,7 @@ import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.CategoryItem
 import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.CommonProductCard
 import com.yash091099.ChiragFarmersApp.ui.presentation.common.data.CommonProductCardData
+import com.yash091099.ChiragFarmersApp.utils.formatAmount
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragTopBar
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost.Route
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.data.BuySellCategory
@@ -202,8 +203,8 @@ fun CategoriesScreen(
                                 product = CommonProductCardData(
                                     productName = product.productName,
                                     brandName = product.sellerName,
-                                    currentPrice = product.effectivePrice.toString(),
-                                    originalPrice = product.originalPrice.takeIf { it > 0 }?.toString(),
+                                    currentPrice = product.effectivePrice.formatAmount(),
+                                    originalPrice = product.originalPrice.takeIf { it > 0 }?.formatAmount(),
                                     rating = product.rating,
                                     imageUrl = product.imageUrl
                                 ), isSellScreen = false, onClick = {

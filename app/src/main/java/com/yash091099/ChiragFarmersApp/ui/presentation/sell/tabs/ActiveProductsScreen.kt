@@ -28,6 +28,7 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.common.data.CommonProduct
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.components.RemoveProductDialog
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.components.SoldOutDialog
 import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
+import com.yash091099.ChiragFarmersApp.utils.formatAmount
 
 @Composable
 fun ActiveProductsScreen(
@@ -101,8 +102,8 @@ fun ActiveProductsScreen(
                                     imageUrl = product.imageUrl,
                                     productName = product.productName,
                                     brandName = product.sellerName,
-                                    currentPrice = product.effectivePrice.toString(),
-                                    originalPrice = product.originalPrice.toString(),
+                                    currentPrice = product.effectivePrice.formatAmount(),
+                                    originalPrice = product.originalPrice.formatAmount(),
                                     rating = product.rating,
                                     isSoldOut = false
                                 ),
