@@ -28,6 +28,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -57,6 +60,7 @@ private fun String.singleLine(): String =
         .replace(Regex("\\s+"), " ")
         .trim()
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoriesScreen(
     modifier: Modifier = Modifier,
@@ -93,6 +97,9 @@ fun CategoriesScreen(
         Categories.getBuyCategory(categoryName)?.displayNameRes?.let { stringResource(it) }
             ?: categoryName
         ).singleLine()
+
+    var showFilterSheet by remember { mutableStateOf(false) }
+    var filterState by remember { mutableStateOf(FilterState()) }
 
     Scaffold(
         modifier = modifier, containerColor = BGWhite, topBar = {
@@ -165,8 +172,8 @@ fun CategoriesScreen(
 
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.clickable{
-
+                        modifier = Modifier.clickable {
+                            showFilterSheet = true
                         }
                     ) {
                         Icon(
@@ -239,5 +246,15 @@ fun CategoriesScreen(
                 Spacer(modifier = Modifier.height(12.dp))
             }
         }
+    }
+
+    if (showFilterSheet) {
+        FilterBottomSheet(
+            onDismissRequest = { showFilterSheet = false },
+            initialState = filterState,
+            onApplyFilters = { newState ->
+                filterState = newState
+            }
+        )
     }
 }
