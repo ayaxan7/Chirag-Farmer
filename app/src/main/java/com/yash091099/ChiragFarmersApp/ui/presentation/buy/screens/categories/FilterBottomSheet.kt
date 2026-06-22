@@ -2,15 +2,18 @@ package com.yash091099.ChiragFarmersApp.ui.presentation.buy.screens.categories
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -20,13 +23,14 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -35,14 +39,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.ChiragButton
+import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
+import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
+import com.yash091099.ChiragFarmersApp.ui.theme.BorderGray
+import com.yash091099.ChiragFarmersApp.ui.theme.ChiragFarmerTheme
 
 data class FilterState(
     val minBudget: String = "",
@@ -71,250 +82,291 @@ fun FilterBottomSheet(
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
         sheetState = sheetState,
-        containerColor = Color.White,
         dragHandle = null,
-        shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
+        containerColor = BGWhite,
+        shape = RoundedCornerShape(topStart = 22.dp, topEnd = 22.dp),
+        contentWindowInsets = { WindowInsets(0, 0, 0, 0) }) {
+        FilterBottomSheetContent(
+            minBudget = minBudget,
+            onMinBudgetChange = { minBudget = it },
+            maxBudget = maxBudget,
+            onMaxBudgetChange = { maxBudget = it },
+            nearBy = nearBy,
+            onNearByChange = { nearBy = it },
+            moreThan3Rating = moreThan3Rating,
+            onMoreThan3RatingChange = { moreThan3Rating = it },
+            sortByLowToHigh = sortByLowToHigh,
+            onSortByLowToHighChange = {
+                sortByLowToHigh = it
+                if (it) sortByHighToLow = false
+            },
+            sortByHighToLow = sortByHighToLow,
+            onSortByHighToLowChange = {
+                sortByHighToLow = it
+                if (it) sortByLowToHigh = false
+            },
+            onResetFilters = {
+                minBudget = ""
+                maxBudget = ""
+                nearBy = false
+                moreThan3Rating = false
+                sortByLowToHigh = false
+                sortByHighToLow = false
+            },
+            onApplyFilters = {
+                onApplyFilters(
+                    FilterState(
+                        minBudget,
+                        maxBudget,
+                        nearBy,
+                        moreThan3Rating,
+                        sortByLowToHigh,
+                        sortByHighToLow
+                    )
+                )
+                onDismissRequest()
+            },
+            onDismissRequest = onDismissRequest
+        )
+    }
+}
+
+@Composable
+fun FilterBottomSheetContent(
+    minBudget: String,
+    onMinBudgetChange: (String) -> Unit,
+    maxBudget: String,
+    onMaxBudgetChange: (String) -> Unit,
+    nearBy: Boolean,
+    onNearByChange: (Boolean) -> Unit,
+    moreThan3Rating: Boolean,
+    onMoreThan3RatingChange: (Boolean) -> Unit,
+    sortByLowToHigh: Boolean,
+    onSortByLowToHighChange: (Boolean) -> Unit,
+    sortByHighToLow: Boolean,
+    onSortByHighToLowChange: (Boolean) -> Unit,
+    onResetFilters: () -> Unit,
+    onApplyFilters: () -> Unit,
+    onDismissRequest: () -> Unit
+) {
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .background(BGWhite)
     ) {
+
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp)
-                .padding(top = 24.dp, bottom = 32.dp)
+                .wrapContentHeight()
                 .verticalScroll(rememberScrollState())
+                .padding(horizontal = 20.dp, vertical = 16.dp)
         ) {
-            // Header: Filter and Close Icon
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+
                 Text(
-                    text = "Filter",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                    text = "Filter", fontSize = 18.sp, fontWeight = FontWeight.Bold
                 )
+
                 IconButton(onClick = onDismissRequest) {
                     Icon(
-                        imageVector = Icons.Default.Close,
-                        contentDescription = "Close",
-                        tint = Color.Black
+                        imageVector = Icons.Default.Close, contentDescription = null, tint = BGBlack
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(Modifier.height(10.dp))
 
-            // Budget Range Section
             Text(
-                text = "Budget Range",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black
+                "Budget Range", fontSize = 15.sp, fontWeight = FontWeight.SemiBold
             )
-            Spacer(modifier = Modifier.height(12.dp))
+
+            Spacer(Modifier.height(8.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
+
                 Column(modifier = Modifier.weight(1f)) {
+
                     Text(
-                        text = "Min",
-                        fontSize = 14.sp,
-                        color = Color.Black,
-                        fontWeight = FontWeight.Medium
+                        "Min", fontSize = 12.sp, fontWeight = FontWeight.Medium
                     )
-                    Spacer(modifier = Modifier.height(6.dp))
+
+                    Spacer(Modifier.height(4.dp))
+
                     BudgetInputField(
-                        value = minBudget,
-                        onValueChange = { minBudget = it },
-                        placeholder = "100"
+                        value = minBudget, onValueChange = onMinBudgetChange, placeholder = "100"
                     )
                 }
 
                 Column(modifier = Modifier.weight(1f)) {
+
                     Text(
-                        text = "Max",
-                        fontSize = 14.sp,
-                        color = Color.Black,
-                        fontWeight = FontWeight.Medium
+                        "Max", fontSize = 12.sp, fontWeight = FontWeight.Medium
                     )
-                    Spacer(modifier = Modifier.height(6.dp))
+
+                    Spacer(Modifier.height(4.dp))
+
                     BudgetInputField(
-                        value = maxBudget,
-                        onValueChange = { maxBudget = it },
-                        placeholder = "100"
+                        value = maxBudget, onValueChange = onMaxBudgetChange, placeholder = "100"
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(Modifier.height(12.dp))
             DashedDivider()
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(Modifier.height(12.dp))
 
-            // Location Section
             Text(
-                text = "Location",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            FilterSwitchRow(
-                label = "Near By",
-                checked = nearBy,
-                onCheckedChange = { nearBy = it }
+                "Location", fontSize = 15.sp, fontWeight = FontWeight.SemiBold
             )
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(Modifier.height(6.dp))
+
+            FilterSwitchRow(
+                label = "Near By", checked = nearBy, onCheckedChange = onNearByChange
+            )
+
+            Spacer(Modifier.height(12.dp))
             DashedDivider()
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(Modifier.height(12.dp))
 
-            // Rating Section
             Text(
-                text = "Rating",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black
+                "Rating", fontSize = 15.sp, fontWeight = FontWeight.SemiBold
             )
-            Spacer(modifier = Modifier.height(12.dp))
+
+            Spacer(Modifier.height(6.dp))
+
             FilterSwitchRow(
-                label = "More then 3 rating",
+                label = "More than 3 rating",
                 checked = moreThan3Rating,
-                onCheckedChange = { moreThan3Rating = it }
+                onCheckedChange = onMoreThan3RatingChange
             )
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(Modifier.height(12.dp))
             DashedDivider()
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(Modifier.height(12.dp))
 
-            // Sort By Section
             Text(
-                text = "Sort by",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black
+                "Sort by", fontSize = 15.sp, fontWeight = FontWeight.SemiBold
             )
-            Spacer(modifier = Modifier.height(12.dp))
+
+            Spacer(Modifier.height(6.dp))
+
             FilterSwitchRow(
                 label = "Low Price - High Price",
                 checked = sortByLowToHigh,
-                onCheckedChange = {
-                    sortByLowToHigh = it
-                    if (it) sortByHighToLow = false
-                }
+                onCheckedChange = onSortByLowToHighChange
             )
-            Spacer(modifier = Modifier.height(12.dp))
+
+            Spacer(Modifier.height(8.dp))
+
             FilterSwitchRow(
-                label = "Hight Price - Low Price",
+                label = "High Price - Low Price",
                 checked = sortByHighToLow,
-                onCheckedChange = {
-                    sortByHighToLow = it
-                    if (it) sortByLowToHigh = false
-                }
+                onCheckedChange = onSortByHighToLowChange
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(Modifier.height(16.dp))
+        }
 
-            // Buttons: Reset and Apply
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                ChiragButton(
-                    text = "Reset Filters",
-                    onClick = {
-                        minBudget = ""
-                        maxBudget = ""
-                        nearBy = false
-                        moreThan3Rating = false
-                        sortByLowToHigh = false
-                        sortByHighToLow = false
-                    },
-                    modifier = Modifier.weight(1f),
-                    containerColor = Color(0xFFE2E8F0),
-                    contentColor = Color.Black
-                )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(BGWhite)
+                .padding(horizontal = 20.dp, vertical = 12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
 
-                ChiragButton(
-                    text = "Apply Filter",
-                    onClick = {
-                        onApplyFilters(
-                            FilterState(
-                                minBudget = minBudget,
-                                maxBudget = maxBudget,
-                                nearBy = nearBy,
-                                moreThan3Rating = moreThan3Rating,
-                                sortByLowToHigh = sortByLowToHigh,
-                                sortByHighToLow = sortByHighToLow
-                            )
-                        )
-                        onDismissRequest()
-                    },
-                    modifier = Modifier.weight(1f)
-                )
-            }
+            ChiragButton(
+                text = "Reset Filters",
+                onClick = onResetFilters,
+                modifier = Modifier.weight(1f),
+                containerColor = Color(0xFFE2E8F0),
+                contentColor = BGBlack
+            )
+
+            ChiragButton(
+                text = "Apply Filter", onClick = onApplyFilters, modifier = Modifier.weight(1f)
+            )
         }
     }
 }
 
 @Composable
 fun BudgetInputField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    placeholder: String
+    value: String, onValueChange: (String) -> Unit, placeholder: String
 ) {
-    TextField(
-        value = value,
-        onValueChange = onValueChange,
-        placeholder = { Text(text = placeholder, color = Color(0xFF737373), fontSize = 14.sp) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        singleLine = true,
-        colors = TextFieldDefaults.colors(
-            focusedContainerColor = Color(0xFFF1F5F9),
-            unfocusedContainerColor = Color(0xFFF1F5F9),
-            disabledContainerColor = Color(0xFFF1F5F9),
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-            disabledIndicatorColor = Color.Transparent,
-            cursorColor = Color.Black
-        ),
-        shape = RoundedCornerShape(8.dp),
-        modifier = Modifier.fillMaxWidth()
+    OutlinedTextField(
+        value = value, onValueChange = {
+        if (it.all(Char::isDigit)) {
+            onValueChange(it)
+        }
+    }, placeholder = {
+        Text(
+            text = placeholder,
+            fontSize = 13.sp,
+            color = Color(0xFF94A3B8),
+            textAlign = TextAlign.Center
+        )
+    }, singleLine = true, textStyle = LocalTextStyle.current.copy(
+        fontSize = 13.sp, color = BGBlack
+    ), keyboardOptions = KeyboardOptions(
+        keyboardType = KeyboardType.Number
+    ), shape = RoundedCornerShape(8.dp), colors = OutlinedTextFieldDefaults.colors(
+        focusedContainerColor = Color(0xFFf4fafb),
+        unfocusedContainerColor = Color(0xFFf4fafb),
+        focusedBorderColor = BorderGray,
+        unfocusedBorderColor = BorderGray,
+        cursorColor = BGBlack,
+        focusedPlaceholderColor = Color(0xFFf4fafb),
+        unfocusedPlaceholderColor = Color(0xFFf4fafb)
+    ), modifier = Modifier
+            .fillMaxWidth()
+            .defaultMinSize(minHeight = 48.dp)
     )
 }
 
 @Composable
 fun FilterSwitchRow(
-    label: String,
-    checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit
+    label: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color(0xFFF1F5F9), RoundedCornerShape(12.dp))
-            .clickable { onCheckedChange(!checked) }
-            .padding(horizontal = 16.dp, vertical = 12.dp),
+            .height(44.dp)
+            .background(
+                Color(0xFFf4fafb), RoundedCornerShape(8.dp)
+            )
+            .border(
+                1.dp, BorderGray, RoundedCornerShape(8.dp)
+            )
+            .clickable {
+                onCheckedChange(!checked)
+            }
+            .padding(horizontal = 12.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
+        verticalAlignment = Alignment.CenterVertically) {
+
         Text(
-            text = label,
-            fontSize = 15.sp,
-            color = Color.Black,
-            fontWeight = FontWeight.Medium
+            text = label, fontSize = 13.sp, fontWeight = FontWeight.Medium, color = BGBlack
         )
         Switch(
             checked = checked,
             onCheckedChange = onCheckedChange,
+            modifier = Modifier.scale(0.72f),
             colors = SwitchDefaults.colors(
-                checkedThumbColor = Color.White,
-                checkedTrackColor = Color(0xFF1E293B),
-                uncheckedThumbColor = Color.White,
-                uncheckedTrackColor = Color(0xFFCBD5E1),
-                uncheckedBorderColor = Color.Transparent
+                checkedThumbColor = BGWhite, checkedTrackColor = Color(0xFF1E293B),
+                uncheckedThumbColor = BGWhite, uncheckedTrackColor = Color(0xFFCBD5E1),
+                checkedBorderColor = Color.Transparent, uncheckedBorderColor = Color.Transparent
             )
         )
     }
@@ -335,5 +387,28 @@ fun DashedDivider(modifier: Modifier = Modifier) {
             pathEffect = pathEffect,
             strokeWidth = 2f
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun FilterBottomSheetPreview() {
+    ChiragFarmerTheme {
+        FilterBottomSheetContent(
+            minBudget = "100",
+            onMinBudgetChange = {},
+            maxBudget = "500",
+            onMaxBudgetChange = {},
+            nearBy = true,
+            onNearByChange = {},
+            moreThan3Rating = false,
+            onMoreThan3RatingChange = {},
+            sortByLowToHigh = false,
+            onSortByLowToHighChange = {},
+            sortByHighToLow = true,
+            onSortByHighToLowChange = {},
+            onResetFilters = {},
+            onApplyFilters = {},
+            onDismissRequest = {})
     }
 }
