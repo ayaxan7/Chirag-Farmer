@@ -52,7 +52,7 @@ class ProductRepositoryImpl @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun getAllProducts(
-        category: String, subcategory: String?
+        category: String, subcategory: String?, minPrice: String?, maxPrice: String?, sort: String?, rating: String?, location: String?
     ): Flow<PagingData<Product>> {
         return chiragDataStore.getAuthToken().flatMapLatest { token ->
             Pager(
@@ -66,7 +66,12 @@ class ProductRepositoryImpl @Inject constructor(
                         apiService = apiService,
                         token = token ?: "",
                         category = category,
-                        subcategory = subcategory
+                        subcategory = subcategory,
+                        minPrice = minPrice,
+                        maxPrice = maxPrice,
+                        sort = sort,
+                        rating = rating,
+                        location = location
                     )
                 }).flow
         }
@@ -74,7 +79,7 @@ class ProductRepositoryImpl @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun getSmartFarmingProducts(
-        category: String, subcategory: String?
+        category: String, subcategory: String?, minPrice: String?, maxPrice: String?, sort: String?, rating: String?, location: String?
     ): Flow<PagingData<Product>> {
         return chiragDataStore.getAuthToken().flatMapLatest { token ->
             Pager(
@@ -88,7 +93,12 @@ class ProductRepositoryImpl @Inject constructor(
                         apiService = apiService,
                         token = token ?: "",
                         category = category,
-                        subcategory = subcategory
+                        subcategory = subcategory,
+                        minPrice = minPrice,
+                        maxPrice = maxPrice,
+                        sort = sort,
+                        rating = rating,
+                        location = location
                     )
                 }).flow
         }

@@ -9,8 +9,8 @@ import javax.inject.Inject
 class GetAllProductsByCategoryUseCase @Inject constructor(
     private val repository: ProductRepository
 ) {
-    operator fun invoke(category: String, subcategory: String? = null): Flow<PagingData<Product>> {
-        return repository.getAllProducts(category, subcategory)
+    operator fun invoke(category: String, subcategory: String? = null, minPrice: String? = null, maxPrice: String? = null, sort: String? = null, rating: String? = null, location: String? = null): Flow<PagingData<Product>> {
+        return repository.getAllProducts(category, subcategory, minPrice, maxPrice, sort, rating, location)
     }
 }
 

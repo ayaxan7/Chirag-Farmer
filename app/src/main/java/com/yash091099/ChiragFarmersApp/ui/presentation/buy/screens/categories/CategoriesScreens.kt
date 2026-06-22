@@ -254,6 +254,7 @@ fun CategoriesScreen(
             initialState = filterState,
             onApplyFilters = { newState ->
                 filterState = newState
+                viewModel.setFilterState(newState)
             }
         )
     }

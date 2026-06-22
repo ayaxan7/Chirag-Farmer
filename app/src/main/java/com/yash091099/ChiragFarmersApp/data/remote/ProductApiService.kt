@@ -42,7 +42,12 @@ interface ProductApiService {
         @Query("page") page: Int,
         @Query("limit") limit: Int,
         @Query("category") category: String,
-        @Query("subcategory") subcategory: String? = null
+        @Query("subcategory") subcategory: String? = null,
+        @Query("minPrice") minPrice: String? = null,
+        @Query("maxPrice") maxPrice: String? = null,
+        @Query("sort") sort: String? = null,
+        @Query("rating") rating: String? = null,
+        @Query("location") location: String? = null
     ): ProductResponseDto
 
     @GET("api/farmers/smart-farming-products")
@@ -51,7 +56,12 @@ interface ProductApiService {
         @Query("page") page: Int,
         @Query("limit") limit: Int,
         @Query("category") category: String,
-        @Query("subcategory") subcategory: String? = null
+        @Query("subcategory") subcategory: String? = null,
+        @Query("minPrice") minPrice: String? = null,
+        @Query("maxPrice") maxPrice: String? = null,
+        @Query("sort") sort: String? = null,
+        @Query("rating") rating: String? = null,
+        @Query("location") location: String? = null
     ): ProductResponseDto
 
     @GET("api/farmers/mixed-products")

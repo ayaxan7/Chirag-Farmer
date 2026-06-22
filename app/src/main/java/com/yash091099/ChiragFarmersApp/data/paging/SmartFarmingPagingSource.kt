@@ -11,7 +11,12 @@ class SmartFarmingPagingSource(
     private val apiService: ProductApiService,
     private val token: String,
     private val category: String,
-    private val subcategory: String?
+    private val subcategory: String?,
+    private val minPrice: String? = null,
+    private val maxPrice: String? = null,
+    private val sort: String? = null,
+    private val rating: String? = null,
+    private val location: String? = null
 ) : PagingSource<Int, Product>() {
 
     override fun getRefreshKey(state: PagingState<Int, Product>): Int? {
@@ -29,7 +34,12 @@ class SmartFarmingPagingSource(
                 page = page,
                 limit = params.loadSize,
                 category = category,
-                subcategory = subcategory
+                subcategory = subcategory,
+                minPrice = minPrice,
+                maxPrice = maxPrice,
+                sort = sort,
+                rating = rating,
+                location = location
             )
             val products = response.data.products.map { it.toDomain() }
             val totalPages = (response.data.total + params.loadSize - 1) / params.loadSize
