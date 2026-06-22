@@ -1,6 +1,7 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.buy.screens.categories
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -162,19 +163,22 @@ fun CategoriesScreen(
                         fontWeight = FontWeight.W600
                     )
 
-//                    Row(
-//                        verticalAlignment = Alignment.CenterVertically
-//                    ) {
-//                        Icon(
-//                            imageVector = Icons.Default.FilterList,
-//                            contentDescription = "Filter",
-//                            modifier = Modifier.width(18.dp)
-//                        )
-//                        Spacer(modifier = Modifier.width(6.dp))
-//                        Text(
-//                            text = "Filter", fontSize = 13.sp
-//                        )
-//                    }
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.clickable{
+
+                        }
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_filter),
+                            contentDescription = "Filter",
+                            modifier = Modifier.width(18.dp)
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(
+                            text = "Filter", fontSize = 13.sp
+                        )
+                    }
                 }
             }
 
