@@ -172,6 +172,16 @@
     <string name="seller_all_products">All Products</string>
     <string name="seller_no_products">No products found</string>
     <string name="seller_share_description">Share</string>
+    <string name="seller_sort_filter_title">Sort &amp; Filter</string>
+    <string name="seller_budget_range">Budget Range</string>
+    <string name="seller_min_price">Min</string>
+    <string name="seller_max_price">Max</string>
+    <string name="seller_sort_by">Sort by</string>
+    <string name="seller_sort_latest_to_earliest">Listed Latest to Earliest</string>
+    <string name="seller_sort_earliest_to_latest">Listed Earliest to Latest</string>
+    <string name="seller_reset_filters">Reset Filters</string>
+    <string name="seller_apply_filter">Apply Filter</string>
+    <string name="seller_sort_button">Sort</string>
 
     <!-- Cart -->
     <string name="cart_error_loading">Error Loading Cart</string>

@@ -26,6 +26,7 @@ class SellerProfileViewModel @Inject constructor(
     val uiState: StateFlow<SellerProfileUiState> = _uiState.asStateFlow()
 
     private val sellerId: String = checkNotNull(savedStateHandle["sellerId"])
+    private var currentFilter = SellerFilterState()
 
     init {
         loadSellerDetails()
@@ -34,7 +35,14 @@ class SellerProfileViewModel @Inject constructor(
     fun loadSellerDetails() {
         viewModelScope.launch {
             _uiState.value = SellerProfileUiState.Loading
-            productRepository.getSellerDetails(sellerId).fold(
+            val minPrice = currentFilter.minBudget.takeIf { it.isNotEmpty() }
+            val maxPrice = currentFilter.maxBudget.takeIf { it.isNotEmpty() }
+            val sort = when {
+                currentFilter.sortByLatest -> "latest"
+                currentFilter.sortByEarliest -> "earliest"
+                else -> null
+            }
+            productRepository.getSellerDetails(sellerId, minPrice = minPrice, maxPrice = maxPrice, sort = sort).fold(
                 onSuccess = { sellerDetails ->
                     _uiState.value = SellerProfileUiState.Success(sellerDetails)
                 },
@@ -45,6 +53,11 @@ class SellerProfileViewModel @Inject constructor(
                 }
             )
         }
+    }
+
+    fun applyFilter(filter: SellerFilterState) {
+        currentFilter = filter
+        loadSellerDetails()
     }
 
     fun retry() {

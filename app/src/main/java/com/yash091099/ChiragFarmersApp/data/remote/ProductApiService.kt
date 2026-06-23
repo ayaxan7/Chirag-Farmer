@@ -116,7 +116,10 @@ interface ProductApiService {
         @Header("Authorization") token: String,
         @Path("sellerId") sellerId: String,
         @Query("page") page: Int = 1,
-        @Query("limit") limit: Int = 10
+        @Query("limit") limit: Int = 10,
+        @Query("minPrice") minPrice: String? = null,
+        @Query("maxPrice") maxPrice: String? = null,
+        @Query("sort") sort: String? = null
     ): SellerDetailsResponse
 
     @POST("api/farmers/rate-product")

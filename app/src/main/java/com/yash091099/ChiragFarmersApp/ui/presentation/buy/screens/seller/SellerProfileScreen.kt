@@ -17,45 +17,48 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Verified
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.yash091099.ChiragFarmersApp.R
+import com.yash091099.ChiragFarmersApp.data.remote.dto.toDomain
 import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.CommonProductCard
 import com.yash091099.ChiragFarmersApp.ui.presentation.common.data.CommonProductCardData
-import com.yash091099.ChiragFarmersApp.utils.formatAmount
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragTopBar
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost.Route
 import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
 import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
 import com.yash091099.ChiragFarmersApp.ui.theme.TextGray
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.yash091099.ChiragFarmersApp.data.remote.dto.toDomain
-import java.util.Locale
 import com.yash091099.ChiragFarmersApp.utils.ShareUtils
+import com.yash091099.ChiragFarmersApp.utils.formatAmount
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -66,6 +69,9 @@ fun SellerProfileScreen(
 ) {
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
+    var showSortSheet by remember { mutableStateOf(false) }
+    var sellerFilterState by remember { mutableStateOf(SellerFilterState()) }
+    val shareChooserTitle = stringResource(R.string.share_seller_profile)
 
     Scaffold(
         topBar = {
@@ -119,7 +125,8 @@ fun SellerProfileScreen(
                             ) {
                                 // Profile Image
                                 AsyncImage(
-                                    model = sellerData.seller.profileImageUrl ?: sellerImage ?: R.drawable.sell_category_spices,
+                                    model = sellerData.seller.profileImageUrl ?: sellerImage
+                                    ?: R.drawable.sell_category_spices,
                                     contentDescription = stringResource(R.string.seller_image_description),
                                     modifier = Modifier
                                         .size(100.dp)
@@ -156,39 +163,89 @@ fun SellerProfileScreen(
                             horizontalArrangement = Arrangement.SpaceAround
                         ) {
                             StatItem(
-                                value = "${String.format(Locale.getDefault(), "%.1f", sellerData.seller.rating)} ⭐",
-                                label = stringResource(R.string.seller_ratings_label, sellerData.seller.totalRatings.toString())
+                                value = "${
+                                    String.format(
+                                        Locale.getDefault(),
+                                        "%.1f",
+                                        sellerData.seller.rating
+                                    )
+                                } ⭐",
+                                label = stringResource(
+                                    R.string.seller_ratings_label,
+                                    sellerData.seller.totalRatings.toString()
+                                )
                             )
-                            StatItem(label = stringResource(R.string.seller_products_label), value = sellerData.stats.totalListings.toString())
-                            StatItem(label = stringResource(R.string.seller_sold_out_label), value = sellerData.stats.soldOutProducts.toString())
+                            StatItem(
+                                label = stringResource(R.string.seller_products_label),
+                                value = sellerData.stats.totalListings.toString()
+                            )
+                            StatItem(
+                                label = stringResource(R.string.seller_sold_out_label),
+                                value = sellerData.stats.soldOutProducts.toString()
+                            )
                             StatItem(
                                 label = stringResource(R.string.seller_share_label),
                                 icon = R.drawable.ic_share,
                                 onClick = {
                                     val shareLink = ShareUtils.generateShareLink(
-                                        type = "farmer",
-                                        id = sellerData.seller.userId
+                                        type = "farmer", id = sellerData.seller.userId
                                     )
                                     val sendIntent = Intent(Intent.ACTION_SEND).apply {
                                         type = "text/plain"
                                         putExtra(Intent.EXTRA_TEXT, shareLink)
                                     }
-                                    context.startActivity(Intent.createChooser(sendIntent, context.getString(R.string.share_seller_profile)))
-                                }
-                            )
+                                    context.startActivity(
+                                        Intent.createChooser(
+                                            sendIntent,
+                                            shareChooserTitle
+                                        )
+                                    )
+                                })
                         }
 
                         // Products Section
-                        Text(
-                            text = stringResource(R.string.seller_all_products),
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                        )
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 8.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = stringResource(R.string.seller_all_products),
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.clickable {
+                                    showSortSheet = true
+                                }) {
+
+                                Text(
+                                    text = stringResource(R.string.seller_sort_button),
+                                    fontSize = 13.sp
+                                )
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_sort),
+                                    contentDescription = "Sort",
+                                    modifier = Modifier.width(18.dp)
+                                )
+
+                            }
+                        }
 
                         if (sellerData.products.isEmpty()) {
-                            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                                Text(text = stringResource(R.string.seller_no_products), color = TextGray)
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.seller_no_products),
+                                    color = TextGray
+                                )
                             }
                         } else {
                             LazyVerticalGrid(
@@ -209,11 +266,13 @@ fun SellerProfileScreen(
                                             currentPrice = product.effectivePrice.formatAmount(),
                                             originalPrice = product.originalPrice.formatAmount(),
                                             rating = product.rating
-                                        ),
-                                        onClick = {
-                                            navController.navigate(Route.ProductDetails.createRoute(product.productId))
-                                        }
-                                    )
+                                        ), onClick = {
+                                            navController.navigate(
+                                                Route.ProductDetails.createRoute(
+                                                    product.productId
+                                                )
+                                            )
+                                        })
                                 }
                             }
                         }
@@ -222,14 +281,28 @@ fun SellerProfileScreen(
             }
         }
     }
+
+    if (showSortSheet) {
+        SellerFilterBottomSheet(
+            onDismissRequest = { showSortSheet = false },
+            initialState = sellerFilterState,
+            onApplyFilters = { newState ->
+                sellerFilterState = newState
+                viewModel.applyFilter(newState)
+            })
+    }
 }
 
 @Composable
-fun StatItem(label: String, value: String? = null, icon: Int? = null, onClick: (() -> Unit)? = null) {
+fun StatItem(
+    label: String,
+    value: String? = null,
+    icon: Int? = null,
+    onClick: (() -> Unit)? = null
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = if (onClick != null) Modifier.clickable { onClick() } else Modifier
-    ) {
+        modifier = if (onClick != null) Modifier.clickable { onClick() } else Modifier) {
         if (icon != null) {
             Icon(
                 painter = painterResource(id = icon),

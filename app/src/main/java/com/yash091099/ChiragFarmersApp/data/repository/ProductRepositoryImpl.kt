@@ -310,7 +310,10 @@ class ProductRepositoryImpl @Inject constructor(
     override suspend fun getSellerDetails(
         sellerId: String,
         page: Int,
-        limit: Int
+        limit: Int,
+        minPrice: String?,
+        maxPrice: String?,
+        sort: String?
     ): Result<SellerDetailsData> {
         return try {
             val token = chiragDataStore.getAuthToken().first()
@@ -318,7 +321,7 @@ class ProductRepositoryImpl @Inject constructor(
                 return Result.failure(Exception("Authentication token not found"))
             }
 
-            val response = apiService.getSellerDetails("Bearer $token", sellerId, page, limit)
+            val response = apiService.getSellerDetails("Bearer $token", sellerId, page, limit, minPrice, maxPrice, sort)
             if (response.success && response.data != null) {
                 Result.success(response.data)
             } else {

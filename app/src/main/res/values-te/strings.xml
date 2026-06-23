@@ -174,6 +174,16 @@
     <string name="seller_all_products">అన్ని ఉత్పత్తులు</string>
     <string name="seller_no_products">ఉత్పత్తులు ఏవీ కనుగొనబడలేదు</string>
     <string name="seller_share_description">షేర్</string>
+    <string name="seller_sort_filter_title">క్రమబద్ధీకరించు &amp; ఫిల్టర్</string>
+    <string name="seller_budget_range">బడ్జెట్ పరిధి</string>
+    <string name="seller_min_price">కనిష్టం</string>
+    <string name="seller_max_price">గరిష్టం</string>
+    <string name="seller_sort_by">దీని ప్రకారం క్రమబద్ధీకరించు</string>
+    <string name="seller_sort_latest_to_earliest">తాజా నుండి పాతది</string>
+    <string name="seller_sort_earliest_to_latest">పాత నుండి తాజా</string>
+    <string name="seller_reset_filters">ఫిల్టర్‌లను రీసెట్ చేయండి</string>
+    <string name="seller_apply_filter">ఫిల్టర్ వర్తించు</string>
+    <string name="seller_sort_button">క్రమబద్ధీకరించు</string>
 
     <!-- Cart -->
     <string name="cart_error_loading">కార్ట్ లోడ్ చేయడంలో లోపం</string>

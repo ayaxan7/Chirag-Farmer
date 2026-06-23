@@ -185,6 +185,16 @@
     <string name="seller_all_products">ਸਾਰੇ ਉਤਪਾਦ</string>
     <string name="seller_no_products">ਕੋਈ ਉਤਪਾਦ ਨਹੀਂ ਮਿਲਿਆ</string>
     <string name="seller_share_description">ਸਾਂਝਾ ਕਰੋ</string>
+    <string name="seller_sort_filter_title">ਛਾਂਟੋ ਅਤੇ ਫਿਲਟਰ ਕਰੋ</string>
+    <string name="seller_budget_range">ਬਜਟ ਰੇਂਜ</string>
+    <string name="seller_min_price">ਘੱਟੋ-ਘੱਟ</string>
+    <string name="seller_max_price">ਵੱਧ ਤੋਂ ਵੱਧ</string>
+    <string name="seller_sort_by">ਇਸ ਅਨੁਸਾਰ ਛਾਂਟੋ</string>
+    <string name="seller_sort_latest_to_earliest">ਨਵੀਨਤਮ ਤੋਂ ਪੁਰਾਣਾ</string>
+    <string name="seller_sort_earliest_to_latest">ਪੁਰਾਣਾ ਤੋਂ ਨਵੀਨਤਮ</string>
+    <string name="seller_reset_filters">ਫਿਲਟਰ ਰੀਸੈਟ ਕਰੋ</string>
+    <string name="seller_apply_filter">ਫਿਲਟਰ ਲਾਗੂ ਕਰੋ</string>
+    <string name="seller_sort_button">ਛਾਂਟੋ</string>
 
     <!-- Cart -->
     <string name="cart_error_loading">ਕਾਰਟ ਲੋਡ ਕਰਨ ਵਿੱਚ ਗੜਬੜ</string>

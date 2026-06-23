@@ -173,6 +173,16 @@
     <string name="seller_all_products">सभी उत्पाद</string>
     <string name="seller_no_products">कोई उत्पाद नहीं मिला</string>
     <string name="seller_share_description">शेयर करें</string>
+    <string name="seller_sort_filter_title">सॉर्ट और फ़िल्टर</string>
+    <string name="seller_budget_range">बजट रेंज</string>
+    <string name="seller_min_price">न्यूनतम</string>
+    <string name="seller_max_price">अधिकतम</string>
+    <string name="seller_sort_by">इसके अनुसार क्रमबद्ध करें</string>
+    <string name="seller_sort_latest_to_earliest">नवीनतम से पुरानतम</string>
+    <string name="seller_sort_earliest_to_latest">पुरानतम से नवीनतम</string>
+    <string name="seller_reset_filters">फ़िल्टर रीसेट करें</string>
+    <string name="seller_apply_filter">फ़िल्टर लागू करें</string>
+    <string name="seller_sort_button">सॉर्ट</string>
 
     <!-- Cart -->
     <string name="cart_error_loading">कार्ट लोड करने में त्रुटि</string>

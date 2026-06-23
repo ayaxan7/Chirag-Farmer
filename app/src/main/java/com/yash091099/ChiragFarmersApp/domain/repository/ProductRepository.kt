@@ -31,6 +31,6 @@ interface ProductRepository {
     suspend fun toggleSoldOut(productId: String): Result<Boolean>
     suspend fun deleteProduct(productId: String): Result<Unit>
     suspend fun searchProducts(query: String): Result<List<SearchProductItem>>
-    suspend fun getSellerDetails(sellerId: String, page: Int = 1, limit: Int = 10): Result<SellerDetailsData>
+    suspend fun getSellerDetails(sellerId: String, page: Int = 1, limit: Int = 10, minPrice: String? = null, maxPrice: String? = null, sort: String? = null): Result<SellerDetailsData>
     suspend fun rateProduct(request: RateProductRequest): Result<RateProductResponse>
 }
