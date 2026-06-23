@@ -39,73 +39,115 @@ The application follows **Clean Architecture** with three distinct layers, enfor
 
 ```mermaid
 graph TB
-    subgraph "UI Layer (Presentation)"
-        C[Compose Screens<br/>Composables]
-        VM[ViewModels<br/>@HiltViewModel]
-        NA[Navigation<br/>NavHost + Route Sealed Class]
+
+    subgraph UI["UI Layer (Presentation)"]
+        C["Compose Screens\nComposables"]
+        VM["ViewModels\nHiltViewModel"]
+        NA["Navigation\nNavHost + Route Sealed Class"]
     end
 
-    subgraph "Domain Layer (Business Logic)"
-        UC[Use Cases<br/>32 Use Cases]
-        DI[Domain Interfaces<br/>Repository Contracts]
-        DM[Domain Models<br/>Product, Order, Location]
+    subgraph DOMAIN["Domain Layer (Business Logic)"]
+        UC["Use Cases\n32 Use Cases"]
+        DI["Repository Interfaces"]
+        DM["Domain Models\nProduct\nOrder\nLocation"]
     end
 
-    subgraph "Data Layer (Implementation)"
-        RI[Repository Implementations<br/>8 Repositories]
-        RD[Remote Data Sources<br/>8 Retrofit ApiServices]
-        LD[Local Data Sources<br/>DataStore + Room]
-        PG[Paging 3 Sources<br/>4 PagingSource]
+    subgraph DATA["Data Layer (Implementation)"]
+        RI["Repository Implementations\n8 Repositories"]
+        RD["Remote Data Sources\n8 Retrofit ApiServices"]
+        LD["Local Data Sources\nDataStore + Room"]
+        PG["Paging 3 Sources\n4 PagingSource"]
     end
 
-    subgraph "DI Layer (Hilt)"
-        HILT[Hilt Modules<br/>NetworkModule, ApiModule,<br/>RepositoryModule, DataStoreModule,<br/>FirebaseModule, BookingModule, LocationModule]
+    subgraph HILT_LAYER["Dependency Injection (Hilt)"]
+        HILT["Hilt Modules
+
+NetworkModule
+ApiModule
+RepositoryModule
+DataStoreModule
+FirebaseModule
+BookingModule
+LocationModule"]
     end
 
-    subgraph "External Services"
-        API["🌐 Backend API<br/>backend.chiragvendor.com"]
-        FCM["🔥 Firebase<br/>Cloud Messaging"]
-        PH["💳 PhonePe<br/>Payment Gateway"]
-        CLD["☁️ Cloudinary<br/>Image Hosting"]
-        OSM["🗺 OpenStreetMap<br/>Nominatim"]
-        MSG["📱 MSG91<br/>OTP Service"]
-        SNT["📊 Sentry<br/>Error Monitoring"]
-        CRL["🛡 Firebase<br/>Crashlytics"]
+    subgraph SERVICES["External Services"]
+        API["Backend API
+backend.chiragvendor.com"]
+
+        FCM["Firebase Cloud Messaging"]
+
+        PH["PhonePe
+Payment Gateway"]
+
+        CLD["Cloudinary
+Image Hosting"]
+
+        OSM["OpenStreetMap
+Nominatim"]
+
+        MSG["MSG91
+OTP Service"]
+
+        SNT["Sentry
+Error Monitoring"]
+
+        CRL["Firebase
+Crashlytics"]
     end
 
+    subgraph CLOUD["Cloud Infrastructure"]
+        BE["Backend Services"]
+        DB[(MongoDB)]
+        AI["AI / ML Engine
+Crop Analysis
+Chat"]
+    end
+
+    APP["App Preferences"]
+
+    %% Clean Architecture Flow
     C --> VM
     VM --> UC
     UC --> DI
     DI --> RI
+
+    %% Data Layer
     RI --> RD
     RI --> LD
     RI --> PG
-    HILT --- VM
-    HILT --- RI
-    HILT --- RD
+
+    %% Dependency Injection
+    HILT -.-> VM
+    HILT -.-> RI
+    HILT -.-> RD
+
+    %% External Services
     RD --> API
     RD --> OSM
     RI --> PH
 
-    LD -->|DataStore| APP[App Preferences]
-    PG -->|Paging| API
+    LD --> APP
+    PG --> API
 
-    subgraph "Cloud Infrastructure"
-        API -->|"Node.js/Express"| BE[Backend Services]
-        BE --> DB[(MongoDB)]
-        BE --> AI["🧠 AI ML Engine<br/>Crop Analysis + Chat"]
-    end
+    %% Backend
+    API -->|Node.js / Express| BE
+    BE --> DB
+    BE --> AI
 
-    CLD --- API
-    MSG --- API
+    %% Supporting Services
+    CLD -.-> API
+    MSG -.-> API
     FCM --> SNT
     FCM --> CRL
 
-    style C fill:#6200EE,color:#fff,stroke:#333,stroke-width:2px
-    style UC fill:#FF6F00,color:#fff,stroke:#333,stroke-width:2px
-    style API fill:#1565C0,color:#fff,stroke:#333,stroke-width:2px
-    style HILT fill:#2E7D32,color:#fff,stroke:#333,stroke-width:2px
-    style RI fill:#C62828,color:#fff,stroke:#333,stroke-width:2px
+    %% Styles
+    style C fill:#6200EE,color:#ffffff,stroke:#333333,stroke-width:2px
+    style VM fill:#6200EE,color:#ffffff,stroke:#333333,stroke-width:2px
+    style UC fill:#FF6F00,color:#ffffff,stroke:#333333,stroke-width:2px
+    style RI fill:#C62828,color:#ffffff,stroke:#333333,stroke-width:2px
+    style API fill:#1565C0,color:#ffffff,stroke:#333333,stroke-width:2px
+    style HILT fill:#2E7D32,color:#ffffff,stroke:#333333,stroke-width:2px
 ```
 
 ### Dependency Flow
