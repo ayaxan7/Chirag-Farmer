@@ -55,7 +55,8 @@ android {
 
         release {
             buildConfigField("String", "BASE_URL", "\"https://backend.chiragvendor.com/\"")
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

@@ -4,15 +4,22 @@ import com.yash091099.ChiragFarmersApp.domain.model.Product
 import com.google.gson.annotations.SerializedName
 
 data class ProductResponseDto(
+    @SerializedName("success")
     val success: Boolean,
+    @SerializedName("message")
     val message: String,
+    @SerializedName("data")
     val data: ProductsDataDto
 )
 
 data class ProductsDataDto(
+    @SerializedName("page")
     val page: Int,
+    @SerializedName("limit")
     val limit: Int,
+    @SerializedName("total")
     val total: Int,
+    @SerializedName("products")
     val products: List<ProductDto>
 )
 

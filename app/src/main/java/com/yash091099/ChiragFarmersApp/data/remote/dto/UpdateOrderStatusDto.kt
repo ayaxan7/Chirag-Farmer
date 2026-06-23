@@ -10,7 +10,10 @@ data class UpdateOrderStatusRequest(
 )
 
 data class UpdateOrderStatusResponse(
+    @SerializedName("success")
     val success: Boolean,
+    @SerializedName("message")
     val message: String,
+    @SerializedName("data")
     val data: OrderTrackingData?
 )
