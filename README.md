@@ -809,9 +809,3 @@ We follow [Conventional Commits](https://www.conventionalcommits.org/):
 
 ---
 
-<p align="center">
-  <i>Built with 🌾 for the farming community</i><br/>
-  <a href="https://backend.chiragvendor.com/">Backend</a> ·
-  <a href="https://sentry.io/">Sentry</a> ·
-  <a href="https://console.firebase.google.com/">Firebase</a>
-</p>
