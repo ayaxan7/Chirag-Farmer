@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,6 +31,7 @@ class AuthViewModel @Inject constructor(
 
             result.fold(
                 onSuccess = { response ->
+                    Timber.d("sendOTP response: success=%b, data=%s, message=%s", response.success, response.data, response.message)
                     if (response.success && response.data != null) {
                         _uiState.value = LoginUiState.Success(
                             requestId = response.data.requestId,
@@ -41,6 +43,7 @@ class AuthViewModel @Inject constructor(
                     }
                 },
                 onFailure = { exception ->
+                    Timber.e(exception, "sendOTP failed")
                     _uiState.value = LoginUiState.Error(
                         exception.message ?: "Network error occurred"
                     )
