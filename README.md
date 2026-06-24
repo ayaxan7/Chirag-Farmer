@@ -33,6 +33,12 @@ Added PhonePe payments because UPI is huge in India, Cloudinary for image handli
 
 Kotlin, Jetpack Compose, Material 3, Clean Architecture, Hilt DI, Retrofit2, Room, DataStore, Paging 3, Coil, Firebase (FCM + Crashlytics), Sentry, PhonePe SDK, Cloudinary, OpenStreetMap, Hashids.
 
+## AI Disclosure
+
+I did use AI while working on this project. For the README, I was initially using OpenCode to help write and organize it and also generate the flowcharts and architecture diagrams but after the previous review I wrote this README on my own. I also used AI to create some of the static images and banners used inside the app and some images in my journals.
+
+For the actual app development I used ChatGPT and Claude mainly to help me understand things, debug errors, explain Android/Compose concepts and sometimes generate boilerplate or suggest code when I got stuck. I still had to integrate everything myself make changes to the generated code test it fix issues and get the app working before publishing it.
+
 ## Screenshots
 
 <p align="center">
