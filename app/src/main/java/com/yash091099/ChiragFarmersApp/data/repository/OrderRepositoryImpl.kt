@@ -33,9 +33,9 @@ class OrderRepositoryImpl @Inject constructor(
 ) : OrderRepository {
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override fun getActiveOrdersPaged(): Flow<PagingData<Order>> {
+    override fun getActiveOrdersPaged(status: String?): Flow<PagingData<Order>> {
         return chiragDataStore.getAuthToken().flatMapLatest { token ->
-            Timber.tag("ActiveOrders").d("getActiveOrdersPaged tokenPresent=%s", token.isNullOrBlank().not())
+            Timber.tag("ActiveOrders").d("getActiveOrdersPaged tokenPresent=%s status=%s", token.isNullOrBlank().not(), status)
             Pager(
                 config = PagingConfig(
                     pageSize = 10,
@@ -43,7 +43,7 @@ class OrderRepositoryImpl @Inject constructor(
                     prefetchDistance = 1,
                     enablePlaceholders = false
                 ), pagingSourceFactory = {
-                    ActiveOrdersPagingSource(apiService = api, token = token.orEmpty())
+                    ActiveOrdersPagingSource(apiService = api, token = token.orEmpty(), status = status)
                 }
             ).flow
         }

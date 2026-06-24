@@ -9,8 +9,8 @@ import javax.inject.Inject
 class GetActiveOrdersUseCase @Inject constructor(
     private val orderRepository: OrderRepository
 ) {
-    operator fun invoke(): Flow<PagingData<Order>> {
-        return orderRepository.getActiveOrdersPaged()
+    operator fun invoke(status: String? = null): Flow<PagingData<Order>> {
+        return orderRepository.getActiveOrdersPaged(status)
     }
 }
 

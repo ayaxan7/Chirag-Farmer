@@ -316,6 +316,11 @@
     <string name="active_orders_cancel_confirm_message">మీరు ఖచ్చితంగా ఈ ఆర్డర్ రద్దు చేయాలనుకుంటున్నారా?</string>
     <string name="active_orders_cancel_confirm">ఆర్డర్ రద్దు చేయండి</string>
     <string name="active_orders_keep_order">ఆర్డర్ ఉంచండి</string>
+    <string name="active_orders_filter_all">అన్ని ఆర్డర్లు</string>
+    <string name="active_orders_filter_packed">ప్యాక్ చేయబడింది</string>
+    <string name="active_orders_filter_shipped">రవాణా చేయబడింది</string>
+    <string name="active_orders_filter_out_for_delivery">డెలివరీ కోసం బయలుదేరింది</string>
+    <string name="active_orders_total_format">మొత్తం : %d ఆర్డర్లు</string>
     <string name="product_mark_as_sold">అమ్మినదిగా గుర్తించండి</string>
     <string name="product_marked_as_sold">అమ్మినదిగా గుర్తించబడింది</string>
     <!-- Reviews -->

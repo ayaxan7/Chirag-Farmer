@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface OrderRepository {
     suspend fun getActiveOrders(page: Int, limit: Int): Result<OrdersData>
-    fun getActiveOrdersPaged(): Flow<PagingData<Order>>
+    fun getActiveOrdersPaged(status: String? = null): Flow<PagingData<Order>>
     suspend fun placeOrder(request: PlaceOrderRequest): Result<PlaceOrderResponse>
     suspend fun getOrderTracking(id: String): Result<OrderTrackingDto>
     suspend fun updateOrderStatus(id: String, request: UpdateOrderStatusRequest): Result<UpdateOrderStatusResponse>

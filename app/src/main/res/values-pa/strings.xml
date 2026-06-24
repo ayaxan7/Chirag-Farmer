@@ -327,6 +327,11 @@
     <string name="active_orders_cancel_confirm_message">ਕੀ ਤੁਸੀਂ ਪੱਕਾ ਇਹ ਆਰਡਰ ਰੱਦ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ?</string>
     <string name="active_orders_cancel_confirm">ਆਰਡਰ ਰੱਦ ਕਰੋ</string>
     <string name="active_orders_keep_order">ਆਰਡਰ ਰੱਖੋ</string>
+    <string name="active_orders_filter_all">ਸਾਰੇ ਆਰਡਰ</string>
+    <string name="active_orders_filter_packed">ਪੈਕ ਕੀਤਾ</string>
+    <string name="active_orders_filter_shipped">ਭੇਜ ਦਿੱਤਾ</string>
+    <string name="active_orders_filter_out_for_delivery">ਡਿਲੀਵਰੀ ਲਈ ਨਿਕਲਿਆ</string>
+    <string name="active_orders_total_format">ਕੁੱਲ : %d ਆਰਡਰ</string>
 
     <!-- Reviews -->
     <string name="review_title">ਸਮੀਖਿਆ ਦਿਓ</string>

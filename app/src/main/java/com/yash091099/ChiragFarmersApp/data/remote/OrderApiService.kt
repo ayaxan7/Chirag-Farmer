@@ -23,7 +23,8 @@ interface OrderApiService {
     suspend fun getActiveOrders(
     @Header("Authorization") token: String,
     @Query("page") page: Int,
-    @Query("limit") limit: Int
+    @Query("limit") limit: Int,
+    @Query("status") status: String? = null
     ): ActiveOrdersResponse
     @POST("api/farmers/orders/")
     suspend fun placeOrder(

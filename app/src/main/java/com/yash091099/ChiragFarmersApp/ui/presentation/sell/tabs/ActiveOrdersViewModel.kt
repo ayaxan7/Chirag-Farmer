@@ -12,10 +12,12 @@ import androidx.paging.cachedIn
 import com.yash091099.ChiragFarmersApp.domain.model.Order
 import com.yash091099.ChiragFarmersApp.domain.usecase.UpdateOrderStatusUseCase
 import com.yash091099.ChiragFarmersApp.data.remote.dto.CancelOrderRequest
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import android.content.Context
@@ -40,15 +42,13 @@ sealed class CancelOrderState {
 @HiltViewModel
 class ActiveOrdersViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    getActiveOrdersUseCase: GetActiveOrdersUseCase,
+    private val getActiveOrdersUseCase: GetActiveOrdersUseCase,
     private val getOrderTrackingUseCase: GetOrderTrackingUseCase,
     private val updateOrderStatusUseCase: UpdateOrderStatusUseCase,
     private val repository: com.yash091099.ChiragFarmersApp.domain.repository.OrderRepository
 ) : ViewModel() {
 
-    private val activeOrdersFlow: Flow<PagingData<Order>> = getActiveOrdersUseCase().cachedIn(viewModelScope).also {
-        Timber.tag("ActiveOrdersVM").d("created device=%s SDK=%s", Build.MODEL, Build.VERSION.SDK_INT)
-    }
+    private val _selectedStatus = MutableStateFlow<String?>(null)
 
     private val _orderTrackingState = MutableStateFlow<OrderTrackingState>(OrderTrackingState.Idle)
     val orderTrackingState: StateFlow<OrderTrackingState> = _orderTrackingState.asStateFlow()
@@ -56,8 +56,15 @@ class ActiveOrdersViewModel @Inject constructor(
     private val _cancelOrderState = MutableStateFlow<CancelOrderState>(CancelOrderState.Idle)
     val cancelOrderState: StateFlow<CancelOrderState> = _cancelOrderState.asStateFlow()
 
-    val activeOrders: Flow<PagingData<Order>>
-        get() = activeOrdersFlow
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val activeOrders: Flow<PagingData<Order>> = _selectedStatus.flatMapLatest { status ->
+        Timber.tag("ActiveOrdersVM").d("fetching orders status=%s", status)
+        getActiveOrdersUseCase(status)
+    }.cachedIn(viewModelScope)
+
+    fun setFilterStatus(status: String?) {
+        _selectedStatus.value = status
+    }
 
     fun selectOrder(orderId: String?) {
         Timber.tag("ActiveOrdersVM").d("selectOrder orderId=%s", orderId)

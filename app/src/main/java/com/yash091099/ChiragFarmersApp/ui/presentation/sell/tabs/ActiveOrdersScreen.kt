@@ -31,11 +31,16 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.foundation.clickable
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -43,7 +48,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -59,6 +66,7 @@ import coil.compose.AsyncImage
 import com.yash091099.ChiragFarmersApp.domain.model.Order
 import timber.log.Timber
 import com.yash091099.ChiragFarmersApp.R
+import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.CategoryHeader
 import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.ChiragButton
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.screens.orderstatus.OrderSummaryCard
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.screens.orderstatus.ProgressTimeline
@@ -68,6 +76,8 @@ import com.yash091099.ChiragFarmersApp.ui.theme.BorderColour
 import com.yash091099.ChiragFarmersApp.ui.theme.ErrorRed
 import com.yash091099.ChiragFarmersApp.ui.theme.LightGray
 import com.yash091099.ChiragFarmersApp.ui.theme.TextGray
+
+private data class FilterOption(val labelRes: Int, val apiValue: String?)
 
 @Composable
 fun ActiveOrdersScreen(
@@ -157,12 +167,81 @@ fun ActiveOrdersScreen(
 fun ActiveOrdersContent(
     orders: LazyPagingItems<Order>,
     navController: NavHostController,
-    onOrderClick: (String?) -> Unit
+    onOrderClick: (String?) -> Unit,
+    viewModel: ActiveOrdersViewModel = hiltViewModel()
 ) {
+    var expanded by remember { mutableStateOf(false) }
+
+    val filterOptions = remember {
+        listOf(
+            FilterOption(R.string.active_orders_filter_all, null),
+            FilterOption(R.string.active_orders_filter_packed, "packed"),
+            FilterOption(R.string.active_orders_filter_shipped, "shipped"),
+            FilterOption(R.string.active_orders_filter_out_for_delivery, "out_for_delivery"),
+        )
+    }
+
+    var selectedFilterIndex by remember { mutableIntStateOf(0) }
+    val selectedFilterLabel = stringResource(filterOptions[selectedFilterIndex].labelRes)
+
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        // Scrollable Content
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 12.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(R.string.active_orders_total_format, orders.itemCount),
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Bold,
+                color = BGBlack
+            )
+
+            Box {
+                Row(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(BGBlack)
+                        .clickable { expanded = true }
+                        .padding(horizontal = 12.dp, vertical = 2.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = selectedFilterLabel,
+                        color = BGWhite,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Icon(
+                        painter = painterResource(R.drawable.ic_down_arrow),
+                        contentDescription = "Down Arrow",
+                        tint = BGWhite
+                    )
+                }
+
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    filterOptions.forEachIndexed { index, option ->
+                        DropdownMenuItem(
+                            text = { Text(stringResource(option.labelRes)) },
+                            onClick = {
+                                selectedFilterIndex = index
+                                viewModel.setFilterStatus(option.apiValue)
+                                expanded = false
+                            }
+                        )
+                    }
+                }
+            }
+        }
+
         Box(
             modifier = Modifier.weight(1f)
         ) {
@@ -223,9 +302,9 @@ fun ActiveOrdersContent(
 
                 else -> {
                     LazyColumn(
-                        modifier = Modifier.fillMaxSize(), contentPadding = PaddingValues(
-                            top = 16.dp, bottom = 16.dp
-                        ), verticalArrangement = Arrangement.spacedBy(16.dp)
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(bottom = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         items(
                             count = orders.itemCount, key = { index ->
@@ -233,9 +312,18 @@ fun ActiveOrdersContent(
                             }) { index ->
 
                             orders[index]?.let { order ->
-                                Timber.tag("ActiveOrdersUI").d("order[%s] orderObjectId=%s orderId=%s product=%s buyer=%s amount=%s status=%s", index, order.orderObjectId, order.orderId, order.productName, order.buyerName, order.amountPaid, order.status)
+                                Timber.tag("ActiveOrdersUI").d(
+                                    "order[%s] orderObjectId=%s orderId=%s product=%s buyer=%s amount=%s status=%s",
+                                    index,
+                                    order.orderObjectId,
+                                    order.orderId,
+                                    order.productName,
+                                    order.buyerName,
+                                    order.amountPaid,
+                                    order.status
+                                )
                                 OrderCard(
-                                   order= order, onOrderClick = onOrderClick
+                                    order = order, onOrderClick = onOrderClick
                                 )
                             }
                         }
@@ -274,11 +362,15 @@ fun ActiveOrdersContent(
                                                 containerColor = BGBlack
                                             )
                                         ) {
-                                            Text(stringResource(R.string.active_orders_retry), color = BGWhite)
+                                            Text(
+                                                stringResource(R.string.active_orders_retry),
+                                                color = BGWhite
+                                            )
                                         }
                                     }
                                 }
                             }
+
                             else -> Unit
                         }
                     }

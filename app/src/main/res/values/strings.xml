@@ -314,6 +314,11 @@
     <string name="active_orders_cancel_confirm_message">Are you sure you want to cancel this order?</string>
     <string name="active_orders_cancel_confirm">Cancel Order</string>
     <string name="active_orders_keep_order">Keep Order</string>
+    <string name="active_orders_filter_all">All orders</string>
+    <string name="active_orders_filter_packed">Packed</string>
+    <string name="active_orders_filter_shipped">Shipped</string>
+    <string name="active_orders_filter_out_for_delivery">Out for Delivery</string>
+    <string name="active_orders_total_format">Total : %d orders</string>
 
     <!-- Reviews -->
     <string name="review_title">Drop Review</string>

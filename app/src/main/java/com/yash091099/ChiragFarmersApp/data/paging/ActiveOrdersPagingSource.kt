@@ -11,7 +11,8 @@ import timber.log.Timber
 
 class ActiveOrdersPagingSource(
     private val apiService: OrderApiService,
-    private val token: String
+    private val token: String,
+    private val status: String? = null
 ) : PagingSource<Int, Order>() {
 
     override fun getRefreshKey(state: PagingState<Int, Order>): Int? {
@@ -37,7 +38,8 @@ class ActiveOrdersPagingSource(
             val response = apiService.getActiveOrders(
                 token = "Bearer $token",
                 page = page,
-                limit = params.loadSize
+                limit = params.loadSize,
+                status = status
             )
 
             Timber.tag("ActiveOrders").d("API response success=%s message=%s | full=%s", response.success, response.message, response)

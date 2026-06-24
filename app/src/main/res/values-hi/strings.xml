@@ -315,6 +315,11 @@
     <string name="active_orders_cancel_confirm_message">क्या आप वाकई यह ऑर्डर रद्द करना चाहते हैं?</string>
     <string name="active_orders_cancel_confirm">ऑर्डर रद्द करें</string>
     <string name="active_orders_keep_order">ऑर्डर रखें</string>
+    <string name="active_orders_filter_all">सभी ऑर्डर</string>
+    <string name="active_orders_filter_packed">पैक किया हुआ</string>
+    <string name="active_orders_filter_shipped">भेज दिया गया</string>
+    <string name="active_orders_filter_out_for_delivery">डिलीवरी के लिए निकला</string>
+    <string name="active_orders_total_format">कुल : %d ऑर्डर</string>
     <string name="product_mark_as_sold">बेचा गया चिह्नित करें</string>
     <string name="product_marked_as_sold">बेचा गया चिह्नित</string>
     <!-- Reviews -->
