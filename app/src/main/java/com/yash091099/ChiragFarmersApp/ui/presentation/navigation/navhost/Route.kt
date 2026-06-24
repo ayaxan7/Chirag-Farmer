@@ -16,14 +16,15 @@ sealed class Route(val path: String) {
     object Register: Route("register")
     object RegisterSuccess: Route("register_success")
     object Search:Route("search")
-    object BuyCategory : Route("buy_category/{categoryName}?bannerImageResId={bannerImageResId}") {
-        fun createRoute(categoryName: String, bannerImageResId: Int? = null): String {
+    object BuyCategory : Route("buy_category/{categoryName}?bannerImageResId={bannerImageResId}&isPopularProducts={isPopularProducts}") {
+        fun createRoute(categoryName: String, bannerImageResId: Int? = null, isPopularProducts: Boolean = false): String {
             val params = Uri.encode(categoryName)
-            return if (bannerImageResId != null) {
-                "buy_category/$params?bannerImageResId=$bannerImageResId"
-            } else {
-                "buy_category/$params"
+            val base = "buy_category/$params"
+            val queryParams = buildList {
+                bannerImageResId?.let { add("bannerImageResId=$it") }
+                if (isPopularProducts) add("isPopularProducts=true")
             }
+            return if (queryParams.isEmpty()) base else "$base?${queryParams.joinToString("&")}"
         }
     }
     object AddressMap: Route("address_map")

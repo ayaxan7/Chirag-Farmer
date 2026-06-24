@@ -143,6 +143,7 @@
     <string name="categories_loading">ਉਤਪਾਦ ਲੋਡ ਹੋ ਰਹੇ ਹਨ…</string>
     <string name="categories_no_products">ਕੋਈ ਉਤਪਾਦ ਨਹੀਂ ਮਿਲਿਆ</string>
     <string name="categories_loading_more">ਹੋਰ ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ…</string>
+    <string name="categories_filter">ਫਿਲਟਰ</string>
 
     <!-- Product Details -->
     <string name="product_added_to_cart">ਉਤਪਾਦ ਕਾਰਟ ਵਿੱਚ ਸ਼ਾਮਲ ਕੀਤਾ ਗਿਆ!</string>

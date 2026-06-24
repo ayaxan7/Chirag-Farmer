@@ -283,7 +283,7 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
                                 category = stringResource(R.string.buy_popular_products),
                                 btnText = stringResource(R.string.home_view_all),
                                 onClick = {
-                                    navController.navigate(Route.BuyCategory.createRoute("Popular Products"))
+                                    navController.navigate(Route.BuyCategory.createRoute("Popular Products", isPopularProducts = true))
                                 })
                         }
                         items(validRandomProducts) { product ->

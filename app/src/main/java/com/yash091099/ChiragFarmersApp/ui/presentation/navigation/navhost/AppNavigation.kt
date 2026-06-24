@@ -161,15 +161,22 @@ fun AppNavigation(
                 navArgument("bannerImageResId") {
                     type = NavType.IntType
                     defaultValue = R.drawable.buy_banner
+                },
+                navArgument("isPopularProducts") {
+                    type = NavType.BoolType
+                    defaultValue = false
                 })
         ) { backStackEntry ->
             val categoryName = Uri.decode(backStackEntry.arguments?.getString("categoryName") ?: "")
             val bannerImageResId =
                 backStackEntry.arguments?.getInt("bannerImageResId") ?: R.drawable.buy_banner
+            val isPopularProducts =
+                backStackEntry.arguments?.getBoolean("isPopularProducts") ?: false
             CategoriesScreen(
                 navController = navController,
                 categoryName = categoryName,
-                bannerImageRes = bannerImageResId
+                bannerImageRes = bannerImageResId,
+                isPopularProducts = isPopularProducts
             )
         }
         composable(Route.AssistImage.path) {

@@ -67,6 +67,7 @@ fun CategoriesScreen(
     navController: NavHostController,
     categoryName: String = "",
     bannerImageRes: Int = R.drawable.buy_banner,
+    isPopularProducts: Boolean = false,
     viewModel: BuyCategoriesViewModel = hiltViewModel()
 ) {
 
@@ -104,7 +105,12 @@ fun CategoriesScreen(
     Scaffold(
         modifier = modifier, containerColor = BGWhite, topBar = {
             ChiragTopBar(
-                navController = navController, title = categoryTitle, icon = R.drawable.ic_arrow
+                navController = navController,
+                title = categoryTitle,
+                icon = R.drawable.ic_arrow,
+                buttonIcon = if (isPopularProducts) Icons.Default.FilterList else null,
+                buttonText = if (isPopularProducts) stringResource(R.string.categories_filter) else null,
+                onButtonClick = { if (isPopularProducts) showFilterSheet = true }
             )
         }) { paddingValues ->
 
@@ -120,71 +126,75 @@ fun CategoriesScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
 
-            item(span = { GridItemSpan(maxLineSpan) }) {
-                Image(
-                    painter = painterResource(id = bannerImageRes),
-                    contentDescription = stringResource(R.string.categories_banner_description),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(140.dp)
-                        .clip(RoundedCornerShape(12.dp)),
-                    contentScale = ContentScale.Crop
-                )
-            }
-
-            item(span = { GridItemSpan(maxLineSpan) }) {
-                Text(
-                    text = stringResource(R.string.categories_title), fontSize = 16.sp, fontWeight = FontWeight.W600
-                )
-            }
-
-            item(span = { GridItemSpan(maxLineSpan) }) {
-                LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    items(allCategories) { category ->
-                        CategoryItem(
-                            category = category,
-                            selected = selectedCategoryId == category.id,
-                            onClick = {
-                                selectedCategoryId =
-                                    if (selectedCategoryId == category.id) 0 else category.id
-                                viewModel.onCategoryChipSelected(
-                                    allCategories.find { it.id == selectedCategoryId }?.apiValue
-                                )
-                            })
-                    }
+            if (!isPopularProducts) {
+                item(span = { GridItemSpan(maxLineSpan) }) {
+                    Image(
+                        painter = painterResource(id = bannerImageRes),
+                        contentDescription = stringResource(R.string.categories_banner_description),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(140.dp)
+                            .clip(RoundedCornerShape(12.dp)),
+                        contentScale = ContentScale.Crop
+                    )
                 }
             }
 
-
-            item(span = { GridItemSpan(maxLineSpan) }) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+            if (!isPopularProducts) {
+                item(span = { GridItemSpan(maxLineSpan) }) {
                     Text(
-                        text = categoryDisplayText,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.W600
+                        text = stringResource(R.string.categories_title), fontSize = 16.sp, fontWeight = FontWeight.W600
                     )
+                }
 
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.clickable {
-                            showFilterSheet = true
-                        }
+                item(span = { GridItemSpan(maxLineSpan) }) {
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_filter),
-                            contentDescription = "Filter",
-                            modifier = Modifier.width(18.dp)
-                        )
-                        Spacer(modifier = Modifier.width(6.dp))
+                        items(allCategories) { category ->
+                            CategoryItem(
+                                category = category,
+                                selected = selectedCategoryId == category.id,
+                                onClick = {
+                                    selectedCategoryId =
+                                        if (selectedCategoryId == category.id) 0 else category.id
+                                    viewModel.onCategoryChipSelected(
+                                        allCategories.find { it.id == selectedCategoryId }?.apiValue
+                                    )
+                                })
+                        }
+                    }
+                }
+
+
+                item(span = { GridItemSpan(maxLineSpan) }) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         Text(
-                            text = "Filter", fontSize = 13.sp
+                            text = categoryDisplayText,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.W600
                         )
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.clickable {
+                                showFilterSheet = true
+                            }
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_filter),
+                                contentDescription = "Filter",
+                                modifier = Modifier.width(18.dp)
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                        Text(
+                            text = stringResource(R.string.categories_filter), fontSize = 13.sp
+                        )
+                        }
                     }
                 }
             }

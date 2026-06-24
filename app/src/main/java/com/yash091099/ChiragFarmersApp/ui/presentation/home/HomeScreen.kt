@@ -315,9 +315,7 @@ fun HomeScreen(
                                 btnText = stringResource(R.string.home_view_all),
                                 onClick = {
                                     navController.navigate(
-                                        Route.BuyCategory.createRoute(
-                                            popularLabel, bannerImageResId
-                                        )
+                                        Route.BuyCategory.createRoute(popularLabel, isPopularProducts = true)
                                     )
                                 })
                             val popularItems = successState.popularProducts.take(4)

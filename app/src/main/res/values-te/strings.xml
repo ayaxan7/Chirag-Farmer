@@ -132,6 +132,7 @@
     <string name="categories_loading">ఉత్పత్తులు లోడ్ అవుతున్నాయి…</string>
     <string name="categories_no_products">ఉత్పత్తులు ఏవీ కనుగొనబడలేదు</string>
     <string name="categories_loading_more">మరిన్ని లోడ్ అవుతున్నాయి…</string>
+    <string name="categories_filter">ఫిల్టర్</string>
 
     <!-- Product Details -->
     <string name="product_added_to_cart">ఉత్పత్తి కార్ట్‌కు జోడించబడింది!</string>

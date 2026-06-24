@@ -130,6 +130,7 @@
     <string name="categories_loading">Loading products…</string>
     <string name="categories_no_products">No products found</string>
     <string name="categories_loading_more">Loading more…</string>
+    <string name="categories_filter">Filter</string>
 
     <!-- Product Details -->
     <string name="product_added_to_cart">Product added to cart!</string>
