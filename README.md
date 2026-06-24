@@ -36,7 +36,7 @@ Kotlin, Jetpack Compose, Material 3, Clean Architecture, Hilt DI, Retrofit2, Roo
 ## Screenshots
 
 <p align="center">
-  <img src="./app/release/screenshot1.png" width="200" alt="Screenshot 1">
+  <img src="screenshot1.png" width="200" alt="Screenshot 1">
   <img src="./app/release/screenshot2.jpg" width="200" alt="Screenshot 2">
   <img src="./app/release/screenshot3.jpg" width="200" alt="Screenshot 3">
 </p>
