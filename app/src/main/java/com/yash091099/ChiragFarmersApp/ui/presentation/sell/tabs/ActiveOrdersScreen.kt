@@ -3,8 +3,10 @@ package com.yash091099.ChiragFarmersApp.ui.presentation.sell.tabs
 import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,6 +16,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -22,20 +25,28 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.AlertDialog
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.foundation.clickable
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType.Companion.PrimaryNotEditable
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -48,7 +59,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -63,10 +73,8 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
-import com.yash091099.ChiragFarmersApp.domain.model.Order
-import timber.log.Timber
 import com.yash091099.ChiragFarmersApp.R
-import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.CategoryHeader
+import com.yash091099.ChiragFarmersApp.domain.model.Order
 import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.ChiragButton
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.screens.orderstatus.OrderSummaryCard
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.screens.orderstatus.ProgressTimeline
@@ -76,6 +84,7 @@ import com.yash091099.ChiragFarmersApp.ui.theme.BorderColour
 import com.yash091099.ChiragFarmersApp.ui.theme.ErrorRed
 import com.yash091099.ChiragFarmersApp.ui.theme.LightGray
 import com.yash091099.ChiragFarmersApp.ui.theme.TextGray
+import timber.log.Timber
 
 private data class FilterOption(val labelRes: Int, val apiValue: String?)
 
@@ -93,10 +102,16 @@ fun ActiveOrdersScreen(
         val refresh = orders.loadState.refresh
         val append = orders.loadState.append
         if (refresh is LoadState.Error) {
-            Timber.tag("ActiveOrdersUI").e(refresh.error, "refresh error itemCount=%s device=%s", orders.itemCount, Build.MODEL)
+            Timber.tag("ActiveOrdersUI").e(
+                refresh.error,
+                "refresh error itemCount=%s device=%s",
+                orders.itemCount,
+                Build.MODEL
+            )
         }
         if (append is LoadState.Error) {
-            Timber.tag("ActiveOrdersUI").e(append.error, "append error itemCount=%s", orders.itemCount)
+            Timber.tag("ActiveOrdersUI")
+                .e(append.error, "append error itemCount=%s", orders.itemCount)
         }
     }
 
@@ -154,8 +169,7 @@ fun ActiveOrdersScreen(
                     },
                     onNavigateBack = {
                         onOrderClick(null)
-                    }
-                )
+                    })
             }
 
             is OrderTrackingState.Idle -> Unit
@@ -208,8 +222,7 @@ fun ActiveOrdersContent(
                         .background(BGBlack)
                         .clickable { expanded = true }
                         .padding(horizontal = 12.dp, vertical = 2.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+                    verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = selectedFilterLabel,
                         color = BGWhite,
@@ -225,9 +238,7 @@ fun ActiveOrdersContent(
                 }
 
                 DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false }
-                ) {
+                    expanded = expanded, onDismissRequest = { expanded = false }) {
                     filterOptions.forEachIndexed { index, option ->
                         DropdownMenuItem(
                             text = { Text(stringResource(option.labelRes)) },
@@ -235,8 +246,7 @@ fun ActiveOrdersContent(
                                 selectedFilterIndex = index
                                 viewModel.setFilterStatus(option.apiValue)
                                 expanded = false
-                            }
-                        )
+                            })
                     }
                 }
             }
@@ -404,7 +414,10 @@ fun OrderCard(order: Order, onOrderClick: (String?) -> Unit) {
                 ) {
                     AsyncImage(
                         model = order.productImage,
-                        contentDescription = stringResource(R.string.active_orders_product_description_format, order.productName),
+                        contentDescription = stringResource(
+                            R.string.active_orders_product_description_format,
+                            order.productName
+                        ),
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop
                     )
@@ -451,10 +464,14 @@ fun OrderCard(order: Order, onOrderClick: (String?) -> Unit) {
             // Grid Details
             Row(modifier = Modifier.fillMaxWidth()) {
                 DetailItem(
-                    label = stringResource(R.string.active_orders_order_id_label), value = order.orderId, modifier = Modifier.weight(1f)
+                    label = stringResource(R.string.active_orders_order_id_label),
+                    value = order.orderId,
+                    modifier = Modifier.weight(1f)
                 )
                 DetailItem(
-                    label = stringResource(R.string.active_orders_quantity_label), value = order.quantity, modifier = Modifier.weight(1f)
+                    label = stringResource(R.string.active_orders_quantity_label),
+                    value = order.quantity,
+                    modifier = Modifier.weight(1f)
                 )
             }
 
@@ -468,7 +485,9 @@ fun OrderCard(order: Order, onOrderClick: (String?) -> Unit) {
                     modifier = Modifier.weight(1f)
                 )
                 DetailItem(
-                    label = stringResource(R.string.active_orders_location_label), value = order.location, modifier = Modifier.weight(1f)
+                    label = stringResource(R.string.active_orders_location_label),
+                    value = order.location,
+                    modifier = Modifier.weight(1f)
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
@@ -544,11 +563,9 @@ fun OrderDetailsView(
 
         // Scrollable Content
         LazyColumn(
-            modifier = Modifier.weight(1f),
-            contentPadding = PaddingValues(
+            modifier = Modifier.weight(1f), contentPadding = PaddingValues(
                 vertical = 16.dp
-            ),
-            verticalArrangement = Arrangement.spacedBy(24.dp)
+            ), verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             item {
                 OrderSummaryCard(data = data)
@@ -563,9 +580,7 @@ fun OrderDetailsView(
             }
             item {
                 ProgressTimeline(
-                    orderId = orderId,
-                    data = data,
-                    onStatusUpdate = onStatusUpdate
+                    orderId = orderId, data = data, onStatusUpdate = onStatusUpdate
                 )
             }
         }
@@ -583,12 +598,10 @@ fun OrderDetailsView(
                         .height(42.dp),
                     shape = RoundedCornerShape(8.dp),
                     border = BorderStroke(
-                        width = 1.dp,
-                        color = BGBlack
+                        width = 1.dp, color = BGBlack
                     ),
                     colors = ButtonDefaults.outlinedButtonColors(
-                        containerColor = BGWhite,
-                        contentColor = BGBlack
+                        containerColor = BGWhite, contentColor = BGBlack
                     ),
                     enabled = cancelOrderState !is CancelOrderState.Loading
                 ) {
@@ -615,10 +628,10 @@ fun OrderDetailsView(
 
     // Cancel Dialog
     if (showCancelDialog) {
-        CancelOrderDialog(
+        CancelOrderBottomSheet(
             onDismiss = { showCancelDialog = false },
-            onConfirm = {
-                viewModel.cancelOrder(orderId, data.productId.orEmpty(), "")
+            onConfirm = { reason ->
+                viewModel.cancelOrder(orderId, data.productId.orEmpty(), reason)
                 showCancelDialog = false
             },
             isLoading = cancelOrderState is CancelOrderState.Loading,
@@ -629,62 +642,231 @@ fun OrderDetailsView(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CancelOrderDialog(
+fun CancelOrderBottomSheet(
     onDismiss: () -> Unit,
-    onConfirm: () -> Unit,
+    onConfirm: (String) -> Unit,
     isLoading: Boolean = false,
     errorMessage: String? = null
 ) {
-    AlertDialog(
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val reasonResIds = listOf(
+        R.string.cancel_reason_ordered_mistake,
+        R.string.cancel_reason_unable_deliver,
+        R.string.cancel_reason_quality_issue,
+        R.string.cancel_reason_out_of_stock,
+        R.string.cancel_reason_incorrect_listing,
+        R.string.cancel_reason_other
+    )
+    val reasons = reasonResIds.map { stringResource(it) }
+    val otherIndex = reasonResIds.lastIndex
+    var selectedIndex by remember { mutableIntStateOf(0) }
+    val selectedReason = reasons[selectedIndex]
+    var otherReason by remember { mutableStateOf("") }
+    var expanded by remember { mutableStateOf(false) }
+    val enterReasonPlaceholder = stringResource(R.string.cancel_reason_enter_reason)
+
+    ModalBottomSheet(
         onDismissRequest = { if (!isLoading) onDismiss() },
-        title = {
-            Text(
-                text = stringResource(R.string.active_orders_cancel_confirm),
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp
-            )
-        },
-        text = {
-            Column(modifier = Modifier.fillMaxWidth()) {
-                Text(
-                    text = stringResource(R.string.active_orders_cancel_confirm_message),
-                    fontSize = 14.sp,
-                    color = Color.Black
+        sheetState = sheetState,
+        containerColor = BGWhite,
+        dragHandle = null
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp)
+                .padding(bottom = 24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            // Placeholder for the bag with X icon
+            Box(
+                modifier = Modifier.size(100.dp), contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.cancel_order),
+                    contentDescription = stringResource(R.string.active_orders_cancel_order_description),
+                    modifier = Modifier.fillMaxSize()
                 )
-                if (!errorMessage.isNullOrBlank()) {
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Text(
-                        text = errorMessage,
-                        fontSize = 12.sp,
-                        color = Color.Red
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .offset(x = (-8).dp, y = (-8).dp)
+                        .background(BGWhite, CircleShape)
+                        .padding(4.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = stringResource(R.string.active_orders_cancel_order_description),
+                        tint = BGWhite,
+                        modifier = Modifier
+                            .size(24.dp)
+                            .background(ErrorRed, CircleShape)
+                            .padding(4.dp)
                     )
                 }
             }
-        },
-        confirmButton = {
-            Button(
-                onClick = onConfirm,
-                enabled = !isLoading,
-                colors = ButtonDefaults.buttonColors(containerColor = ErrorRed)
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(
+                text = stringResource(R.string.active_orders_cancel_confirm),
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                color = BGBlack
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = stringResource(R.string.active_orders_cancel_confirm_message),
+                fontSize = 14.sp,
+                color = Color.DarkGray,
+                textAlign = TextAlign.Center
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Column(
+                modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start
             ) {
-                if (isLoading) {
-                    CircularProgressIndicator(modifier = Modifier.size(16.dp), color = BGWhite)
-                    Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = stringResource(R.string.cancel_reason_label),
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = BGBlack
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                ExposedDropdownMenuBox(
+                    expanded = expanded,
+                    onExpandedChange = { expanded = !expanded },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    OutlinedTextField(
+                        value = selectedReason,
+                        onValueChange = {},
+                        readOnly = true,
+                        trailingIcon = {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_down_arrow),
+                                contentDescription = stringResource(R.string.cancel_reason_label),
+                                tint = BGBlack
+                            )
+                        },
+                        modifier = Modifier
+                            .menuAnchor(PrimaryNotEditable, enabled = true)
+                            .fillMaxWidth(),
+                        shape = RoundedCornerShape(8.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = BGBlack,
+                            unfocusedBorderColor = BorderColour,
+                            focusedContainerColor = BGWhite,
+                            unfocusedContainerColor = BGWhite
+                        )
+                    )
+
+                    ExposedDropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false },
+                        modifier = Modifier.background(BGWhite)
+                    ) {
+                        reasons.forEachIndexed { index, reason ->
+                            DropdownMenuItem(text = {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(text = reason, color = BGBlack, fontSize = 14.sp)
+                                    RadioButton(
+                                        selected = selectedIndex == index,
+                                        onClick = null,
+                                        colors = RadioButtonDefaults.colors(selectedColor = BGBlack)
+                                    )
+                                }
+                            }, onClick = {
+                                selectedIndex = index
+                                if (index != otherIndex) {
+                                    expanded = false
+                                }
+                            })
+                        }
+                    }
                 }
-                Text(stringResource(R.string.active_orders_cancel_confirm), color = BGWhite)
+
+                if (selectedIndex == otherIndex) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = otherReason,
+                        onValueChange = { otherReason = it },
+                        placeholder = { Text(enterReasonPlaceholder, color = TextGray) },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(8.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = BGBlack, unfocusedBorderColor = BorderColour
+                        )
+                    )
+                }
             }
-        },
-        dismissButton = {
-            Button(
-                onClick = onDismiss,
-                enabled = !isLoading,
-                colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray)
+
+            if (!errorMessage.isNullOrBlank()) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = errorMessage, fontSize = 12.sp, color = ErrorRed
+                )
+            }
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Text(stringResource(R.string.active_orders_keep_order), color = BGBlack)
+                OutlinedButton(
+                    onClick = { if (!isLoading) onDismiss() },
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(48.dp),
+                    shape = RoundedCornerShape(8.dp),
+                    border = BorderStroke(1.dp, BGBlack),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = BGBlack)
+                ) {
+                    Text(stringResource(R.string.cancel_go_back), fontWeight = FontWeight.Medium)
+                }
+
+                Button(
+                    onClick = {
+                        val finalReason =
+                            if (selectedIndex == otherIndex) otherReason else selectedReason
+                        onConfirm(finalReason)
+                    },
+                    enabled = !isLoading && (selectedIndex != otherIndex || otherReason.isNotBlank()),
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(48.dp),
+                    shape = RoundedCornerShape(8.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = BGBlack,
+                        contentColor = BGWhite,
+                        disabledContainerColor = Color.Gray
+                    )
+                ) {
+                    if (isLoading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(16.dp),
+                            color = BGWhite,
+                            strokeWidth = 2.dp
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                    }
+                    Text(stringResource(R.string.cancel_yes_cancel_order), fontWeight = FontWeight.Medium)
+                }
             }
         }
-    )
+    }
 }
 
 @Composable
