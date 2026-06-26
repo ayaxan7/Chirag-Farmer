@@ -278,6 +278,8 @@
     <string name="orders_reason_label">Reason</string>
     <string name="orders_confirm">Confirm</string>
     <string name="orders_cancel">Cancel</string>
+    <string name="orders_item_status">Item Status</string>
+    <string name="orders_cancel_item_button">Cancel Item</string>
 
     <!-- My Orders (Buyer) -->
     <string name="my_orders_title">My Orders</string>

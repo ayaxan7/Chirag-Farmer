@@ -17,6 +17,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -206,13 +207,16 @@ fun MyOrderDetailsScreen(
         }
     }
 
+    val cancelErrorMessage = (cancelOrderState as? CancelOrderState.Error)?.message
+
     if (showCancelDialog) {
         CancelOrderDialog(
             onDismiss = { showCancelDialog = false },
             onConfirm = { reason ->
                 viewModel.cancelOrderItem(orderId, selectedProductId, reason)
             },
-            isLoading = cancelOrderState is CancelOrderState.Loading
+            isLoading = cancelOrderState is CancelOrderState.Loading,
+            errorMessage = cancelErrorMessage
         )
     }
 }
@@ -354,40 +358,45 @@ fun OrderProductCard(
                 }
             }
 
-//            // Show item status if available
-//            if (!itemStatus.isNullOrBlank()) {
-//                HorizontalDivider(color = BorderColour.copy(alpha = 0.3f), thickness = 0.5.dp)
-//                Row(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .padding(12.dp),
-//                    horizontalArrangement = Arrangement.SpaceBetween,
-//                    verticalAlignment = Alignment.CenterVertically
-//                ) {
-//                    Column {
-//                        Text("Item Status", fontSize = 12.sp, color = TextGray)
-//                        Text(
-//                            text = itemStatus,
-//                            fontSize = 14.sp,
-//                            fontWeight = FontWeight.Bold,
-//                            color = BGBlack
-//                        )
-//                    }
-//
-//                    // Show cancel button if item is not already cancelled
-//                    if (itemStatus.lowercase() != "cancelled") {
-//                        Button(
-//                            onClick = onCancelClick,
-//                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF6B6B)),
-//                            shape = RoundedCornerShape(6.dp),
-//                            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
-//                            modifier = Modifier.height(32.dp)
-//                        ) {
-//                            Text("Cancel Item", color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
-//                        }
-//                    }
-//                }
-//            }
+            // Show item status if available
+            if (!itemStatus.isNullOrBlank()) {
+                HorizontalDivider(color = BorderColour.copy(alpha = 0.3f), thickness = 0.5.dp)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column {
+                        Text(stringResource(R.string.orders_item_status), fontSize = 12.sp, color = TextGray)
+                        Text(
+                            text = itemStatus,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = BGBlack
+                        )
+                    }
+
+                    // Show cancel button if item is not already cancelled
+                    if (itemStatus.lowercase() != "cancelled") {
+                        Button(
+                            onClick = onCancelClick,
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF6B6B)),
+                            shape = RoundedCornerShape(6.dp),
+                            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
+                            modifier = Modifier.height(32.dp)
+                        ) {
+                            Text(
+                                stringResource(R.string.orders_cancel_item_button),
+                                color = Color.White,
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
     // Show cancellation details if item was cancelled
@@ -689,53 +698,100 @@ private fun getActiveStatusIndex(currentStatus: String?, steps: List<Pair<String
     return if (mappedIndex >= 0) mappedIndex else steps.indexOfFirst { !it.second }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CancelOrderDialog(
     onDismiss: () -> Unit,
     onConfirm: (String) -> Unit,
-    isLoading: Boolean = false
+    isLoading: Boolean = false,
+    errorMessage: String? = null
 ) {
-    var reason by remember { mutableStateOf("") }
+    val reasonResIds = listOf(
+        R.string.cancel_reason_ordered_mistake,
+        R.string.cancel_reason_unable_deliver,
+        R.string.cancel_reason_quality_issue,
+        R.string.cancel_reason_out_of_stock,
+        R.string.cancel_reason_incorrect_listing,
+        R.string.cancel_reason_other
+    )
+    val reasons = reasonResIds.map { stringResource(it) }
+    val otherIndex = reasonResIds.lastIndex
+    var selectedIndex by remember { mutableIntStateOf(0) }
+    var otherReason by remember { mutableStateOf("") }
+    val enterReasonPlaceholder = stringResource(R.string.cancel_reason_enter_reason)
 
     AlertDialog(
         onDismissRequest = { if (!isLoading) onDismiss() },
         title = {
             Text(
-                text = stringResource(R.string.orders_cancel_item),
+                text = stringResource(R.string.active_orders_cancel_confirm),
                 fontWeight = FontWeight.Bold,
-                fontSize = 16.sp
+                fontSize = 18.sp
             )
         },
         text = {
             Column(modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    text = stringResource(R.string.orders_cancel_reason),
+                    text = stringResource(R.string.active_orders_cancel_confirm_message),
                     fontSize = 14.sp,
                     color = TextGray,
-                    modifier = Modifier.padding(bottom = 12.dp)
+                    modifier = Modifier.padding(bottom = 16.dp)
                 )
-                TextField(
-                    value = reason,
-                    onValueChange = { reason = it },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(100.dp),
-                    label = { Text(stringResource(R.string.orders_reason_label)) },
-                    shape = RoundedCornerShape(8.dp),
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color(0xFFF5F5F5),
-                        unfocusedContainerColor = Color(0xFFF5F5F5),
-                        focusedIndicatorColor = BGBlack,
-                        unfocusedIndicatorColor = BorderColour
-                    ),
-                    maxLines = 4
-                )
+
+                reasons.forEachIndexed { index, reason ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { selectedIndex = index }
+                            .padding(vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = selectedIndex == index,
+                            onClick = { selectedIndex = index },
+                            colors = RadioButtonDefaults.colors(selectedColor = BGBlack)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = reason,
+                            fontSize = 14.sp,
+                            color = BGBlack
+                        )
+                    }
+                }
+
+                if (selectedIndex == otherIndex) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = otherReason,
+                        onValueChange = { otherReason = it },
+                        placeholder = { Text(enterReasonPlaceholder, color = TextGray) },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(8.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = BGBlack, unfocusedBorderColor = BorderColour
+                        )
+                    )
+                }
+
+                if (!errorMessage.isNullOrBlank()) {
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text(
+                        text = errorMessage,
+                        fontSize = 12.sp,
+                        color = ErrorRed
+                    )
+                }
             }
         },
         confirmButton = {
             Button(
-                onClick = { onConfirm(reason) },
-                enabled = reason.isNotBlank() && !isLoading,
+                onClick = {
+                    val finalReason =
+                        if (selectedIndex == otherIndex) otherReason else reasons[selectedIndex]
+                    onConfirm(finalReason)
+                },
+                enabled = !isLoading && (selectedIndex != otherIndex || otherReason.isNotBlank()),
                 colors = ButtonDefaults.buttonColors(containerColor = BGBlack)
             ) {
                 if (isLoading) {
@@ -745,7 +801,7 @@ fun CancelOrderDialog(
                         strokeWidth = 2.dp
                     )
                 } else {
-                    Text(stringResource(R.string.orders_confirm), color = Color.White)
+                    Text(stringResource(R.string.cancel_yes_cancel_order), color = Color.White)
                 }
             }
         },
@@ -755,7 +811,7 @@ fun CancelOrderDialog(
                 enabled = !isLoading,
                 colors = ButtonDefaults.outlinedButtonColors(contentColor = BGBlack)
             ) {
-                Text(stringResource(R.string.orders_cancel))
+                Text(stringResource(R.string.cancel_go_back))
             }
         }
     )
