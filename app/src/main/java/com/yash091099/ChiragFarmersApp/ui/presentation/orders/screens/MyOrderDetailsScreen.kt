@@ -71,10 +71,8 @@ fun MyOrderDetailsScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val cancelOrderState by viewModel.cancelOrderState.collectAsStateWithLifecycle()
-    var showCancelDialog by remember { mutableStateOf(false) }
+
     var showCancelOrderSheet by remember { mutableStateOf(false) }
-    var selectedProductId by remember { mutableStateOf("") }
-    var cancelReason by remember { mutableStateOf("") }
 
     LaunchedEffect(orderId, productId) {
         if (orderId.isNotBlank()) {
@@ -84,7 +82,7 @@ fun MyOrderDetailsScreen(
 
     LaunchedEffect(cancelOrderState) {
         if (cancelOrderState is CancelOrderState.Success) {
-            showCancelDialog = false
+            showCancelOrderSheet = false
             // Reload order details after successful cancellation
             if (orderId.isNotBlank()) {
                 viewModel.loadOrderDetails(orderId, productId?.ifEmpty { null })
@@ -216,39 +214,24 @@ fun MyOrderDetailsScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(paddingValues),
-                    orderId = orderId,
-                    onCancelItem = { productId ->
-                        selectedProductId = productId
-                        cancelReason = ""
-                        showCancelDialog = true
-                    }
+                    orderId = orderId
                 )
             }
         }
     }
 
     val cancelErrorMessage = (cancelOrderState as? CancelOrderState.Error)?.message
-
-    if (showCancelDialog) {
-        CancelOrderDialog(
-            onDismiss = { showCancelDialog = false },
-            onConfirm = { reason ->
-                viewModel.cancelOrderItem(orderId, selectedProductId, reason)
-            },
-            isLoading = cancelOrderState is CancelOrderState.Loading,
-            errorMessage = cancelErrorMessage
-        )
-    }
+    val cancelOrderTargetProductId = productId
+        ?: (uiState as? OrderDetailsUiState.Success)?.data?.items?.firstOrNull()?.productId.orEmpty()
 
     if (showCancelOrderSheet) {
         CancelOrderBottomSheet(
             onDismiss = { showCancelOrderSheet = false },
             onConfirm = { reason ->
-                // TODO: Integrate order-level cancellation API for the buyer
-                showCancelOrderSheet = false
+                viewModel.cancelOrderItem(orderId, cancelOrderTargetProductId, reason)
             },
-            isLoading = false,
-            errorMessage = null
+            isLoading = cancelOrderState is CancelOrderState.Loading,
+            errorMessage = cancelErrorMessage
         )
     }
 }
@@ -273,8 +256,7 @@ private fun resolveBottomActionMode(orderStatus: String?): BottomActionMode {
 private fun OrderDetailsContent(
     data: OrderDetailsData,
     modifier: Modifier = Modifier,
-    orderId: String = "",
-    onCancelItem: (String) -> Unit = {}
+    orderId: String = ""
 ) {
     Column(
         modifier = modifier
@@ -292,8 +274,6 @@ private fun OrderDetailsContent(
                 quantity = item.quantity.orEmpty(),
                 itemStatus = item.itemStatus,
                 cancellationDetails = item.cancellationDetails,
-                productId = item.productId.orEmpty(),
-                onCancelClick = { onCancelItem(item.productId.orEmpty()) },
                 deliveryAddress=data.deliveryAddress
             )
         }
@@ -314,8 +294,6 @@ fun OrderProductCard(
     quantity: String,
     itemStatus: String? = null,
     cancellationDetails: CancellationDetailsDto? = null,
-    productId: String = "",
-    onCancelClick: () -> Unit = {},
     deliveryAddress: OrderDeliveryAddress? = null
 ) {
     Card(
@@ -700,123 +678,4 @@ private fun getActiveStatusIndex(currentStatus: String?, steps: List<Pair<String
     }
 
     return if (mappedIndex >= 0) mappedIndex else steps.indexOfFirst { !it.second }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun CancelOrderDialog(
-    onDismiss: () -> Unit,
-    onConfirm: (String) -> Unit,
-    isLoading: Boolean = false,
-    errorMessage: String? = null
-) {
-    val reasonResIds = listOf(
-        R.string.cancel_reason_ordered_mistake,
-        R.string.cancel_reason_unable_deliver,
-        R.string.cancel_reason_quality_issue,
-        R.string.cancel_reason_out_of_stock,
-        R.string.cancel_reason_incorrect_listing,
-        R.string.cancel_reason_other
-    )
-    val reasons = reasonResIds.map { stringResource(it) }
-    val otherIndex = reasonResIds.lastIndex
-    var selectedIndex by remember { mutableIntStateOf(0) }
-    var otherReason by remember { mutableStateOf("") }
-    val enterReasonPlaceholder = stringResource(R.string.cancel_reason_enter_reason)
-
-    AlertDialog(
-        onDismissRequest = { if (!isLoading) onDismiss() },
-        title = {
-            Text(
-                text = stringResource(R.string.active_orders_cancel_confirm),
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp
-            )
-        },
-        text = {
-            Column(modifier = Modifier.fillMaxWidth()) {
-                Text(
-                    text = stringResource(R.string.active_orders_cancel_confirm_message),
-                    fontSize = 14.sp,
-                    color = TextGray,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
-
-                reasons.forEachIndexed { index, reason ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { selectedIndex = index }
-                            .padding(vertical = 4.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        RadioButton(
-                            selected = selectedIndex == index,
-                            onClick = { selectedIndex = index },
-                            colors = RadioButtonDefaults.colors(selectedColor = BGBlack)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = reason,
-                            fontSize = 14.sp,
-                            color = BGBlack
-                        )
-                    }
-                }
-
-                if (selectedIndex == otherIndex) {
-                    Spacer(modifier = Modifier.height(8.dp))
-                    OutlinedTextField(
-                        value = otherReason,
-                        onValueChange = { otherReason = it },
-                        placeholder = { Text(enterReasonPlaceholder, color = TextGray) },
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(8.dp),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = BGBlack, unfocusedBorderColor = BorderColour
-                        )
-                    )
-                }
-
-                if (!errorMessage.isNullOrBlank()) {
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Text(
-                        text = errorMessage,
-                        fontSize = 12.sp,
-                        color = ErrorRed
-                    )
-                }
-            }
-        },
-        confirmButton = {
-            Button(
-                onClick = {
-                    val finalReason =
-                        if (selectedIndex == otherIndex) otherReason else reasons[selectedIndex]
-                    onConfirm(finalReason)
-                },
-                enabled = !isLoading && (selectedIndex != otherIndex || otherReason.isNotBlank()),
-                colors = ButtonDefaults.buttonColors(containerColor = BGBlack)
-            ) {
-                if (isLoading) {
-                    CircularProgressIndicator(
-                        color = Color.White,
-                        modifier = Modifier.size(16.dp),
-                        strokeWidth = 2.dp
-                    )
-                } else {
-                    Text(stringResource(R.string.cancel_yes_cancel_order), color = Color.White)
-                }
-            }
-        },
-        dismissButton = {
-            OutlinedButton(
-                onClick = onDismiss,
-                enabled = !isLoading,
-                colors = ButtonDefaults.outlinedButtonColors(contentColor = BGBlack)
-            ) {
-                Text(stringResource(R.string.cancel_go_back))
-            }
-        }
-    )
 }

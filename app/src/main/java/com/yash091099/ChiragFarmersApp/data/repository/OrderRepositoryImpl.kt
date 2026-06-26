@@ -125,6 +125,16 @@ class OrderRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun buyerCancelOrder(request: CancelOrderRequest): Result<CancelOrderResponse> {
+        return try {
+            val token = chiragDataStore.getAuthToken().first()
+            val response = api.buyerCancelOrder("Bearer $token", request)
+            Result.success(response)
+        } catch (e: Exception) {
+            Result.failure(Exception(getErrorMessage(e)))
+        }
+    }
+
     override suspend fun sellerCancelOrder(request: CancelOrderRequest): Result<CancelOrderResponse> {
         return try {
             val token = chiragDataStore.getAuthToken().first()

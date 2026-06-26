@@ -13,7 +13,7 @@ class CancelOrderItemUseCase @Inject constructor(
         productId: String,
         reason: String
     ): Result<CancelOrderResponse> {
-        return repository.cancelOrder(CancelOrderRequest(orderId, productId, reason))
+        return repository.buyerCancelOrder(CancelOrderRequest(orderId, productId, reason))
     }
 }
 

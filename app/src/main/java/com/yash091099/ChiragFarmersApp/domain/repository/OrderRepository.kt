@@ -23,6 +23,7 @@ interface OrderRepository {
     suspend fun getUserPlacedOrders(type: String, page: Int, limit: Int): Result<UserPlacedOrdersResponse>
     suspend fun getOrderDetails(id: String, productId: String? = null): Result<OrderDetailsResponse>
     suspend fun cancelOrder(request: CancelOrderRequest): Result<CancelOrderResponse>
+    suspend fun buyerCancelOrder(request: CancelOrderRequest): Result<CancelOrderResponse>
     suspend fun sellerCancelOrder(request: CancelOrderRequest): Result<CancelOrderResponse>
 }
 
