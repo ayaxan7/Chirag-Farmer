@@ -283,6 +283,7 @@
     <string name="orders_item_status">ఐటమ్ స్థితి</string>
     <string name="orders_cancel_item_button">ఐటమ్ రద్దు చేయండి</string>
     <string name="orders_cancel_reason_display">కారణం: %s</string>
+    <string name="orders_cancel_order">ఆర్డర్ రద్దు చేయండి</string>
 
     <!-- My Orders (Buyer) -->
     <string name="my_orders_title">నా ఆర్డర్లు</string>

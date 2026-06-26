@@ -44,6 +44,7 @@ import com.yash091099.ChiragFarmersApp.data.remote.dto.OrderDeliveryAddress
 import com.yash091099.ChiragFarmersApp.data.remote.dto.OrderDetailsData
 import com.yash091099.ChiragFarmersApp.data.remote.dto.StatusTimeline
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragTopBar
+import com.yash091099.ChiragFarmersApp.ui.presentation.sell.tabs.CancelOrderBottomSheet
 import com.yash091099.ChiragFarmersApp.ui.theme.*
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.foundation.Canvas
@@ -71,6 +72,7 @@ fun MyOrderDetailsScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val cancelOrderState by viewModel.cancelOrderState.collectAsStateWithLifecycle()
     var showCancelDialog by remember { mutableStateOf(false) }
+    var showCancelOrderSheet by remember { mutableStateOf(false) }
     var selectedProductId by remember { mutableStateOf("") }
     var cancelReason by remember { mutableStateOf("") }
 
@@ -114,44 +116,62 @@ fun MyOrderDetailsScreen(
                         .padding(horizontal = 16.dp, vertical = 12.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    OutlinedButton(
-                        onClick = {},
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(48.dp),
-                        shape = RoundedCornerShape(8.dp),
-                        border = BorderStroke(1.dp,BGBlack),
-                        colors = ButtonDefaults.outlinedButtonColors(contentColor = BGBlack)
-                    ) {
-                        Text(stringResource(R.string.orders_reorder), fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
-                    }
-
-                    if (actionMode == BottomActionMode.BOTH) {
-                        Button(
-                            onClick = {
-                                navController.navigate(
-                                    Route.DropReview.createRoute(
-                                        orderId = orderId,
-                                        productId = productId ?: primaryItem?.productId.orEmpty(),
-                                        imageUrl = primaryItem?.imageUrl,
-                                        productName = primaryItem?.productName,
-                                        sellerName = primaryItem?.sellerName,
-                                        pricePaid = primaryItem?.pricePaid?.toString()
-                                    )
-                                )
-                            },
+                    if (actionMode == BottomActionMode.CANCEL_ONLY) {
+                        OutlinedButton(
+                            onClick = { showCancelOrderSheet = true },
                             modifier = Modifier
                                 .weight(1f)
                                 .height(48.dp),
                             shape = RoundedCornerShape(8.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = BGBlack)
+                            border = BorderStroke(1.dp, ErrorRed),
+                            colors = ButtonDefaults.outlinedButtonColors(contentColor = ErrorRed)
                         ) {
                             Text(
-                                stringResource(R.string.orders_drop_review),
-                                color = BGWhite,
+                                stringResource(R.string.orders_cancel_order),
                                 fontWeight = FontWeight.SemiBold,
                                 fontSize = 15.sp
                             )
+                        }
+                    } else {
+                        OutlinedButton(
+                            onClick = {},
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(48.dp),
+                            shape = RoundedCornerShape(8.dp),
+                            border = BorderStroke(1.dp, BGBlack),
+                            colors = ButtonDefaults.outlinedButtonColors(contentColor = BGBlack)
+                        ) {
+                            Text(stringResource(R.string.orders_reorder), fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
+                        }
+
+                        if (actionMode == BottomActionMode.BOTH) {
+                            Button(
+                                onClick = {
+                                    navController.navigate(
+                                        Route.DropReview.createRoute(
+                                            orderId = orderId,
+                                            productId = productId ?: primaryItem?.productId.orEmpty(),
+                                            imageUrl = primaryItem?.imageUrl,
+                                            productName = primaryItem?.productName,
+                                            sellerName = primaryItem?.sellerName,
+                                            pricePaid = primaryItem?.pricePaid?.toString()
+                                        )
+                                    )
+                                },
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(48.dp),
+                                shape = RoundedCornerShape(8.dp),
+                                colors = ButtonDefaults.buttonColors(containerColor = BGBlack)
+                            ) {
+                                Text(
+                                    stringResource(R.string.orders_drop_review),
+                                    color = BGWhite,
+                                    fontWeight = FontWeight.SemiBold,
+                                    fontSize = 15.sp
+                                )
+                            }
                         }
                     }
                 }
@@ -219,12 +239,25 @@ fun MyOrderDetailsScreen(
             errorMessage = cancelErrorMessage
         )
     }
+
+    if (showCancelOrderSheet) {
+        CancelOrderBottomSheet(
+            onDismiss = { showCancelOrderSheet = false },
+            onConfirm = { reason ->
+                // TODO: Integrate order-level cancellation API for the buyer
+                showCancelOrderSheet = false
+            },
+            isLoading = false,
+            errorMessage = null
+        )
+    }
 }
 
 private enum class BottomActionMode {
     NONE,
     REORDER_ONLY,
-    BOTH
+    BOTH,
+    CANCEL_ONLY
 }
 
 private fun resolveBottomActionMode(orderStatus: String?): BottomActionMode {
@@ -232,7 +265,7 @@ private fun resolveBottomActionMode(orderStatus: String?): BottomActionMode {
     return when {
         normalized.contains("delivered") || normalized.contains("complete") -> BottomActionMode.BOTH
         normalized.contains("cancel") -> BottomActionMode.REORDER_ONLY
-        else -> BottomActionMode.NONE
+        else -> BottomActionMode.CANCEL_ONLY
     }
 }
 
