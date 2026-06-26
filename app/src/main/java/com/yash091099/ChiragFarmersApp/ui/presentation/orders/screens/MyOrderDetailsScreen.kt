@@ -74,9 +74,9 @@ fun MyOrderDetailsScreen(
     var selectedProductId by remember { mutableStateOf("") }
     var cancelReason by remember { mutableStateOf("") }
 
-    LaunchedEffect(orderId) {
+    LaunchedEffect(orderId, productId) {
         if (orderId.isNotBlank()) {
-            viewModel.loadOrderDetails(orderId)
+            viewModel.loadOrderDetails(orderId, productId?.ifEmpty { null })
         }
     }
 
@@ -85,7 +85,7 @@ fun MyOrderDetailsScreen(
             showCancelDialog = false
             // Reload order details after successful cancellation
             if (orderId.isNotBlank()) {
-                viewModel.loadOrderDetails(orderId)
+                viewModel.loadOrderDetails(orderId, productId?.ifEmpty { null })
             }
             viewModel.resetCancelState()
         }
@@ -182,7 +182,7 @@ fun MyOrderDetailsScreen(
                     Text(text = state.message, color = Color.Red, textAlign = TextAlign.Center)
                     Spacer(modifier = Modifier.height(12.dp))
                     Button(
-                        onClick = { if (orderId.isNotBlank()) viewModel.loadOrderDetails(orderId) },
+                        onClick = { if (orderId.isNotBlank()) viewModel.loadOrderDetails(orderId, productId?.ifEmpty { null }) },
                         colors = ButtonDefaults.buttonColors(containerColor = BGBlack)
                     ) {
                         Text(stringResource(R.string.orders_retry), color = BGWhite)

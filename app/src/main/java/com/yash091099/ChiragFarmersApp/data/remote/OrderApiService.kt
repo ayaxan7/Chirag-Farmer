@@ -56,7 +56,8 @@ interface OrderApiService {
     @GET("api/farmers/orders/details/{id}")
     suspend fun getOrderDetails(
         @Header("Authorization") token: String,
-        @Path("id") id: String
+        @Path("id") id: String,
+        @Query("productId") productId: String? = null
     ): OrderDetailsResponse
 
     @POST("api/farmer/orders/cancel")

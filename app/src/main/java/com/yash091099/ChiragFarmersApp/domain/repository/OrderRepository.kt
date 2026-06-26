@@ -21,7 +21,7 @@ interface OrderRepository {
     suspend fun getOrderTracking(id: String, productId: String? = null): Result<OrderTrackingDto>
     suspend fun updateOrderStatus(id: String, request: UpdateOrderStatusRequest): Result<UpdateOrderStatusResponse>
     suspend fun getUserPlacedOrders(type: String, page: Int, limit: Int): Result<UserPlacedOrdersResponse>
-    suspend fun getOrderDetails(id: String): Result<OrderDetailsResponse>
+    suspend fun getOrderDetails(id: String, productId: String? = null): Result<OrderDetailsResponse>
     suspend fun cancelOrder(request: CancelOrderRequest): Result<CancelOrderResponse>
     suspend fun sellerCancelOrder(request: CancelOrderRequest): Result<CancelOrderResponse>
 }

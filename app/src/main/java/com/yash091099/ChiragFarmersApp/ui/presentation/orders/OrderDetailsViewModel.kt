@@ -53,10 +53,10 @@ class OrderDetailsViewModel @Inject constructor(
     private val _updateStatusState = MutableStateFlow<UpdateStatusState>(UpdateStatusState.Idle)
     val updateStatusState: StateFlow<UpdateStatusState> = _updateStatusState.asStateFlow()
 
-    fun loadOrderDetails(orderId: String) {
+    fun loadOrderDetails(orderId: String, productId: String? = null) {
         viewModelScope.launch {
             _uiState.value = OrderDetailsUiState.Loading
-            getOrderDetailsUseCase(orderId).fold(
+            getOrderDetailsUseCase(orderId, productId).fold(
                 onSuccess = { response ->
                     if (response.success) {
                         _uiState.value = OrderDetailsUiState.Success(response.data)

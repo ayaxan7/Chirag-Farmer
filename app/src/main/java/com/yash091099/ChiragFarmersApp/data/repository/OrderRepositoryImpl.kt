@@ -105,10 +105,10 @@ class OrderRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getOrderDetails(id: String): Result<OrderDetailsResponse> {
+    override suspend fun getOrderDetails(id: String, productId: String?): Result<OrderDetailsResponse> {
         return try {
             val token = chiragDataStore.getAuthToken().first()
-            val response = api.getOrderDetails("Bearer $token", id)
+            val response = api.getOrderDetails("Bearer $token", id, productId)
             Result.success(response)
         } catch (e: Exception) {
             Result.failure(Exception(getErrorMessage(e)))
