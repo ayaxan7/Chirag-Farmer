@@ -6,6 +6,7 @@ import com.yash091099.ChiragFarmersApp.domain.model.OrdersData
 fun OrderItemDto.toDomain(): Order = Order(
     orderObjectId = orderObjectId,
     orderId = orderId,
+    productId = productId,
     productName = productName,
     productImage = productImage,
     buyerName = buyerName,

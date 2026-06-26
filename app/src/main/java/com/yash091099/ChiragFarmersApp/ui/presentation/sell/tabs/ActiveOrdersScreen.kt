@@ -91,8 +91,8 @@ private data class FilterOption(val labelRes: Int, val apiValue: String?)
 @Composable
 fun ActiveOrdersScreen(
     navController: NavHostController,
-    selectedOrderId: String? = null,
-    onOrderClick: (String?) -> Unit = {},
+    selectedOrder: Pair<String, String>? = null,
+    onOrderClick: (Pair<String, String>?) -> Unit = {},
     viewModel: ActiveOrdersViewModel = hiltViewModel()
 ) {
     val orders = viewModel.activeOrders.collectAsLazyPagingItems()
@@ -115,22 +115,28 @@ fun ActiveOrdersScreen(
         }
     }
 
-    LaunchedEffect(selectedOrderId) {
-        if (selectedOrderId != null) {
-            Timber.tag("ActiveOrdersUI").d("selectedOrderId=%s", selectedOrderId)
-            viewModel.selectOrder(selectedOrderId)
+    LaunchedEffect(selectedOrder) {
+        if (selectedOrder != null) {
+            val (orderId, productId) = selectedOrder
+            Timber.tag("ActiveOrdersUI").d("selectedOrderId=%s productId=%s", orderId, productId)
+            viewModel.selectOrder(orderId, productId.ifEmpty { null })
         }
     }
 
-    BackHandler(enabled = selectedOrderId != null) {
+    BackHandler(enabled = selectedOrder != null) {
+        viewModel.selectOrder(null)
         onOrderClick(null)
     }
 
-    if (selectedOrderId == null) {
+    if (selectedOrder == null) {
         ActiveOrdersContent(
-            orders = orders, navController = navController, onOrderClick = onOrderClick
+            orders = orders, navController = navController, onOrderClick = { id, pid ->
+                viewModel.selectOrder(id, pid)
+                onOrderClick(Pair(id, pid))
+            }
         )
     } else {
+        val (currentOrderId, currentProductId) = selectedOrder
         when (val state = orderTrackingState) {
             is OrderTrackingState.Loading -> {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -149,7 +155,9 @@ fun ActiveOrdersScreen(
                     Text(text = state.message, color = Color.Red, textAlign = TextAlign.Center)
                     Spacer(modifier = Modifier.height(16.dp))
                     Button(
-                        onClick = { onOrderClick(selectedOrderId) },
+                        onClick = {
+                            viewModel.selectOrder(currentOrderId, currentProductId.ifEmpty { null })
+                        },
                         colors = ButtonDefaults.buttonColors(containerColor = BGBlack)
                     ) {
                         Text(stringResource(R.string.active_orders_retry), color = BGWhite)
@@ -159,15 +167,16 @@ fun ActiveOrdersScreen(
 
             is OrderTrackingState.Success -> {
                 OrderDetailsView(
-                    orderId = selectedOrderId,
+                    orderId = currentOrderId,
                     data = state.data,
                     navController = navController,
                     onStatusUpdate = { status ->
                         viewModel.updateOrderStatus(
-                            selectedOrderId, state.data.productId.orEmpty(), status
+                            currentOrderId, state.data.productId.orEmpty(), status
                         )
                     },
                     onNavigateBack = {
+                        viewModel.selectOrder(null)
                         onOrderClick(null)
                     })
             }
@@ -181,7 +190,7 @@ fun ActiveOrdersScreen(
 fun ActiveOrdersContent(
     orders: LazyPagingItems<Order>,
     navController: NavHostController,
-    onOrderClick: (String?) -> Unit,
+    onOrderClick: (String, String) -> Unit,
     viewModel: ActiveOrdersViewModel = hiltViewModel()
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -318,7 +327,7 @@ fun ActiveOrdersContent(
                     ) {
                         items(
                             count = orders.itemCount, key = { index ->
-                                orders[index]?.orderObjectId ?: index
+                                orders[index]?.let { "${it.orderObjectId}_${it.productId}" } ?: index
                             }) { index ->
 
                             orders[index]?.let { order ->
@@ -391,7 +400,7 @@ fun ActiveOrdersContent(
 }
 
 @Composable
-fun OrderCard(order: Order, onOrderClick: (String?) -> Unit) {
+fun OrderCard(order: Order, onOrderClick: (String, String) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -521,7 +530,7 @@ fun OrderCard(order: Order, onOrderClick: (String?) -> Unit) {
             ChiragButton(
                 text = stringResource(R.string.active_orders_update_status),
                 onClick = {
-                    onOrderClick(order.orderObjectId)
+                    onOrderClick(order.orderObjectId, order.productId)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -680,7 +689,7 @@ fun CancelOrderBottomSheet(
                 .padding(bottom = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Placeholder for the bag with X icon
+
             Box(
                 modifier = Modifier.size(100.dp), contentAlignment = Alignment.Center
             ) {
@@ -689,23 +698,6 @@ fun CancelOrderBottomSheet(
                     contentDescription = stringResource(R.string.active_orders_cancel_order_description),
                     modifier = Modifier.fillMaxSize()
                 )
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .offset(x = (-8).dp, y = (-8).dp)
-                        .background(BGWhite, CircleShape)
-                        .padding(4.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Close,
-                        contentDescription = stringResource(R.string.active_orders_cancel_order_description),
-                        tint = BGWhite,
-                        modifier = Modifier
-                            .size(24.dp)
-                            .background(ErrorRed, CircleShape)
-                            .padding(4.dp)
-                    )
-                }
             }
 
             Spacer(modifier = Modifier.height(16.dp))

@@ -60,7 +60,7 @@ fun SellScreen(
     val activeProducts = viewModel.activeProducts.collectAsLazyPagingItems()
     val soldOutProducts = viewModel.soldOutProducts.collectAsLazyPagingItems()
 
-    val selectedOrderId by viewModel.selectedOrderId.collectAsStateWithLifecycle()
+    val selectedOrder by viewModel.selectedOrder.collectAsStateWithLifecycle()
 
     // Initialize with provided order ID and navigate to Active Orders tab
     LaunchedEffect(initialOrderId) {
@@ -72,7 +72,7 @@ fun SellScreen(
         }
     }
 
-    BackHandler(enabled = selectedOrderId != null) {
+    BackHandler(enabled = selectedOrder != null) {
         viewModel.selectOrder(null)
     }
 
@@ -222,8 +222,8 @@ fun SellScreen(
 
                     2 -> ActiveOrdersScreen(
                         navController = navController,
-                        selectedOrderId = selectedOrderId,
-                        onOrderClick = { viewModel.selectOrder(it) }
+                        selectedOrder = selectedOrder,
+                        onOrderClick = { viewModel.selectOrder(it?.first, it?.second) }
                     )
                 }
             }

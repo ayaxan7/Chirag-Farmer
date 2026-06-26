@@ -66,20 +66,20 @@ class ActiveOrdersViewModel @Inject constructor(
         _selectedStatus.value = status
     }
 
-    fun selectOrder(orderId: String?) {
-        Timber.tag("ActiveOrdersVM").d("selectOrder orderId=%s", orderId)
+    fun selectOrder(orderId: String?, productId: String? = null) {
+        Timber.tag("ActiveOrdersVM").d("selectOrder orderId=%s productId=%s", orderId, productId)
         if (orderId != null) {
-            fetchOrderTracking(orderId)
+            fetchOrderTracking(orderId, productId)
         } else {
             _orderTrackingState.value = OrderTrackingState.Idle
         }
     }
 
-    private fun fetchOrderTracking(id: String) {
-        Timber.tag("ActiveOrdersVM").d("fetchOrderTracking id=%s", id)
+    private fun fetchOrderTracking(id: String, productId: String? = null) {
+        Timber.tag("ActiveOrdersVM").d("fetchOrderTracking id=%s productId=%s", id, productId)
         viewModelScope.launch {
             _orderTrackingState.value = OrderTrackingState.Loading
-            getOrderTrackingUseCase(id).fold(
+            getOrderTrackingUseCase(id, productId).fold(
                 onSuccess = { response ->
                     Timber.tag("ActiveOrdersVM").d("fetchOrderTracking success id=%s", id)
                     _orderTrackingState.value = OrderTrackingState.Success(response.data)
@@ -100,7 +100,7 @@ class ActiveOrdersViewModel @Inject constructor(
             updateOrderStatusUseCase(id, productId, status).onSuccess { response ->
                 Timber.tag("ActiveOrdersVM").d("updateOrderStatus success=%s", response.success)
                 if (response.success) {
-                    fetchOrderTracking(id)
+                    fetchOrderTracking(id, productId)
                 }
             }.onFailure { error ->
                 Timber.tag("ActiveOrdersVM").e(error, "updateOrderStatus failed id=%s", id)

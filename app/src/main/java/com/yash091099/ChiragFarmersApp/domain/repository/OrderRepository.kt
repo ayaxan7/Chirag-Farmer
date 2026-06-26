@@ -18,7 +18,7 @@ interface OrderRepository {
     suspend fun getActiveOrders(page: Int, limit: Int): Result<OrdersData>
     fun getActiveOrdersPaged(status: String? = null): Flow<PagingData<Order>>
     suspend fun placeOrder(request: PlaceOrderRequest): Result<PlaceOrderResponse>
-    suspend fun getOrderTracking(id: String): Result<OrderTrackingDto>
+    suspend fun getOrderTracking(id: String, productId: String? = null): Result<OrderTrackingDto>
     suspend fun updateOrderStatus(id: String, request: UpdateOrderStatusRequest): Result<UpdateOrderStatusResponse>
     suspend fun getUserPlacedOrders(type: String, page: Int, limit: Int): Result<UserPlacedOrdersResponse>
     suspend fun getOrderDetails(id: String): Result<OrderDetailsResponse>

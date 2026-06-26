@@ -25,6 +25,8 @@ data class OrderItemDto(
     val orderObjectId: String,
     @SerializedName("orderId")
     val orderId: String,
+    @SerializedName("productId")
+    val productId: String,
     @SerializedName("productName")
     val productName: String,
     @SerializedName("productImage")

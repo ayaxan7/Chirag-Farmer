@@ -53,11 +53,11 @@ class SellViewModel @Inject constructor(
     private val _deleteState = MutableStateFlow<DeleteProductState>(DeleteProductState.Idle)
     val deleteState: StateFlow<DeleteProductState> = _deleteState.asStateFlow()
 
-    private val _selectedOrderId = MutableStateFlow<String?>(null)
-    val selectedOrderId: StateFlow<String?> = _selectedOrderId.asStateFlow()
+    private val _selectedOrder = MutableStateFlow<Pair<String, String>?>(null)
+    val selectedOrder: StateFlow<Pair<String, String>?> = _selectedOrder.asStateFlow()
 
-    fun selectOrder(orderId: String?) {
-        _selectedOrderId.value = orderId
+    fun selectOrder(orderId: String?, productId: String? = null) {
+        _selectedOrder.value = if (orderId != null) Pair(orderId, productId ?: "") else null
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

@@ -7,7 +7,7 @@ import javax.inject.Inject
 class GetOrderTrackingUseCase @Inject constructor(
     private val repository: OrderRepository
 ) {
-    suspend operator fun invoke(id: String): Result<OrderTrackingDto> {
-        return repository.getOrderTracking(id)
+    suspend operator fun invoke(id: String, productId: String? = null): Result<OrderTrackingDto> {
+        return repository.getOrderTracking(id, productId)
     }
 }

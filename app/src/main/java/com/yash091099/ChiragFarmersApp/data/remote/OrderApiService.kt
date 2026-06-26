@@ -35,7 +35,8 @@ interface OrderApiService {
     @GET("api/farmers/orders/{id}")
     suspend fun getOrderTracking(
         @Header("Authorization") token: String,
-        @Path("id") id: String
+        @Path("id") id: String,
+        @Query("productId") productId: String? = null
     ): OrderTrackingDto
 
     @PATCH("api/farmers/orders/{id}/status")
