@@ -30,6 +30,8 @@ data class OrderDetailsData(
     val orderDate: String?,
     @SerializedName("transactionId")
     val transactionId: String?,
+    @SerializedName("cancellationReason")
+    val cancellationReason: String? = null,
     @SerializedName("items")
     val items: List<OrderDetailItem>
 )

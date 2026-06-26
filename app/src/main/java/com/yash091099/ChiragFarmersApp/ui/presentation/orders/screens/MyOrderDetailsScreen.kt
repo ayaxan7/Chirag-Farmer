@@ -403,23 +403,34 @@ fun OrderProductCard(
     if (!cancellationDetails?.cancelledAt.isNullOrBlank()) {
         val cancelledText = parseAndFormatDate(cancellationDetails.cancelledAt) ?: return
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.cancelled),
-                contentDescription = stringResource(R.string.orders_status_cancelled_title),
-                modifier = Modifier.size(20.dp),
-                tint = Color(0xFFF95353)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = stringResource(R.string.orders_cancelled_on, cancelledText),
-                color = Color(0xFFF95353),
-                fontSize = 14.sp,
-                fontWeight = FontWeight.SemiBold
-            )
+        Column(modifier = Modifier.fillMaxWidth()) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.cancelled),
+                    contentDescription = stringResource(R.string.orders_status_cancelled_title),
+                    modifier = Modifier.size(20.dp),
+                    tint = Color(0xFFF95353)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = stringResource(R.string.orders_cancelled_on, cancelledText),
+                    color = Color(0xFFF95353),
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
+            if (!cancellationDetails.reason.isNullOrBlank()) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = stringResource(R.string.orders_cancel_reason_display, cancellationDetails.reason),
+                    color = Color(0xFFF95353),
+                    fontSize = 13.sp,
+                    modifier = Modifier.padding(start = 28.dp)
+                )
+            }
         }
     }
     DeliveryAddressSection(deliveryAddress)
