@@ -330,7 +330,7 @@ fun OrderProductCard(
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
-                    Spacer(modifier = Modifier.height(6.dp))
+//                    Spacer(modifier = Modifier.height(6.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -352,46 +352,6 @@ fun OrderProductCard(
                                 fontSize = 12.sp,
                                 color = TextGray,
                                 fontWeight = FontWeight.Medium
-                            )
-                        }
-                    }
-                }
-            }
-
-            // Show item status if available
-            if (!itemStatus.isNullOrBlank()) {
-                HorizontalDivider(color = BorderColour.copy(alpha = 0.3f), thickness = 0.5.dp)
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(12.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column {
-                        Text(stringResource(R.string.orders_item_status), fontSize = 12.sp, color = TextGray)
-                        Text(
-                            text = itemStatus,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = BGBlack
-                        )
-                    }
-
-                    // Show cancel button if item is not already cancelled
-                    if (itemStatus.lowercase() != "cancelled") {
-                        Button(
-                            onClick = onCancelClick,
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF6B6B)),
-                            shape = RoundedCornerShape(6.dp),
-                            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
-                            modifier = Modifier.height(32.dp)
-                        ) {
-                            Text(
-                                stringResource(R.string.orders_cancel_item_button),
-                                color = Color.White,
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.SemiBold
                             )
                         }
                     }
