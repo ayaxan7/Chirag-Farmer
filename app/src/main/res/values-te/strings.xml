@@ -280,6 +280,8 @@
     <string name="orders_reason_label">కారణం</string>
     <string name="orders_confirm">నిర్ధారించండి</string>
     <string name="orders_cancel">రద్దు చేయండి</string>
+    <string name="orders_item_status">ఐటమ్ స్థితి</string>
+    <string name="orders_cancel_item_button">ఐటమ్ రద్దు చేయండి</string>
 
     <!-- My Orders (Buyer) -->
     <string name="my_orders_title">నా ఆర్డర్లు</string>

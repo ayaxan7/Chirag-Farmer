@@ -291,6 +291,8 @@
     <string name="orders_reason_label">ਕਾਰਨ</string>
     <string name="orders_confirm">ਪੱਕਾ ਕਰੋ</string>
     <string name="orders_cancel">ਰੱਦ ਕਰੋ</string>
+    <string name="orders_item_status">ਆਈਟਮ ਦੀ ਸਥਿਤੀ</string>
+    <string name="orders_cancel_item_button">ਆਈਟਮ ਰੱਦ ਕਰੋ</string>
 
     <!-- My Orders (Buyer) -->
     <string name="my_orders_title">ਮੇਰੇ ਆਰਡਰ</string>

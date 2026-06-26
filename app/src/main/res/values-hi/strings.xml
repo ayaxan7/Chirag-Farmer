@@ -279,6 +279,8 @@
     <string name="orders_reason_label">कारण</string>
     <string name="orders_confirm">पुष्टि करें</string>
     <string name="orders_cancel">रद्द करें</string>
+    <string name="orders_item_status">आइटम स्थिति</string>
+    <string name="orders_cancel_item_button">आइटम रद्द करें</string>
 
     <!-- My Orders (Buyer) -->
     <string name="my_orders_title">मेरे ऑर्डर</string>
