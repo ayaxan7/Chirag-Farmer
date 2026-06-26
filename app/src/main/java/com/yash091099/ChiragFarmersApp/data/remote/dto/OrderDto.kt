@@ -36,7 +36,7 @@ data class OrderItemDto(
     @SerializedName("quantity")
     val quantity: String,
     @SerializedName("amountPaid")
-    val amountPaid: Int,
+    val amountPaid: Double,
     @SerializedName("location")
     val location: String,
     @SerializedName("status")

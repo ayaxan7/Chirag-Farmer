@@ -8,7 +8,7 @@ data class Order(
     val buyerName: String,
     val buyerContact: String? = null,
     val quantity: String,
-    val amountPaid: Int,
+    val amountPaid: Double,
     val location: String,
     val status: String
 )
