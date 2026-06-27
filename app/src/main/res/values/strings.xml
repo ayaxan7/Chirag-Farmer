@@ -253,6 +253,11 @@
     <string name="payment_pay_now">Pay Now</string>
     <string name="payment_navigate_description">Navigate</string>
     <string name="payment_online">Online</string>
+    <string name="payment_online_payment">Online Payment (Card/UPI/Wallet)</string>
+    <string name="error_payment_initialization_failed">Unable to initialize payment. Please try again.</string>
+    <string name="error_payment_verification_failed">Payment verification failed. Please contact support.</string>
+    <string name="error_payment_cancelled">Payment was cancelled.</string>
+    <string name="error_payment_not_captured">Payment could not be confirmed. Your order has not been placed. If any amount was deducted, it will be returned within 2-5 business days.</string>
     <string name="payment_successful">Payment Successful</string>
     <string name="payment_thank_you">Thank You for purchase</string>
     <string name="payment_success_description">Payment Success</string>
@@ -618,7 +623,6 @@
 
     <!-- Snackbar Messages -->
     <string name="snackbar_product_added">Product added to cart!</string>
-    <string name="snackbar_phonepe_unavailable">Unable to launch PhonePe checkout</string>
     <string name="snackbar_address_unknown_error">Unknown error</string>
 
     <!-- ViewModel Error Strings -->
@@ -627,9 +631,6 @@
     <string name="error_cart_data_not_found">Cart data not found. Please try again.</string>
     <string name="error_no_items_in_cart">No items in cart to order.</string>
     <string name="error_order_placement_failed">Order placement failed</string>
-    <string name="error_phonepe_data_not_found">PhonePe checkout data not found. Please try again.</string>
-    <string name="error_phonepe_order_id_missing">PhonePe merchant order id is missing.</string>
-    <string name="error_phonepe_payment_failed">PhonePe payment failed</string>
     <string name="error_product_id_not_found">Product ID not found</string>
     <string name="error_image_upload_failed">Failed to upload image: %s</string>
     <string name="error_invalid_price">Invalid price value</string>
@@ -788,9 +789,6 @@
     <string name="error_unknown_disease">Unknown Disease</string>
     <string name="error_no_description">No description available.</string>
     <string name="error_home_booking_failed">Booking failed</string>
-    <string name="error_phonepe_token_missing">PhonePe checkout token was not returned by the server.</string>
-    <string name="error_phonepe_verification_failed">Unable to verify PhonePe payment</string>
-    <string name="error_phonepe_verification_timed_out">PhonePe payment verification timed out.</string>
     <string name="error_payment_still_pending">Payment is still pending. Please check again after some time.</string>
     <string name="chat_error_generate_response">Failed to generate AI response: %s</string>
     <string name="chat_option_yellow_leaves">Yellow leaves</string>
@@ -800,7 +798,6 @@
     <string name="chat_option_other">Other</string>
 
     <!-- Additional ViewModel Error Strings -->
-    <string name="error_unable_start_phonepe_checkout">Unable to start PhonePe checkout</string>
     <string name="error_location_permission_not_granted">Location permission not granted</string>
     <string name="error_fetching_location">Error fetching location: %s</string>
     <string name="error_updating_location">Error updating location: %s</string>

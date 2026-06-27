@@ -19,9 +19,11 @@ val localProperties = Properties().apply {
 val nominatimBaseUrl=localProperties.getProperty("OSM_NOMINATIM_BASE_URL")?:"MISSING_BASE_URL"
 val cloudinaryCloudName=localProperties.getProperty("CLOUD_NAME")?:"MISSING_CLOUD_NAME"
 val cloudinaryUploadPreset=localProperties.getProperty("CLOUDINARY_UPLOAD_PRESET")?:"MISSING_UPLOAD_PRESET"
-val phonePeMerchantId = localProperties.getProperty("PHONEPE_MERCHANT_ID") ?: "MISSING_PHONEPE_MERCHANT_ID"
+
 val hashidsSalt = localProperties.getProperty("HASHIDS_SALT") ?: "MISSING_HASHIDS_SALT"
 val sentryDsn = localProperties.getProperty("SENTRY_DSN") ?: "MISSING_SENTRY_DSN"
+val razorpayKeyId = localProperties.getProperty("RAZORPAY_KEY_ID") ?: "MISSING_RAZORPAY_KEY_ID"
+val razorpayKeySecret = localProperties.getProperty("RAZORPAY_KEY_SECRET") ?: "MISSING_RAZORPAY_KEY_SECRET"
 android {
     namespace = "com.yash091099.ChiragFarmersApp"
     compileSdk {
@@ -42,9 +44,11 @@ android {
         buildConfigField("String", "OSM_NOMINATIM_BASE_URL", "\"$nominatimBaseUrl\"")
         buildConfigField("String", "CLOUDINARY_CLOUD_NAME", "\"$cloudinaryCloudName\"")
         buildConfigField("String", "CLOUDINARY_UPLOAD_PRESET", "\"$cloudinaryUploadPreset\"")
-        buildConfigField("String", "PHONEPE_MERCHANT_ID", "\"$phonePeMerchantId\"")
         buildConfigField("String", "HASHIDS_SALT", "\"$hashidsSalt\"")
         buildConfigField("String", "SENTRY_DSN", "\"$sentryDsn\"")
+        buildConfigField("String", "RAZORPAY_KEY_ID", "\"$razorpayKeyId\"")
+        buildConfigField("String", "RAZORPAY_KEY_SECRET", "\"$razorpayKeySecret\"")
+        manifestPlaceholders["razorpayKeyId"] = razorpayKeyId
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -148,7 +152,7 @@ dependencies {
     implementation(libs.androidx.compose.material3.window.size.class1)
 //    implementation(libs.cloudinary.android)
     implementation(libs.cloudinary.android.core)
-    implementation(libs.phonePe)
+    implementation(libs.razorpay)
     // Debug builds: the real interceptor.
     debugImplementation(libs.logpose.android)
     // Release builds: a zero-overhead no-op with the SAME api — keeps LogPose out of

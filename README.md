@@ -14,14 +14,14 @@ Started with a simple MVP, just a product listing with cart and orders. But as t
 
 The backend is Node.js + Express with MongoDB (separate repo). Initially I was making direct API calls from the app but then added a proper repository layer with caching so the app works decently even on slow networks...which is important because a lot of users are in areas with patchy connectivity.
 
-Added PhonePe payments because UPI is huge in India, Cloudinary for image handling, OSM for maps (google maps api is expensive), and later integrated AI for crop disease detection using image analysis.
+Added Razorpay payments because UPI and cards are huge in India, Cloudinary for image handling, OSM for maps (google maps api is expensive), and later integrated AI for crop disease detection using image analysis.
 
 ## What's in it
 
 - **Marketplace:** Browse/search products by category, seller profiles, product details with reviews
 - **Shopping Cart:** Add/remove items, quantity management, buy now flow
 - **Orders:** Place orders, track status, cancel items, order history
-- **Payments:** PhonePe UPI integration with deep link fallback
+- **Payments:** Razorpay (Card/UPI/Wallet) + Cash on Delivery
 - **AI Crop Advisory:** Chat with AI assistant for farming advice, upload crop photos for disease detection, get remedy recommendations in Hindi/Punjabi/Telugu
 - **Service Booking:** Schedule drone spraying services with location and farm area selection
 - **Authentication:** Phone OTP via MSG91, profile management, business info setup
@@ -31,7 +31,7 @@ Added PhonePe payments because UPI is huge in India, Cloudinary for image handli
 
 ## Built with
 
-Kotlin, Jetpack Compose, Material 3, Clean Architecture, Hilt DI, Retrofit2, Room, DataStore, Paging 3, Coil, Firebase (FCM + Crashlytics), Sentry, PhonePe SDK, Cloudinary, OpenStreetMap, Hashids.
+Kotlin, Jetpack Compose, Material 3, Clean Architecture, Hilt DI, Retrofit2, Room, DataStore, Paging 3, Coil, Firebase (FCM + Crashlytics), Sentry, Razorpay, Cloudinary, OpenStreetMap, Hashids.
 
 ## Screenshots
 
@@ -54,7 +54,6 @@ You need to set up `local.properties` with API keys (see the build file for what
 OSM_NOMINATIM_BASE_URL=https://nominatim.openstreetmap.org/
 CLOUD_NAME=your_cloud_name
 CLOUDINARY_UPLOAD_PRESET=your_preset
-PHONEPE_MERCHANT_ID=your_merchant_id
 HASHIDS_SALT=your_salt
 SENTRY_DSN=your_dsn
 ```

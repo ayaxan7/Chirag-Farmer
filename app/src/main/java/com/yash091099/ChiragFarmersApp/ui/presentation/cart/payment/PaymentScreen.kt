@@ -1,5 +1,6 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.cart.payment
 
+import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -17,8 +18,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -37,13 +36,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.res.stringResource
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.navigation.NavHostController
+import com.razorpay.Checkout
+import com.razorpay.PaymentData
 import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.ChiragButton
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragTopBar
@@ -51,6 +50,7 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost.Route
 import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
 import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
 import com.yash091099.ChiragFarmersApp.ui.theme.BorderColour
+import org.json.JSONObject
 
 @Composable
 fun PaymentScreen(
@@ -64,27 +64,48 @@ fun PaymentScreen(
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
-    val installedUpiApps by viewModel.installedUpiApps.collectAsState()
+    val activity = context as? Activity
     val paymentState by viewModel.paymentState.collectAsState()
-    val phonePeLaunchRequest by viewModel.phonePeLaunchRequest.collectAsState()
+    val razorpayCheckoutRequest by viewModel.razorpayCheckoutRequest.collectAsState()
     var selectedPayment by remember { mutableStateOf<String?>(null) }
 
-    val phonePeLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()
-    ) {
-        viewModel.verifyPhonePePayment()
+    val razorpayCheckout = remember { Checkout() }
+    val razorpayListener = remember {
+        object : com.razorpay.PaymentResultWithDataListener {
+            override fun onPaymentSuccess(razorpayPaymentId: String?, paymentData: PaymentData?) {
+                viewModel.onPaymentSuccess(paymentData?.paymentId, paymentData?.orderId, paymentData?.signature)
+            }
+            override fun onPaymentError(code: Int, response: String?, paymentData: PaymentData?) {
+                viewModel.onPaymentError(code, response)
+            }
+        }
     }
 
-    val phonePeUnavailableMsg = stringResource(R.string.snackbar_phonepe_unavailable)
-    LaunchedEffect(phonePeLaunchRequest) {
-        val request = phonePeLaunchRequest ?: return@LaunchedEffect
-
+    LaunchedEffect(razorpayCheckoutRequest) {
+        val options = razorpayCheckoutRequest ?: return@LaunchedEffect
         try {
-            startPhonePeCheckout(context, request.token, request.orderId, phonePeLauncher)
+            val jsonOptions = JSONObject().apply {
+                put("key", options.key)
+                put("amount", options.amount)
+                put("currency", options.currency)
+                put("order_id", options.orderId)
+                put("name", options.name)
+                put("description", options.description)
+                put("theme.color", options.themeColor)
+                val prefill = JSONObject()
+                options.prefillEmail?.let { prefill.put("email", it) }
+                options.prefillContact?.let { prefill.put("contact", it) }
+                put("prefill", prefill)
+            }
+            razorpayCheckout.setKeyID(options.key)
+            activity?.let {
+                razorpayCheckout.merchantActivityResult(it, 0, 0, null, razorpayListener, null)
+                razorpayCheckout.open(it, jsonOptions)
+            }
         } catch (e: Exception) {
-            snackbarHostState.showSnackbar(e.message ?: phonePeUnavailableMsg)
+            viewModel.onPaymentError(-1, e.message ?: "Failed to launch Razorpay checkout")
         } finally {
-            viewModel.clearPhonePeLaunchRequest()
+            viewModel.clearRazorpayCheckoutRequest()
         }
     }
 
@@ -122,12 +143,12 @@ fun PaymentScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
-                    .padding(bottom = 280.dp) // Space for price summary
+                    .padding(bottom = 280.dp)
             ) {
                 Spacer(modifier = Modifier.height(16.dp))
-                // Credit & Debit Cards Section
+
                 Text(
-                    text = stringResource(R.string.payment_credit_debit_cards),
+                    text = stringResource(R.string.payment_more_options),
                     fontSize = 15.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Color.Black,
@@ -138,67 +159,11 @@ fun PaymentScreen(
 
                 PaymentOptionItem(
                     icon = R.drawable.ic_card,
-                    title = stringResource(R.string.payment_add_card),
-                    isSelected = false,
-                    showChevron = true,
-                    onClick = { /* Navigate to add card */ },
+                    title = stringResource(R.string.payment_online_payment),
+                    isSelected = selectedPayment == "Online",
+                    onClick = { selectedPayment = "Online" },
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                // UPI Payments Section
-                if (installedUpiApps.isNotEmpty()) {
-                    Text(
-                        text = stringResource(R.string.payment_upi),
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color.Black,
-                        modifier = Modifier.padding(horizontal = 16.dp)
-                    )
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    installedUpiApps.forEach { app ->
-                        PaymentOptionItem(
-                            icon = app.icon,
-                            title = app.name,
-                            isSelected = selectedPayment == app.packageName,
-                            onClick = { selectedPayment = app.packageName },
-                            modifier = Modifier.padding(horizontal = 16.dp)
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
-                    }
-                }
-
-                // More Payment Options Section
-                Text(
-                    text = stringResource(R.string.payment_more_options),
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.Black,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-
-//                Spacer(modifier = Modifier.height(12.dp))
-//
-//                PaymentOptionItem(
-//                    icon = R.drawable.ic_card,
-//                    title = "Add Kisan Card",
-//                    isSelected = selectedPayment == "Add Kisan Card",
-//                    onClick = { selectedPayment = "Add Kisan Card" },
-//                    modifier = Modifier.padding(horizontal = 16.dp)
-//                )
-//
-//                Spacer(modifier = Modifier.height(12.dp))
-//
-//                PaymentOptionItem(
-//                    icon = R.drawable.ic_wallet,
-//                    title = "Kisan Wallet",
-//                    isSelected = selectedPayment == "Kisan Wallet",
-//                    onClick = { selectedPayment = "Kisan Wallet" },
-//                    modifier = Modifier.padding(horizontal = 16.dp)
-//                )
 
                 Spacer(modifier = Modifier.height(12.dp))
 
@@ -213,7 +178,6 @@ fun PaymentScreen(
                 Spacer(modifier = Modifier.height(24.dp))
             }
 
-            // Price Summary (Fixed at bottom)
             Column(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
@@ -225,7 +189,6 @@ fun PaymentScreen(
                     )
                     .padding(16.dp)
             ) {
-                // Sub-Total
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -243,7 +206,6 @@ fun PaymentScreen(
                         color = BGBlack
                     )
                 }
-                // Delivery Fee
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -261,8 +223,6 @@ fun PaymentScreen(
                         color = BGBlack
                     )
                 }
-
-                // Discount
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -280,7 +240,6 @@ fun PaymentScreen(
                         color = BGBlack
                     )
                 }
-                // Total Cost
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -301,7 +260,6 @@ fun PaymentScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Show loading indicator or button based on operation status
                 if (paymentState is PaymentUiState.Loading) {
                     Box(
                         modifier = Modifier
@@ -335,27 +293,12 @@ fun PaymentScreen(
     }
 }
 
-private fun startPhonePeCheckout(
-    context: android.content.Context,
-    token: String,
-    orderId: String,
-    phonePeLauncher: androidx.activity.result.ActivityResultLauncher<android.content.Intent>
-) {
-    val phonePeKtClass = Class.forName("com.phonepe.intent.sdk.api.PhonePeKt")
-    val startMethod = phonePeKtClass.methods.firstOrNull { method ->
-        method.name == "startCheckoutPage" && method.parameterTypes.size == 4
-    } ?: error("PhonePe checkout launcher is unavailable")
-
-    startMethod.invoke(null, context, token, orderId, phonePeLauncher)
-}
-
 @Composable
 fun PaymentOptionItem(
     icon: Any?,
     title: String,
     modifier: Modifier = Modifier,
     isSelected: Boolean,
-    showChevron: Boolean = false,
     onClick: () -> Unit,
 ) {
     Row(
@@ -370,7 +313,6 @@ fun PaymentOptionItem(
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-        // Icon
         if (icon != null) {
             Box(
                 modifier = Modifier
@@ -387,7 +329,6 @@ fun PaymentOptionItem(
             }
         }
 
-        // Title and Offers
         Row(
             modifier = Modifier.weight(1f),
             verticalAlignment = Alignment.CenterVertically,
@@ -398,35 +339,24 @@ fun PaymentOptionItem(
             )
         }
 
-        // Right Icon (Chevron or Radio)
-        if (showChevron) {
-            Icon(
-                imageVector = Icons.Default.ChevronRight,
-                contentDescription = stringResource(R.string.payment_navigate_description),
-                tint = Color.Black,
-                modifier = Modifier.size(20.dp)
-            )
-        } else {
-            // Radio button
-            Box(
-                modifier = Modifier
-                    .size(20.dp)
-                    .clip(CircleShape)
-                    .background(if (isSelected) BGWhite else Color.Transparent)
-                    .border(
-                        width = 1.dp,
-                        color = if (isSelected) BGBlack else BorderColour,
-                        shape = CircleShape
-                    ), contentAlignment = Alignment.Center
-            ) {
-                if (isSelected) {
-                    Box(
-                        modifier = Modifier
-                            .size(12.dp)
-                            .clip(CircleShape)
-                            .background(BGBlack)
-                    )
-                }
+        Box(
+            modifier = Modifier
+                .size(20.dp)
+                .clip(CircleShape)
+                .background(if (isSelected) BGWhite else Color.Transparent)
+                .border(
+                    width = 1.dp,
+                    color = if (isSelected) BGBlack else BorderColour,
+                    shape = CircleShape
+                ), contentAlignment = Alignment.Center
+        ) {
+            if (isSelected) {
+                Box(
+                    modifier = Modifier
+                        .size(12.dp)
+                        .clip(CircleShape)
+                        .background(BGBlack)
+                )
             }
         }
     }

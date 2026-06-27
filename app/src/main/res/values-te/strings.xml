@@ -601,7 +601,6 @@
 
     <!-- Snackbar Messages -->
     <string name="snackbar_product_added">ఉత్పత్తి కార్ట్‌కు జోడించబడింది!</string>
-    <string name="snackbar_phonepe_unavailable">PhonePe చెక్‌అవుట్ ప్రారంభించడం సాధ్యం కాలేదు</string>
     <string name="snackbar_address_unknown_error">తెలియని లోపం</string>
 
     <!-- ViewModel Error Strings -->
@@ -610,9 +609,6 @@
     <string name="error_cart_data_not_found">కార్ట్ డేటా కనుగొనబడలేదు. దయచేసి మళ్ళీ ప్రయత్నించండి.</string>
     <string name="error_no_items_in_cart">ఆర్డర్ చేయడానికి కార్ట్‌లో ఐటమ్‌లు లేవు.</string>
     <string name="error_order_placement_failed">ఆర్డర్ ప్లేస్‌మెంట్ విఫలమైంది</string>
-    <string name="error_phonepe_data_not_found">PhonePe చెక్‌అవుట్ డేటా కనుగొనబడలేదు. దయచేసి మళ్ళీ ప్రయత్నించండి.</string>
-    <string name="error_phonepe_order_id_missing">PhonePe మర్చంట్ ఆర్డర్ ID లేదు.</string>
-    <string name="error_phonepe_payment_failed">PhonePe చెల్లింపు విఫలమైంది</string>
     <string name="error_product_id_not_found">ఉత్పత్తి ID కనుగొనబడలేదు</string>
     <string name="error_image_upload_failed">చిత్రం అప్‌లోడ్ విఫలమైంది: %s</string>
     <string name="error_invalid_price">చెల్లని ధర విలువ</string>
@@ -778,9 +774,6 @@
     <string name="error_unknown_disease">తెలియని వ్యాధి</string>
     <string name="error_no_description">వివరణ అందుబాటులో లేదు.</string>
     <string name="error_home_booking_failed">బుకింగ్ విఫలమైంది</string>
-    <string name="error_phonepe_token_missing">PhonePe చెక్‌అవుట్ టోకెన్ సర్వర్ ద్వారా తిరిగి ఇవ్వబడలేదు.</string>
-    <string name="error_phonepe_verification_failed">PhonePe చెల్లింపును ధృవీకరించలేరు</string>
-    <string name="error_phonepe_verification_timed_out">PhonePe చెల్లింపు ధృవీకరణ సమయం ముగిసింది.</string>
     <string name="error_payment_still_pending">చెల్లింపు ఇంకా పెండింగ్‌లో ఉంది. దయచేసి కొంత సమయం తర్వాత మళ్ళీ తనిఖీ చేయండి.</string>
     <string name="chat_error_generate_response">AI ప్రతిస్పందనను రూపొందించడంలో విఫలమైంది: %s</string>
     <string name="chat_option_yellow_leaves">పసుపు ఆకులు</string>
@@ -790,7 +783,6 @@
     <string name="chat_option_other">ఇతర</string>
 
     <!-- Additional ViewModel Error Strings -->
-    <string name="error_unable_start_phonepe_checkout">PhonePe చెక్‌అవుట్ ప్రారంభించడంలో విఫలమైంది</string>
     <string name="error_location_permission_not_granted">లొకేషన్ అనుమతి మంజూరు చేయబడలేదు</string>
     <string name="error_fetching_location">లొకేషన్ పొందడంలో లోపం: %s</string>
     <string name="error_updating_location">లొకేషన్ నవీకరించడంలో లోపం: %s</string>

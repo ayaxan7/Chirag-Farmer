@@ -1,49 +1,47 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.cart.payment
 
+import android.app.Activity
 import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
 import com.yash091099.ChiragFarmersApp.R
-import android.graphics.drawable.Drawable
 import timber.log.Timber
-import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yash091099.ChiragFarmersApp.data.CartDataCache
+import com.yash091099.ChiragFarmersApp.data.local.ChiragDataStore
 import com.yash091099.ChiragFarmersApp.data.local.OrderResponseCache
+import com.yash091099.ChiragFarmersApp.data.local.PendingPayment
+import com.yash091099.ChiragFarmersApp.data.local.PendingPaymentStorage
 import com.yash091099.ChiragFarmersApp.data.remote.dto.CartItemDto
 import com.yash091099.ChiragFarmersApp.data.remote.dto.OrderItemRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.PlaceOrderRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.PlaceOrderResponse
-import com.yash091099.ChiragFarmersApp.data.remote.dto.PhonePeCheckoutData
-import com.yash091099.ChiragFarmersApp.data.remote.dto.PhonePePaymentStatusResponse
-import com.yash091099.ChiragFarmersApp.data.remote.dto.PhonePeVerifyRequest
-import com.yash091099.ChiragFarmersApp.utils.getErrorMessage
-import com.yash091099.ChiragFarmersApp.domain.usecase.GetPhonePePaymentStatusUseCase
-import com.yash091099.ChiragFarmersApp.domain.usecase.InitiatePhonePeCheckoutUseCase
+import com.yash091099.ChiragFarmersApp.data.remote.dto.VerifyRazorpayPaymentRequest
+import com.yash091099.ChiragFarmersApp.domain.usecase.CancelCheckoutSessionUseCase
+import com.yash091099.ChiragFarmersApp.domain.usecase.CreateRazorpayOrderUseCase
 import com.yash091099.ChiragFarmersApp.domain.usecase.PlaceOrderUseCase
-import com.yash091099.ChiragFarmersApp.domain.usecase.VerifyPhonePePaymentUseCase
+import com.yash091099.ChiragFarmersApp.domain.usecase.VerifyRazorpayPaymentUseCase
+import com.yash091099.ChiragFarmersApp.utils.getErrorMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import org.json.JSONObject
 import javax.inject.Inject
-import java.util.Locale
 
-data class UpiAppInfo(
-    val name: String,
-    val packageName: String,
-    val icon: Drawable?
-)
-
-data class PhonePeLaunchRequest(
-    val token: String,
+data class RazorpayCheckoutOptions(
+    val key: String,
+    val amount: Int,
+    val currency: String,
     val orderId: String,
-    val merchantOrderId: String
+    val name: String,
+    val description: String,
+    val prefillEmail: String?,
+    val prefillContact: String?,
+    val themeColor: String
 )
 
 sealed class PaymentUiState {
@@ -57,112 +55,40 @@ sealed class PaymentUiState {
 }
 
 private const val CASH_ON_DELIVERY = "Cash On Delivery"
-private const val PHONEPE_ONLINE_PAYMENT = "Online"
-private const val PHONEPE_STATUS_COMPLETED = "COMPLETED"
-private const val PHONEPE_STATUS_SUCCESS = "SUCCESS"
-private const val PHONEPE_STATUS_SUCCEEDED = "SUCCEEDED"
-private const val PHONEPE_STATUS_PAID = "PAID"
-private const val PHONEPE_STATUS_PENDING = "PENDING"
-private const val PHONEPE_STATUS_PROCESSING = "PROCESSING"
-private const val PHONEPE_STATUS_IN_PROGRESS = "IN_PROGRESS"
-private const val PHONEPE_STATUS_INITIATED = "INITIATED"
-private const val PHONEPE_STATUS_FAILED = "FAILED"
-private const val PHONEPE_STATUS_CANCELLED = "CANCELLED"
-private const val PHONEPE_POLL_INTERVAL_MS = 15_000L
-private const val PHONEPE_POLL_MAX_ATTEMPTS = 10
+private const val ONLINE_PAYMENT = "Online"
 
 @HiltViewModel
 class PaymentViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val placeOrderUseCase: PlaceOrderUseCase,
-    private val initiatePhonePeCheckoutUseCase: InitiatePhonePeCheckoutUseCase,
-    private val verifyPhonePePaymentUseCase: VerifyPhonePePaymentUseCase,
-    private val getPhonePePaymentStatusUseCase: GetPhonePePaymentStatusUseCase,
+    private val createRazorpayOrderUseCase: CreateRazorpayOrderUseCase,
+    private val verifyRazorpayPaymentUseCase: VerifyRazorpayPaymentUseCase,
+    private val cancelCheckoutSessionUseCase: CancelCheckoutSessionUseCase,
     private val orderResponseCache: OrderResponseCache,
-    private val cartDataCache: CartDataCache
+    private val cartDataCache: CartDataCache,
+    private val pendingPaymentStorage: PendingPaymentStorage,
+    private val chiragDataStore: ChiragDataStore
 ) : ViewModel() {
-
-    private val _installedUpiApps = MutableStateFlow<List<UpiAppInfo>>(emptyList())
-    val installedUpiApps: StateFlow<List<UpiAppInfo>> = _installedUpiApps.asStateFlow()
 
     private val _paymentState = MutableStateFlow<PaymentUiState>(PaymentUiState.Idle)
     val paymentState: StateFlow<PaymentUiState> = _paymentState.asStateFlow()
 
-    private val _phonePeLaunchRequest = MutableStateFlow<PhonePeLaunchRequest?>(null)
-    val phonePeLaunchRequest: StateFlow<PhonePeLaunchRequest?> = _phonePeLaunchRequest.asStateFlow()
+    private val _razorpayCheckoutRequest = MutableStateFlow<RazorpayCheckoutOptions?>(null)
+    val razorpayCheckoutRequest: StateFlow<RazorpayCheckoutOptions?> = _razorpayCheckoutRequest.asStateFlow()
 
-    private var phonePePollingJob: Job? = null
-    private var pendingPhonePeCheckout: PhonePeCheckoutData? = null
-
-
-    init {
-        fetchInstalledUpiApps()
-    }
-
-    private fun fetchInstalledUpiApps() {
-        val upiIntent = Intent(Intent.ACTION_VIEW).apply {
-            data = "upi://pay?pa=dummy@upi".toUri()
-        }
-        
-        val packageManager = context.packageManager
-        val resolveInfoList = packageManager.queryIntentActivities(upiIntent, PackageManager.MATCH_ALL)
-        Timber.d("Found ${resolveInfoList.size} UPI apps")
-        var upiApps = resolveInfoList.map { resolveInfo ->
-            UpiAppInfo(
-                name = resolveInfo.loadLabel(packageManager).toString(),
-                packageName = resolveInfo.activityInfo.packageName,
-                icon = resolveInfo.loadIcon(packageManager)
-            )
-        }.distinctBy { it.packageName }
-
-        // Fallback: If no apps found via intent, check for common UPI apps by package name
-        if (upiApps.isEmpty()) {
-            Timber.d("No apps found via intent, trying fallback...")
-            val commonUpiPackages = listOf(
-                "com.google.android.apps.nbu.paisa.user" to "Google Pay",
-                "com.phonepe.app" to "PhonePe",
-                "net.one97.paytm" to "Paytm",
-                "in.org.npci.upiapp" to "BHIM",
-                "com.mobikwik_new" to "Mobikwik",
-                "com.freecharge.android" to "Freecharge"
-            )
-
-            val fallbackApps = mutableListOf<UpiAppInfo>()
-            for ((pkg, name) in commonUpiPackages) {
-                try {
-                    val appInfo = packageManager.getApplicationInfo(pkg, 0)
-                    if (appInfo.enabled) {
-                        fallbackApps.add(UpiAppInfo(
-                            name = name,
-                            packageName = pkg,
-                            icon = packageManager.getApplicationIcon(appInfo)
-                        ))
-                    }
-                } catch (e: PackageManager.NameNotFoundException) {
-                    // App not installed
-                    Timber.d("App not installed: $pkg with ${e.stackTrace}")
-                }
-            }
-            upiApps = fallbackApps
-        }
-
-        Timber.d("Installed UPI apps: $upiApps")
-        _installedUpiApps.value = upiApps
-    }
+    private var pendingRazorpayOrderId: String? = null
 
     fun placeOrder(paymentMethod: String) {
         if (paymentMethod.equals(CASH_ON_DELIVERY, ignoreCase = true)) {
-            placeCashOnDeliveryOrder(paymentMethod)
+            placeCashOnDeliveryOrder()
         } else {
-            startPhonePeCheckout()
+            startRazorpayCheckout()
         }
     }
 
-    private fun placeCashOnDeliveryOrder(paymentMethod: String) {
+    private fun placeCashOnDeliveryOrder() {
         viewModelScope.launch {
             _paymentState.value = PaymentUiState.Loading
-            phonePePollingJob?.cancel()
-            clearPhonePeCheckoutState()
             try {
                 val cachedCartData = cartDataCache.getCartData()
                 if (cachedCartData == null) {
@@ -171,7 +97,7 @@ class PaymentViewModel @Inject constructor(
                 }
 
                 val request = buildPlaceOrderRequest(
-                    paymentMethod = paymentMethod,
+                    paymentMethod = CASH_ON_DELIVERY,
                     cachedCartDataItems = cachedCartData.items,
                     shippingAddress = cachedCartData.shippingAddress
                 )
@@ -181,19 +107,20 @@ class PaymentViewModel @Inject constructor(
                     return@launch
                 }
 
-                Timber.d("Placing order with request: $request")
+                Timber.d("Placing COD order with request: $request")
 
                 placeOrderUseCase(request).fold(
                     onSuccess = { response ->
-                        Timber.d("Order placed successfully: ${response.data?.order?.orderId}")
+                        Timber.d("COD order placed successfully: ${response.data?.order?.orderId}")
                         orderResponseCache.setOrderResponse(response)
-                        cartDataCache.clearCartData() // Clear cart data after successful order
-                        clearPhonePeCheckoutState()
+                        cartDataCache.clearCartData()
                         _paymentState.value = PaymentUiState.Success(response)
                     },
                     onFailure = { exception ->
-                        Timber.e(exception, "Order placement failed")
-                        _paymentState.value = PaymentUiState.Error(exception.message ?: context.getString(R.string.error_order_placement_failed))
+                        Timber.e(exception, "COD order placement failed")
+                        _paymentState.value = PaymentUiState.Error(
+                            exception.message ?: context.getString(R.string.error_order_placement_failed)
+                        )
                     }
                 )
             } catch (e: Exception) {
@@ -203,12 +130,9 @@ class PaymentViewModel @Inject constructor(
         }
     }
 
-    private fun startPhonePeCheckout() {
+    private fun startRazorpayCheckout() {
         viewModelScope.launch {
             _paymentState.value = PaymentUiState.Loading
-            phonePePollingJob?.cancel()
-            clearPhonePeCheckoutState()
-
             try {
                 val cachedCartData = cartDataCache.getCartData()
                 if (cachedCartData == null) {
@@ -217,7 +141,7 @@ class PaymentViewModel @Inject constructor(
                 }
 
                 val request = buildPlaceOrderRequest(
-                    paymentMethod = PHONEPE_ONLINE_PAYMENT,
+                    paymentMethod = ONLINE_PAYMENT,
                     cachedCartDataItems = cachedCartData.items,
                     shippingAddress = cachedCartData.shippingAddress
                 )
@@ -227,159 +151,130 @@ class PaymentViewModel @Inject constructor(
                     return@launch
                 }
 
-                Timber.d("Creating PhonePe checkout with request: $request")
+                Timber.d("Creating Razorpay checkout with request: $request")
 
-                initiatePhonePeCheckoutUseCase(request).fold(
+                createRazorpayOrderUseCase(request).fold(
                     onSuccess = { response ->
                         if (!response.success) {
-                            _paymentState.value = PaymentUiState.Error(response.message)
-                            return@fold
-                        }
-
-                        val checkoutData = response.data
-                        val token = checkoutData?.token
-                        val orderId = checkoutData?.phonePeOrderId
-                            ?: checkoutData?.orderId
-                            ?: checkoutData?.merchantOrderId
-                        val merchantOrderId = checkoutData?.merchantOrderId
-                            ?: checkoutData?.orderId
-
-                        if (token.isNullOrBlank() || orderId.isNullOrBlank() || merchantOrderId.isNullOrBlank()) {
                             _paymentState.value = PaymentUiState.Error(
-                                response.message.ifBlank { context.getString(R.string.error_phonepe_token_missing) }
+                                response.message.ifBlank { context.getString(R.string.error_payment_initialization_failed) }
                             )
                             return@fold
                         }
 
-                        pendingPhonePeCheckout = checkoutData
-                        _phonePeLaunchRequest.value = PhonePeLaunchRequest(
-                            token = token,
-                            orderId = orderId,
-                            merchantOrderId = merchantOrderId
+                        val data = response.data ?: run {
+                            _paymentState.value = PaymentUiState.Error(
+                                context.getString(R.string.error_payment_initialization_failed)
+                            )
+                            return@fold
+                        }
+
+                        pendingRazorpayOrderId = data.razorpayOrderId
+
+                        pendingPaymentStorage.savePendingPayment(
+                            PendingPayment(
+                                razorpayOrderId = data.razorpayOrderId,
+                                amount = data.amount,
+                                paymentType = ONLINE_PAYMENT
+                            )
+                        )
+
+                        _paymentState.value = PaymentUiState.Idle
+
+                        val userPhone = chiragDataStore.getUserPhone().first()
+
+                        _razorpayCheckoutRequest.value = RazorpayCheckoutOptions(
+                            key = data.razorpayKeyId,
+                            amount = (data.amount * 100).toInt(),
+                            currency = data.currency,
+                            orderId = data.razorpayOrderId,
+                            name = "Chirag",
+                            description = "Order Payment",
+                            prefillEmail = null,
+                            prefillContact = userPhone,
+                            themeColor = "#3399cc"
                         )
                     },
                     onFailure = { exception ->
-                        Timber.e(exception, "PhonePe checkout failed")
+                        Timber.e(exception, "Razorpay checkout creation failed")
                         _paymentState.value = PaymentUiState.Error(
-                            exception.message ?: context.getString(R.string.error_unable_start_phonepe_checkout)
+                            exception.message ?: context.getString(R.string.error_payment_initialization_failed)
                         )
                     }
                 )
             } catch (e: Exception) {
-                Timber.e(e, "Exception in startPhonePeCheckout")
+                Timber.e(e, "Exception in startRazorpayCheckout")
                 _paymentState.value = PaymentUiState.Error(getErrorMessage(e))
             }
         }
     }
 
-    fun verifyPhonePePayment() {
-        val pendingCheckout = pendingPhonePeCheckout ?: run {
-            _paymentState.value = PaymentUiState.Error(context.getString(R.string.error_phonepe_data_not_found))
+    fun onPaymentSuccess(razorpayPaymentId: String?, razorpayOrderId: String?, razorpaySignature: String?) {
+        val orderId = razorpayOrderId ?: pendingRazorpayOrderId
+        if (orderId == null || razorpayPaymentId == null || razorpaySignature == null) {
+            _paymentState.value = PaymentUiState.Error(
+                context.getString(R.string.error_payment_verification_failed)
+            )
             return
         }
+        verifyPayment(orderId, razorpayPaymentId, razorpaySignature)
+    }
 
-        val merchantOrderId = pendingCheckout.merchantOrderId
-        if (merchantOrderId.isNullOrBlank()) {
-            _paymentState.value = PaymentUiState.Error(context.getString(R.string.error_phonepe_order_id_missing))
-            return
+    fun onPaymentError(code: Int, description: String?) {
+        Timber.e("Razorpay payment error: code=$code description=$description")
+        pendingRazorpayOrderId?.let { orderId ->
+            pendingPaymentStorage.markFailed(orderId)
+            viewModelScope.launch { cancelCheckoutSessionUseCase(orderId) }
         }
+        pendingRazorpayOrderId = null
+        _razorpayCheckoutRequest.value = null
+        val message = when {
+            code == 0 -> context.getString(R.string.error_payment_cancelled)
+            description != null -> description
+            else -> context.getString(R.string.error_payment_verification_failed)
+        }
+        _paymentState.value = PaymentUiState.Error(message)
+    }
 
-        phonePePollingJob?.cancel()
-        phonePePollingJob = viewModelScope.launch {
+    fun clearRazorpayCheckoutRequest() {
+        _razorpayCheckoutRequest.value = null
+    }
+
+    private fun verifyPayment(razorpayOrderId: String, razorpayPaymentId: String, razorpaySignature: String) {
+        viewModelScope.launch {
             _paymentState.value = PaymentUiState.Loading
 
-            val verifyRequest = PhonePeVerifyRequest(
-                merchantOrderId = merchantOrderId,
-                orderId = pendingCheckout.orderId
+            val verifyRequest = VerifyRazorpayPaymentRequest(
+                razorpayOrderId = razorpayOrderId,
+                razorpayPaymentId = razorpayPaymentId,
+                razorpaySignature = razorpaySignature
             )
 
-            verifyPhonePePaymentUseCase(verifyRequest).fold(
-                onSuccess = { verificationResponse ->
-                    when (normalizePhonePeStatus(verificationResponse)) {
-                        PHONEPE_STATUS_COMPLETED,
-                        PHONEPE_STATUS_SUCCESS,
-                        PHONEPE_STATUS_SUCCEEDED,
-                        PHONEPE_STATUS_PAID -> handlePhonePeSuccess(verificationResponse)
-
-                        PHONEPE_STATUS_PENDING,
-                        PHONEPE_STATUS_PROCESSING,
-                        PHONEPE_STATUS_IN_PROGRESS,
-                        PHONEPE_STATUS_INITIATED -> pollPhonePePaymentStatus(merchantOrderId)
-
-                        PHONEPE_STATUS_FAILED,
-                        PHONEPE_STATUS_CANCELLED -> handlePhonePeFailure(verificationResponse.message)
-
-                        else -> pollPhonePePaymentStatus(merchantOrderId)
+            verifyRazorpayPaymentUseCase(verifyRequest).fold(
+                onSuccess = { response ->
+                    if (response.success) {
+                        pendingPaymentStorage.markCompleted(razorpayOrderId)
+                        pendingRazorpayOrderId = null
+                        _razorpayCheckoutRequest.value = null
+                        cartDataCache.clearCartData()
+                        _paymentState.value = PaymentUiState.Success(
+                            message = response.message.ifBlank { context.getString(R.string.success_payment) }
+                        )
+                    } else {
+                        pendingPaymentStorage.markFailed(razorpayOrderId)
+                        _paymentState.value = PaymentUiState.Error(
+                            response.message.ifBlank { context.getString(R.string.error_payment_verification_failed) }
+                        )
                     }
                 },
                 onFailure = { exception ->
-                    handlePhonePeFailure(exception.message ?: context.getString(R.string.error_phonepe_verification_failed))
+                    Timber.e(exception, "Payment verification failed")
+                    _paymentState.value = PaymentUiState.Error(
+                        exception.message ?: context.getString(R.string.error_payment_verification_failed)
+                    )
                 }
             )
         }
-    }
-
-    private suspend fun pollPhonePePaymentStatus(merchantOrderId: String) {
-        repeat(PHONEPE_POLL_MAX_ATTEMPTS) { attempt ->
-            delay(PHONEPE_POLL_INTERVAL_MS)
-
-            getPhonePePaymentStatusUseCase(merchantOrderId).fold(
-                onSuccess = { statusResponse ->
-                    when (normalizePhonePeStatus(statusResponse)) {
-                        PHONEPE_STATUS_COMPLETED,
-                        PHONEPE_STATUS_SUCCESS,
-                        PHONEPE_STATUS_SUCCEEDED,
-                        PHONEPE_STATUS_PAID -> {
-                            handlePhonePeSuccess(statusResponse)
-                            return
-                        }
-
-                        PHONEPE_STATUS_FAILED,
-                        PHONEPE_STATUS_CANCELLED -> {
-                            handlePhonePeFailure(statusResponse.message)
-                            return
-                        }
-
-                        else -> {
-                            _paymentState.value = PaymentUiState.Loading
-                        }
-                    }
-                },
-                onFailure = { exception ->
-                    if (attempt == PHONEPE_POLL_MAX_ATTEMPTS - 1) {
-                        handlePhonePeFailure(exception.message ?: context.getString(R.string.error_phonepe_verification_timed_out))
-                        return
-                    }
-                }
-            )
-        }
-
-        if (_paymentState.value !is PaymentUiState.Success) {
-            handlePhonePeFailure(context.getString(R.string.error_payment_still_pending))
-        }
-    }
-
-    private fun handlePhonePeSuccess(response: PhonePePaymentStatusResponse) {
-        phonePePollingJob?.cancel()
-        cartDataCache.clearCartData()
-        orderResponseCache.clearOrderResponse()
-        clearPhonePeCheckoutState()
-        _paymentState.value = PaymentUiState.Success(message = response.message.ifBlank { context.getString(R.string.success_payment) })
-    }
-
-    private fun handlePhonePeFailure(message: String) {
-        phonePePollingJob?.cancel()
-        clearPhonePeCheckoutState()
-        _paymentState.value = PaymentUiState.Error(message.ifBlank { context.getString(R.string.error_phonepe_payment_failed) })
-    }
-
-    private fun clearPhonePeCheckoutState() {
-        _phonePeLaunchRequest.value = null
-        pendingPhonePeCheckout = null
-    }
-
-    fun clearPhonePeLaunchRequest() {
-        _phonePeLaunchRequest.value = null
     }
 
     private fun buildPlaceOrderRequest(
@@ -393,7 +288,6 @@ class PaymentViewModel @Inject constructor(
                 quantity = cartItem.quantity
             )
         }
-
         return PlaceOrderRequest(
             items = items,
             shippingAddress = shippingAddress,
@@ -401,18 +295,16 @@ class PaymentViewModel @Inject constructor(
         )
     }
 
-    private fun normalizePhonePeStatus(response: PhonePePaymentStatusResponse): String {
-        val rawStatus = response.data?.state
-            ?: response.data?.paymentStatus
-            ?: response.message
-        return rawStatus.trim().replace(' ', '_').uppercase(Locale.US)
-    }
-
     fun resetPaymentState() {
-        phonePePollingJob?.cancel()
-        clearPhonePeCheckoutState()
         _paymentState.value = PaymentUiState.Idle
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        pendingRazorpayOrderId?.let { orderId ->
+            runBlocking {
+                try { cancelCheckoutSessionUseCase(orderId) } catch (_: Exception) {}
+            }
+        }
+    }
 }
-
-

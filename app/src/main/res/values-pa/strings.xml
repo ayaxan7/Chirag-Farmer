@@ -612,7 +612,6 @@
 
     <!-- Snackbar Messages -->
     <string name="snackbar_product_added">ਉਤਪਾਦ ਕਾਰਟ ਵਿੱਚ ਸ਼ਾਮਲ ਕੀਤਾ ਗਿਆ!</string>
-    <string name="snackbar_phonepe_unavailable">PhonePe ਚੈੱਕਆਊਟ ਖੋਲ੍ਹਣ ਵਿੱਚ ਅਸਮਰੱਥ</string>
     <string name="snackbar_address_unknown_error">ਅਣਜਾਣ ਗੜਬੜ</string>
 
     <!-- ViewModel Error Strings -->
@@ -621,9 +620,6 @@
     <string name="error_cart_data_not_found">ਕਾਰਟ ਡੇਟਾ ਨਹੀਂ ਮਿਲਿਆ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।</string>
     <string name="error_no_items_in_cart">ਆਰਡਰ ਕਰਨ ਲਈ ਕਾਰਟ ਵਿੱਚ ਕੋਈ ਆਈਟਮ ਨਹੀਂ ਹੈ।</string>
     <string name="error_order_placement_failed">ਆਰਡਰ ਦੇਣ ਵਿੱਚ ਅਸਫ਼ਲ</string>
-    <string name="error_phonepe_data_not_found">PhonePe ਚੈੱਕਆਊਟ ਡੇਟਾ ਨਹੀਂ ਮਿਲਿਆ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।</string>
-    <string name="error_phonepe_order_id_missing">PhonePe ਮਰਚੈਂਟ ਆਰਡਰ ਆਈਡੀ ਗੁੰਮ ਹੈ।</string>
-    <string name="error_phonepe_payment_failed">PhonePe ਭੁਗਤਾਨ ਅਸਫ਼ਲ</string>
     <string name="error_product_id_not_found">ਉਤਪਾਦ ਆਈਡੀ ਨਹੀਂ ਮਿਲੀ</string>
     <string name="error_image_upload_failed">ਤਸਵੀਰ ਅਪਲੋਡ ਕਰਨ ਵਿੱਚ ਅਸਫ਼ਲ: %s</string>
     <string name="error_invalid_price">ਗਲਤ ਕੀਮਤ ਮੁੱਲ</string>
@@ -774,9 +770,6 @@
     <string name="error_unknown_disease">ਅਣਜਾਣ ਬਿਮਾਰੀ</string>
     <string name="error_no_description">ਕੋਈ ਵੇਰਵਾ ਉਪਲਬਧ ਨਹੀਂ ਹੈ।</string>
     <string name="error_home_booking_failed">ਬੁਕਿੰਗ ਅਸਫ਼ਲ</string>
-    <string name="error_phonepe_token_missing">PhonePe ਚੈੱਕਆਊਟ ਟੋਕਨ ਸਰਵਰ ਦੁਆਰਾ ਵਾਪਸ ਨਹੀਂ ਕੀਤਾ ਗਿਆ।</string>
-    <string name="error_phonepe_verification_failed">PhonePe ਭੁਗਤਾਨ ਦੀ ਪੁਸ਼ਟੀ ਕਰਨ ਵਿੱਚ ਅਸਮਰੱਥ</string>
-    <string name="error_phonepe_verification_timed_out">PhonePe ਭੁਗਤਾਨ ਪੁਸ਼ਟੀਕਰਨ ਦਾ ਸਮਾਂ ਖਤਮ ਹੋ ਗਿਆ।</string>
     <string name="error_payment_still_pending">ਭੁਗਤਾਨ ਅਜੇ ਵੀ ਬਕਾਇਆ ਹੈ। ਕਿਰਪਾ ਕਰਕੇ ਕੁਝ ਸਮੇਂ ਬਾਅਦ ਦੁਬਾਰਾ ਜਾਂਚ ਕਰੋ।</string>
     <string name="chat_error_generate_response">AI ਜਵਾਬ ਤਿਆਰ ਕਰਨ ਵਿੱਚ ਅਸਫ਼ਲ: %s</string>
     <string name="chat_option_yellow_leaves">ਪੀਲੇ ਪੱਤੇ</string>
@@ -786,7 +779,6 @@
     <string name="chat_option_other">ਹੋਰ</string>
 
     <!-- Additional ViewModel Error Strings -->
-    <string name="error_unable_start_phonepe_checkout">PhonePe ਚੈੱਕਆਊਟ ਸ਼ੁਰੂ ਕਰਨ ਵਿੱਚ ਅਸਫ਼ਲ</string>
     <string name="error_location_permission_not_granted">ਸਥਾਨ ਦੀ ਇਜਾਜ਼ਤ ਨਹੀਂ ਦਿੱਤੀ ਗਈ</string>
     <string name="error_fetching_location">ਸਥਾਨ ਪ੍ਰਾਪਤ ਕਰਨ ਵਿੱਚ ਗੜਬੜ: %s</string>
     <string name="error_updating_location">ਸਥਾਨ ਅਪਡੇਟ ਕਰਨ ਵਿੱਚ ਗੜਬੜ: %s</string>

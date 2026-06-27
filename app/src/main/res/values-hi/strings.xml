@@ -599,7 +599,6 @@
 
     <!-- Snackbar Messages -->
     <string name="snackbar_product_added">उत्पाद कार्ट में जोड़ा गया!</string>
-    <string name="snackbar_phonepe_unavailable">PhonePe चेकआउट लॉन्च नहीं किया जा सका</string>
     <string name="snackbar_address_unknown_error">अज्ञात त्रुटि</string>
 
     <!-- ViewModel Error Strings -->
@@ -608,9 +607,6 @@
     <string name="error_cart_data_not_found">कार्ट डेटा नहीं मिला। कृपया पुनः प्रयास करें।</string>
     <string name="error_no_items_in_cart">ऑर्डर करने के लिए कार्ट में कोई आइटम नहीं है।</string>
     <string name="error_order_placement_failed">ऑर्डर देने में विफल</string>
-    <string name="error_phonepe_data_not_found">PhonePe चेकआउट डेटा नहीं मिला। कृपया पुनः प्रयास करें।</string>
-    <string name="error_phonepe_order_id_missing">PhonePe व्यापारी ऑर्डर आईडी गायब है।</string>
-    <string name="error_phonepe_payment_failed">PhonePe भुगतान विफल हुआ</string>
     <string name="error_product_id_not_found">उत्पाद आईडी नहीं मिली</string>
     <string name="error_image_upload_failed">छवि अपलोड करने में विफल: %s</string>
     <string name="error_invalid_price">अमान्य मूल्य मान</string>
@@ -776,9 +772,6 @@
     <string name="error_unknown_disease">अज्ञात रोग</string>
     <string name="error_no_description">कोई विवरण उपलब्ध नहीं है।</string>
     <string name="error_home_booking_failed">बुकिंग विफल</string>
-    <string name="error_phonepe_token_missing">PhonePe चेकआउट टोकन सर्वर द्वारा वापस नहीं किया गया।</string>
-    <string name="error_phonepe_verification_failed">PhonePe भुगतान सत्यापित करने में असमर्थ</string>
-    <string name="error_phonepe_verification_timed_out">PhonePe भुगतान सत्यापन का समय समाप्त हो गया।</string>
     <string name="error_payment_still_pending">भुगतान अभी भी लंबित है। कृपया कुछ समय बाद पुनः जांचें।</string>
     <string name="chat_error_generate_response">AI प्रतिक्रिया उत्पन्न करने में विफल: %s</string>
     <string name="chat_option_yellow_leaves">पीली पत्तियां</string>
@@ -788,7 +781,6 @@
     <string name="chat_option_other">अन्य</string>
 
     <!-- Additional ViewModel Error Strings -->
-    <string name="error_unable_start_phonepe_checkout">PhonePe चेकआउट शुरू करने में असमर्थ</string>
     <string name="error_location_permission_not_granted">लोकेशन अनुमति नहीं दी गई</string>
     <string name="error_fetching_location">लोकेशन प्राप्त करने में त्रुटि: %s</string>
     <string name="error_updating_location">लोकेशन अपडेट करने में त्रुटि: %s</string>

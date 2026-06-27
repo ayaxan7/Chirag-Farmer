@@ -1,0 +1,56 @@
+package com.yash091099.ChiragFarmersApp.data.remote.dto
+
+import com.google.gson.annotations.SerializedName
+
+data class CreateRazorpayOrderResponse(
+    @SerializedName("success")
+    val success: Boolean,
+    @SerializedName("message")
+    val message: String,
+    @SerializedName("data")
+    val data: CreateRazorpayOrderData? = null
+)
+
+data class CreateRazorpayOrderData(
+    @SerializedName("razorpayOrderId")
+    val razorpayOrderId: String,
+    @SerializedName("razorpayKeyId")
+    val razorpayKeyId: String,
+    @SerializedName("amount")
+    val amount: Double,
+    @SerializedName("currency")
+    val currency: String,
+    @SerializedName("receipt")
+    val receipt: String? = null,
+    @SerializedName("orderId")
+    val orderId: String? = null
+)
+
+data class VerifyRazorpayPaymentRequest(
+    @SerializedName("razorpayOrderId")
+    val razorpayOrderId: String,
+    @SerializedName("razorpayPaymentId")
+    val razorpayPaymentId: String,
+    @SerializedName("razorpaySignature")
+    val razorpaySignature: String
+)
+
+data class VerifyRazorpayPaymentResponse(
+    @SerializedName("success")
+    val success: Boolean,
+    @SerializedName("message")
+    val message: String,
+    @SerializedName("data")
+    val data: VerifyRazorpayPaymentData? = null
+)
+
+data class VerifyRazorpayPaymentData(
+    @SerializedName("order")
+    val order: OrderDetailsDto? = null,
+    @SerializedName("state")
+    val state: String? = null,
+    @SerializedName("transactionId")
+    val transactionId: String? = null,
+    @SerializedName("balance")
+    val balance: Double? = null
+)
