@@ -33,9 +33,7 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.cart.CartViewModel
 import com.yash091099.ChiragFarmersApp.ui.presentation.cart.address.AddressListViewModel
 import com.yash091099.ChiragFarmersApp.ui.presentation.cart.address.AddressMapScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.cart.address.AddressScreen
-import com.yash091099.ChiragFarmersApp.ui.presentation.cart.payment.PaymentScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.cart.payment.PaymentSuccess
-import com.yash091099.ChiragFarmersApp.ui.presentation.cart.payment.PaymentViewModel
 import com.yash091099.ChiragFarmersApp.ui.presentation.home.HomeScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.home.HomeViewModel
 import com.yash091099.ChiragFarmersApp.ui.presentation.home.screens.SearchScreen
@@ -243,31 +241,6 @@ fun AppNavigation(
             val viewModel: ProductDetailsViewModel = hiltViewModel()
             ProductDetailsScreen(
                 navController = navController, viewModel = viewModel
-            )
-        }
-        composable(
-            Route.Payment.path, arguments = listOf(
-            navArgument("subtotal") { type = NavType.FloatType; defaultValue = 0.0f },
-            navArgument("totalDiscount") { type = NavType.FloatType; defaultValue = 0.0f },
-            navArgument("totalDeliveryFee") { type = NavType.FloatType; defaultValue = 0.0f },
-            navArgument("totalAmount") {
-                type = NavType.FloatType; defaultValue = 0.0f
-            })) { backStackEntry ->
-            val subtotal = backStackEntry.arguments?.getFloat("subtotal")?.toDouble() ?: 0.0
-            val totalDiscount =
-                backStackEntry.arguments?.getFloat("totalDiscount")?.toDouble() ?: 0.0
-            val totalDeliveryFee =
-                backStackEntry.arguments?.getFloat("totalDeliveryFee")?.toDouble() ?: 0.0
-            val totalAmount = backStackEntry.arguments?.getFloat("totalAmount")?.toDouble() ?: 0.0
-            val viewModel: PaymentViewModel = hiltViewModel()
-
-            PaymentScreen(
-                navController = navController,
-                viewModel = viewModel,
-                subtotal = subtotal,
-                totalDiscount = totalDiscount,
-                totalDeliveryFee = totalDeliveryFee,
-                totalAmount = totalAmount
             )
         }
         composable(Route.PaymentSuccess.path) {

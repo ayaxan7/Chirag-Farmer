@@ -1,5 +1,6 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.cart
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -21,8 +22,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -32,23 +36,30 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavHostController
+import com.razorpay.Checkout
 import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.presentation.cart.components.CartItemCard
 import com.yash091099.ChiragFarmersApp.ui.presentation.cart.components.SwipeToRevealItem
+import com.yash091099.ChiragFarmersApp.ui.presentation.cart.payment.PaymentUiState
+import com.yash091099.ChiragFarmersApp.ui.presentation.cart.payment.PaymentViewModel
 import com.yash091099.ChiragFarmersApp.ui.presentation.common.components.ChiragButton
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragTopBar
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost.Route
@@ -57,6 +68,7 @@ import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
 import com.yash091099.ChiragFarmersApp.ui.theme.BorderColour
 import com.yash091099.ChiragFarmersApp.ui.theme.TextDarkGray
 import com.yash091099.ChiragFarmersApp.ui.theme.TextGray
+import org.json.JSONObject
 
 @Composable
 fun CartScreen(
@@ -68,6 +80,7 @@ fun CartScreen(
     modifier: Modifier = Modifier,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
     val cartState by viewModel.cartState.collectAsState()
     val isOperationInProgress by viewModel.isOperationInProgress.collectAsState()
 
@@ -188,6 +201,67 @@ fun CartScreen(
             val cartItems = state.cartItems
             val summary = state.summary
             val address = state.address
+
+            val paymentViewModel: PaymentViewModel = hiltViewModel()
+            val paymentState by paymentViewModel.paymentState.collectAsState()
+            val razorpayCheckoutRequest by paymentViewModel.razorpayCheckoutRequest.collectAsState()
+            var selectedPaymentMethod by remember { mutableStateOf("Cash On Delivery") }
+            var showPaymentDropdown by remember { mutableStateOf(false) }
+
+            val razorpayCheckout = remember { Checkout() }
+            val razorpayListener = remember {
+                object : com.razorpay.PaymentResultWithDataListener {
+                    override fun onPaymentSuccess(razorpayPaymentId: String?, paymentData: com.razorpay.PaymentData?) {
+                        paymentViewModel.onPaymentSuccess(paymentData?.paymentId, paymentData?.orderId, paymentData?.signature)
+                    }
+                    override fun onPaymentError(code: Int, response: String?, paymentData: com.razorpay.PaymentData?) {
+                        paymentViewModel.onPaymentError(code, response)
+                    }
+                }
+            }
+
+            LaunchedEffect(razorpayCheckoutRequest) {
+                val options = razorpayCheckoutRequest ?: return@LaunchedEffect
+                val activity = context as? android.app.Activity ?: return@LaunchedEffect
+                razorpayCheckout.merchantActivityResult(activity, 0, 0, null, razorpayListener, null)
+                try {
+                    val jsonOptions = JSONObject().apply {
+                        put("key", options.key)
+                        put("amount", options.amount)
+                        put("currency", options.currency)
+                        put("order_id", options.orderId)
+                        put("name", options.name)
+                        put("description", options.description)
+                        put("theme.color", options.themeColor)
+                        val prefill = JSONObject()
+                        options.prefillEmail?.let { prefill.put("email", it) }
+                        options.prefillContact?.let { prefill.put("contact", it) }
+                        put("prefill", prefill)
+                    }
+                    razorpayCheckout.setKeyID(options.key)
+                    razorpayCheckout.open(activity, jsonOptions)
+                } catch (e: Exception) {
+                    paymentViewModel.onPaymentError(-1, e.message ?: "Failed to launch Razorpay checkout")
+                } finally {
+                    paymentViewModel.clearRazorpayCheckoutRequest()
+                }
+            }
+
+            LaunchedEffect(paymentState) {
+                when (val state = paymentState) {
+                    is PaymentUiState.Success -> {
+                        navController.navigate(Route.PaymentSuccess.path) {
+                            popUpTo(navController.currentDestination?.id ?: 0) { inclusive = false }
+                        }
+                        paymentViewModel.resetPaymentState()
+                    }
+                    is PaymentUiState.Error -> {
+                        snackbarHostState.showSnackbar(state.message)
+                        paymentViewModel.resetPaymentState()
+                    }
+                    else -> {}
+                }
+            }
 
             Scaffold(
                 modifier = modifier,
@@ -444,8 +518,8 @@ fun CartScreen(
 
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        // Show loading indicator or button based on operation status
-                        if (isOperationInProgress) {
+                        val isPaymentLoading = paymentState is PaymentUiState.Loading
+                        if (isOperationInProgress || isPaymentLoading) {
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -460,33 +534,64 @@ fun CartScreen(
                                 )
                             }
                         } else {
-                            ChiragButton(
-                                text = stringResource(R.string.cart_proceed_checkout),
-                                onClick = {
-                                    if (address == null) {
-                                        navController.navigate(Route.AddressList.path)
-                                        return@ChiragButton
-                                    }
-
-                                    // Cache cart items and address for payment screen
-                                    viewModel.cacheCartDataForPayment(
-                                        cartItems = cartItems,
-                                        address = address.addressString
-                                    )
-
-                                    // Navigate to payment screen
-                                    navController.navigate(
-                                        Route.Payment.createRoute(
-                                            subtotal = summary.subtotal,
-                                            totalDiscount = summary.totalDiscount,
-                                            totalDeliveryFee = summary.totalDeliveryFee,
-                                            totalAmount = summary.totalAmount
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Box(modifier = Modifier.weight(0.4f)) {
+                                    OutlinedButton(
+                                        onClick = { showPaymentDropdown = true },
+                                        shape = RoundedCornerShape(8.dp),
+                                        border = BorderStroke(1.dp, BGBlack),
+                                        contentPadding = PaddingValues(horizontal = 12.dp),
+                                        modifier = Modifier.fillMaxWidth()
+                                    ) {
+                                        Text(
+                                            text = when (selectedPaymentMethod) {
+                                                "Cash On Delivery" -> "Cash on Delivery"
+                                                else -> "Online Payment"
+                                            },
+                                            fontSize = 12.sp,
+                                            color = BGBlack
                                         )
-                                    )
-                                },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                            )
+                                    }
+                                    DropdownMenu(
+                                        expanded = showPaymentDropdown,
+                                        onDismissRequest = { showPaymentDropdown = false }
+                                    ) {
+                                        DropdownMenuItem(
+                                            text = { Text("Cash on Delivery") },
+                                            onClick = {
+                                                selectedPaymentMethod = "Cash On Delivery"
+                                                showPaymentDropdown = false
+                                            }
+                                        )
+                                        DropdownMenuItem(
+                                            text = { Text("Online Payment") },
+                                            onClick = {
+                                                selectedPaymentMethod = "Online"
+                                                showPaymentDropdown = false
+                                            }
+                                        )
+                                    }
+                                }
+                                ChiragButton(
+                                    text = stringResource(R.string.cart_proceed_checkout),
+                                    onClick = {
+                                        if (address == null) {
+                                            navController.navigate(Route.AddressList.path)
+                                            return@ChiragButton
+                                        }
+
+                                        viewModel.cacheCartDataForPayment(
+                                            cartItems = cartItems,
+                                            address = address.addressString
+                                        )
+                                        paymentViewModel.placeOrder(selectedPaymentMethod)
+                                    },
+                                    modifier = Modifier.weight(0.6f)
+                                )
+                            }
                         }
                     }
                 }
