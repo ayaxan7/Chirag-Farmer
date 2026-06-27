@@ -1,6 +1,5 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.cart
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -22,11 +21,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -43,7 +39,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -52,11 +47,11 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavHostController
 import com.razorpay.Checkout
 import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.presentation.cart.components.CartItemCard
+import com.yash091099.ChiragFarmersApp.ui.presentation.cart.components.PaymentChip
 import com.yash091099.ChiragFarmersApp.ui.presentation.cart.components.SwipeToRevealItem
 import com.yash091099.ChiragFarmersApp.ui.presentation.cart.payment.PaymentUiState
 import com.yash091099.ChiragFarmersApp.ui.presentation.cart.payment.PaymentViewModel
@@ -122,7 +117,9 @@ fun CartScreen(
                     ChiragTopBar(
                         navController = navController,
                         icon = R.drawable.ic_arrow,
-                        title = if (isBuyNow) stringResource(R.string.cart_top_bar_checkout) else stringResource(R.string.cart_top_bar_my_cart)
+                        title = if (isBuyNow) stringResource(R.string.cart_top_bar_checkout) else stringResource(
+                            R.string.cart_top_bar_my_cart
+                        )
                     )
                 }) { paddingValues ->
                 Box(
@@ -164,7 +161,9 @@ fun CartScreen(
                     ChiragTopBar(
                         navController = navController,
                         icon = R.drawable.ic_arrow,
-                        title = if (isBuyNow) stringResource(R.string.cart_top_bar_checkout) else stringResource(R.string.cart_top_bar_my_cart)
+                        title = if (isBuyNow) stringResource(R.string.cart_top_bar_checkout) else stringResource(
+                            R.string.cart_top_bar_my_cart
+                        )
                     )
                 }) { paddingValues ->
                 Box(
@@ -184,7 +183,9 @@ fun CartScreen(
                             color = BGBlack
                         )
                         Text(
-                            text = stringResource(R.string.cart_empty_subtitle), fontSize = 14.sp, color = Color.Gray
+                            text = stringResource(R.string.cart_empty_subtitle),
+                            fontSize = 14.sp,
+                            color = Color.Gray
                         )
                         Button(
                             onClick = { navController.popBackStack() },
@@ -211,10 +212,17 @@ fun CartScreen(
             val razorpayCheckout = remember { Checkout() }
             val razorpayListener = remember {
                 object : com.razorpay.PaymentResultWithDataListener {
-                    override fun onPaymentSuccess(razorpayPaymentId: String?, paymentData: com.razorpay.PaymentData?) {
-                        paymentViewModel.onPaymentSuccess(paymentData?.paymentId, paymentData?.orderId, paymentData?.signature)
+                    override fun onPaymentSuccess(
+                        razorpayPaymentId: String?, paymentData: com.razorpay.PaymentData?
+                    ) {
+                        paymentViewModel.onPaymentSuccess(
+                            paymentData?.paymentId, paymentData?.orderId, paymentData?.signature
+                        )
                     }
-                    override fun onPaymentError(code: Int, response: String?, paymentData: com.razorpay.PaymentData?) {
+
+                    override fun onPaymentError(
+                        code: Int, response: String?, paymentData: com.razorpay.PaymentData?
+                    ) {
                         paymentViewModel.onPaymentError(code, response)
                     }
                 }
@@ -223,7 +231,9 @@ fun CartScreen(
             LaunchedEffect(razorpayCheckoutRequest) {
                 val options = razorpayCheckoutRequest ?: return@LaunchedEffect
                 val activity = context as? android.app.Activity ?: return@LaunchedEffect
-                razorpayCheckout.merchantActivityResult(activity, 0, 0, null, razorpayListener, null)
+                razorpayCheckout.merchantActivityResult(
+                    activity, 0, 0, null, razorpayListener, null
+                )
                 try {
                     val jsonOptions = JSONObject().apply {
                         put("key", options.key)
@@ -241,7 +251,9 @@ fun CartScreen(
                     razorpayCheckout.setKeyID(options.key)
                     razorpayCheckout.open(activity, jsonOptions)
                 } catch (e: Exception) {
-                    paymentViewModel.onPaymentError(-1, e.message ?: "Failed to launch Razorpay checkout")
+                    paymentViewModel.onPaymentError(
+                        -1, e.message ?: "Failed to launch Razorpay checkout"
+                    )
                 } finally {
                     paymentViewModel.clearRazorpayCheckoutRequest()
                 }
@@ -255,10 +267,12 @@ fun CartScreen(
                         }
                         paymentViewModel.resetPaymentState()
                     }
+
                     is PaymentUiState.Error -> {
                         snackbarHostState.showSnackbar(state.message)
                         paymentViewModel.resetPaymentState()
                     }
+
                     else -> {}
                 }
             }
@@ -271,7 +285,9 @@ fun CartScreen(
                     ChiragTopBar(
                         navController = navController,
                         icon = R.drawable.ic_arrow,
-                        title = if (isBuyNow) stringResource(R.string.cart_top_bar_checkout) else stringResource(R.string.cart_top_bar_my_cart)
+                        title = if (isBuyNow) stringResource(R.string.cart_top_bar_checkout) else stringResource(
+                            R.string.cart_top_bar_my_cart
+                        )
                     )
                 }) { paddingValues ->
                 Box(
@@ -330,7 +346,9 @@ fun CartScreen(
                                         Spacer(modifier = Modifier.height(2.dp))
                                         Row {
                                             Text(
-                                                text = stringResource(R.string.cart_pin_label), fontSize = 13.sp, color = TextGray
+                                                text = stringResource(R.string.cart_pin_label),
+                                                fontSize = 13.sp,
+                                                color = TextGray
                                             )
                                             Text(
                                                 text = address.pincode,
@@ -344,12 +362,10 @@ fun CartScreen(
                                         colors = ButtonDefaults.buttonColors(containerColor = BGBlack),
                                         shape = RoundedCornerShape(12.dp),
                                         contentPadding = PaddingValues(
-                                            horizontal = 12.dp,
-                                            vertical = 4.dp
+                                            horizontal = 12.dp, vertical = 4.dp
                                         ),
                                         modifier = Modifier.defaultMinSize(
-                                            minWidth = 1.dp,
-                                            minHeight = 1.dp
+                                            minWidth = 1.dp, minHeight = 1.dp
                                         )
                                     ) {
                                         Text(
@@ -388,8 +404,12 @@ fun CartScreen(
                                     imageUrl = item.productImage ?: "",
                                     productName = item.productName,
                                     sellerName = item.sellerName,
-                                    price = stringResource(R.string.product_price_format, item.finalPrice),
-                                    deliveryDate = stringResource(R.string.cart_delivery_by, "7 June 2025"),
+                                    price = stringResource(
+                                        R.string.product_price_format, item.finalPrice
+                                    ),
+                                    deliveryDate = stringResource(
+                                        R.string.cart_delivery_by, "7 June 2025"
+                                    ),
                                     quantity = "${item.quantity}",
                                     onQuantityDecrease = {
                                         viewModel.decrementQuantity(item.productId)
@@ -440,10 +460,9 @@ fun CartScreen(
                                 color = BGBlack
                             )
                             Text(
-                                text = stringResource(R.string.product_price_format, summary.subtotal),
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Normal,
-                                color = BGBlack
+                                text = stringResource(
+                                    R.string.product_price_format, summary.subtotal
+                                ), fontSize = 12.sp, fontWeight = FontWeight.Normal, color = BGBlack
                             )
                         }
 
@@ -461,10 +480,9 @@ fun CartScreen(
                                 color = BGBlack
                             )
                             Text(
-                                text = stringResource(R.string.product_price_format, summary.totalDeliveryFee),
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Normal,
-                                color = BGBlack
+                                text = stringResource(
+                                    R.string.product_price_format, summary.totalDeliveryFee
+                                ), fontSize = 12.sp, fontWeight = FontWeight.Normal, color = BGBlack
                             )
                         }
 
@@ -482,10 +500,10 @@ fun CartScreen(
                                 color = BGBlack
                             )
                             Text(
-                                text = stringResource(R.string.product_price_format, "%.2f".format(summary.totalDiscount)),
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Normal,
-                                color = BGBlack
+                                text = stringResource(
+                                    R.string.product_price_format,
+                                    "%.2f".format(summary.totalDiscount)
+                                ), fontSize = 12.sp, fontWeight = FontWeight.Normal, color = BGBlack
                             )
                         }
 
@@ -509,10 +527,10 @@ fun CartScreen(
                                 color = BGBlack
                             )
                             Text(
-                                text = stringResource(R.string.product_price_format, "%.2f".format(summary.totalAmount)),
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = BGBlack
+                                text = stringResource(
+                                    R.string.product_price_format,
+                                    "%.2f".format(summary.totalAmount)
+                                ), fontSize = 14.sp, fontWeight = FontWeight.Bold, color = BGBlack
                             )
                         }
 
@@ -534,47 +552,41 @@ fun CartScreen(
                                 )
                             }
                         } else {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            Column(
+                                modifier = Modifier.fillMaxWidth()
                             ) {
-                                Box(modifier = Modifier.weight(0.4f)) {
-                                    OutlinedButton(
-                                        onClick = { showPaymentDropdown = true },
-                                        shape = RoundedCornerShape(8.dp),
-                                        border = BorderStroke(1.dp, BGBlack),
-                                        contentPadding = PaddingValues(horizontal = 12.dp),
-                                        modifier = Modifier.fillMaxWidth()
+
+                                Text(
+                                    text = "Payment Method",
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+
+                                Spacer(modifier = Modifier.height(12.dp))
+
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    PaymentChip(
+                                        text = "Cash on Delivery",
+                                        selected = selectedPaymentMethod == "Cash On Delivery",
+                                        modifier = Modifier.weight(1f)
                                     ) {
-                                        Text(
-                                            text = when (selectedPaymentMethod) {
-                                                "Cash On Delivery" -> "Cash on Delivery"
-                                                else -> "Online Payment"
-                                            },
-                                            fontSize = 12.sp,
-                                            color = BGBlack
-                                        )
+                                        selectedPaymentMethod = "Cash On Delivery"
                                     }
-                                    DropdownMenu(
-                                        expanded = showPaymentDropdown,
-                                        onDismissRequest = { showPaymentDropdown = false }
+
+                                    PaymentChip(
+                                        text = "Online Payment",
+                                        selected = selectedPaymentMethod == "Online",
+                                        modifier = Modifier.weight(1f)
                                     ) {
-                                        DropdownMenuItem(
-                                            text = { Text("Cash on Delivery") },
-                                            onClick = {
-                                                selectedPaymentMethod = "Cash On Delivery"
-                                                showPaymentDropdown = false
-                                            }
-                                        )
-                                        DropdownMenuItem(
-                                            text = { Text("Online Payment") },
-                                            onClick = {
-                                                selectedPaymentMethod = "Online"
-                                                showPaymentDropdown = false
-                                            }
-                                        )
+                                        selectedPaymentMethod = "Online"
                                     }
                                 }
+
+                                Spacer(modifier = Modifier.height(16.dp))
+
                                 ChiragButton(
                                     text = stringResource(R.string.cart_proceed_checkout),
                                     onClick = {
@@ -589,7 +601,7 @@ fun CartScreen(
                                         )
                                         paymentViewModel.placeOrder(selectedPaymentMethod)
                                     },
-                                    modifier = Modifier.weight(0.6f)
+                                    modifier = Modifier.fillMaxWidth()
                                 )
                             }
                         }

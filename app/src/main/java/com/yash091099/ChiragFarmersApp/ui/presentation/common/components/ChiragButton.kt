@@ -1,7 +1,6 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.common.components
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -9,19 +8,14 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.ui.theme.BGBlack
-import com.yash091099.ChiragFarmersApp.ui.theme.ErrorRed
 
 @Composable
 fun ChiragButton(
@@ -35,14 +29,17 @@ fun ChiragButton(
     disabledContainerColor: Color = BGBlack.copy(alpha = 0.4f),
     disabledContentColor: Color = Color.White,
     fontSize: TextUnit = 16.sp,
+    height: Dp = 56.dp,
+    contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
 ) {
     Button(
         onClick = onClick,
         modifier = modifier
             .fillMaxWidth()
-            .height(56.dp),
+            .height(height),
         enabled = enabled,
         shape = shape,
+        contentPadding = contentPadding,
         colors = ButtonDefaults.buttonColors(
             containerColor = containerColor,
             contentColor = contentColor,
@@ -51,35 +48,7 @@ fun ChiragButton(
         )
     ) {
         Text(
-            text = text,
-            fontSize = fontSize,
-            fontWeight = FontWeight.Medium
-        )
-    }
-}
-@Composable
-fun ChiragErrorButton(
-    onClick: () -> Unit={},
-    text: String
-){
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = text,
-            fontSize = 13.sp,
-            color =ErrorRed ,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        ChiragButton(
-            text = stringResource(R.string.common_retry),
-            onClick = {
-                onClick()
-            },
-            containerColor = ErrorRed
+            text = text, fontSize = fontSize, fontWeight = FontWeight.Medium, maxLines = 1
         )
     }
 }
