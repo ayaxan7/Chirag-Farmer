@@ -247,6 +247,12 @@
     <string name="payment_upi">UPI भुगतान</string>
     <string name="payment_more_options">अन्य भुगतान विकल्प</string>
     <string name="payment_cash_on_delivery">डिलीवरी पर नकद</string>
+    <string name="payment_online_payment">ऑनलाइन भुगतान (कार्ड/UPI/वॉलेट)</string>
+    <string name="error_payment_initialization_failed">भुगतान प्रारंभ करने में असमर्थ। कृपया पुनः प्रयास करें।</string>
+    <string name="error_payment_verification_failed">भुगतान सत्यापन विफल। कृपया सहायता से संपर्क करें।</string>
+    <string name="error_payment_cancelled">भुगतान रद्द कर दिया गया।</string>
+    <string name="error_payment_not_captured">भुगतान की पुष्टि नहीं हो सकी। आपका ऑर्डर नहीं बनाया गया है। यदि कोई राशि काटी गई है, तो वह 2-5 कार्य दिवसों में वापस कर दी जाएगी।</string>
+    <string name="payment_select_method_hint"> (आगे बढ़ने के लिए भुगतान विधि चुनें)</string>
     <string name="payment_subtotal">उप-योग</string>
     <string name="payment_delivery_fee">डिलीवरी शुल्क</string>
     <string name="payment_discount">छूट</string>

@@ -258,6 +258,7 @@
     <string name="error_payment_verification_failed">Payment verification failed. Please contact support.</string>
     <string name="error_payment_cancelled">Payment was cancelled.</string>
     <string name="error_payment_not_captured">Payment could not be confirmed. Your order has not been placed. If any amount was deducted, it will be returned within 2-5 business days.</string>
+    <string name="payment_select_method_hint"> (select a payment method to proceed)</string>
     <string name="payment_successful">Payment Successful</string>
     <string name="payment_thank_you">Thank You for purchase</string>
     <string name="payment_success_description">Payment Success</string>

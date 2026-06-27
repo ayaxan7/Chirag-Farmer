@@ -248,6 +248,12 @@
     <string name="payment_upi">UPI చెల్లింపులు</string>
     <string name="payment_more_options">మరిన్ని చెల్లింపు ఎంపికలు</string>
     <string name="payment_cash_on_delivery">డెలివరీపై నగదు</string>
+    <string name="payment_online_payment">ఆన్‌లైన్ చెల్లింపు (కార్డ్/UPI/వాలెట్)</string>
+    <string name="error_payment_initialization_failed">చెల్లింపును ప్రారంభించలేకపోతున్నాము. దయచేసి మళ్లీ ప్రయత్నించండి.</string>
+    <string name="error_payment_verification_failed">చెల్లింపు ధృవీకరణ విఫలమైంది. దయచేసి సహాయాన్ని సంప్రదించండి.</string>
+    <string name="error_payment_cancelled">చెల్లింపు రద్దు చేయబడింది.</string>
+    <string name="error_payment_not_captured">చెల్లింపు నిర్ధారించబడలేదు. మీ ఆర్డర్ ఉంచబడలేదు. ఏదైనా మొత్తం తీసివేయబడితే, అది 2-5 వ్యాపార రోజులలో తిరిగి ఇవ్వబడుతుంది.</string>
+    <string name="payment_select_method_hint"> (కొనసాగడానికి చెల్లింపు పద్ధతిని ఎంచుకోండి)</string>
     <string name="payment_subtotal">సబ్-టోటల్</string>
     <string name="payment_delivery_fee">డెలివరీ ఫీజు</string>
     <string name="payment_discount">డిస్కౌంట్</string>

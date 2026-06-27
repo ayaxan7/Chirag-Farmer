@@ -38,6 +38,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -78,7 +79,7 @@ fun CartScreen(
     val context = LocalContext.current
     val cartState by viewModel.cartState.collectAsState()
     val isOperationInProgress by viewModel.isOperationInProgress.collectAsState()
-
+    val localeTag = LocalConfiguration.current.locales[0]
     val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner, isBuyNow, productId, quantity) {
         val observer = LifecycleEventObserver { _, event ->
@@ -206,7 +207,7 @@ fun CartScreen(
             val paymentViewModel: PaymentViewModel = hiltViewModel()
             val paymentState by paymentViewModel.paymentState.collectAsState()
             val razorpayCheckoutRequest by paymentViewModel.razorpayCheckoutRequest.collectAsState()
-            var selectedPaymentMethod by remember { mutableStateOf("Cash On Delivery") }
+            var selectedPaymentMethod by remember { mutableStateOf<String?>(null) }
             var showPaymentDropdown by remember { mutableStateOf(false) }
 
             val razorpayCheckout = remember { Checkout() }
@@ -231,6 +232,7 @@ fun CartScreen(
             LaunchedEffect(razorpayCheckoutRequest) {
                 val options = razorpayCheckoutRequest ?: return@LaunchedEffect
                 val activity = context as? android.app.Activity ?: return@LaunchedEffect
+                val langTag = localeTag.toLanguageTag()
                 razorpayCheckout.merchantActivityResult(
                     activity, 0, 0, null, razorpayListener, null
                 )
@@ -243,6 +245,7 @@ fun CartScreen(
                         put("name", options.name)
                         put("description", options.description)
                         put("theme.color", options.themeColor)
+                        put("language", langTag)
                         val prefill = JSONObject()
                         options.prefillEmail?.let { prefill.put("email", it) }
                         options.prefillContact?.let { prefill.put("contact", it) }
@@ -555,21 +558,24 @@ fun CartScreen(
                             Column(
                                 modifier = Modifier.fillMaxWidth()
                             ) {
-
-                                Text(
-                                    text = "Payment Method",
-                                    fontSize = 14.sp,
-                                    fontWeight = FontWeight.SemiBold
-                                )
-
-                                Spacer(modifier = Modifier.height(12.dp))
-
+                                Row {
+                                    Text(
+                                        text = stringResource(R.string.orders_payment_method),
+                                        fontSize = 14.sp,
+                                        fontWeight = FontWeight.SemiBold
+                                    )
+                                    Text(
+                                        text = stringResource(R.string.payment_select_method_hint),
+                                        fontSize = 11.sp,
+                                        color = Color.Gray
+                                    )
+                                }
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                                 ) {
                                     PaymentChip(
-                                        text = "Cash on Delivery",
+                                        text = stringResource(R.string.payment_cash_on_delivery),
                                         selected = selectedPaymentMethod == "Cash On Delivery",
                                         modifier = Modifier.weight(1f)
                                     ) {
@@ -577,18 +583,21 @@ fun CartScreen(
                                     }
 
                                     PaymentChip(
-                                        text = "Online Payment",
+                                        text = stringResource(R.string.payment_online_payment),
                                         selected = selectedPaymentMethod == "Online",
                                         modifier = Modifier.weight(1f)
                                     ) {
                                         selectedPaymentMethod = "Online"
                                     }
+
+                                    Spacer(modifier = Modifier.height(8.dp))
+
+
                                 }
-
                                 Spacer(modifier = Modifier.height(16.dp))
-
                                 ChiragButton(
                                     text = stringResource(R.string.cart_proceed_checkout),
+                                    enabled = selectedPaymentMethod != null,
                                     onClick = {
                                         if (address == null) {
                                             navController.navigate(Route.AddressList.path)
@@ -596,10 +605,9 @@ fun CartScreen(
                                         }
 
                                         viewModel.cacheCartDataForPayment(
-                                            cartItems = cartItems,
-                                            address = address.addressString
+                                            cartItems = cartItems, address = address.addressString
                                         )
-                                        paymentViewModel.placeOrder(selectedPaymentMethod)
+                                        paymentViewModel.placeOrder(selectedPaymentMethod!!)
                                     },
                                     modifier = Modifier.fillMaxWidth()
                                 )

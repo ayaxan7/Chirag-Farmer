@@ -259,6 +259,12 @@
     <string name="payment_upi">UPI ਭੁਗਤਾਨ</string>
     <string name="payment_more_options">ਹੋਰ ਭੁਗਤਾਨ ਵਿਕਲਪ</string>
     <string name="payment_cash_on_delivery">ਡਿਲਿਵਰੀ \'ਤੇ ਨਕਦ</string>
+    <string name="payment_online_payment">ਆਨਲਾਈਨ ਭੁਗਤਾਨ (ਕਾਰਡ/UPI/ਵਾਲੇਟ)</string>
+    <string name="error_payment_initialization_failed">ਭੁਗਤਾਨ ਸ਼ੁਰੂ ਕਰਨ ਵਿੱਚ ਅਸਮਰੱਥ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।</string>
+    <string name="error_payment_verification_failed">ਭੁਗਤਾਨ ਪੁਸ਼ਟੀਕਰਨ ਅਸਫਲ ਰਿਹਾ। ਕਿਰਪਾ ਕਰਕੇ ਸਹਾਇਤਾ ਨਾਲ ਸੰਪਰਕ ਕਰੋ।</string>
+    <string name="error_payment_cancelled">ਭੁਗਤਾਨ ਰੱਦ ਕਰ ਦਿੱਤਾ ਗਿਆ।</string>
+    <string name="error_payment_not_captured">ਭੁਗਤਾਨ ਦੀ ਪੁਸ਼ਟੀ ਨਹੀਂ ਹੋ ਸਕੀ। ਤੁਹਾਡਾ ਆਰਡਰ ਨਹੀਂ ਬਣਾਇਆ ਗਿਆ ਹੈ। ਜੇਕਰ ਕੋਈ ਰਕਮ ਕੱਟੀ ਗਈ ਹੈ, ਤਾਂ ਇਹ 2-5 ਕਾਰੋਬਾਰੀ ਦਿਨਾਂ ਵਿੱਚ ਵਾਪਸ ਕਰ ਦਿੱਤੀ ਜਾਵੇਗੀ।</string>
+    <string name="payment_select_method_hint"> (ਅੱਗੇ ਵਧਣ ਲਈ ਭੁਗਤਾਨ ਵਿਧੀ ਚੁਣੋ)</string>
     <string name="payment_subtotal">ਉਪ-ਕੁੱਲ</string>
     <string name="payment_delivery_fee">ਡਿਲਿਵਰੀ ਫ਼ੀਸ</string>
     <string name="payment_discount">ਛੋਟ</string>
