@@ -1,6 +1,7 @@
 package com.yash091099.ChiragFarmersApp.di
 
 import com.yash091099.ChiragFarmersApp.data.local.ChiragDataStore
+import com.yash091099.ChiragFarmersApp.data.local.TokenManager
 import com.yash091099.ChiragFarmersApp.data.remote.AuthApiService
 import com.yash091099.ChiragFarmersApp.data.remote.CropAnalysisApiService
 import com.yash091099.ChiragFarmersApp.data.remote.CartApiService
@@ -36,9 +37,11 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideAuthRepository(
-        api: AuthApiService, dataStore: ChiragDataStore
+        api: AuthApiService,
+        dataStore: ChiragDataStore,
+        tokenManager: TokenManager
     ): AuthRepository {
-        return AuthRepository(api, dataStore)
+        return AuthRepository(api, dataStore, tokenManager)
     }
 
     @Provides
