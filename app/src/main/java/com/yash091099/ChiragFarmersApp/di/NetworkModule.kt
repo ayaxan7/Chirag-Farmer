@@ -25,8 +25,8 @@ annotation class BaseOkHttpClient
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private const val BASE_URL = "https://rheumatoid-ringlike-al.ngrok-free.dev/"
-//    private const val BASE_URL = BuildConfig.BASE_URL
+//    private const val BASE_URL = "https://rheumatoid-ringlike-al.ngrok-free.dev/"
+    private const val BASE_URL = BuildConfig.BASE_URL
 
     @Provides
     @BaseOkHttpClient

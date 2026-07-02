@@ -1,0 +1,19 @@
+package com.yash091099.ChiragFarmersApp.data.remote.dto
+
+import com.google.gson.annotations.SerializedName
+
+data class AppVersionResponse(
+    @SerializedName("success")
+    val success: Boolean,
+    @SerializedName("code")
+    val code: Int,
+    @SerializedName("message")
+    val message: String,
+    @SerializedName("data")
+    val data: AppVersionData? = null
+)
+
+data class AppVersionData(
+    @SerializedName("appVersion")
+    val appVersion: String
+)

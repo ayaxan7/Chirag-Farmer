@@ -1,5 +1,6 @@
 package com.yash091099.ChiragFarmersApp.di
 
+import com.yash091099.ChiragFarmersApp.data.remote.AppVersionApiService
 import com.yash091099.ChiragFarmersApp.data.remote.AuthApiService
 import com.yash091099.ChiragFarmersApp.data.remote.CropAnalysisApiService
 import com.yash091099.ChiragFarmersApp.data.remote.ChatApiService
@@ -67,5 +68,11 @@ object ApiModule {
     @Singleton
     fun provideRazorpayApiService(retrofit: Retrofit): RazorpayApiService {
         return retrofit.create(RazorpayApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAppVersionApiService(retrofit: Retrofit): AppVersionApiService {
+        return retrofit.create(AppVersionApiService::class.java)
     }
 }
