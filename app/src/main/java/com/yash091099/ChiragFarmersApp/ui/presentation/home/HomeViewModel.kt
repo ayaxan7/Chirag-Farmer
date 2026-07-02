@@ -7,6 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.yash091099.ChiragFarmersApp.BuildConfig
 import com.yash091099.ChiragFarmersApp.R
 import com.yash091099.ChiragFarmersApp.data.location.LocationManager
+import com.yash091099.ChiragFarmersApp.data.local.ChiragDataStore
+import com.yash091099.ChiragFarmersApp.data.remote.AppVersionApiService
+import com.yash091099.ChiragFarmersApp.data.remote.dto.AppVersionRequest
 import com.yash091099.ChiragFarmersApp.data.remote.dto.MixedProductItem
 import com.yash091099.ChiragFarmersApp.data.repository.AuthRepository
 import com.yash091099.ChiragFarmersApp.domain.model.Location
@@ -19,6 +22,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -53,7 +57,9 @@ class HomeViewModel @Inject constructor(
     private val updateDefaultLocationUseCase: UpdateDefaultLocationUseCase,
     private val productRepository: ProductRepository,
     private val locationManager: LocationManager,
-    private val firebaseMessaging: FirebaseMessaging
+    private val firebaseMessaging: FirebaseMessaging,
+    private val appVersionApiService: AppVersionApiService,
+    private val chiragDataStore: ChiragDataStore
 ) : ViewModel() {
 
 
@@ -185,6 +191,21 @@ class HomeViewModel @Inject constructor(
                 )
             } catch (e: Exception) {
                 Timber.e(e, "Failed to fetch or sync FCM token: ${e.message}")
+            }
+        }
+    }
+
+    fun reportAppVersionOnScreenOpen() {
+        viewModelScope.launch {
+            try {
+                val token = chiragDataStore.getAuthToken().first() ?: return@launch
+                Timber.tag("AppVersion").d("$token ${BuildConfig.VERSION_NAME}")
+                appVersionApiService.updateAppVersion(
+                    authorization = "Bearer $token",
+                    AppVersionRequest(appVersion = BuildConfig.VERSION_NAME)
+                )
+            } catch (e: Exception) {
+                Timber.tag("AppVersion").e(e)
             }
         }
     }

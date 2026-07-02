@@ -98,6 +98,7 @@ class ChiragFarmerApplication : Application() {
         applicationScope.launch {
             cleanupOrphanedPendingPayments()
         }
+
     }
 
     private suspend fun cleanupOrphanedPendingPayments() {

@@ -100,11 +100,8 @@ fun HomeScreen(
     // Update default location every time HomeScreen is displayed
     LaunchedEffect(Unit) {
         viewModel.updateDefaultLocationOnScreenOpen()
-    }
-
-    // Sync FCM token every time HomeScreen is displayed
-    LaunchedEffect(Unit) {
         viewModel.updateFcmDeviceTokenOnScreenOpen()
+        viewModel.reportAppVersionOnScreenOpen()
     }
 
     LaunchedEffect(bookingStatus) {
