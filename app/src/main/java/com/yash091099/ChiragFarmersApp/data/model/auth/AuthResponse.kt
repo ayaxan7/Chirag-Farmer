@@ -21,8 +21,6 @@ data class VerifyOTPData(
     val verified: Boolean,
     @SerializedName("token")
     val token: String? = null,
-    @SerializedName("refreshToken")
-    val refreshToken: String? = null,
     @SerializedName("user")
     val user: User? = null
 )

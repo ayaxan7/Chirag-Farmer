@@ -16,7 +16,6 @@ class ChiragDataStore(private val context: Context) {
 
     companion object {
         private val TOKEN_KEY = stringPreferencesKey("auth_token")
-        private val REFRESH_TOKEN_KEY = stringPreferencesKey("refresh_token")
         private val USER_ID_KEY = stringPreferencesKey("user_id")
         private val USER_PHONE_KEY = stringPreferencesKey("user_phone")
         private val USER_ROLE_KEY = stringPreferencesKey("user_role")
@@ -29,18 +28,6 @@ class ChiragDataStore(private val context: Context) {
     suspend fun saveAuthToken(token: String) {
         context.dataStore.edit { preferences ->
             preferences[TOKEN_KEY] = token
-        }
-    }
-
-    suspend fun saveRefreshToken(token: String) {
-        context.dataStore.edit { preferences ->
-            preferences[REFRESH_TOKEN_KEY] = token
-        }
-    }
-
-    fun getRefreshToken(): Flow<String?> {
-        return context.dataStore.data.map { preferences ->
-            preferences[REFRESH_TOKEN_KEY]
         }
     }
 

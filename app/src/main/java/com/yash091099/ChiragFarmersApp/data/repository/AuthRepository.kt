@@ -3,16 +3,12 @@ package com.yash091099.ChiragFarmersApp.data.repository
 import timber.log.Timber
 import com.google.gson.Gson
 import com.yash091099.ChiragFarmersApp.data.local.ChiragDataStore
-import com.yash091099.ChiragFarmersApp.data.local.TokenManager
 import com.yash091099.ChiragFarmersApp.data.model.auth.AddBusinessInfoRequest
 import com.yash091099.ChiragFarmersApp.data.model.auth.AuthResponse
 import com.yash091099.ChiragFarmersApp.data.model.auth.FarmerProfileResponse
-import com.yash091099.ChiragFarmersApp.data.model.auth.LogoutRequest
-import com.yash091099.ChiragFarmersApp.data.model.auth.RefreshTokenRequest
 import com.yash091099.ChiragFarmersApp.data.model.auth.RegisterRequest
 import com.yash091099.ChiragFarmersApp.data.model.auth.SendOTPData
 import com.yash091099.ChiragFarmersApp.data.model.auth.SendOTPRequest
-import com.yash091099.ChiragFarmersApp.data.model.auth.TokenRefreshData
 import com.yash091099.ChiragFarmersApp.data.model.auth.UpdateProfileData
 import com.yash091099.ChiragFarmersApp.data.model.auth.UserDetailsData
 import com.yash091099.ChiragFarmersApp.data.model.auth.VerifyOTPData
@@ -39,8 +35,7 @@ import javax.inject.Inject
 
 class AuthRepository @Inject constructor(
     private val apiService: AuthApiService,
-    private val chiragDataStore: ChiragDataStore,
-    private val tokenManager: TokenManager
+    private val chiragDataStore: ChiragDataStore
 ) {
 
     suspend fun sendLoginOTP(phone: String): Result<AuthResponse<SendOTPData>> {
@@ -72,16 +67,13 @@ class AuthRepository @Inject constructor(
                 )
             )
 
+            // Save token and user data if verification is successful
             if (response.success && response.data?.verified == true) {
                 response.data.token?.let { token ->
                     response.data.user?.let { user ->
                         chiragDataStore.saveUserSession(token, user.id, user.phone, user.role)
                         chiragDataStore.saveProfileStatus(false)
                     }
-                }
-                val refreshToken = response.data.refreshToken
-                if (!refreshToken.isNullOrEmpty()) {
-                    chiragDataStore.saveRefreshToken(refreshToken)
                 }
             }
 
@@ -102,16 +94,14 @@ class AuthRepository @Inject constructor(
                 )
             )
 
+            // Save token and user data if registration is successful
             if (response.success && response.data?.verified == true) {
                 response.data.token?.let { token ->
                     response.data.user?.let { user ->
                         chiragDataStore.saveUserSession(token, user.id, user.phone, user.role)
+                        // Reset profile status to false on registration, will be updated by API call
                         chiragDataStore.saveProfileStatus(false)
                     }
-                }
-                val refreshToken = response.data.refreshToken
-                if (!refreshToken.isNullOrEmpty()) {
-                    chiragDataStore.saveRefreshToken(refreshToken)
                 }
             }
 
@@ -208,15 +198,7 @@ class AuthRepository @Inject constructor(
 
     suspend fun logout() {
         try {
-            val refreshToken = chiragDataStore.getRefreshToken().first()
-            if (!refreshToken.isNullOrEmpty()) {
-                apiService.logout(LogoutRequest(refreshToken = refreshToken))
-            }
-        } catch (e: Exception) {
-            Timber.w("Logout API call failed: ${e.message}")
-        }
-
-        try {
+            // Try to delete the FCM token from the server before clearing local auth data
             val deviceId = chiragDataStore.getDeviceId().first()
             if (!deviceId.isNullOrEmpty()) {
                 deleteDeviceToken(deviceId).fold(
@@ -232,26 +214,9 @@ class AuthRepository @Inject constructor(
             Timber.e("Error during FCM token deletion: ${e.message}")
         }
 
+        // Clear local auth data
         chiragDataStore.clearAuthData()
         chiragDataStore.saveLocationUpdatedOnLaunch(false)
-    }
-
-    suspend fun refreshToken(): Result<AuthResponse<TokenRefreshData>> {
-        return try {
-            val token = chiragDataStore.getRefreshToken().first()
-            if (token.isNullOrEmpty()) {
-                return Result.failure(Exception("No refresh token available"))
-            }
-            val response = apiService.refreshToken(RefreshTokenRequest(refreshToken = token))
-            if (response.success && response.data != null) {
-                val data = response.data
-                chiragDataStore.saveAuthToken(data.token)
-                chiragDataStore.saveRefreshToken(data.refreshToken)
-            }
-            Result.success(response)
-        } catch (e: Exception) {
-            Result.failure(Exception(getErrorMessage(e)))
-        }
     }
 
     suspend fun updateDefaultLocation(latitude: Double, longitude: Double): Result<UpdateDefaultLocationResponse> {

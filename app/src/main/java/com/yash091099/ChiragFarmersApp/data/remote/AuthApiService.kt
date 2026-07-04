@@ -3,12 +3,9 @@ package com.yash091099.ChiragFarmersApp.data.remote
 import com.yash091099.ChiragFarmersApp.data.model.auth.AddBusinessInfoRequest
 import com.yash091099.ChiragFarmersApp.data.model.auth.AuthResponse
 import com.yash091099.ChiragFarmersApp.data.model.auth.FarmerProfileResponse
-import com.yash091099.ChiragFarmersApp.data.model.auth.LogoutRequest
-import com.yash091099.ChiragFarmersApp.data.model.auth.RefreshTokenRequest
 import com.yash091099.ChiragFarmersApp.data.model.auth.RegisterRequest
 import com.yash091099.ChiragFarmersApp.data.model.auth.SendOTPData
 import com.yash091099.ChiragFarmersApp.data.model.auth.SendOTPRequest
-import com.yash091099.ChiragFarmersApp.data.model.auth.TokenRefreshData
 import com.yash091099.ChiragFarmersApp.data.model.auth.UpdateProfileData
 import com.yash091099.ChiragFarmersApp.data.model.auth.UserDetailsData
 import com.yash091099.ChiragFarmersApp.data.model.auth.VerifyOTPData
@@ -126,15 +123,5 @@ interface AuthApiService {
     suspend fun getFarmerProfile(
         @Header("Authorization") authorization: String
     ): FarmerProfileResponse
-
-    @POST("api/msg91/refresh-token")
-    suspend fun refreshToken(
-        @Body request: RefreshTokenRequest
-    ): AuthResponse<TokenRefreshData>
-
-    @POST("api/msg91/logout")
-    suspend fun logout(
-        @Body request: LogoutRequest
-    ): AuthResponse<Any>
 }
 
