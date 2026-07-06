@@ -7,6 +7,7 @@ import com.yash091099.ChiragFarmersApp.data.remote.ChatApiService
 import com.yash091099.ChiragFarmersApp.data.remote.CartApiService
 import com.yash091099.ChiragFarmersApp.data.remote.NotificationApiService
 import com.yash091099.ChiragFarmersApp.data.remote.RazorpayApiService
+import com.yash091099.ChiragFarmersApp.data.remote.WalletApiService
 import com.yash091099.ChiragFarmersApp.data.remote.OrderApiService
 import com.yash091099.ChiragFarmersApp.data.remote.ProductApiService
 import dagger.Module
@@ -74,5 +75,11 @@ object ApiModule {
     @Singleton
     fun provideAppVersionApiService(retrofit: Retrofit): AppVersionApiService {
         return retrofit.create(AppVersionApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideWalletApiService(retrofit: Retrofit): WalletApiService {
+        return retrofit.create(WalletApiService::class.java)
     }
 }

@@ -459,6 +459,9 @@
     <string name="wallet_withdraw_amount_label">वॉलेट टॉप-अप करें</string>
     <string name="wallet_top_up_hint">राशि दर्ज करें</string>
     <string name="wallet_enter_button">दर्ज करें</string>
+    <string name="wallet_top_up_description">वॉलेट टॉप-अप</string>
+    <string name="wallet_top_up_success">पैसे सफलतापूर्वक जोड़े गए!</string>
+    <string name="wallet_invalid_amount">कृपया एक वैध राशि दर्ज करें</string>
 
     <string name="profile_manage_addresses">पते प्रबंधित करें</string>
     <string name="profile_terms">नियम और शर्तें</string>

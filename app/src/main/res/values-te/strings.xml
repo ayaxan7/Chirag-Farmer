@@ -460,6 +460,9 @@
     <string name="wallet_withdraw_amount_label">వాలెట్ టాప్-అప్ చేయండి</string>
     <string name="wallet_top_up_hint">మొత్తం నమోదు చేయండి</string>
     <string name="wallet_enter_button">నమోదు చేయండి</string>
+    <string name="wallet_top_up_description">వాలెట్ టాప్-అప్</string>
+    <string name="wallet_top_up_success">డబ్బు విజయవంతంగా జోడించబడింది!</string>
+    <string name="wallet_invalid_amount">దయచేసి చెల్లుబాటు అయ్యే మొత్తాన్ని నమోదు చేయండి</string>
 
     <string name="profile_manage_addresses">చిరునామాలను నిర్వహించండి</string>
     <string name="profile_terms">నిబంధనలు మరియు షరతులు</string>

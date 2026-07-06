@@ -471,6 +471,9 @@
     <string name="wallet_withdraw_amount_label">ਵਾਲਿਟ ਟਾਪ-ਅੱਪ ਕਰੋ</string>
     <string name="wallet_top_up_hint">ਰਕਮ ਦਰਜ ਕਰੋ</string>
     <string name="wallet_enter_button">ਦਰਜ ਕਰੋ</string>
+    <string name="wallet_top_up_description">ਵਾਲਿਟ ਟਾਪ-ਅੱਪ</string>
+    <string name="wallet_top_up_success">ਪੈਸੇ ਸਫਲਤਾਪੂਰਵਕ ਜੋੜ ਦਿੱਤੇ ਗਏ!</string>
+    <string name="wallet_invalid_amount">ਕਿਰਪਾ ਕਰਕੇ ਇੱਕ ਵੈਧ ਰਕਮ ਦਰਜ ਕਰੋ</string>
 
     <string name="profile_manage_addresses">ਪਤਿਆਂ ਦਾ ਪ੍ਰਬੰਧ ਕਰੋ</string>
     <string name="profile_terms">ਨਿਯਮ ਅਤੇ ਸ਼ਰਤਾਂ</string>

@@ -7,6 +7,7 @@ import com.yash091099.ChiragFarmersApp.data.remote.CartApiService
 import com.yash091099.ChiragFarmersApp.data.remote.NotificationApiService
 import com.yash091099.ChiragFarmersApp.data.remote.OrderApiService
 import com.yash091099.ChiragFarmersApp.data.remote.RazorpayApiService
+import com.yash091099.ChiragFarmersApp.data.remote.WalletApiService
 import com.yash091099.ChiragFarmersApp.data.remote.ProductApiService
 import com.yash091099.ChiragFarmersApp.data.repository.AuthRepository
 import com.yash091099.ChiragFarmersApp.data.repository.CropAnalysisRepositoryImpl
@@ -14,12 +15,14 @@ import com.yash091099.ChiragFarmersApp.data.repository.CartRepositoryImpl
 import com.yash091099.ChiragFarmersApp.data.repository.NotificationRepositoryImpl
 import com.yash091099.ChiragFarmersApp.data.repository.OrderRepositoryImpl
 import com.yash091099.ChiragFarmersApp.data.repository.RazorpayCheckoutRepositoryImpl
+import com.yash091099.ChiragFarmersApp.data.repository.WalletRepositoryImpl
 import com.yash091099.ChiragFarmersApp.data.repository.ProductRepositoryImpl
 import com.yash091099.ChiragFarmersApp.domain.repository.CropAnalysisRepository
 import com.yash091099.ChiragFarmersApp.domain.repository.CartRepository
 import com.yash091099.ChiragFarmersApp.domain.repository.OrderRepository
 import com.yash091099.ChiragFarmersApp.domain.repository.NotificationRepository
 import com.yash091099.ChiragFarmersApp.domain.repository.RazorpayCheckoutRepository
+import com.yash091099.ChiragFarmersApp.domain.repository.WalletRepository
 import com.yash091099.ChiragFarmersApp.domain.repository.ProductRepository
 import dagger.Module
 import dagger.Provides
@@ -93,5 +96,14 @@ object RepositoryModule {
         chiragDataStore: ChiragDataStore
     ): RazorpayCheckoutRepository {
         return RazorpayCheckoutRepositoryImpl(api, chiragDataStore)
+    }
+
+    @Provides
+    @Singleton
+    fun provideWalletRepository(
+        api: WalletApiService,
+        chiragDataStore: ChiragDataStore
+    ): WalletRepository {
+        return WalletRepositoryImpl(api, chiragDataStore)
     }
 }
