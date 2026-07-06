@@ -302,7 +302,7 @@ fun MenuListSection(
     navController: NavHostController
 ) {
     Column {
-        MenuItem(icon = R.drawable.ic_wallet, title = stringResource(R.string.profile_wallet))
+        MenuItem(icon = R.drawable.ic_wallet, title = stringResource(R.string.profile_wallet), onClick = { navController.navigate(Route.Wallet.path) })
         MenuItem(
             icon = R.drawable.location,
             title = stringResource(R.string.profile_manage_addresses),

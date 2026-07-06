@@ -456,6 +456,11 @@
     <string name="profile_orders_title">Orders\nplaced</string>
     <string name="profile_help_title">Help &amp;\nSupport</string>
     <string name="profile_wallet">Wallet</string>
+    <string name="wallet_title">Wallet</string>
+    <string name="wallet_balance_label">Your Balance</string>
+    <string name="wallet_withdraw_amount_label">Top-up Wallet</string>
+    <string name="wallet_top_up_hint">Enter amount</string>
+    <string name="wallet_enter_button">Enter</string>
     <string name="profile_manage_addresses">Manage Addresses</string>
     <string name="profile_terms">Terms and conditions</string>
     <string name="profile_privacy">Privacy Policy</string>

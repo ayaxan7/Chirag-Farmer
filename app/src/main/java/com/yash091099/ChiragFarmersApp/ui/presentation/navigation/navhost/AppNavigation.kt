@@ -44,6 +44,7 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.orders.screens.MyOrdersSc
 import com.yash091099.ChiragFarmersApp.ui.presentation.profile.ProfileScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.profile.screens.EditProfileScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.profile.screens.LanguageScreen
+import com.yash091099.ChiragFarmersApp.ui.presentation.profile.screens.WalletScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.profile.ProfileViewModel
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.SellScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.screens.sellcategories.SellCategoriesScreen
@@ -256,6 +257,9 @@ fun AppNavigation(
         }
         composable(Route.Language.path) {
             LanguageScreen(navController = navController)
+        }
+        composable(Route.Wallet.path) {
+            WalletScreen(navController = navController)
         }
         composable(Route.MyOrders.path) {
             MyOrdersScreen(navController = navController)

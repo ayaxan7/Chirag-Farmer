@@ -1,7 +1,5 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.home
 
-import android.util.Log
-import timber.log.Timber
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -23,14 +21,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -47,6 +44,7 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.home.components.topbar.Ho
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost.Route
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.data.Categories
 import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
+import timber.log.Timber
 
 @Composable
 fun HomeScreen(
@@ -63,18 +61,21 @@ fun HomeScreen(
             R.drawable.smart_farmer_hi,
             R.drawable.smart_farmer_hi
         )
+
         langTag.startsWith("te") -> listOf(
             R.drawable.smart_farmer_te,
             R.drawable.smart_farmer_te,
             R.drawable.smart_farmer_te,
             R.drawable.smart_farmer_te
         )
+
         langTag.startsWith("pa") -> listOf(
             R.drawable.smart_farmer_pu,
             R.drawable.smart_farmer_pu,
             R.drawable.smart_farmer_pu,
             R.drawable.smart_farmer_pu
         )
+
         else -> listOf(
             R.drawable.smart_farmer,
             R.drawable.smart_farmer,
@@ -82,18 +83,26 @@ fun HomeScreen(
             R.drawable.smart_farmer
         )
     }
-    val footerImage=when{
+    val footerImage = when {
         langTag.startsWith("hi") -> R.drawable.home_footer_hi
         langTag.startsWith("te") -> R.drawable.home_footer_te
         langTag.startsWith("pa") -> R.drawable.home_footer_pu
         else -> R.drawable.home_footer
     }
     val productCategories = listOf(
-        Triple(stringResource(R.string.home_agriculture_drones), R.drawable.agri_drone, "Agriculture Drone"),
+        Triple(
+            stringResource(R.string.home_agriculture_drones),
+            R.drawable.agri_drone,
+            "Agriculture Drone"
+        ),
         Triple(stringResource(R.string.home_seeds), R.drawable.agri_seeds, "Seeds"),
         Triple(stringResource(R.string.home_sprayer), R.drawable.agri_sprayer, "Sprayers"),
         Triple(stringResource(R.string.home_tractors), R.drawable.agri_tractor, "Tractors"),
-        Triple(stringResource(R.string.home_harvesting_machines), R.drawable.agri_harvester, "Harvesting Machines")
+        Triple(
+            stringResource(R.string.home_harvesting_machines),
+            R.drawable.agri_harvester,
+            "Harvesting Machines"
+        )
     )
     val bookingStatus by viewModel.bookingStatus.collectAsStateWithLifecycle()
 
@@ -298,7 +307,7 @@ fun HomeScreen(
                                 }
                             }
                         }
-                        val bannerImageResId=when{
+                        val bannerImageResId = when {
                             langTag.startsWith("hi") -> R.drawable.buy_banner_hi
                             langTag.startsWith("te") -> R.drawable.buy_banner_te
                             langTag.startsWith("pa") -> R.drawable.buy_banner_pa
@@ -312,7 +321,10 @@ fun HomeScreen(
                                 btnText = stringResource(R.string.home_view_all),
                                 onClick = {
                                     navController.navigate(
-                                        Route.BuyCategory.createRoute(popularLabel, isPopularProducts = true)
+                                        Route.BuyCategory.createRoute(
+                                            popularLabel,
+                                            isPopularProducts = true
+                                        )
                                     )
                                 })
                             val popularItems = successState.popularProducts.take(4)

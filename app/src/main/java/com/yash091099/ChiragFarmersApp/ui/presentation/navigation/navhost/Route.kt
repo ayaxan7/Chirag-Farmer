@@ -65,6 +65,7 @@ sealed class Route(val path: String) {
      object Profile: Route("profile")
      object EditProfile: Route("edit_profile")
     object Language: Route("language")
+    object Wallet: Route("wallet")
     object PaymentSuccess: Route("payment_success")
     object MyOrders:Route("orders")
      object OrderDetails : Route("order_details/{orderId}?productId={productId}") {
