@@ -452,7 +452,8 @@
     <string name="profile_orders_title">ऑर्डर\nदिए गए</string>
     <string name="profile_help_title">सहायता &amp;\nसमर्थन</string>
     <string name="profile_wallet">वॉलेट</string>
-
+    <string name="profile_bank_details">बैंक विवरण</string>
+    
     <!-- Wallet -->
     <string name="wallet_title">वॉलेट</string>
     <string name="wallet_balance_label">आपका बैलेंस</string>

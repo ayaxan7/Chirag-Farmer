@@ -11,7 +11,9 @@ data class PlaceOrderRequest(
     @SerializedName("paymentMethod")
     val paymentMethod: String,
     @SerializedName("transactionId")
-    val transactionId: String? = null
+    val transactionId: String? = null,
+    @SerializedName("keepWallet")
+    val keepWallet: Boolean = false
 )
 
 data class OrderItemRequest(

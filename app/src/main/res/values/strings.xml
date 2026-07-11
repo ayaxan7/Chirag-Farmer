@@ -253,11 +253,11 @@
     <string name="payment_pay_now">Pay Now</string>
     <string name="payment_navigate_description">Navigate</string>
     <string name="payment_online">Online</string>
-    <string name="payment_online_payment">Online Payment (Card/UPI/Wallet)</string>
+    <string name="payment_online_payment">Online Payment</string>
     <string name="error_payment_initialization_failed">Unable to initialize payment. Please try again.</string>
     <string name="error_payment_verification_failed">Payment verification failed. Please contact support.</string>
     <string name="error_payment_cancelled">Payment was cancelled.</string>
-    <string name="error_payment_not_captured">Payment could not be confirmed. Your order has not been placed. If any amount was deducted, it will be returned within 2-5 business days.</string>
+    <string name="error_payment_not_captured">Payment could not be confirmed. Your order has not been placed. If any amount was deducted, it will be returned within 2–5 business days.</string>
     <string name="payment_select_method_hint"> (select a payment method to proceed)</string>
     <string name="payment_successful">Payment Successful</string>
     <string name="payment_thank_you">Thank You for purchase</string>
@@ -456,6 +456,7 @@
     <string name="profile_orders_title">Orders\nplaced</string>
     <string name="profile_help_title">Help &amp;\nSupport</string>
     <string name="profile_wallet">Wallet</string>
+    <string name="profile_bank_details">Bank Details</string>
     <string name="wallet_title">Wallet</string>
     <string name="wallet_balance_label">Your Balance</string>
     <string name="wallet_withdraw_amount_label">Top-up Wallet</string>
@@ -464,6 +465,7 @@
     <string name="wallet_top_up_description">Wallet Top-up</string>
     <string name="wallet_top_up_success">Money added successfully!</string>
     <string name="wallet_invalid_amount">Please enter a valid amount</string>
+    <string name="wallet_money_label">Wallet Money</string>
     <string name="profile_manage_addresses">Manage Addresses</string>
     <string name="profile_terms">Terms and conditions</string>
     <string name="profile_privacy">Privacy Policy</string>

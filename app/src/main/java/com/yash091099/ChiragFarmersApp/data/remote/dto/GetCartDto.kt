@@ -17,7 +17,9 @@ data class CartDataWrapper(
     @SerializedName("summary")
     val summary: CartSummary = CartSummary(),
     @SerializedName("currentDefaultAddress")
-    val currentDefaultAddress: CartAddressDto? = null
+    val currentDefaultAddress: CartAddressDto? = null,
+    @SerializedName("walletBalance")
+    val walletBalance: Double = 0.0
 )
 
 data class CartSummary(

@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName
 data class CreateRazorpayOrderResponse(
     @SerializedName("success")
     val success: Boolean,
+    @SerializedName("code")
+    val code: Int = 200,
     @SerializedName("message")
     val message: String,
     @SerializedName("data")
@@ -13,17 +15,19 @@ data class CreateRazorpayOrderResponse(
 
 data class CreateRazorpayOrderData(
     @SerializedName("razorpayOrderId")
-    val razorpayOrderId: String,
+    val razorpayOrderId: String? = null,
     @SerializedName("razorpayKeyId")
-    val razorpayKeyId: String,
+    val razorpayKeyId: String? = null,
     @SerializedName("amount")
-    val amount: Double,
+    val amount: Double? = null,
     @SerializedName("currency")
-    val currency: String,
+    val currency: String? = null,
     @SerializedName("receipt")
     val receipt: String? = null,
     @SerializedName("orderId")
-    val orderId: String? = null
+    val orderId: String? = null,
+    @SerializedName("walletContribution")
+    val walletContribution: Double? = null
 )
 
 data class VerifyRazorpayPaymentRequest(

@@ -62,8 +62,9 @@ fun PaymentChip(
 
             Text(
                 text = text,
-                fontSize = 13.sp,
-                maxLines = 1
+                fontSize = 11.sp,
+                maxLines = 2,
+                softWrap = true
             )
         }
     }

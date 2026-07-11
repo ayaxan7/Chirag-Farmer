@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -203,12 +205,14 @@ fun CartScreen(
             val cartItems = state.cartItems
             val summary = state.summary
             val address = state.address
+            val walletBalance = state.walletBalance
 
             val paymentViewModel: PaymentViewModel = hiltViewModel()
             val paymentState by paymentViewModel.paymentState.collectAsState()
             val razorpayCheckoutRequest by paymentViewModel.razorpayCheckoutRequest.collectAsState()
             var selectedPaymentMethod by remember { mutableStateOf<String?>(null) }
             var showPaymentDropdown by remember { mutableStateOf(false) }
+            var useWalletForPayment by remember { mutableStateOf(false) }
 
             val razorpayCheckout = remember { Checkout() }
             val razorpayListener = remember {
@@ -510,13 +514,33 @@ fun CartScreen(
                             )
                         }
 
-//                        Spacer(modifier = Modifier.height(12.dp))
+                        val walletUsed = if (useWalletForPayment) {
+                            minOf(walletBalance, summary.totalAmount)
+                        } else 0.0
+                        val finalTotal = summary.totalAmount - walletUsed
 
-//                        HorizontalDivider(
-//                            color = BorderColour, thickness = 1.dp
-//                        )
-
-//                        Spacer(modifier = Modifier.height(12.dp))
+                        if (walletUsed > 0) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.wallet_money_label),
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    color = BGBlack
+                                )
+                                Text(
+                                    text = stringResource(
+                                        R.string.product_price_format,
+                                        "-%.2f".format(walletUsed)
+                                    ),
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    color = BGBlack
+                                )
+                            }
+                        }
 
                         // Total Cost
                         Row(
@@ -532,7 +556,7 @@ fun CartScreen(
                             Text(
                                 text = stringResource(
                                     R.string.product_price_format,
-                                    "%.2f".format(summary.totalAmount)
+                                    "%.2f".format(finalTotal)
                                 ), fontSize = 14.sp, fontWeight = FontWeight.Bold, color = BGBlack
                             )
                         }
@@ -558,17 +582,27 @@ fun CartScreen(
                             Column(
                                 modifier = Modifier.fillMaxWidth()
                             ) {
-                                Row {
-                                    Text(
-                                        text = stringResource(R.string.orders_payment_method),
-                                        fontSize = 14.sp,
-                                        fontWeight = FontWeight.SemiBold
-                                    )
-                                    Text(
-                                        text = stringResource(R.string.payment_select_method_hint),
-                                        fontSize = 11.sp,
-                                        color = Color.Gray
-                                    )
+                                Column(
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth()
+                                    ) {
+                                        Text(
+                                            text = stringResource(R.string.orders_payment_method),
+                                            fontSize = 14.sp,
+                                            fontWeight = FontWeight.SemiBold,
+                                            softWrap = true
+                                        )
+                                        Spacer(modifier = Modifier.width(4.dp))
+                                        Text(
+                                            text = stringResource(R.string.payment_select_method_hint),
+                                            fontSize = 11.sp,
+                                            color = Color.Gray,
+                                            softWrap = true,
+                                            modifier = Modifier.weight(1f)
+                                        )
+                                    }
                                 }
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
@@ -590,9 +624,27 @@ fun CartScreen(
                                         selectedPaymentMethod = "Online"
                                     }
 
+                                }
+                                if (selectedPaymentMethod == "Online") {
                                     Spacer(modifier = Modifier.height(8.dp))
-
-
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        modifier = Modifier.fillMaxWidth()
+                                    ) {
+                                        Checkbox(
+                                            checked = useWalletForPayment,
+                                            onCheckedChange = { useWalletForPayment = it },
+                                            colors = CheckboxDefaults.colors(checkedColor = BGBlack)
+                                        )
+                                        Text(
+                                            text = "Use Wallet balance (Available: ₹%,.0f)".format(walletBalance),
+                                            fontSize = 12.sp,
+                                            color = BGBlack,
+                                            fontWeight = FontWeight.Normal,
+                                            softWrap = true,
+                                            modifier = Modifier.weight(1f)
+                                        )
+                                    }
                                 }
                                 Spacer(modifier = Modifier.height(16.dp))
                                 ChiragButton(
@@ -604,8 +656,13 @@ fun CartScreen(
                                             return@ChiragButton
                                         }
 
+                                        val walletUsed = if (useWalletForPayment) {
+                                            minOf(walletBalance, summary.totalAmount)
+                                        } else 0.0
                                         viewModel.cacheCartDataForPayment(
-                                            cartItems = cartItems, address = address.addressString
+                                            cartItems = cartItems,
+                                            address = address.addressString,
+                                            keepWallet = useWalletForPayment
                                         )
                                         paymentViewModel.placeOrder(selectedPaymentMethod!!)
                                     },

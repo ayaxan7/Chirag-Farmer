@@ -35,7 +35,9 @@ data class BuyNowData(
     @SerializedName("totalCost")
     val totalCost: Double,
     @SerializedName("defaultLocation")
-    val defaultLocation: DefaultLocation? = null
+    val defaultLocation: DefaultLocation? = null,
+    @SerializedName("walletBalance")
+    val walletBalance: Double = 0.0
 )
 
 data class DefaultLocation(

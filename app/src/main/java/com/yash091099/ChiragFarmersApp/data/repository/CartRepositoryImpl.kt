@@ -148,7 +148,8 @@ class CartRepositoryImpl @Inject constructor(
                 val cartDataWrapper = CartDataWrapper(
                     items = listOf(cartItem),
                     summary = cartSummary,
-                    currentDefaultAddress = address
+                    currentDefaultAddress = address,
+                    walletBalance = buyNowData.walletBalance
                 )
 
                 Result.success(cartDataWrapper)

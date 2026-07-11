@@ -7,15 +7,16 @@ import javax.inject.Singleton
 
 data class CartData(
     val items: List<CartItemDto> = emptyList(),
-    val shippingAddress: String = ""
+    val shippingAddress: String = "",
+    val keepWallet: Boolean = false
 )
 
 @Singleton
 class CartDataCache @Inject constructor() {
     private val _cartData = MutableStateFlow<CartData?>(null)
 
-    fun setCartData(items: List<CartItemDto>, address: String) {
-        _cartData.value = CartData(items = items, shippingAddress = address)
+    fun setCartData(items: List<CartItemDto>, address: String, keepWallet: Boolean = false) {
+        _cartData.value = CartData(items = items, shippingAddress = address, keepWallet = keepWallet)
     }
 
     fun getCartData(): CartData? {

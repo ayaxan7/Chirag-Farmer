@@ -71,7 +71,12 @@ class CartViewModel @Inject constructor(
                     _cartState.value = if (cartData.items.isEmpty()) {
                         CartUiState.Empty
                     } else {
-                        CartUiState.Success(cartData.items, cartData.summary, cartData.currentDefaultAddress)
+                        CartUiState.Success(
+                            cartItems = cartData.items,
+                            summary = cartData.summary,
+                            address = cartData.currentDefaultAddress,
+                            walletBalance = cartData.walletBalance
+                        )
                     }
                 },
                 onFailure = { exception ->
@@ -92,7 +97,12 @@ class CartViewModel @Inject constructor(
                     _cartState.value = if (cartData.items.isEmpty()) {
                         CartUiState.Empty
                     } else {
-                        CartUiState.Success(cartData.items, cartData.summary, cartData.currentDefaultAddress)
+                        CartUiState.Success(
+                            cartItems = cartData.items,
+                            summary = cartData.summary,
+                            address = cartData.currentDefaultAddress,
+                            walletBalance = cartData.walletBalance
+                        )
                     }
                 },
                 onFailure = { exception ->
@@ -113,7 +123,12 @@ class CartViewModel @Inject constructor(
                     val newState = if (cartData.items.isEmpty()) {
                         CartUiState.Empty
                     } else {
-                        CartUiState.Success(cartData.items, cartData.summary, cartData.currentDefaultAddress)
+                        CartUiState.Success(
+                            cartItems = cartData.items,
+                            summary = cartData.summary,
+                            address = cartData.currentDefaultAddress,
+                            walletBalance = cartData.walletBalance
+                        )
                     }
                     _cartState.value = newState
                     _isOperationInProgress.value = false
@@ -164,8 +179,8 @@ class CartViewModel @Inject constructor(
         loadCart()
     }
 
-    fun cacheCartDataForPayment(cartItems: List<CartItemDto>, address: String) {
-        cartDataCache.setCartData(cartItems, address)
+    fun cacheCartDataForPayment(cartItems: List<CartItemDto>, address: String, keepWallet: Boolean = false) {
+        cartDataCache.setCartData(cartItems, address, keepWallet)
     }
 
     fun clearCachedCartData() {
@@ -178,7 +193,8 @@ sealed class CartUiState {
     data class Success(
         val cartItems: List<CartItemDto>,
         val summary: CartSummary,
-        val address: CartAddressDto? = null
+        val address: CartAddressDto? = null,
+        val walletBalance: Double = 0.0
     ) : CartUiState()
     object Empty : CartUiState()
     data class Error(val message: String) : CartUiState()

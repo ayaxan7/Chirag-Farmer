@@ -453,7 +453,8 @@
     <string name="profile_orders_title">ఆర్డర్లు\nచేసినవి</string>
     <string name="profile_help_title">సహాయం &amp;\nసపోర్ట్</string>
     <string name="profile_wallet">వాలెట్</string>
-
+    <string name="profile_bank_details">బ్యాంక్ వివరాలు</string>
+    
     <!-- Wallet -->
     <string name="wallet_title">వాలెట్</string>
     <string name="wallet_balance_label">మీ బ్యాలెన్స్</string>

@@ -464,7 +464,8 @@
     <string name="profile_orders_title">ਆਰਡਰ\nਰੱਖੇ ਗਏ</string>
     <string name="profile_help_title">ਮਦਦ &amp;\nਸਹਾਇਤਾ</string>
     <string name="profile_wallet">ਵਾਲਿਟ</string>
-
+    <string name="profile_bank_details">ਬੈਂਕ ਵੇਰਵੇ</string>
+    
     <!-- Wallet -->
     <string name="wallet_title">ਵਾਲਿਟ</string>
     <string name="wallet_balance_label">ਤੁਹਾਡਾ ਬੈਲੰਸ</string>

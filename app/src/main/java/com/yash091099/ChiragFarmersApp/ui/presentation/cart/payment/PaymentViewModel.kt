@@ -143,7 +143,8 @@ class PaymentViewModel @Inject constructor(
                 val request = buildPlaceOrderRequest(
                     paymentMethod = ONLINE_PAYMENT,
                     cachedCartDataItems = cachedCartData.items,
-                    shippingAddress = cachedCartData.shippingAddress
+                    shippingAddress = cachedCartData.shippingAddress,
+                    keepWallet = cachedCartData.keepWallet
                 )
 
                 if (request.items.isEmpty()) {
@@ -169,12 +170,47 @@ class PaymentViewModel @Inject constructor(
                             return@fold
                         }
 
-                        pendingRazorpayOrderId = data.razorpayOrderId
+                        Timber.d("Checkout response code=%d, razorpayOrderId=%s, amount=%s, walletContribution=%s",
+                            response.code, data.razorpayOrderId, data.amount, data.walletContribution)
+
+                        // code 201 = pure wallet success (order placed directly, no Razorpay order)
+                        if (response.code == 201) {
+                            Timber.d("Pure wallet payment - order placed directly")
+                            cartDataCache.clearCartData()
+                            _paymentState.value = PaymentUiState.Success(
+                                message = response.message.ifBlank { "Order placed successfully" }
+                            )
+                            return@fold
+                        }
+
+                        // code 200 = Razorpay order (split or full online)
+                        // For split payment, amount is already the gateway contribution
+                        val razorpayOrderId = data.razorpayOrderId ?: run {
+                            _paymentState.value = PaymentUiState.Error(
+                                context.getString(R.string.error_payment_initialization_failed)
+                            )
+                            return@fold
+                        }
+                        val razorpayKeyId = data.razorpayKeyId ?: run {
+                            _paymentState.value = PaymentUiState.Error(
+                                context.getString(R.string.error_payment_initialization_failed)
+                            )
+                            return@fold
+                        }
+                        val currency = data.currency ?: "INR"
+                        val razorpayAmount = data.amount ?: run {
+                            _paymentState.value = PaymentUiState.Error(
+                                context.getString(R.string.error_payment_initialization_failed)
+                            )
+                            return@fold
+                        }
+
+                        pendingRazorpayOrderId = razorpayOrderId
 
                         pendingPaymentStorage.savePendingPayment(
                             PendingPayment(
-                                razorpayOrderId = data.razorpayOrderId,
-                                amount = data.amount,
+                                razorpayOrderId = razorpayOrderId,
+                                amount = razorpayAmount,
                                 paymentType = ONLINE_PAYMENT
                             )
                         )
@@ -183,11 +219,14 @@ class PaymentViewModel @Inject constructor(
 
                         val userPhone = chiragDataStore.getUserPhone().first()
 
+                        Timber.d("Launching Razorpay: amount=%d (%.2f rupees), orderId=%s",
+                            (razorpayAmount * 100).toInt(), razorpayAmount, razorpayOrderId)
+
                         _razorpayCheckoutRequest.value = RazorpayCheckoutOptions(
-                            key = data.razorpayKeyId,
-                            amount = (data.amount * 100).toInt(),
-                            currency = data.currency,
-                            orderId = data.razorpayOrderId,
+                            key = razorpayKeyId,
+                            amount = (razorpayAmount * 100).toInt(),
+                            currency = currency,
+                            orderId = razorpayOrderId,
                             name = "Chirag",
                             description = "Order Payment",
                             prefillEmail = null,
@@ -280,7 +319,8 @@ class PaymentViewModel @Inject constructor(
     private fun buildPlaceOrderRequest(
         paymentMethod: String,
         cachedCartDataItems: List<CartItemDto>,
-        shippingAddress: String
+        shippingAddress: String,
+        keepWallet: Boolean = false
     ): PlaceOrderRequest {
         val items = cachedCartDataItems.map { cartItem ->
             OrderItemRequest(
@@ -291,7 +331,8 @@ class PaymentViewModel @Inject constructor(
         return PlaceOrderRequest(
             items = items,
             shippingAddress = shippingAddress,
-            paymentMethod = paymentMethod
+            paymentMethod = paymentMethod,
+            keepWallet = keepWallet
         )
     }
 

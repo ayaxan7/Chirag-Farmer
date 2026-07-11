@@ -213,7 +213,7 @@ fun HomeScreen(
                         if (successState.smartFarmingProducts.isNotEmpty()) {
                             CategoryHeader(
                                 category = stringResource(R.string.home_smart_farming_category),
-                                btnText = stringResource(R.string.home_view_all),
+//                                btnText = stringResource(R.string.home_view_all),
                                 onClick = {
                                     navController.navigate(
                                         Route.BuyCategory.createRoute(

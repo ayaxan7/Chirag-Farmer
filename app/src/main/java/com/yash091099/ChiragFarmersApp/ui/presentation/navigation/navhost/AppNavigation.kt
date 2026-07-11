@@ -46,6 +46,7 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.profile.screens.EditProfi
 import com.yash091099.ChiragFarmersApp.ui.presentation.profile.screens.LanguageScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.profile.screens.WalletScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.profile.ProfileViewModel
+import com.yash091099.ChiragFarmersApp.ui.presentation.profile.screens.BankDetailsScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.SellScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.screens.sellcategories.SellCategoriesScreen
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.screens.sellproduces.SellProducesScreen
@@ -324,6 +325,9 @@ fun AppNavigation(
                 sellerName = sellerName,
                 pricePaid = pricePaid
             )
+        }
+        composable(Route.BankDetails.path) {
+            BankDetailsScreen(navController = navController)
         }
     }
 }
