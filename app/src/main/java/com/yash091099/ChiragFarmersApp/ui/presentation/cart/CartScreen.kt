@@ -637,7 +637,7 @@ fun CartScreen(
                                             colors = CheckboxDefaults.colors(checkedColor = BGBlack)
                                         )
                                         Text(
-                                            text = "Use Wallet balance (Available: ₹%,.0f)".format(walletBalance),
+                                            text = "Use Wallet balance (Available: ₹%,.2f)".format(walletBalance),
                                             fontSize = 12.sp,
                                             color = BGBlack,
                                             fontWeight = FontWeight.Normal,

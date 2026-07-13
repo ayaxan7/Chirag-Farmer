@@ -1,5 +1,6 @@
 package com.yash091099.ChiragFarmersApp.data.remote.dto
 
+import com.google.gson.JsonElement
 import com.google.gson.annotations.SerializedName
 
 data class CreateRazorpayOrderResponse(
@@ -23,7 +24,7 @@ data class CreateRazorpayOrderData(
     @SerializedName("currency")
     val currency: String? = null,
     @SerializedName("receipt")
-    val receipt: String? = null,
+    val receipt: JsonElement? = null,
     @SerializedName("orderId")
     val orderId: String? = null,
     @SerializedName("walletContribution")

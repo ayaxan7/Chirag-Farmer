@@ -39,6 +39,7 @@ import com.yash091099.ChiragFarmersApp.ui.presentation.home.components.ImageCaro
 import com.yash091099.ChiragFarmersApp.ui.presentation.home.components.topbar.SearchBarButton
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navbar.ChiragTopBar
 import com.yash091099.ChiragFarmersApp.ui.presentation.navigation.navhost.Route
+import com.yash091099.ChiragFarmersApp.utils.formatAmount
 import com.yash091099.ChiragFarmersApp.ui.presentation.sell.data.Categories
 import com.yash091099.ChiragFarmersApp.ui.theme.BGWhite
 
@@ -200,8 +201,8 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
                                     imageUrl = product.imageUrl,
                                     productName = product.productName,
                                     brandName = product.sellerName,
-                                    currentPrice = product.finalPrice.toInt().toString(),
-                                    originalPrice = product.originalPrice.toInt().toString(),
+                                    currentPrice = product.finalPrice.formatAmount(),
+                                    originalPrice = product.originalPrice.formatAmount(),
                                     rating = product.rating
                                 ), onClick = {
                                     navController.navigate(Route.ProductDetails.createRoute(product.id))
@@ -234,8 +235,8 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
                                     imageUrl = product.imageUrl,
                                     productName = product.productName,
                                     brandName = product.sellerName,
-                                    currentPrice = product.finalPrice.toInt().toString(),
-                                    originalPrice = product.originalPrice.toInt().toString(),
+                                    currentPrice = product.finalPrice.formatAmount(),
+                                    originalPrice = product.originalPrice.formatAmount(),
                                     rating = product.rating
                                 ), onClick = {
                                     navController.navigate(Route.ProductDetails.createRoute(product.id))
@@ -267,8 +268,8 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
                                     imageUrl = product.imageUrl,
                                     productName = product.productName,
                                     brandName = product.sellerName,
-                                    currentPrice = product.finalPrice.toInt().toString(),
-                                    originalPrice = product.originalPrice.toInt().toString(),
+                                    currentPrice = product.finalPrice.formatAmount(),
+                                    originalPrice = product.originalPrice.formatAmount(),
                                     rating = product.rating
                                 ), onClick = {
                                     navController.navigate(Route.ProductDetails.createRoute(product.id))
@@ -292,8 +293,8 @@ fun BuyScreen(navController: NavHostController, viewModel: BuyViewModel = hiltVi
                                     imageUrl = product.imageUrl,
                                     productName = product.productName,
                                     brandName = product.sellerName,
-                                    currentPrice = product.finalPrice.toInt().toString(),
-                                    originalPrice = product.originalPrice.toInt().toString(),
+                                    currentPrice = product.finalPrice.formatAmount(),
+                                    originalPrice = product.originalPrice.formatAmount(),
                                     rating = product.rating
                                 ), onClick = {
                                     navController.navigate(Route.ProductDetails.createRoute(product.id))
