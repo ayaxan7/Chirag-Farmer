@@ -47,7 +47,9 @@ data class NotificationItemDataDto(
     @SerializedName("image")
     val image: String? = null,
     @SerializedName("status")
-    val status: String? = null
+    val status: String? = null,
+    @SerializedName("url")
+    val url: String? = null
 )
 
 data class NotificationPagination(

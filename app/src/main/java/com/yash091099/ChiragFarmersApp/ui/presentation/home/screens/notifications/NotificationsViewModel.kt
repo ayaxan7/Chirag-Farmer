@@ -26,7 +26,8 @@ data class NotificationUiModel(
     val orderId: String? = null,
     val bookingId: String? = null,
     val notificationType: String? = null,
-    val status: String? = null
+    val status: String? = null,
+    val url: String? = null
 )
 
 sealed class NotificationsUiState {
@@ -95,7 +96,8 @@ class NotificationsViewModel @Inject constructor(
             orderId = data?.orderId,
             bookingId = data?.bookingId,
             notificationType = resolvedType,
-            status = data?.status
+            status = data?.status,
+            url = data?.url
         )
     }
 

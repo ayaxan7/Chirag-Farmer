@@ -1,5 +1,7 @@
 package com.yash091099.ChiragFarmersApp.ui.presentation.home.screens.notifications
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,6 +32,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -214,6 +217,8 @@ private fun NotificationSection(
 
     Spacer(modifier = Modifier.height(8.dp))
 
+    val context = LocalContext.current
+
     notifications.forEach { notification ->
         NotificationItem(
             imageUrl = notification.imageUrl,
@@ -224,16 +229,16 @@ private fun NotificationSection(
             actionButtonText = notification.actionButtonText,
             onActionClick = {
                 when {
+                    !notification.url.isNullOrBlank() -> {
+                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(notification.url)))
+                    }
                     !notification.bookingId.isNullOrBlank() -> {
                         navController.navigate(Route.Bookings.path)
                     }
-
                     !notification.orderId.isNullOrBlank() -> {
-                        // Route based on notification tag
                         if (notification.tag == "sell") {
                             navController.navigate(Route.SellerOrderDetails.createRoute(notification.orderId))
                         } else {
-                            // Default to buyer's order (buy tag or any other tag)
                             navController.navigate(Route.OrderDetails.createRoute(notification.orderId))
                         }
                     }
