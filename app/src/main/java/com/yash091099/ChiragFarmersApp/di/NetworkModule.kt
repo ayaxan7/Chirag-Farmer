@@ -19,8 +19,8 @@ import javax.inject.Singleton
 object NetworkModule {
 //    private const val BASE_URL="http://10.0.2.2:5001/"
 //    private const val BASE_URL = "http://10.109.184.193:5001/"
-//    private const val BASE_URL = BuildConfig.BASE_URL
-private const val BASE_URL ="http://192.168.1.9:5001"
+    private const val BASE_URL = BuildConfig.BASE_URL
+//private const val BASE_URL ="https://backend.chiragvendor.com/"
     @Provides
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {

@@ -39,8 +39,8 @@ android {
         applicationId = "com.yash091099.ChiragFarmersApp"
         minSdk = 28
         targetSdk = 36
-        versionCode = 26
-        versionName = "8.0"
+        versionCode = 28
+        versionName = "8.2"
         buildConfigField("String", "OSM_NOMINATIM_BASE_URL", "\"$nominatimBaseUrl\"")
         buildConfigField("String", "CLOUDINARY_CLOUD_NAME", "\"$cloudinaryCloudName\"")
         buildConfigField("String", "CLOUDINARY_UPLOAD_PRESET", "\"$cloudinaryUploadPreset\"")

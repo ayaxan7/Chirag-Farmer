@@ -21,6 +21,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -50,9 +53,16 @@ import timber.log.Timber
 fun HomeScreen(
     navController: NavHostController, viewModel: HomeViewModel = hiltViewModel()
 ) {
-    val isProfileComplete by viewModel.isProfileComplete.collectAsStateWithLifecycle()
     val homeMixedProductsUiState by viewModel.homeMixedProductsUiState.collectAsStateWithLifecycle()
+    val isProfileComplete by viewModel.isProfileComplete.collectAsStateWithLifecycle()
 
+    var showProfileIncompleteBanner by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(isProfileComplete) {
+        isProfileComplete?.let { profileComplete ->
+            showProfileIncompleteBanner = !profileComplete
+        }
+    }
     val langTag = LocalConfiguration.current.locales[0].toLanguageTag()
     val carouselImages = when {
         langTag.startsWith("hi") -> listOf(
@@ -147,7 +157,7 @@ fun HomeScreen(
                 modifier = Modifier.padding(horizontal = 16.dp)
             ) {
                 // Only show profile incomplete image if profile is not complete
-                if (!isProfileComplete) {
+                if (showProfileIncompleteBanner) {
                     Image(
                         painter = painterResource(R.drawable.profile_incomplete_image),
                         contentDescription = stringResource(R.string.home_profile_incomplete_image_description),

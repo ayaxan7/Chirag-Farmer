@@ -11,8 +11,8 @@ enum class AppDestinations(
     val route: String
 ) {
     HOME(R.string.nav_home, R.drawable.ic_home_selected, R.drawable.ic_home_unselected, Route.Home.path),
-    ASSIST(R.string.nav_assist, R.drawable.ic_assist_selected, R.drawable.ic_assist_unselected, Route.Assist.path),
-    BOOKINGS(R.string.nav_bookings, R.drawable.ic_bookings_selected, R.drawable.ic_bookings_unselected, Route.Bookings.path),
     BUY(R.string.nav_buy, R.drawable.ic_buy_selected, R.drawable.ic_buy_unselected, Route.Buy.path),
-    SELL(R.string.nav_sell, R.drawable.ic_sell_selected, R.drawable.ic_sell_unselected, Route.Sell.path)
+    ASSIST(R.string.nav_assist, R.drawable.ic_assist_selected, R.drawable.ic_assist_unselected, Route.Assist.path),
+    SELL(R.string.nav_sell, R.drawable.ic_sell_selected, R.drawable.ic_sell_unselected, Route.Sell.path),
+    BOOKINGS(R.string.nav_bookings, R.drawable.ic_bookings_selected, R.drawable.ic_bookings_unselected, Route.Bookings.path),
 }
