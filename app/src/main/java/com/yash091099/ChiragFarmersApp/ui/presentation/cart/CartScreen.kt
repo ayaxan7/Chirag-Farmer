@@ -435,7 +435,7 @@ fun CartScreen(
                             )
                         }
 
-                        Spacer(modifier = Modifier.height(24.dp))
+                        Spacer(modifier = Modifier.height(48.dp))
                     }
 
                     // Price Summary (Fixed at bottom)
@@ -614,6 +614,7 @@ fun CartScreen(
                                         modifier = Modifier.weight(1f)
                                     ) {
                                         selectedPaymentMethod = "Cash On Delivery"
+                                        useWalletForPayment = false
                                     }
 
                                     PaymentChip(
