@@ -1,20 +1,37 @@
 # Chirag Farmer
 
-Android app for farmers to buy and sell agricultural supplies, book drone spraying services, and get AI-powered crop advisory. The idea is to bring as much of the farming ecosystem into one app as possible.
+Chirag Farmer is an Android app that brings together different services farmers need in one place. Users can buy and sell agricultural products, book drone spraying services, and use AI to detect crop diseases by simply uploading an image.
 
-## Why I built it
+I built this project because I grew up seeing the challenges farmers face every day. Finding quality products, reaching the right buyers, and getting help when crops become diseased isn't always easy. I wanted to create something that could make at least a small part of that process simpler.
 
-I grew up seeing how difficult farming can be (in my village). People(both farmers and buyers) often struggle to find good quality products, lose money to middlemen, and dont always know what to do when crops get diseased. I wanted to build something that actually helps instead of just another shopping app. It started as a simple marketplace, but as people started using it they kept asking for more features like drone bookings and crop disease detection, so I kept improving it.
+## Features
 
-## How I built it
+* Buy and sell agricultural products
+* Book drone spraying services
+* AI-based crop disease detection
+* Secure online payments with Razorpay
+* Location support using OpenStreetMap
+* Image storage with Cloudinary
 
-I started with a basic MVP and later migrated everything to Clean Architecture with MVVM as the app grew. Payments are handled with Razorpay, images with Cloudinary, maps with OpenStreetMap, and AI is used for crop disease detection from images.
+## Tech Stack
 
-Screenshots
+* Kotlin
+* MVVM
+* Clean Architecture
+* Firebase
+* Razorpay
+* Cloudinary
+* OpenStreetMap
+
+## Screenshots
 
 <p align="center">
-  <img src="screenshot1.png" width="200" alt="Screenshot 1">
-  <img src="screenshot2.png" width="200" alt="Screenshot 2">
-  <img src="screenshot3.png" width="200" alt="Screenshot 3">
+  <img src="screenshot1.png" width="220" alt="Home">
+  <img src="screenshot2.png" width="220" alt="Marketplace">
+  <img src="screenshot3.png" width="220" alt="Crop Detection">
 </p>
+
+## About the Project
+
+This project started as a simple marketplace for farmers, but I kept adding features as the idea evolved. Along the way, I also migrated the app to Clean Architecture to make it easier to maintain and scale. It has been a great project for learning Android development while building something that solves a real-world problem.
 
